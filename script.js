@@ -11,4 +11,21 @@ function updateSlidePosition() {
   slides.style.transform = `translateX(-${slideIndex * (100 / slidesCount)}%)`;
 }
 
-setInterval(nextSlide, 5000); // Change slide every 5 seconds
+setInterval(nextSlide, 5000);
+
+// Mouse Click Animation
+document.addEventListener('click', function(e) {
+  const x = e.clientX;
+  const y = e.clientY;
+
+  const ripple = document.createElement('span');
+  ripple.classList.add('ripple');
+  ripple.style.left = x + 'px';
+  ripple.style.top = y + 'px';
+
+  document.body.appendChild(ripple);
+
+  setTimeout(() => {
+    ripple.remove();
+  }, 600); // Animation duration
+});
