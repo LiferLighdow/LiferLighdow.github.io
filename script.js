@@ -27,5 +27,5 @@ document.addEventListener('click', function(e) {
 
   setTimeout(() => {
     ripple.remove();
-  }, 600); // Animation duration
+  }, 600);
 });
