@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聯絡我們</title>
+    <style>
+        body {
+            font-family: serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f4f4f4; /* 移除動畫，使用靜態背景 */
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+            width: 500px;
+            max-width: 90%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .contact-info {
+		      font: italic small-caps bold 17px cursive;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #555;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        input[type="button"]  {
+		      font: italic small-caps bold 16px cursive;
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+				margin-top: 10px;
+            width: 100%;
+        }
+
+
+         input[type="button"]:hover {
+            background-color: #3898FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        input[type="button"]:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+		  
+        input[type="reset"] {
+		      font: italic small-caps bold 16px cursive;
+            background-color: #6c757d;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        input[type="reset"]:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        input[type="reset"]:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #languageSelect {
+		      font: italic small-caps bold 16px serif;
+            margin-bottom: 20px; /* 增加下方間距 */
+            padding: 10px 15px; /* 增加內距 */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: #fff;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"); /* 下拉箭頭 */
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px 16px;
+            padding-right: 30px; /* 調整右側內距，留出箭頭空間 */
+            width: fit-content; /* 寬度根據內容調整 */
+        }
+
+        #languageSelect:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.25); /* 聚焦時添加陰影 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="zh_TW">繁體中文</option>
+            <option value="zh_CN">简体中文</option>
+            <option value="ja">日本語</option>
+        </select>
+        <h1>Contact Us</h1>
+        <div class="contact-info">
+            <p><strong>Email:</strong> liferlighdow1012@gmail.com</p>
+       </div>
+        <form id="contactForm">
+            <div class="form-group">
+                <label for="subjectInput">主旨：</label>
+                <input type="text" id="subjectInput" name="subject" size="25" maxlength="50" required>
+            </div>
+            <div class="form-group">
+                <label for="commentInput">您的寶貴建議：</label>
+                <textarea id="commentInput" name="Comment" cols="30" rows="3" required></textarea>
+            </div>
+            <a id="mailLink" href=" " target="_blank"><input type="button" id="submitButton" value="Submit"></a>
+            <input type="reset" value="Reset">
+        </form>
+        <div id="formMessage"></div>
+    </div>
+    <script>
+        const translations = {
+            en: {
+                title: 'Contact Us',
+                subjectLabel: 'Subject:',
+                commentLabel: 'Your Message:',
+                submit: 'Submit',
+                reset: 'Reset',
+                sent: 'Message sent!',
+            },
+            zh_TW: {
+                title: '聯絡我們',
+                subjectLabel: '主旨：',
+                commentLabel: '您的寶貴建議：',
+                submit: '確認傳送',
+                reset: '放棄清除',
+                sent: '訊息已送出！',
+            },
+            zh_CN: {
+                title: '联系我们',
+                subjectLabel: '主题：',
+                commentLabel: '您的宝贵建议：',
+                submit: '确认传送',
+                reset: '放弃清除',
+                sent: '信息已发送！',
+            },
+            ja: {
+                title: 'お問い合わせ',
+                subjectLabel: '件名：',
+                commentLabel: 'メッセージ：',
+                submit: '送信',
+                reset: 'クリア',
+                sent: 'メッセージを送信しました！',
+            },
+        };
+
+        function setLanguage(lang) {
+            const elements = {
+                title: document.querySelector('h1'),
+                subjectLabel: document.querySelector('label[for="subjectInput"]'),
+                commentLabel: document.querySelector('label[for="commentInput"]'),
+                submitButton: document.querySelector('#submitButton'),
+                resetButton:document.querySelector('input[type="reset"]'),
+            };
+            for (const key in elements) {
+              if(elements[key]){
+                elements[key].textContent = translations[lang][key];
+              }
+            }
+        }
+
+        let currentLanguage = 'en';
+        setLanguage(currentLanguage);
+
+        const languageSelect = document.getElementById('languageSelect');
+        if (languageSelect) {
+            languageSelect.addEventListener('change', function() {
+                currentLanguage = this.value;
+                setLanguage(currentLanguage);
+            });
+        }
+
+        const mailLink = document.getElementById('mailLink');
+        const submitButton = document.getElementById('submitButton');
+        const subjectInput = document.getElementById('subjectInput');
+        const commentInput = document.getElementById('commentInput');
+
+        submitButton.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const subject = subjectInput.value;
+            const comment = commentInput.value;
+            const title = translations[currentLanguage].title;
+
+            if (subject === "" || comment === "") {
+                alert("請填寫所有欄位");
+                return;
+            }
+
+            const mailtoLink = `mailto:liferlighdow1012@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(comment)}`;
+
+            mailLink.href = mailtoLink;
+            mailLink.click();
+            subjectInput.value = "";
+            commentInput.value = "";
+        });
+    </script>
+</body>
+</html>
