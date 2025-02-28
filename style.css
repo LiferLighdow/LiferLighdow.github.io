@@ -1,6 +1,6 @@
 /* General Styles (unchanged) */
 body {
-    font-family: 'Poppins', sans-serif; /* Use the Google Font */
+    font-family: cursive;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
@@ -48,7 +48,7 @@ nav ul li a {
 
 /* Hero Section (Cover) */
 .hero {
-    background-image: url('images/hero-background.jpg'); /* Add your background image */
+    background-image: url('images/hero-background.gif'); /* Add your background image */
     background-size: cover;
     background-position: center;
     color: #fff; /* Ensure text is readable on the background */
