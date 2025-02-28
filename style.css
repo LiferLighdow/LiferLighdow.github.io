@@ -48,36 +48,53 @@ nav ul li a {
 
 /* Hero Section (Cover) */
 .hero {
-    background-image: url('images/hero-background.jpg'); /* Add your background image */
-    background-size: cover;
-    background-position: center;
-    color: #fff; /* Ensure text is readable on the background */
-    padding: 6rem 0;
-    text-align: center;
-    position: relative; /* For overlay */
+    position: relative;
+    overflow: hidden; /* Hide overflowing slides */
+    height: 500px; /* Adjust as needed */
 }
 
-.hero::before {  /* Add a semi-transparent overlay */
-    content: '';
+.hero-slides {
+    display: flex;
+    width: 300%; /* 3 slides * 100% */
+    transition: transform 0.5s ease-in-out; /* Smooth transition */
+    height: 100%; /* Fill the hero height */
+}
+
+.hero-slide {
+    width: calc(100% / 3); /* Each slide takes up 1/3 of the container */
+    flex-shrink: 0; /* Prevent slides from shrinking */
+    height: 100%; /* Fill the hero height */
+}
+
+.hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the entire slide */
+    display: block; /* Remove extra space under images */
+}
+
+.hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Adjust transparency as needed */
-    z-index: 0;
+    background-color: rgba(0, 0, 0, 0.3); /* Adjust overlay transparency */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
 }
 
-.hero-content {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    position: relative; /* Bring content forward */
-    z-index: 1;
+.profile-image-container {
+    position: relative;
+    z-index: 2; /* Above the hero-overlay */
 }
 
 .profile-image {
-    /*width: 200px;  Fixed width - now responsive */
     width: 25vw;  /* Viewport Width - responsive to screen size */
     max-width: 300px; /* Maximum size */
     height: auto; /* Maintain aspect ratio */
@@ -165,5 +182,9 @@ footer {
 
     .button-container {
         flex-direction: column;
+    }
+
+    .hero {
+        height: 400px;  /* Adjust hero height for smaller screens */
     }
 }
