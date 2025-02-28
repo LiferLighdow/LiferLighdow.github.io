@@ -64,12 +64,13 @@ nav ul li a {
     width: calc(100% / 13);
     flex-shrink: 0;
     height: 100%;
+    overflow: hidden; /* 確保圖片不超出範圍 */
 }
 
 .hero-slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* 確保圖片填滿容器 */
     display: block;
 }
 
@@ -187,19 +188,24 @@ footer {
     .hero {
         height: 400px;
     }
+}
+
+/* Ripple Effect */
 .ripple {
-  position: absolute;
-  border-radius: 50%;
-  transform: scale(0);
-  animation: ripple 0.6s linear;
-  background-color: rgba(255, 255, 255, 0.4); /* Ripple color */
-  pointer-events: none; /* Allows clicks to pass through */
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    background-color: rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    z-index: 9999; /* 確保在最上層 */
 }
 
 @keyframes ripple {
-  to {
-    transform: scale(2);
-    opacity: 0;
-  }
-}
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
 }
