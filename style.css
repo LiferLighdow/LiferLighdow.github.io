@@ -1,6 +1,6 @@
 /* General Styles (unchanged) */
 body {
-    font-family: cursive;
+    font-family: 'Poppins', sans-serif; /* Use the Google Font */
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
@@ -48,7 +48,7 @@ nav ul li a {
 
 /* Hero Section (Cover) */
 .hero {
-    background-image: url('images/hero-background.gif'); /* Add your background image */
+    background-image: url('images/hero-background.jpg'); /* Add your background image */
     background-size: cover;
     background-position: center;
     color: #fff; /* Ensure text is readable on the background */
@@ -76,10 +76,10 @@ nav ul li a {
     z-index: 1;
 }
 
-.hero-image {
+.profile-image {
     /*width: 200px;  Fixed width - now responsive */
     width: 25vw;  /* Viewport Width - responsive to screen size */
-    max-width: 100px; /* Maximum size */
+    max-width: 300px; /* Maximum size */
     height: auto; /* Maintain aspect ratio */
     border-radius: 50%; /* Makes it a circle */
     object-fit: cover; /* Prevents distortion */
@@ -98,7 +98,7 @@ nav ul li a {
     color: #eee; /* Lighter color for better visibility */
 }
 
-/* Buttons Section */
+/* Buttons Section (unchanged) */
 .buttons {
     padding: 2rem 0;
     text-align: center;
@@ -128,7 +128,7 @@ nav ul li a {
     transform: translateY(-3px); /* Slight lift on hover */
 }
 
-/* Different button colors */
+/* Different button colors (unchanged) */
 .button1 { background-color: #2980b9; } /* Blue */
 .button2 { background-color: #e74c3c; } /* Red */
 .button3 { background-color: #8e44ad; } /* Purple */
