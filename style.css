@@ -76,6 +76,18 @@ nav ul li a {
     z-index: 1;
 }
 
+.profile-image {
+    /*width: 200px;  Fixed width - now responsive */
+    width: 25vw;  /* Viewport Width - responsive to screen size */
+    max-width: 300px; /* Maximum size */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 50%; /* Makes it a circle */
+    object-fit: cover; /* Prevents distortion */
+    margin-bottom: 1rem;
+    border: 5px solid #fff; /* Add a white border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
 .hero h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
