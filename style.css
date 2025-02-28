@@ -1,4 +1,4 @@
-/* General Styles */
+/* General Styles (unchanged) */
 body {
     font-family: 'Poppins', sans-serif; /* Use the Google Font */
     margin: 0;
@@ -12,7 +12,7 @@ a {
     color: #007bff; /* Blue, a common link color */
 }
 
-/* Header and Navigation */
+/* Header and Navigation (unchanged) */
 header {
     background-color: #333;
     color: #fff;
@@ -77,12 +77,15 @@ nav ul li a {
 }
 
 .hero-image {
-    width: 200px; /* Adjust size as needed */
-    height: 200px;
+    /*width: 200px;  Fixed width - now responsive */
+    width: 25vw;  /* Viewport Width - responsive to screen size */
+    max-width: 300px; /* Maximum size */
+    height: auto; /* Maintain aspect ratio */
     border-radius: 50%; /* Makes it a circle */
     object-fit: cover; /* Prevents distortion */
     margin-bottom: 1rem;
     border: 5px solid #fff; /* Add a white border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
 .hero h1 {
@@ -108,20 +111,35 @@ nav ul li a {
 }
 
 .button {
-    background-color: #007bff;
-    color: #fff;
     padding: 1rem 2rem;
     margin: 1rem;
-    border-radius: 25px; /* More rounded corners */
+    border-radius: 15px;
     display: inline-block;
-    transition: background-color 0.3s ease; /* Smooth hover effect */
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1); /* Improved transition */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23); /* 3D shadow */
+    color: white; /* White text */
+    border: none; /* Remove default borders */
+    font-weight: 500;
+    cursor: pointer; /* Indicate clickable */
 }
 
 .button:hover {
-    background-color: #0056b3;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); /* Increased shadow on hover */
+    transform: translateY(-3px); /* Slight lift on hover */
 }
 
-/* Footer */
+/* Different button colors */
+.button1 { background-color: #2980b9; } /* Blue */
+.button2 { background-color: #e74c3c; } /* Red */
+.button3 { background-color: #8e44ad; } /* Purple */
+.button4 { background-color: #27ae60; } /* Green */
+
+.button:active { /* Added active state */
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Footer (unchanged) */
 footer {
     background-color: #333;
     color: #fff;
