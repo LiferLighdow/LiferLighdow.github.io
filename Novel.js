@@ -33,7 +33,7 @@ function updateFontSize() {
 
 toggleButton.addEventListener('click', () => {
     collapsible.classList.toggle('open');
-    if(collapsible.classList.contains('open')) {
+    if (collapsible.classList.contains('open')) {
         toggleButton.textContent = "點擊收合";
     } else {
         toggleButton.textContent = "點擊展開";
@@ -47,18 +47,63 @@ chapterLinks.forEach(link => {
     }
 });
 
-// Set audio source based on chapter title
-function updateAudioSource() {
-    const audioFilename = chapterTitle.textContent.replace(/[^a-zA-Z0-9]+/g, '_').toLowerCase() + '.mp3';
-    audioElement.src = 'audio/' + audioFilename;
-    audioElement.load(); // Important: Load the new source
+
+// Function to load content from a HTML file
+async function loadChapterContent() {
+    // Get the filename from the current HTML file's name
+    const path = window.location.pathname;
+    const filenameWithExtension = path.split('/').pop(); // Get filename with extension
+    const filename = filenameWithExtension.split('.')[0]; // Get filename without extension
+    const filepath = 'html/' + filename + '.html'; // 修改檔案路徑
+
+	 console.log("Attempting to load from:", filepath); // 顯示檔案路徑
+
+    let timeoutId;
+
+    try {
+        // Set a "Loading..." message
+        chapterContent.innerHTML = '<p>章節內容載入中...</p>'; // 顯示載入中訊息
+
+        // Set a timeout
+        timeoutId = setTimeout(() => {
+            throw new Error(`Loading chapter from ${filepath} timed out after 3 seconds`);
+        }, 5000); //Increase timeout to 5 seconds
+
+        const response = await fetch(filepath);
+        if (!response.ok) {
+            throw new Error(`Could not load chapter from ${filepath}`);
+        }
+        const html = await response.text();
+
+        // Clear the timeout, as the fetch was successful
+        clearTimeout(timeoutId);
+
+        // Set HTML content
+        chapterContent.innerHTML = html; // 直接設定 HTML 內容
+
+    } catch (error) {
+        // Clear the timeout, in case it's still running
+        clearTimeout(timeoutId);
+        console.error(error);
+        chapterContent.innerHTML = '<p>章節內容載入失敗，請稍後再試。</p>'; // 顯示載入失敗訊息
+    }
 }
 
-// Call updateAudioSource() on page load and when content changes.
-updateAudioSource();
+// Function to update the audio source based on the HTML filename
+function updateAudioSource() {
+    const path = window.location.pathname;
+    const filenameWithExtension = path.split('/').pop();
+    const filename = filenameWithExtension.split('.')[0];
+    const audioFilename = 'audio/' + filename + '.mp3';
+    audioElement.src = audioFilename;
+    audioElement.load();
+}
 
-// Initial display of font size
-fontSizeValueDisplay.textContent = currentFontSize.toFixed(1) + 'rem'; // 網頁載入時顯示初始字體大小
+// Call loadChapterContent() and updateAudioSource() on page load
+window.addEventListener('load', () => {
+    loadChapterContent();
+    updateAudioSource(); // 确保在加载内容后更新音频源
+});
 
 // 側邊欄隱藏/顯示切換
 sidebarToggleButton.addEventListener('click', () => {
