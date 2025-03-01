@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifer_Lighdowの紹介</title>
+    <style>
+        body {
+            font-family: 'MyCustomFont', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+		  @font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/myfont.woff2') format('woff2'),
+         url('../fonts/myfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+/* ナビゲーションバーのスタイル */
+.navbar {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 1em 0;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5em 1em;
+    margin: 0 1em;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 2em;
+            margin-top: 30px;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        .video-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .video-list li {
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+            padding: 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .video-list li:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .video-list h3 {
+            margin: 0 0 10px;
+        }
+        .video-list p {
+            margin: 0;
+        }
+        a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        #background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="background-canvas"></canvas>
+	 <nav class="navbar">
+        <a href="../index.html">ホーム</a>
+        <a href="About.html">概要</a>
+        <a href="../Index/">サービス</a>
+        <a href="../Contact.html">お問い合わせ</a>
+    </nav>
+    <div class="container">
+        <h1>Lifer_Lighdowの動画紹介</h1>
+        <p>「Lifer_Lighdow」は、エレクトロニック音楽、ゲーム音楽、伝奇小説、そして日本語の歌に特化したYouTuberです。 彼のチャンネルは、多様な音楽ビデオ、面白いストーリー、そして魅力的な歌声が特徴です。</p>
+        <h2>人気の動画</h2>
+        <ul class="video-list">
+            <li>
+                <h3>エレクトロニック音楽トラック</h3>
+                <p>最新のエレクトロニック音楽トラックを紹介し、非常にクリエイティブなサウンドエフェクトを提供します。</p>
+            </li>
+            <li>
+                <h3>ゲーム音楽</h3>
+                <p>オリジナルで人気のゲーム音楽、高品質のゲームサウンドトラックを提供します。</p>
+            </li>
+            <li>
+                <h3>伝奇小説</h3>
+                <p>魅力的な伝奇小説を語り、視聴者の注意を引きます。</p>
+            </li>
+            <li>
+                <h3>日本語ボーカロイド曲</h3>
+                <p>日本語の歌を歌い、彼の魅力的な歌声でファンを魅了します。</p>
+            </li>
+        </ul>
+        <p>詳細については、<a href="https://www.youtube.com/channel/UCQV71earvPicg7EbVlcbO-g/">彼のYouTubeチャンネル</a>をご覧ください。</p>
+    </div>
+    <script>
+        const canvas = document.getElementById('background-canvas');
+        const context = canvas.getContext('2d');
+        let width, height, stars;
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            stars = Array(800).fill().map(() => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                z: Math.random() * width
+            }));
+        }
+
+        function animate() {
+            context.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            context.fillRect(0, 0, width, height);
+            context.fillStyle = '#fff';
+
+            stars.forEach(star => {
+                star.z -= 2;
+                if (star.z <= 0) {
+                    star.x = Math.random() * width;
+                    star.y = Math.random() * height;
+                    star.z = width;
+                }
+
+                const k = 128.0 / star.z;
+                const px = (star.x - width / 2) * k + width / 2;
+                const py = (star.y - height / 2) * k + height / 2;
+
+                if (px >= 0 && px <= width && py >= 0 && py <= height) {
+                    const size = (1 - star.z / width) * 5;
+                    context.beginPath();
+                    context.arc(px, py, size, 0, 2 * Math.PI);
+                    context.fill();
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        animate();
+    </script>
+</body>
+</html>
