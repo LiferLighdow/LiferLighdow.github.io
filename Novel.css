@@ -1,0 +1,224 @@
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    line-height: 1.8;
+    margin: 0;
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+#container {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 1200px;
+    display: flex;
+    min-height: 80vh;
+    position: relative; /* 讓按鈕可以相對於 container 定位 */
+}
+
+#sidebar {
+    background-color: #ffffff;
+    border-right: 1px solid #dee2e6;
+    padding: 30px;
+    width: 300px; /* 原始寬度 */
+    min-width: 0; /* 移除最小寬度限制 */
+    overflow-y: auto;
+    transition: all 0.3s ease; /* 平滑過渡效果 */
+    flex-shrink: 0; /* 防止側邊欄被壓縮 */
+}
+
+#sidebar.hidden {
+    width: 0;
+    padding: 0;
+    border-right: none;
+    overflow: hidden;
+}
+
+#content {
+    padding: 30px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+h1, h2, h3 {
+    font-weight: 700;
+}
+
+h1.chapter-title {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 10px;
+    position: relative; /* 讓按鈕可以相對於標題定位 */
+}
+
+#chapter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#chapter-list li {
+    margin-bottom: 15px;
+}
+
+#chapter-list a {
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #343a40;
+    transition: background-color 0.3s ease;
+}
+
+#chapter-list a:hover {
+    background-color: #e9ecef;
+}
+
+#chapter-list a.active {
+    background-color: #007bff;
+    color: white;
+}
+
+p {
+    margin-bottom: 1em;
+    font-size: 1rem; /* 使用 rem 单位 */
+}
+
+/* 可收合列表樣式 */
+.collapsible #chapter-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.collapsible.open #chapter-list {
+    max-height: 500px; /* 根據需要調整 */
+}
+
+.toggle-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #f0f0f0;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    #container {
+        flex-direction: column;
+    }
+
+    #sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #dee2e6;
+        overflow-y: auto; /* 手機上側邊欄也允許捲動 */
+    }
+}
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+}
+
+.bar-nav {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 1em 0;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.bar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.bar-nav li {
+    margin: 0 10px;
+}
+
+.bar-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5em 1em;
+    margin: 0 1em;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.bar-nav a:hover {
+    color: #343a40;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 音訊播放器和字體控制項的容器 */
+#audio-controls-container {
+    display: flex; /* 使用 Flexbox 佈局 */
+    justify-content: center; /* 水平置中對齊 */
+    align-items: center; /* 垂直置中對齊 */
+    margin-bottom: 20px;
+}
+
+/* 音訊播放器樣式 */
+#audio-player {
+    /* text-align: center;  移除，因為 audio-controls-container 會處理置中 */
+    margin-right: 20px; /* 在音訊播放器和字體控制項之間加入一些間距 */
+}
+
+/* 字體控制項樣式 */
+#font-controls {
+    display: flex; /* 讓按鈕和數值水平排列 */
+    align-items: center; /* 垂直置中對齊 */
+}
+
+#font-controls button {
+    padding: 8px 15px;
+    margin: 0 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#font-controls button:hover {
+    background-color: #0056b3;
+}
+
+#font-size-value {
+    margin-left: 5px;
+    font-size: 1rem;
+}
+
+/* 側邊欄寬度切換按鈕 */
+#sidebar-toggle-button {
+    position: absolute; /* 絕對定位 */
+    top: 10px; /* 距離頂部 10px */
+    left: 10px; /* 距離左側 10px */
+    padding: 5px; /* 減少內距 */
+    border: none;
+    background-color: rgba(255, 255, 255, 0.8); /* 半透明背景 */
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 10; /* 確保按鈕在最上層 */
+}
+
+#sidebar-toggle-button i {
+    font-size: 1.2rem; /* 圖示大小 */
+}
+
+/* 側邊欄隱藏時按鈕樣式 */
+#sidebar-toggle-button.sidebar-hidden {
+    top: 10px;
+    left: 10px;
+}
