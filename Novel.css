@@ -9,7 +9,7 @@ body {
 /* 定義自定義字體 */
 @font-face {
     font-family: 'MyCustomFont';
-    src: url('../fonts/myfont.woff2') format('woff2'), url('../fonts/myfont.woff') format('woff');
+    src: url('fonts/myfont.woff2') format('woff2'), url('fonts/myfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -33,7 +33,7 @@ body {
     overflow-y: auto; /* 启用垂直滚动 */
     transition: all 0.3s ease; /* 平滑過渡效果 */
     flex-shrink: 0; /* 防止側邊欄被壓縮 */
-    max-height: 80vh; /* 限制最大高度 */
+    max-height: 100vh; /* 限制最大高度 */
 }
 
 #chapter-list {
