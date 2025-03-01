@@ -47,48 +47,6 @@ chapterLinks.forEach(link => {
     }
 });
 
-
-// Function to load content from a HTML file
-async function loadChapterContent() {
-    // Get the filename from the current HTML file's name
-    const path = window.location.pathname;
-    const filenameWithExtension = path.split('/').pop(); // Get filename with extension
-    const filename = filenameWithExtension.split('.')[0]; // Get filename without extension
-    const filepath = 'html/' + filename + '.html'; // 修改檔案路徑
-
-	 console.log("Attempting to load from:", filepath); // 顯示檔案路徑
-
-    let timeoutId;
-
-    try {
-        // Set a "Loading..." message
-        chapterContent.innerHTML = '<p>章節內容載入中...</p>'; // 顯示載入中訊息
-
-        // Set a timeout
-        timeoutId = setTimeout(() => {
-            throw new Error(`Loading chapter from ${filepath} timed out after 3 seconds`);
-        }, 5000); //Increase timeout to 5 seconds
-
-        const response = await fetch(filepath);
-        if (!response.ok) {
-            throw new Error(`Could not load chapter from ${filepath}`);
-        }
-        const html = await response.text();
-
-        // Clear the timeout, as the fetch was successful
-        clearTimeout(timeoutId);
-
-        // Set HTML content
-        chapterContent.innerHTML = html; // 直接設定 HTML 內容
-
-    } catch (error) {
-        // Clear the timeout, in case it's still running
-        clearTimeout(timeoutId);
-        console.error(error);
-        chapterContent.innerHTML = '<p>章節內容載入失敗，請稍後再試。</p>'; // 顯示載入失敗訊息
-    }
-}
-
 // Function to update the audio source based on the HTML filename
 function updateAudioSource() {
     const path = window.location.pathname;
@@ -99,10 +57,9 @@ function updateAudioSource() {
     audioElement.load();
 }
 
-// Call loadChapterContent() and updateAudioSource() on page load
+// Call updateAudioSource() on page load
 window.addEventListener('load', () => {
-    loadChapterContent();
-    updateAudioSource(); // 确保在加载内容后更新音频源
+    updateAudioSource(); // 確保在載入內容後更新音訊源
 });
 
 // 側邊欄隱藏/顯示切換
