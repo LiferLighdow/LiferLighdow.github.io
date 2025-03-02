@@ -1,0 +1,1027 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(45deg, #FF0000, #FF7F00, #FFFF00, #00FF00, #0000FF, #4B0082, #8B00FF); /* 從紅到紫的漸變 */
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite; /* 動畫效果 */
+    color: #fff;/* 淺色文字 */
+    font-family: "MyCustomFont", sans-serif;
+    font-size: 18px;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* 定義自定義字體 */
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/myfont.woff2') format('woff2'),
+         url('../fonts/myfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    margin: 80px 0;
+}
+
+input {
+    display: inline-block;
+    background: #334155; /* 較淺的按鈕背景 */
+    border-radius: 5px;
+    padding: 0 20px;
+    text-decoration: none;
+    color: #CBD5E0;
+    height: 40px;
+    line-height: 42px;
+    cursor: pointer;
+    font: inherit;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    font-weight: bold;
+    margin: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: background-color 0.2s ease; /* Hover效果 */
+}
+
+input:hover {
+    background-color: #475569; /* Hover時變更背景顏色 */
+}
+
+input[type="text"], input[type="email"] {
+    cursor: auto;
+    background: #4B5563;
+    font-weight: normal;
+    color: #CBD5E0;
+    padding: 0 15px;
+    border: 1px solid #64748B; /* 加上邊框 */
+}
+
+input[type="text"]::-webkit-input-placeholder, input[type="email"]::-webkit-input-placeholder {
+    color: #94A3B8;
+}
+
+input[type="text"]::-moz-placeholder, input[type="email"]::-moz-placeholder {
+    color: #94A3B8;
+}
+
+input[type="text"]:-ms-input-placeholder, input[type="email"]:-ms-input-placeholder {
+    color: #94A3B8;
+}
+
+.heading:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+h1.title {
+    font-size: 80px;
+    font-weight: bold;
+    margin: 0;
+    display: block;
+    float: left;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加上陰影 */
+}
+
+/* 移除 keyframes 樣式，因為他會和footer的back鍵衝突 */
+
+.scores-container {
+    float: right;
+    text-align: right;
+}
+
+.score-container, .best-container {
+    position: relative;
+    display: inline-block;
+    background: #4B5563;
+    padding: 15px 25px;
+    font-size: 25px;
+    height: 25px;
+    line-height: 47px;
+    font-weight: bold;
+    border-radius: 5px;
+    color: white;
+    margin-top: 8px;
+    text-align: center;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* 加上陰影 */
+}
+
+.score-container:after, .best-container:after {
+    position: absolute;
+    width: 100%;
+    top: 10px;
+    left: 0;
+    text-transform: uppercase;
+    font-size: 13px;
+    line-height: 13px;
+    text-align: center;
+    color: #94A3B8;
+}
+
+.score-container .score-addition, .best-container .score-addition {
+    position: absolute;
+    right: 30px;
+    color: #F87171;
+    font-size: 25px;
+    line-height: 25px;
+    font-weight: bold;
+    color: rgba(248, 113, 113, 0.9);
+    z-index: 100;
+    animation: none; /* 移除衝突 */
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.score-container:after {
+    content: "Score";
+}
+
+.best-container:after {
+    content: "Best";
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 10px;
+    line-height: 1.65;
+}
+
+a {
+    color: #CBD5E0;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+strong.important {
+    text-transform: uppercase;
+}
+
+hr {
+    border: none;
+    border-bottom: 1px solid #4B5563;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.container {
+    width: 500px;
+    margin: 0 auto;
+}
+
+/* 移除 keyframes 樣式，因為他會和 footer 的 back 鍵衝突 */
+
+.game-container {
+    margin-top: 40px;
+    position: relative;
+    padding: 15px;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -ms-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -ms-touch-action: none;
+    touch-action: none;
+    background: #334155;
+    border-radius: 6px;
+    width: 500px;
+    height: 500px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5); /* 加上陰影 */
+}
+
+.game-message {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(30, 41, 59, 0.85); /* 深色背景 */
+    z-index: 100;
+    padding-top: 40px;
+    text-align: center;
+    animation: none;/* 移除衝突 */
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.game-message p {
+    font-size: 60px;
+    font-weight: bold;
+    height: 60px;
+    line-height: 60px;
+    margin-top: 222px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加上陰影 */
+}
+
+.game-message .lower {
+    display: block;
+    margin-top: 29px;
+}
+
+.game-message .mailing-list {
+    margin-top: 52px;
+}
+
+.game-message .mailing-list strong {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.game-message .mailing-list .mailing-list-email-field {
+    width: 230px;
+    margin-right: 5px;
+}
+
+.game-message a {
+    display: inline-block;
+    background: #334155;
+    border-radius: 5px;
+    padding: 0 20px;
+    text-decoration: none;
+    color: #CBD5E0;
+    height: 40px;
+    line-height: 42px;
+    cursor: pointer;
+    margin-left: 9px;
+    transition: background-color 0.2s ease; /* Hover效果 */
+}
+
+.game-message a:hover {
+    background-color: #475569; /* Hover時變更背景顏色 */
+}
+
+.game-message a.keep-playing-button {
+    display: none;
+}
+
+.game-message .score-sharing {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.game-message.game-won {
+    background: rgba(237, 194, 46, 0.7);
+    color: #334155; /* 深色文字 */
+}
+
+.game-message.game-won a.keep-playing-button {
+    display: inline-block;
+}
+
+.game-message.game-won, .game-message.game-over {
+    display: block;
+}
+
+.game-message.game-won p, .game-message.game-over p {
+    animation: none;/* 移除衝突 */
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.game-message.game-won .mailing-list, .game-message.game-over .mailing-list {
+    animation: none;/* 移除衝突 */
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.grid-container {
+    position: absolute;
+    z-index: 1;
+}
+
+.grid-row {
+    margin-bottom: 15px;
+}
+
+.grid-row:last-child {
+    margin-bottom: 0;
+}
+
+.grid-row:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.grid-cell {
+    width: 106.25px;
+    height: 106.25px;
+    margin-right: 15px;
+    float: left;
+    border-radius: 5px;
+    background: rgba(75, 85, 99, 0.5); /* 更深的背景 */
+}
+
+.grid-cell:last-child {
+    margin-right: 0;
+}
+
+.tile-container {
+    position: absolute;
+    z-index: 2;
+}
+
+.tile, .tile .tile-inner {
+    width: 107px;
+    height: 107px;
+    line-height: 116.25px;
+    border-radius: 5px;
+}
+
+.tile.tile-position-1-1 {
+    -webkit-transform: translate(0px, 0px);
+    -moz-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);
+}
+
+.tile.tile-position-1-2 {
+    -webkit-transform: translate(0px, 121px);
+    -moz-transform: translate(0px, 121px);
+    transform: translate(0px, 121px);
+}
+
+.tile.tile-position-1-3 {
+    -webkit-transform: translate(0px, 242px);
+    -moz-transform: translate(0px, 242px);
+    transform: translate(0px, 242px);
+}
+
+.tile.tile-position-1-4 {
+    -webkit-transform: translate(0px, 363px);
+    -moz-transform: translate(0px, 363px);
+    transform: translate(0px, 363px);
+}
+
+.tile.tile-position-2-1 {
+    -webkit-transform: translate(121px, 0px);
+    -moz-transform: translate(121px, 0px);
+    transform: translate(121px, 0px);
+}
+
+.tile.tile-position-2-2 {
+    -webkit-transform: translate(121px, 121px);
+    -moz-transform: translate(121px, 121px);
+    transform: translate(121px, 121px);
+}
+
+.tile.tile-position-2-3 {
+    -webkit-transform: translate(121px, 242px);
+    -moz-transform: translate(121px, 242px);
+    transform: translate(121px, 242px);
+}
+
+.tile.tile-position-2-4 {
+    -webkit-transform: translate(121px, 363px);
+    -moz-transform: translate(121px, 363px);
+    transform: translate(121px, 363px);
+}
+
+.tile.tile-position-3-1 {
+    -webkit-transform: translate(242px, 0px);
+    -moz-transform: translate(242px, 0px);
+    transform: translate(242px, 0px);
+}
+
+.tile.tile-position-3-2 {
+    -webkit-transform: translate(242px, 121px);
+    -moz-transform: translate(242px, 121px);
+    transform: translate(242px, 121px);
+}
+
+.tile.tile-position-3-3 {
+    -webkit-transform: translate(242px, 242px);
+    -moz-transform: translate(242px, 242px);
+    transform: translate(242px, 242px);
+}
+
+.tile.tile-position-3-4 {
+    -webkit-transform: translate(242px, 363px);
+    -moz-transform: translate(242px, 363px);
+    transform: translate(242px, 363px);
+}
+
+.tile.tile-position-4-1 {
+    -webkit-transform: translate(363px, 0px);
+    -moz-transform: translate(363px, 0px);
+    transform: translate(363px, 0px);
+}
+
+.tile.tile-position-4-2 {
+    -webkit-transform: translate(363px, 121px);
+    -moz-transform: translate(363px, 121px);
+    transform: translate(363px, 121px);
+}
+
+.tile.tile-position-4-3 {
+    -webkit-transform: translate(363px, 242px);
+    -moz-transform: translate(363px, 242px);
+    transform: translate(363px, 242px);
+}
+
+.tile.tile-position-4-4 {
+    -webkit-transform: translate(363px, 363px);
+    -moz-transform: translate(363px, 363px);
+    transform: translate(363px, 363px);
+}
+
+.tile {
+    position: absolute;
+    transition: 100ms ease-in-out;
+    transition-property: transform;
+}
+
+.tile .tile-inner {
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    z-index: 10;
+    font-size: 40px;
+    color: #000; /* 淺色文字 */
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* 加上陰影 */
+	 position: relative; /* 添加相對定位 */
+    transform-style: preserve-3d; /* 啟用 3D 變換 */
+    transition: all 0.3s ease; /* 添加平滑過渡效果 */
+}
+
+.tile .tile-inner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit; /* 繼承背景顏色 */
+    border-radius: inherit; /* 繼承邊角半徑 */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); /* 內陰影效果 */
+    transform: translateZ(-3px); /* 向後移動一點，形成深度 */
+}
+
+.tile:active .tile-inner {
+    transform: translateY(2px); /* 按下時向下移動 */
+}
+
+.tile:active .tile-inner::before {
+    transform: translateZ(-1px); /* 按下時略微向上移動內陰影 */
+}
+
+/* 方塊顏色 */
+.tile.tile-2 .tile-inner {
+    background: #FFCDD2; /* 淺紅色 */
+}
+
+.tile.tile-4 .tile-inner {
+    background: #FFAB91; /* 淺橙色 */
+}
+
+.tile.tile-8 .tile-inner {
+    background: #FFCC80; /* 淺黃色 */
+}
+
+.tile.tile-16 .tile-inner {
+    background: #DCEDC8; /* 淺綠色 */
+}
+
+.tile.tile-32 .tile-inner {
+    background: #B2EBF2; /* 淺青色 */
+}
+
+.tile.tile-64 .tile-inner {
+    background: #BBDEFB; /* 淺藍色 */
+}
+
+@media screen and (max-width: 520px) {
+    .tile.tile-64 .tile-inner {
+        font-size: 17px;
+    }
+}
+
+.tile.tile-128 .tile-inner {
+    background: #E1BEE7; /* 淺紫色 */
+    font-size: 35px;
+}
+
+@media screen and (max-width: 520px) {
+    .tile.tile-128 .tile-inner {
+        font-size: 13px;
+    }
+}
+
+.tile.tile-256 .tile-inner {
+    background: #F8BBD0; /* 淺粉色 */
+    font-size: 30px;
+}
+
+@media screen and (max-width: 520px) {
+    .tile.tile-256 .tile-inner {
+        font-size: 17px;
+    }
+}
+
+.tile.tile-512 .tile-inner {
+    background: #D1C4E9; /* 較深的淺紫色 */
+    font-size: 30px;
+}
+
+@media screen and (max-width: 520px) {
+    .tile.tile-512 .tile-inner {
+        font-size: 17px;
+    }
+}
+
+.tile.tile-1024 .tile-inner {
+    background: #C8E6C9; /* 較深的淺綠色 */
+    font-size: 30px;
+}
+
+@media screen and (max-width: 520px) {
+    .tile.tile-1024 .tile-inner {
+        font-size: 17px;
+    }
+}
+
+.tile.tile-2048 .tile-inner {
+    background: #B2DFDB; /* 較深的淺青色 */
+    font-size: 30px;
+}
+
+@media screen and (max-width: 520px) {
+    .tile.tile-2048 .tile-inner {
+        font-size: 17px;
+    }
+}
+
+.tile.tile-super .tile-inner {
+    color: #CBD5E0;
+    background: #1E293B;
+    font-size: 30px;
+}
+
+@media screen and (max-width: 520px) {
+    .tile.tile-super .tile-inner {
+        font-size: 17px;
+    }
+}
+
+@-webkit-keyframes appear {
+    0% {
+        opacity: 0;
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        transform: scale(0);
+    }
+ 
+    100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        transform: scale(1);
+    }
+}
+ 
+@-moz-keyframes appear {
+    0% {
+        opacity: 0;
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        transform: scale(0);
+    }
+ 
+    100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        transform: scale(1);
+    }
+}
+ 
+@keyframes appear {
+    0% {
+        opacity: 0;
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        transform: scale(0);
+    }
+ 
+    100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        transform: scale(1);
+    }
+}
+ 
+.tile-new .tile-inner {
+    -webkit-animation: appear 200ms ease 100ms;
+    -moz-animation: appear 200ms ease 100ms;
+    animation: appear 200ms ease 100ms;
+    -webkit-animation-fill-mode: backwards;
+    -moz-animation-fill-mode: backwards;
+    animation-fill-mode: backwards;
+}
+ 
+@-webkit-keyframes pop {
+    0% {
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        transform: scale(0);
+    }
+ 
+    50% {
+        -webkit-transform: scale(1.2);
+        -moz-transform: scale(1.2);
+        transform: scale(1.2);
+    }
+ 
+    100% {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        transform: scale(1);
+    }
+}
+ 
+@-moz-keyframes pop {
+    0% {
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        transform: scale(0);
+    }
+ 
+    50% {
+        -webkit-transform: scale(1.2);
+        -moz-transform: scale(1.2);
+        transform: scale(1.2);
+    }
+ 
+    100% {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        transform: scale(1);
+    }
+}
+ 
+@keyframes pop {
+    0% {
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        transform: scale(0);
+    }
+ 
+    50% {
+        -webkit-transform: scale(1.2);
+        -moz-transform: scale(1.2);
+        transform: scale(1.2);
+    }
+ 
+    100% {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        transform: scale(1);
+    }
+}
+ 
+.tile-merged .tile-inner {
+    z-index: 20;
+    -webkit-animation: pop 200ms ease 100ms;
+    -moz-animation: pop 200ms ease 100ms;
+    animation: pop 200ms ease 100ms;
+    -webkit-animation-fill-mode: backwards;
+    -moz-animation-fill-mode: backwards;
+    animation-fill-mode: backwards;
+}
+ 
+.above-game:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.game-intro {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加上陰影 */
+    float: left;
+    line-height: 42px;
+    margin-bottom: 0;
+}
+
+.restart-button {
+    display: inline-block;
+    background: #334155;
+    border-radius: 5px;
+    padding: 0 20px;
+    text-decoration: none;
+    color: #CBD5E0;
+    height: 40px;
+    line-height: 42px;
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    float: right;text-shadow: 2px 2px 4px rgba(0, 255, 255, 0.5); /* 加上陰影 */
+    transition: background-color 0.2s ease; /* Hover效果 */
+}
+
+.restart-button:hover {
+    background-color: #475569; /* Hover時變更背景顏色 */
+}
+
+.game-explanation {
+    margin-top: 50px;
+}
+
+.sharing {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.sharing > iframe, .sharing > span, .sharing > form {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+@media screen and (max-width: 520px) {
+    html, body {
+        font-size: 15px;
+    }
+
+    body {
+        margin: 20px 0;
+        padding: 0 20px;
+    }
+
+    h1.title {
+        font-size: 27px;
+        margin-top: 15px;
+    }
+
+    .container {
+        width: 280px;
+        margin: 0 auto;
+    }
+
+    .score-container, .best-container {
+        margin-top: 0;
+        padding: 15px 10px;
+        min-width: 40px;
+    }
+
+    .heading {
+        margin-bottom: 10px;
+    }
+
+    .game-intro {
+        width: 55%;
+        display: block;
+        box-sizing: border-box;
+        line-height: 1.65;
+    }
+
+    .restart-button {
+        width: 42%;
+        padding: 0;
+        display: block;
+        box-sizing: border-box;
+        margin-top: 2px;
+    }
+
+    .game-container {
+        margin-top: 17px;
+        position: relative;
+        padding: 10px;
+        cursor: default;
+        -webkit-touch-callout: none;
+        -ms-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -ms-touch-action: none;
+        touch-action: none;
+        background: #334155;
+        border-radius: 6px;
+        width: 280px;
+        height: 280px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5); /* 加上陰影 */
+    }
+
+    .game-message {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(30, 41, 59, 0.85);
+        z-index: 100;
+        padding-top: 40px;
+        text-align: center;
+        animation: none;/* 移除衝突 */
+        -webkit-animation-fill-mode: both;
+        -moz-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+
+    .game-message p {
+        font-size: 30px !important;
+        height: 30px !important;
+        line-height: 30px !important;
+        margin-top: 32% !important;
+        margin-bottom: 0 !important;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加上陰影 */
+    }
+
+    .game-message .lower {
+        margin-top: 10px !important;
+    }
+
+    .game-message.game-won .score-sharing {
+        margin-top: 10px;
+    }
+
+    .game-message.game-over .mailing-list {
+        margin-top: 25px;
+    }
+
+    .game-message .mailing-list {
+        margin-top: 10px;
+    }
+
+    .game-message .mailing-list .mailing-list-email-field {
+        width: 180px;
+    }
+
+    .sharing > iframe, .sharing > span, .sharing > form {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 20px;
+    }
+}
+
+.pp-donate button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    font: inherit;
+    color: inherit;
+    display: inline-block;
+    background: #334155;
+    border-radius: 5px;
+    padding: 0 20px;
+    text-decoration: none;
+    color: #CBD5E0;
+    height: 40px;
+    line-height: 42px;
+    cursor: pointer;
+    transition: background-color 0.2s ease; /* Hover效果 */
+}
+
+.pp-donate button:hover {
+    background-color: #475569; /* Hover時變更背景顏色 */
+}
+
+.pp-donate button img {
+    vertical-align: -4px;
+    margin-right: 8px;
+}
+
+.btc-donate {
+    position: relative;
+    margin-left: 10px;
+    display: inline-block;
+    background: #334155;
+    border-radius: 5px;
+    padding: 0 20px;
+    text-decoration: none;
+    color: #CBD5E0;
+    height: 40px;
+    line-height: 42px;
+    cursor: pointer;
+    transition: background-color 0.2s ease; /* Hover效果 */
+}
+
+.btc-donate:hover {
+    background-color: #475569; /* Hover時變更背景顏色 */
+}
+
+.btc-donate img {
+    vertical-align: -4px;
+    margin-right: 8px;
+}
+
+.btc-donate a {
+    color: #CBD5E0;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.btc-donate .address {
+    cursor: auto;
+    position: absolute;
+    width: 340px;
+    right: 50%;
+    margin-right: -170px;
+    padding-bottom: 7px;
+    top: -30px;
+    opacity: 0;
+    pointer-events: none;
+    transition: 400ms ease;
+    transition-property: top, opacity;
+}
+
+.btc-donate .address:after {
+    position: absolute;
+    border-top: 10px solid #334155;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    content: "";
+    bottom: 0px;
+    left: 50%;
+    margin-left: -7px;
+}
+
+.btc-donate .address code {
+    background-color: #334155;
+    padding: 10px 15px;
+    width: 100%;
+    border-radius: 5px;
+    line-height: 1;
+    font-weight: normal;
+    font-size: 15px;
+    font-family: Consolas, "Liberation Mono", Courier, monospace;
+    text-align: center;
+}
+
+.btc-donate:hover .address, .btc-donate .address:hover .address {
+    opacity: 1;
+    top: -45px;
+    pointer-events: auto;
+}
+
+@media screen and (max-width: 480px) {
+    .btc-donate {
+        width: 120px;
+    }
+
+    .btc-donate .address {
+        margin-right: -150px;
+        width: 300px;
+    }
+
+    .btc-donate .address code {
+        font-size: 13px;
+    }
+
+    .btc-donate .address:after {
+        left: 50%;
+        bottom: 2px;
+    }
+}
+
+/* Footer樣式 */
+footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #776e65;
+}
+
+footer a {
+    color: #CBD5E0;
+    text-decoration: none;
+    transition: color 0.2s ease; /* 文字顏色過渡效果 */
+}
+
+footer a:hover {
+    color: #94A3B8; /* Hover時變更文字顏色 */
+}
+
+footer i {
+    margin-right: 5px;
+}

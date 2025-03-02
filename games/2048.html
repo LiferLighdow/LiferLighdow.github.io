@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2048 Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="2048.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+<div class="container">
+
+    <div class="heading">
+        <h1 class="title">2048</h1>
+        <div class="scores-container">
+            <div class="score-container">
+                <span class="score">0</span>
+                <div class="score-addition"></div>
+            </div>
+            <div class="best-container">
+                <span class="best-score">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="above-game">
+        <p class="game-intro">Join the numbers and get to the <strong>2048 tile!</strong></p>
+        <a class="restart-button">New Game</a>
+    </div>
+
+    <div class="game-container">
+        <div class="game-message">
+            <p></p>
+            <div class="lower">
+                <a class="keep-playing-button">Keep Going</a>
+                <a class="retry-button">Try Again?</a>
+                <div class="score-sharing"></div>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="grid-row">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+            </div>
+        </div>
+
+        <div class="tile-container">
+            <!-- Tiles will be dynamically added here by JavaScript -->
+        </div>
+    </div>
+
+    <footer style="text-align: center; margin-top: 20px; font-size: 12px; color: #776e65;">
+        <a href="#" onclick="window.history.back();" style="color: #CBD5E0; text-decoration: none;">
+            <i class="fas fa-arrow-left" style="margin-right: 5px;"></i> Back
+        </a>
+        <br>
+        © 2025 Lifer_Lighdow. All rights reserved.
+    </footer>
+
+</div>
+
+<script src="./data/bind_polyfill.js"></script>
+<script src="2048.js"></script>
+
+</body>
+</html>
