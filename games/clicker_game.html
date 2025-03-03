@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>放置遊戲</title>
+    <style>
+        /* 之前的 CSS 樣式保持不變，這裡省略 */
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #222; /* 深色背景 */
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #gameContainer {
+            display: grid;
+            grid-template-columns: 20% 40% 40%; /* 使用 Grid 佈局 */
+            width: 80%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #333; /* 深色容器 */
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* 更強烈的陰影 */
+            overflow: hidden;
+        }
+
+        #inventory {
+            padding: 20px;
+            text-align: left;
+        }
+
+        #inventory h2 {
+            margin-top: 0;
+            color: #ddd;
+        }
+
+        #inventory p {
+            margin-bottom: 5px;
+        }
+
+        #centerPanel {
+            padding: 20px;
+            position: relative; /* 用於彈出訊息的定位 */
+        }
+
+        #money {
+            font-size: 2.5em;
+            color: #FFD700; /* 金色 */
+            margin-bottom: 20px;
+            animation: pulse 2s infinite alternate;
+        }
+
+        #clickButton {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background-color: #5cb85c; /* 鮮綠色 */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #clickButton:hover {
+            background-color: #449d44;
+        }
+
+        #clickButton:active {
+            transform: scale(0.95);
+        }
+
+        #functions {
+            padding: 20px;
+            text-align: left;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        #functions h2 {
+            margin-top: 0;
+            color: #ddd;
+        }
+
+        .upgrade {
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #555; /* 深色邊框 */
+            border-radius: 8px;
+            background-color: #444; /* 深色背景 */
+            overflow: auto;
+        }
+
+        .upgrade p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* 升級按鈕樣式 */
+        .upgrade button:nth-child(2) {
+            background-color: #f0ad4e; /* 醒目的橙色 */
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* 增加陰影 */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .upgrade button:nth-child(2):hover {
+            background-color: #eea236;
+        }
+
+        #message {
+            font-size: 1.1em;
+            color: #5bc0de;
+            margin-top: 10px;
+        }
+
+         /* 彈出訊息樣式 */
+        .floating-text {
+            position: absolute;
+            font-size: 1.2em;
+            color: #5cb85c; /* 鮮綠色 */
+            animation: floatUp 1s forwards; /* 向上浮動並消失 */
+            pointer-events: none; /* 穿透點擊事件 */
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+        }
+
+
+        /* 動畫定義 */
+        @keyframes pulse {
+            from { color: #FFD700; }
+            to { color: #DAA520; }
+        }
+
+        /* 新增 Prestige 樣式 */
+        #prestigeButton {
+            background-color: #d9534f; /* 鮮紅色 */
+            color: #fff;
+        }
+
+        #prestigeButton:hover {
+            background-color: #c9302c;
+        }
+
+        /* 通用按鈕樣式 */
+        button {
+            padding: 12px 24px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #005f6b;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #eee;
+        }
+
+        /* 額外功能樣式 */
+        #extraFeatures {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #extraFeatures button {
+            background-color: #777; /* 更柔和的顏色 */
+            color: #fff;
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin: 5px;
+        }
+
+        #extraFeatures button:hover {
+            background-color: #555;
+        }
+
+        /* 重置樣式 */
+        body, h1, h2, p, button {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 彈出訊息 */
+        #floatingTextContainer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none; /* 允許點擊事件穿透 */
+        }
+    </style>
+</head>
+<body>
+
+<div id="gameContainer">
+
+    <div id="inventory">
+        <h2>庫存</h2>
+        <p>我的等級: <span id="myLevelDisplay">1</span></p>
+        <p>點擊器 (等級 <span id="clickerLevel">1</span>): <span id="clickerCount">1</span></p>
+        <p>自動點擊器 (等級 <span id="autoClickerLevelDisplay">1</span>): <span id="autoClickerCount">0</span></p>
+        <p>農場 (等級 <span id="farmLevelDisplay">1</span>): <span id="farmCount">0</span></p>
+        <p>礦場 (等級 <span id="mineLevelDisplay">1</span>): <span id="mineCount">0</span></p>
+        <p>銀行 (等級 <span id="bankLevelDisplay">1</span>): <span id="bankCount">0</span></p>
+        <p>股票交易所 (等級 <span id="stockExchangeLevelDisplay">1</span>): <span id="stockExchangeCount">0</span></p>
+
+        <div id="extraFeatures">
+            <h2>額外功能</h2>
+            <button id="collectBonusButton">收集獎勵 (5:00)</button>
+            <button id="megaBonusButton">超級獎勵 (我的等級 * 10000，30:00)</button>
+            <button id="resetGameButton">重置遊戲 (我的等級+10，保留目前等級, 等級需求: <span id = "nextResetLevel">10</span>)</button>
+        </div>
+    </div>
+
+    <div id="centerPanel">
+        <h1>Lifer_Lighdow放置遊戲</h1>
+        <p id="money">金錢: 0</p>
+        <button id="clickButton">點擊賺錢 (+<span id="clickValueDisplay">1</span>)</button>
+        <div id="message"></div>
+        <div id="floatingTextContainer"></div> <!-- 用於放置浮動文字 -->
+    </div>
+
+    <div id="functions">
+        <h2>功能</h2>
+
+        <div class="upgrade">
+            <p>點擊器</p>
+            <button id="clickerUpgradeButton">升級 (價格: <span id="clickerUpgradeCost">10</span>, +<span id="clickerUpgradeAmount">1</span>)</button>
+        </div>
+
+        <div class="upgrade">
+            <p>自動點擊器</p>
+            <button id="autoClickerButton">購買 (價格: <span id="autoClickerCost">10</span>)</button>
+            <button id="autoClickerUpgradeButton">升級 (價格: <span id="autoClickerUpgradeCost">50</span>, +<span id = "autoClickerUpgradeAmount">0.5</span>)</button>
+        </div>
+
+        <div class="upgrade">
+            <p>農場</p>
+            <button id="farmButton">購買 (價格: <span id="farmCost">50</span>)</button>
+            <button id="farmUpgradeButton">升級 (價格: <span id="farmUpgradeCost">250</span>, +<span id = "farmUpgradeAmount">0.5</span>)</button>
+        </div>
+
+        <div class="upgrade">
+            <p>礦場</p>
+            <button id="mineButton">購買 (價格: <span id="mineCost">200</span>)</button>
+            <button id="mineUpgradeButton">升級 (價格: <span id="mineUpgradeCost">1000</span>, +<span id = "mineUpgradeAmount">0.5</span>)</button>
+        </div>
+
+        <div class="upgrade">
+            <p>銀行 (需要 10 個農場)</p>
+            <button id="bankButton" disabled>購買 (價格: <span id="bankCost">1000</span>)</button>
+            <button id="bankUpgradeButton">升級 (價格: <span id="bankUpgradeCost">5000</span>, +<span id = "bankUpgradeAmount">0.5</span>)</button>
+        </div>
+
+        <div class="upgrade">
+            <p>股票交易所 (需要 5 個礦場)</p>
+            <button id="stockExchangeButton" disabled>購買 (價格: <span id="stockExchangeCost">5000</span>)</button>
+            <button id="stockExchangeUpgradeButton">升級 (價格: <span id="stockExchangeUpgradeCost">25000</span>, +<span id = "stockExchangeUpgradeAmount">0.5</span>)</button>
+        </div>
+
+        <button id="prestigeButton">Prestige (需要 10000 金錢，升級我的等級 +1)</button>
+
+    </div>
+
+</div>
+
+<script src="clicker_game.js"></script>
+
+</body>
+</html>
