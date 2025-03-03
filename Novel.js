@@ -1,9 +1,19 @@
+// 載入小說列表
+const script = document.createElement('script');
+script.src = 'novel_list.js'; // 確保路徑正確
+document.head.appendChild(script);
+
+// 等待 novelList.js 載入完成後再執行程式碼
+script.onload = () => {
+  console.log('novelList.js 載入完成');
+  // 在這裡呼叫其他需要用到 novelList.js 程式碼的函式
+};
+
 const chapterContent = document.getElementById('chapter-content');
 const decreaseFontButton = document.getElementById('decrease-font');
 const increaseFontButton = document.getElementById('increase-font');
 const collapsible = document.querySelector('.collapsible');
 const toggleButton = document.querySelector('.toggle-button');
-const chapterLinks = document.querySelectorAll('#chapter-list a');
 const chapterTitle = document.getElementById('chapter-title');
 const audioElement = document.querySelector('#audio-player audio');
 const fontSizeValueDisplay = document.getElementById('font-size-value'); // 取得顯示字體大小的元素
@@ -41,11 +51,12 @@ toggleButton.addEventListener('click', () => {
 });
 
 // Highlight the active link based on the current page URL
+/*const chapterLinks = document.querySelectorAll('#chapter-list a'); //取得小說列表的連結(不能寫在這裡)
 chapterLinks.forEach(link => {
     if (link.href === window.location.href) {
         link.classList.add('active');
     }
-});
+});*/
 
 // Function to update the audio source based on the HTML filename
 function updateAudioSource() {
@@ -59,7 +70,7 @@ function updateAudioSource() {
 
 // Call updateAudioSource() on page load
 window.addEventListener('load', () => {
-    updateAudioSource(); // 確保在載入內容後更新音訊源
+    updateAudioSource();
 });
 
 // 側邊欄隱藏/顯示切換
