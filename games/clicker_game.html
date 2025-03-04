@@ -5,7 +5,7 @@
     <style>
         /* 之前的 CSS 樣式保持不變，這裡省略 */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'MyCustomFont', sans-serif;
             text-align: center;
             background-color: #222; /* 深色背景 */
             color: #fff;
@@ -16,6 +16,16 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* 定義自定義字體 */
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/myfont.woff2') format('woff2'),
+         url('../fonts/myfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
 
         #gameContainer {
             display: grid;
