@@ -14,7 +14,23 @@
     let bankLevel = 1;
     let stockExchangeLevel = 1;
 
-    // 升級價格 (預設值)
+     // 升級數值 (預設)
+    const initialClickerUpgradeAmountValue = 1;
+    const initialAutoClickerUpgradeAmountValue = 0.5;
+    const initialFarmUpgradeAmountValue = 0.5;
+    const initialMineUpgradeAmountValue = 0.5;
+    const initialBankUpgradeAmountValue = 0.5;
+    const initialStockExchangeUpgradeAmountValue = 0.5;
+
+    // 當前升級數值 (會根據遊戲進度改變)
+    let clickerUpgradeAmountValue = initialClickerUpgradeAmountValue;
+    let autoClickerUpgradeAmountValue = initialAutoClickerUpgradeAmountValue;
+    let farmUpgradeAmountValue = initialFarmUpgradeAmountValue;
+    let mineUpgradeAmountValue = initialMineUpgradeAmountValue;
+    let bankUpgradeAmountValue = initialBankUpgradeAmountValue;
+    let stockExchangeUpgradeAmountValue = initialStockExchangeUpgradeAmountValue;
+
+    // 價格數值 (價格會根據遊戲進度改變)
     let clickerUpgradeCostValue = 10;
     let autoClickerUpgradeCostValue = 50;
     let farmUpgradeCostValue = 250;
@@ -22,25 +38,18 @@
     let bankUpgradeCostValue = 5000;
     let stockExchangeUpgradeCostValue = 25000;
 
-     // 建築價格 (預設值)
+    // 建築價格 (預設值)
     let autoClickerCostValue = 10;
     let farmCostValue = 50;
     let mineCostValue = 200;
     let bankCostValue = 1000;
     let stockExchangeCostValue = 5000;
 
-      let nextResetLevelValue = 10; // "重置遊戲" 的需求等級
-
-      //升級量 (預設值)
-    let clickerUpgradeAmountValue = 1;
-    let autoClickerUpgradeAmountValue = 0.5;
-    let farmUpgradeAmountValue = 0.5;
-    let mineUpgradeAmountValue = 0.5;
-    let bankUpgradeAmountValue = 0.5;
-    let stockExchangeUpgradeAmountValue = 0.5;
+    let nextResetLevelValue = 10; // "重置遊戲" 的需求等級
 
     let prestigeCost = 10000; // 初始 Prestige 價格
 
+    // HTML 元素
     const moneyDisplay = document.getElementById('money');
     const clickButton = document.getElementById('clickButton');
     const autoClickerButton = document.getElementById('autoClickerButton');
@@ -53,7 +62,7 @@
     const clickValueDisplay = document.getElementById('clickValueDisplay');
     const resetGameButton = document.getElementById('resetGameButton');
     const megaBonusButton = document.getElementById('megaBonusButton');
-      const nextResetLevel = document.getElementById('nextResetLevel');  //重置按鈕等級需求顯示
+    const nextResetLevel = document.getElementById('nextResetLevel'); //重置按鈕等級需求顯示
 
     const myLevelDisplay = document.getElementById('myLevelDisplay'); // 我的等級顯示
 
@@ -79,7 +88,7 @@
     const stockExchangeUpgradeButton = document.getElementById('stockExchangeUpgradeButton');
 
     const clickerUpgradeCost = document.getElementById('clickerUpgradeCost');
-     const clickerUpgradeAmount = document.getElementById('clickerUpgradeAmount');
+    const clickerUpgradeAmount = document.getElementById('clickerUpgradeAmount');
 
     const autoClickerUpgradeCost = document.getElementById('autoClickerUpgradeCost');
     const autoClickerUpgradeAmount = document.getElementById('autoClickerUpgradeAmount');
@@ -106,7 +115,7 @@
     let bonusReady = true; // 預設獎勵已就緒
     let megaBonusReady = true;
 
-        //輔助函數，用於格式化時間為 HH:MM:SS
+    //輔助函數，用於格式化時間為 HH:MM:SS
     function formatTime(seconds) {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
@@ -137,7 +146,7 @@
     function updateButtonAvailability() {
         bankButton.disabled = farms < 10;
         stockExchangeButton.disabled = mines < 5;
-         resetGameButton.disabled = myLevel < nextResetLevelValue;  //等級需求會根據目前等級調整
+        resetGameButton.disabled = myLevel < nextResetLevelValue; //等級需求會根據目前等級調整
     }
 
     // 函數：更新庫存顯示
@@ -160,7 +169,7 @@
         nextResetLevel.textContent = nextResetLevelValue;
     }
 
-     // 函數: 顯示彈出文字
+    // 函數: 顯示彈出文字
     function showFloatingText(x, y, text) {
         const floatingText = document.createElement('div');
         floatingText.className = 'floating-text';
@@ -175,26 +184,30 @@
         });
     }
 
-        // 函數：更新升級按鈕的文字
+    // 函數：更新升級按鈕的文字
     function updateUpgradeButtonText() {
         clickerUpgradeCost.textContent = clickerUpgradeCostValue.toFixed(0);
-        autoClickerUpgradeCost.textContent = autoClickerUpgradeCostValue.toFixed(0);
-        farmUpgradeCost.textContent = farmUpgradeCostValue.toFixed(0);
-        mineUpgradeCost.textContent = mineUpgradeCostValue.toFixed(0);
-        bankUpgradeCost.textContent = bankUpgradeCostValue.toFixed(0);
-        stockExchangeUpgradeCost.textContent = stockExchangeUpgradeCostValue.toFixed(0);
-
         clickerUpgradeAmount.textContent = clickerUpgradeAmountValue.toFixed(0);
+
+        autoClickerUpgradeCost.textContent = autoClickerUpgradeCostValue.toFixed(0);
         autoClickerUpgradeAmount.textContent = autoClickerUpgradeAmountValue.toFixed(1);
+
+        farmUpgradeCost.textContent = farmUpgradeCostValue.toFixed(0);
         farmUpgradeAmount.textContent = farmUpgradeAmountValue.toFixed(1);
+
+        mineUpgradeCost.textContent = mineUpgradeCostValue.toFixed(0);
         mineUpgradeAmount.textContent = mineUpgradeAmountValue.toFixed(1);
+
+        bankUpgradeCost.textContent = bankUpgradeCostValue.toFixed(0);
         bankUpgradeAmount.textContent = bankUpgradeAmountValue.toFixed(1);
+
+        stockExchangeUpgradeCost.textContent = stockExchangeUpgradeCostValue.toFixed(0);
         stockExchangeUpgradeAmount.textContent = stockExchangeUpgradeAmountValue.toFixed(1);
 
-         updatePrestigeButtonText();  //確保每次更新升級數值，Prestige按鈕也會更新
+        updatePrestigeButtonText(); //確保每次更新升級數值，Prestige按鈕也會更新
     }
 
-       // 函數：更新聲望按鈕的文字
+    // 函數：更新聲望按鈕的文字
     function updatePrestigeButtonText() {
         prestigeButton.textContent = `Prestige (需要 ${prestigeCost.toFixed(0)} 金錢，升級我的等級 +1)`;
     }
@@ -208,9 +221,18 @@
         stockExchangeCost.textContent = stockExchangeCostValue.toFixed(0);
     }
 
+    // 函數: 更新所有按鈕的價格和資訊
+    function updateAllUI() {
+        updateMoneyDisplay();
+        updateInventoryDisplay();
+        updateButtonAvailability();
+        updateUpgradeButtonText();
+        updateBuildingCostText();
+    }
+
 
     // 點擊賺錢
-   clickButton.addEventListener('click', (event) => {
+    clickButton.addEventListener('click', (event) => {
         const clickValue = 1 * myLevel * clickerLevel;
         money += clickValue;
         updateMoneyDisplay();
@@ -227,13 +249,11 @@
     clickerUpgradeButton.addEventListener('click', () => {
         if (money >= clickerUpgradeCostValue) {
             money -= clickerUpgradeCostValue;
-            clickerLevel += clickerUpgradeAmountValue;  //從0.5改為1
+            clickerLevel += clickerUpgradeAmountValue;
             clickerUpgradeCostValue *= 1.5; // 價格乘以 1.5
-            clickerUpgradeAmountValue++  //每次升級後，下次的升級量+1
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateUpgradeButtonText();
-            clickValueDisplay.textContent = clickerLevel;  //從toFixed(1)改為直接顯示
+            clickerUpgradeAmountValue = initialClickerUpgradeAmountValue + 1;  //設定為下次是原始值+1
+            updateAllUI(); //使用AllUI
+            clickValueDisplay.textContent = clickerLevel; //從toFixed(1)改為直接顯示
             showMessage("點擊器已升級！");
         } else {
             showMessage("金錢不足！");
@@ -242,13 +262,11 @@
 
     // 購買自動點擊器
     autoClickerButton.addEventListener('click', () => {
-         if (money >= autoClickerCostValue) {
+        if (money >= autoClickerCostValue) {
             money -= autoClickerCostValue;
             autoClickers++;
             autoClickerCostValue *= 1.2; // 價格乘以 1.2
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateBuildingCostText();
+            updateAllUI(); //使用AllUI
             showMessage("已購買自動點擊器！");
         } else {
             showMessage("金錢不足！");
@@ -261,10 +279,8 @@
             money -= autoClickerUpgradeCostValue;
             autoClickerLevel += autoClickerUpgradeAmountValue;
             autoClickerUpgradeCostValue *= 1.5; // 價格乘以 1.5
-              autoClickerUpgradeAmountValue++ //每次升級後，下次的升級量+1
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateUpgradeButtonText();
+             autoClickerUpgradeAmountValue = initialAutoClickerUpgradeAmountValue+ 1;  //設定為下次是原始值+1
+            updateAllUI();  //使用AllUI
             showMessage("自動點擊器已升級!");
         } else {
             showMessage("金錢不足!");
@@ -273,14 +289,11 @@
 
     // 購買農場
     farmButton.addEventListener('click', () => {
-       if (money >= farmCostValue) {
+        if (money >= farmCostValue) {
             money -= farmCostValue;
             farms++;
             farmCostValue *= 1.2; // 價格乘以 1.2
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateButtonAvailability();
-            updateBuildingCostText();
+            updateAllUI();  //使用AllUI
             showMessage("已購買農場！");
         } else {
             showMessage("金錢不足！");
@@ -292,10 +305,9 @@
         if (money >= farmUpgradeCostValue) {
             money -= farmUpgradeCostValue;
             farmLevel += farmUpgradeAmountValue;
-             farmUpgradeAmountValue++ //每次升級後，下次的升級量+1
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-             updateUpgradeButtonText()
+            farmUpgradeCostValue *= 1.5; // 價格乘以 1.5
+              farmUpgradeAmountValue = initialFarmUpgradeAmountValue+ 1;  //設定為下次是原始值+1
+            updateAllUI(); //使用AllUI
             showMessage("農場已升級!");
         } else {
             showMessage("金錢不足!");
@@ -307,11 +319,8 @@
         if (money >= mineCostValue) {
             money -= mineCostValue;
             mines++;
-             mineCostValue *= 1.2; // 價格乘以 1.2
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateButtonAvailability();
-            updateBuildingCostText();
+            mineCostValue *= 1.2; // 價格乘以 1.2
+            updateAllUI(); //使用AllUI
             showMessage("已購買礦場！");
         } else {
             showMessage("金錢不足！");
@@ -320,13 +329,12 @@
 
     // 升級礦場
     mineUpgradeButton.addEventListener('click', () => {
-       if (money >= mineUpgradeCostValue) {
+        if (money >= mineUpgradeCostValue) {
             money -= mineUpgradeCostValue;
             mineLevel += mineUpgradeAmountValue;
-              mineUpgradeAmountValue++ //每次升級後，下次的升級量+1
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-             updateUpgradeButtonText()
+            mineUpgradeCostValue *= 1.5; // 價格乘以 1.5
+            mineUpgradeAmountValue = initialMineUpgradeAmountValue+ 1;  //設定為下次是原始值+1
+            updateAllUI(); //使用AllUI
             showMessage("礦場已升級!");
         } else {
             showMessage("金錢不足!");
@@ -335,28 +343,25 @@
 
     // 購買銀行
     bankButton.addEventListener('click', () => {
-      if (money >= bankCostValue) {
+        if (money >= bankCostValue) {
             money -= bankCostValue;
             banks++;
-             bankCostValue *= 1.2; // 價格乘以 1.2
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateBuildingCostText();
+            bankCostValue *= 1.2; // 價格乘以 1.2
+            updateAllUI(); //使用AllUI
             showMessage("已購買銀行！");
         } else {
             showMessage("金錢不足！");
         }
     });
 
-     // 升級銀行
+    // 升級銀行
     bankUpgradeButton.addEventListener('click', () => {
-         if (money >= bankUpgradeCostValue) {
+        if (money >= bankUpgradeCostValue) {
             money -= bankUpgradeCostValue;
             bankLevel += bankUpgradeAmountValue;
-             bankUpgradeAmountValue++ //每次升級後，下次的升級量+1
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateUpgradeButtonText()
+            bankUpgradeCostValue *= 1.5; // 價格乘以 1.5
+             bankUpgradeAmountValue = initialBankUpgradeAmountValue+ 1;  //設定為下次是原始值+1
+            updateAllUI(); //使用AllUI
             showMessage("銀行已升級!");
         } else {
             showMessage("金錢不足!");
@@ -366,28 +371,25 @@
 
     // 購買股票交易所
     stockExchangeButton.addEventListener('click', () => {
-       if (money >= stockExchangeCostValue) {
+        if (money >= stockExchangeCostValue) {
             money -= stockExchangeCostValue;
             stockExchanges++;
-             stockExchangeCostValue *= 1.2; // 價格乘以 1.2
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateBuildingCostText();
+            stockExchangeCostValue *= 1.2; // 價格乘以 1.2
+            updateAllUI(); //使用AllUI
             showMessage("已購買股票交易所！");
         } else {
             showMessage("金錢不足！");
         }
     });
 
-     // 升級股票交易所
+    // 升級股票交易所
     stockExchangeUpgradeButton.addEventListener('click', () => {
         if (money >= stockExchangeUpgradeCostValue) {
             money -= stockExchangeUpgradeCostValue;
             stockExchangeLevel += stockExchangeUpgradeAmountValue;
-              stockExchangeUpgradeAmountValue++ //每次升級後，下次的升級量+1
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateUpgradeButtonText()
+            stockExchangeUpgradeCostValue *= 1.5; // 價格乘以 1.5
+               stockExchangeUpgradeAmountValue = initialStockExchangeUpgradeAmountValue+ 1;  //設定為下次是原始值+1
+            updateAllUI(); //使用AllUI
             showMessage("股票交易所已升級!");
         } else {
             showMessage("金錢不足!");
@@ -410,7 +412,7 @@
             updateButtonAvailability();
             showMessage("已進行 Prestige！我的等級 +1");
             prestigeCost *= 1.2; // 價格提升至原價格的 1.2 倍
-             updateUpgradeButtonText();
+            updateAllUI(); //確保更新所有數據
         } else {
             showMessage("金錢不足！");
         }
@@ -418,69 +420,69 @@
 
     // 收集獎勵功能
     collectBonusButton.addEventListener('click', () => {
-      if (bonusReady) {
-        // 隨機獎勵金額（例如，當前金錢的 5% 到 15%）
-        const bonusAmount = money * (0.05 + Math.random() * 0.1); //0.05 ~ 0.15
-        money += bonusAmount;
-        updateMoneyDisplay();
+        if (bonusReady) {
+            // 隨機獎勵金額（例如，當前金錢的 5% 到 15%）
+            const bonusAmount = money * (0.05 + Math.random() * 0.1); //0.05 ~ 0.15
+            money += bonusAmount;
+            updateMoneyDisplay();
 
-        showMessage(`收集到獎勵 +${bonusAmount.toFixed(2)} 金錢!`);
-        bonusReady = false; // 設定為冷卻中
+            showMessage(`收集到獎勵 +${bonusAmount.toFixed(2)} 金錢!`);
+            bonusReady = false; // 設定為冷卻中
 
-        // 禁用按鈕並變更文字
-        collectBonusButton.disabled = true;
-        collectBonusButton.textContent = "獎勵冷卻中 (05:00)";
+            // 禁用按鈕並變更文字
+            collectBonusButton.disabled = true;
+            collectBonusButton.textContent = "獎勵冷卻中 (05:00)";
 
-        // 開始冷卻計時器
-        let timeLeft = 300; // 5 分鐘，單位秒
-        const timerInterval = setInterval(() => {
-          timeLeft--;
-          collectBonusButton.textContent = `獎勵冷卻中 (${formatTime(timeLeft)})`;
+            // 開始冷卻計時器
+            let timeLeft = 300; // 5 分鐘，單位秒
+            const timerInterval = setInterval(() => {
+                timeLeft--;
+                collectBonusButton.textContent = `獎勵冷卻中 (${formatTime(timeLeft)})`;
 
-          if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            bonusReady = true; // 冷卻完成
-            collectBonusButton.disabled = false; // 啟用按鈕
-            collectBonusButton.textContent = "收集獎勵 (5:00)"; // 重設按鈕文字
-          }
-        }, 1000); // 每秒更新一次
-      } else {
-        showMessage("獎勵冷卻中，請稍後再來！");
-      }
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    bonusReady = true; // 冷卻完成
+                    collectBonusButton.disabled = false; // 啟用按鈕
+                    collectBonusButton.textContent = "收集獎勵 (5:00)"; // 重設按鈕文字
+                }
+            }, 1000);
+        } else {
+            showMessage("獎勵冷卻中，請稍後再來！");
+        }
     });
 
     // 超級獎勵功能
-        megaBonusButton.addEventListener('click', () => {
-            if (megaBonusReady) {
-                const bonusAmount = myLevel * 10000; // 我的等級 * 10000
-                money += bonusAmount;
-                updateMoneyDisplay();
+    megaBonusButton.addEventListener('click', () => {
+        if (megaBonusReady) {
+            const bonusAmount = myLevel * 10000; // 我的等級 * 10000
+            money += bonusAmount;
+            updateMoneyDisplay();
 
-                showMessage(`獲得超級獎勵 +${bonusAmount.toFixed(2)} 金錢!`);
-                megaBonusReady = false;
+            showMessage(`獲得超級獎勵 +${bonusAmount.toFixed(2)} 金錢!`);
+            megaBonusReady = false;
 
-                megaBonusButton.disabled = true;
-                megaBonusButton.textContent = "超級獎勵冷卻中 (30:00)";
+            megaBonusButton.disabled = true;
+            megaBonusButton.textContent = "超級獎勵冷卻中 (30:00)";
 
-                let timeLeft = 30 * 60; // 30分鐘，單位秒
-                const timerInterval = setInterval(() => {
-                    timeLeft--;
-                    megaBonusButton.textContent = `超級獎勵冷卻中 (${formatTime(timeLeft)})`;
-                    if (timeLeft <= 0) {
-                        clearInterval(timerInterval);
-                        megaBonusReady = true;
-                        megaBonusButton.disabled = false;
-                        megaBonusButton.textContent = "超級獎勵 (我的等級 * 10000，30:00)";
-                    }
-                }, 1000);
-            } else {
-                showMessage("超級獎勵冷卻中，請稍後再來！");
-            }
-        });
+            let timeLeft = 30 * 60; // 30分鐘，單位秒
+            const timerInterval = setInterval(() => {
+                timeLeft--;
+                megaBonusButton.textContent = `超級獎勵冷卻中 (${formatTime(timeLeft)})`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    megaBonusReady = true;
+                    megaBonusButton.disabled = false;
+                    megaBonusButton.textContent = "超級獎勵 (我的等級 * 10000，30:00)";
+                }
+            }, 1000);
+        } else {
+            showMessage("超級獎勵冷卻中，請稍後再來！");
+        }
+    });
 
     //重置遊戲功能（保留我的等級）
     resetGameButton.addEventListener('click', () => {
-          if (myLevel >= nextResetLevelValue) {
+        if (myLevel >= nextResetLevelValue) {
 
             // 重置除了我的等級之外的所有變數
             money = 0;
@@ -512,22 +514,17 @@
             bankCostValue = 1000;
             stockExchangeCostValue = 5000;
 
-              nextResetLevelValue = myLevel+10
-               //升級量 (預設值)
-              clickerUpgradeAmountValue = 1;
-              autoClickerUpgradeAmountValue = 0.5;
-              farmUpgradeAmountValue = 0.5;
-              mineUpgradeAmountValue = 0.5;
-              bankUpgradeAmountValue = 0.5;
-              stockExchangeUpgradeAmountValue = 0.5;
+            nextResetLevelValue = myLevel + 10
 
-            // 更新顯示
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateButtonAvailability();
-            updateUpgradeButtonText();
-            updateBuildingCostText();
+            //重置 升級數值
+            clickerUpgradeAmountValue = initialClickerUpgradeAmountValue;
+            autoClickerUpgradeAmountValue = initialAutoClickerUpgradeAmountValue;
+            farmUpgradeAmountValue = initialFarmUpgradeAmountValue;
+            mineUpgradeAmountValue = initialMineUpgradeAmountValue;
+            bankUpgradeAmountValue = initialBankUpgradeAmountValue;
+            stockExchangeUpgradeAmountValue = initialStockExchangeUpgradeAmountValue;
 
+            updateAllUI(); // 確保更新所有數據
 
             showMessage("遊戲已重置！");
         } else {
@@ -547,15 +544,11 @@
 
         money += passiveIncome / 10;
 
-         // "我的等級"的加成：每秒增加等級*5%的金錢
+        // "我的等級"的加成：每秒增加等級*5%的金錢
         money += money * (myLevel * 0.05) / 10;
 
         updateMoneyDisplay();
     }, 100);
 
     // 初始設定
-    updateMoneyDisplay();
-    updateButtonAvailability();
-    updateInventoryDisplay();
-    updateUpgradeButtonText();
-     updateBuildingCostText()
+    updateAllUI();
