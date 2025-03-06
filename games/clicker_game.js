@@ -1,4 +1,4 @@
-   let money = 0;
+ let money = 0;
     let autoClickers = 0;
     let farms = 0;
     let mines = 0;
@@ -14,13 +14,13 @@
     let bankLevel = 1;
     let stockExchangeLevel = 1;
 
-     // 升級數值 (預設)
+    // 升級數值 (預設)
     const initialClickerUpgradeAmountValue = 1;
-    const initialAutoClickerUpgradeAmountValue = 0.5;
-    const initialFarmUpgradeAmountValue = 0.5;
-    const initialMineUpgradeAmountValue = 0.5;
-    const initialBankUpgradeAmountValue = 0.5;
-    const initialStockExchangeUpgradeAmountValue = 0.5;
+    const initialAutoClickerUpgradeAmountValue = 1;
+    const initialFarmUpgradeAmountValue = 1;
+    const initialMineUpgradeAmountValue = 1;
+    const initialBankUpgradeAmountValue = 1;
+    const initialStockExchangeUpgradeAmountValue = 1;
 
     // 當前升級數值 (會根據遊戲進度改變)
     let clickerUpgradeAmountValue = initialClickerUpgradeAmountValue;
@@ -63,6 +63,7 @@
     const resetGameButton = document.getElementById('resetGameButton');
     const megaBonusButton = document.getElementById('megaBonusButton');
     const nextResetLevel = document.getElementById('nextResetLevel'); //重置按鈕等級需求顯示
+    const fullResetButton = document.getElementById('fullResetButton'); // 完全重置按鈕
 
     const myLevelDisplay = document.getElementById('myLevelDisplay'); // 我的等級顯示
 
@@ -250,8 +251,8 @@
         if (money >= clickerUpgradeCostValue) {
             money -= clickerUpgradeCostValue;
             clickerLevel += clickerUpgradeAmountValue;
-            clickerUpgradeCostValue *= 1.5; // 價格乘以 1.5
-            clickerUpgradeAmountValue = initialClickerUpgradeAmountValue + 1;  //設定為下次是原始值+1
+            clickerUpgradeCostValue *= 1.1; // 價格乘以 1.1
+            clickerUpgradeAmountValue = myLevel;  //設定為下次是+目前等級
             updateAllUI(); //使用AllUI
             clickValueDisplay.textContent = clickerLevel; //從toFixed(1)改為直接顯示
             showMessage("點擊器已升級！");
@@ -265,7 +266,7 @@
         if (money >= autoClickerCostValue) {
             money -= autoClickerCostValue;
             autoClickers++;
-            autoClickerCostValue *= 1.2; // 價格乘以 1.2
+            autoClickerCostValue *= 1.1; // 價格乘以 1.1
             updateAllUI(); //使用AllUI
             showMessage("已購買自動點擊器！");
         } else {
@@ -278,8 +279,8 @@
         if (money >= autoClickerUpgradeCostValue) {
             money -= autoClickerUpgradeCostValue;
             autoClickerLevel += autoClickerUpgradeAmountValue;
-            autoClickerUpgradeCostValue *= 1.5; // 價格乘以 1.5
-             autoClickerUpgradeAmountValue = initialAutoClickerUpgradeAmountValue+ 1;  //設定為下次是原始值+1
+            autoClickerUpgradeCostValue *= 1.1; // 價格乘以 1.1
+             autoClickerUpgradeAmountValue = myLevel;  //設定為下次是+目前等級
             updateAllUI();  //使用AllUI
             showMessage("自動點擊器已升級!");
         } else {
@@ -292,7 +293,7 @@
         if (money >= farmCostValue) {
             money -= farmCostValue;
             farms++;
-            farmCostValue *= 1.2; // 價格乘以 1.2
+            farmCostValue *= 1.1; // 價格乘以 1.1
             updateAllUI();  //使用AllUI
             showMessage("已購買農場！");
         } else {
@@ -305,8 +306,8 @@
         if (money >= farmUpgradeCostValue) {
             money -= farmUpgradeCostValue;
             farmLevel += farmUpgradeAmountValue;
-            farmUpgradeCostValue *= 1.5; // 價格乘以 1.5
-              farmUpgradeAmountValue = initialFarmUpgradeAmountValue+ 1;  //設定為下次是原始值+1
+            farmUpgradeCostValue *= 1.1; // 價格乘以 1.1
+              farmUpgradeAmountValue = myLevel;  //設定為下次是+目前等級
             updateAllUI(); //使用AllUI
             showMessage("農場已升級!");
         } else {
@@ -319,7 +320,7 @@
         if (money >= mineCostValue) {
             money -= mineCostValue;
             mines++;
-            mineCostValue *= 1.2; // 價格乘以 1.2
+            mineCostValue *= 1.1; // 價格乘以 1.1
             updateAllUI(); //使用AllUI
             showMessage("已購買礦場！");
         } else {
@@ -332,8 +333,8 @@
         if (money >= mineUpgradeCostValue) {
             money -= mineUpgradeCostValue;
             mineLevel += mineUpgradeAmountValue;
-            mineUpgradeCostValue *= 1.5; // 價格乘以 1.5
-            mineUpgradeAmountValue = initialMineUpgradeAmountValue+ 1;  //設定為下次是原始值+1
+            mineUpgradeCostValue *= 1.1; // 價格乘以 1.1
+            mineUpgradeAmountValue = myLevel;  //設定為下次是+目前等級
             updateAllUI(); //使用AllUI
             showMessage("礦場已升級!");
         } else {
@@ -346,7 +347,7 @@
         if (money >= bankCostValue) {
             money -= bankCostValue;
             banks++;
-            bankCostValue *= 1.2; // 價格乘以 1.2
+            bankCostValue *= 1.1; // 價格乘以 1.1
             updateAllUI(); //使用AllUI
             showMessage("已購買銀行！");
         } else {
@@ -359,8 +360,8 @@
         if (money >= bankUpgradeCostValue) {
             money -= bankUpgradeCostValue;
             bankLevel += bankUpgradeAmountValue;
-            bankUpgradeCostValue *= 1.5; // 價格乘以 1.5
-             bankUpgradeAmountValue = initialBankUpgradeAmountValue+ 1;  //設定為下次是原始值+1
+            bankUpgradeCostValue *= 1.1; // 價格乘以 1.1
+             bankUpgradeAmountValue = myLevel;  //設定為下次是+目前等級
             updateAllUI(); //使用AllUI
             showMessage("銀行已升級!");
         } else {
@@ -374,7 +375,7 @@
         if (money >= stockExchangeCostValue) {
             money -= stockExchangeCostValue;
             stockExchanges++;
-            stockExchangeCostValue *= 1.2; // 價格乘以 1.2
+            stockExchangeCostValue *= 1.1; // 價格乘以 1.1
             updateAllUI(); //使用AllUI
             showMessage("已購買股票交易所！");
         } else {
@@ -387,8 +388,8 @@
         if (money >= stockExchangeUpgradeCostValue) {
             money -= stockExchangeUpgradeCostValue;
             stockExchangeLevel += stockExchangeUpgradeAmountValue;
-            stockExchangeUpgradeCostValue *= 1.5; // 價格乘以 1.5
-               stockExchangeUpgradeAmountValue = initialStockExchangeUpgradeAmountValue+ 1;  //設定為下次是原始值+1
+            stockExchangeUpgradeCostValue *= 1.1; // 價格乘以 1.1
+               stockExchangeUpgradeAmountValue = myLevel;  //設定為下次是+目前等級
             updateAllUI(); //使用AllUI
             showMessage("股票交易所已升級!");
         } else {
@@ -411,7 +412,7 @@
             updateInventoryDisplay();
             updateButtonAvailability();
             showMessage("已進行 Prestige！我的等級 +1");
-            prestigeCost *= 1.2; // 價格提升至原價格的 1.2 倍
+            prestigeCost *= 1.1; // 價格提升至原價格的 1.1 倍
             updateAllUI(); //確保更新所有數據
         } else {
             showMessage("金錢不足！");
@@ -532,6 +533,50 @@
         }
     });
 
+     // 完全重置遊戲功能
+    fullResetButton.addEventListener('click', () => {
+        money = 0;
+        autoClickers = 0;
+        farms = 0;
+        mines = 0;
+        banks = 0;
+        stockExchanges = 0;
+        myLevel = 1;
+
+        clickerLevel = 1;
+        autoClickerLevel = 1;
+        farmLevel = 1;
+        mineLevel = 1;
+        bankLevel = 1;
+        stockExchangeLevel = 1;
+
+        clickerUpgradeAmountValue = initialClickerUpgradeAmountValue;
+        autoClickerUpgradeAmountValue = initialAutoClickerUpgradeAmountValue;
+        farmUpgradeAmountValue = initialFarmUpgradeAmountValue;
+        mineUpgradeAmountValue = initialMineUpgradeAmountValue;
+        bankUpgradeAmountValue = initialBankUpgradeAmountValue;
+        stockExchangeUpgradeAmountValue = initialStockExchangeUpgradeAmountValue;
+
+        clickerUpgradeCostValue = 10;
+        autoClickerUpgradeCostValue = 50;
+        farmUpgradeCostValue = 250;
+        mineUpgradeCostValue = 1000;
+        bankUpgradeCostValue = 5000;
+        stockExchangeUpgradeCostValue = 25000;
+
+        autoClickerCostValue = 10;
+        farmCostValue = 50;
+        mineCostValue = 200;
+        bankCostValue = 1000;
+        stockExchangeCostValue = 5000;
+
+        nextResetLevelValue = 10;
+        prestigeCost = 10000;
+
+        updateAllUI();
+        showMessage("遊戲已完全重置！");
+    });
+
     // 自動產生金錢
     setInterval(() => {
         let passiveIncome = (
@@ -543,10 +588,6 @@
         );
 
         money += passiveIncome / 10;
-
-        // "我的等級"的加成：每秒增加等級*5%的金錢
-        money += money * (myLevel * 0.05) / 10;
-
         updateMoneyDisplay();
     }, 100);
 
