@@ -622,7 +622,7 @@ window.addEventListener("load", () => {
 	// 動態生成遊戲鏈接
         const gameLinksContainer = document.getElementById("game-links-container");
         const gameURLs = [
-            "games/2048.html", "games/clicker_game.html", "https://example.com/game3",
+            "games/2048.html", "games/clicker_game_tw.html", "games/clicker_game.html",
             "https://example.com/game4", "https://example.com/game5", "https://example.com/game6",
             "https://example.com/game7", "https://example.com/game8", "https://example.com/game9",
             "https://example.com/game10", "https://example.com/game11", "https://example.com/game12",
@@ -641,7 +641,26 @@ window.addEventListener("load", () => {
             "https://example.com/game49", "https://example.com/game50"
         ];
 
-        const gameNames = Array.from({ length: 50 }, (_, i) => `Game ${i + 1}`); // 50個game名稱
+        const gameNames = [
+		"2048","放置遊戲","clicker game",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?","?",
+		"?","?",
+	];
 
         gameURLs.forEach((url, index) => {
             const link = document.createElement("a");
