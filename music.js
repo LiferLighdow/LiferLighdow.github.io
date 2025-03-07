@@ -79,8 +79,8 @@ let repeatMode = 'off'; // 循環播放模式 ('off', 'single', 'folder')
 // 播放列表資料 (現在與資料夾名稱相同)
 const playlists = Object.keys(musicData).map(genre => ({
     name: genre,
-    description: `Songs from the ${genre} genre`,
-    cover: `music/cover/${genre}1.jpg`, // 假設封面的命名規則
+    description: `Lifer_Lighdow's ${genre} music genre`,
+    cover: `music/cover/${genre}.jpg`, // 假設封面的命名規則
     songs: musicData[genre].map((_, index) => index) // 歌曲索引
 }));
 
