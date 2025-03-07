@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifer_Lighdow's Music</title>
+    <link rel="stylesheet" href="music.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- 側邊欄 -->
+        <div class="sidebar">
+            <h2>Lifer_Lighdow's Music</h2>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search...">
+                <button id="search-button"><i class="fas fa-search"></i></button>
+            </div>
+            <ul>
+                <li data-page="home" class="active">Home</li>
+                <li data-page="playlists">Playlists</li>
+                <li data-page="library">Your Library</li>
+            </ul>
+        </div>
+
+        <!-- 主要內容區域 -->
+        <div class="main-content">
+            <div id="home" class="page active">
+                <h1>Welcome!</h1>
+                <section class="playlist-container">
+                  <!-- 播放列表項目會在這裡動態生成 -->
+                </section>
+            </div>
+
+            <div id="playlists" class="page">
+                <h2>My Playlists</h2>
+                <ul id="playlist-list">
+                    <!-- 播放列表會在這裡動態生成 -->
+                </ul>
+            </div>
+
+            <div id="library" class="page">
+                <h2>Your Library</h2>
+                <div class="genre-list">
+                    <h3>Genres</h3>
+                    <ul>
+                        <li data-genre="pop">Pop</li>
+                        <li data-genre="rock">Rock</li>
+                        <li data-genre="electronic">Electronic</li>
+                        <li data-genre="vocaloid">Vocaloid</li>
+                        <li data-genre="game">Game</li>
+                        <li data-genre="original">Original</li>
+                    </ul>
+                </div>
+                <div id="music-list">
+                   <!-- 音樂列表將在此處動態生成 -->
+                </div>
+                <div id="search-results">
+                   <!-- 搜尋結果將在此處顯示 -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 音樂播放器 -->
+    <div class="music-player">
+        <div class="song-info">
+            <img src="music/cover/default.jpg" alt="Song Cover" id="song-cover">
+            <div>
+                <h3 id="song-title">Song Title</h3>
+                <p>Lifer_Lighdow</p>
+            </div>
+        </div>
+
+        <div class="player-controls">
+            <button id="shuffle"><i class="fas fa-random"></i></button>
+    <button id="prev"><i class="fas fa-step-backward"></i></button>
+    <button id="play"><i class="fas fa-play"></i></button>
+    <button id="next"><i class="fas fa-step-forward"></i></button>
+    <button id="repeat"><i class="fas fa-redo"></i></button>
+        </div>
+
+        <div class="song-progress">
+            <span id="current-time" class="time">0:00</span>
+            <input type="range" min="0" max="100" value="0" id="progress">
+            <span id="duration" class="time">3:30</span>
+        </div>
+
+        <audio id="audio" src="music/pop/pop1.mp3"></audio>
+    </div>
+
+    <script src="music.js"></script>
+
+</body>
+</html>

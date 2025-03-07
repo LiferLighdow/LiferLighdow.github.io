@@ -1,0 +1,306 @@
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+    font-family: 'MyCustomFont',sans-serif;
+    background-color: #121212;
+    color: #fff;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* 定義自定義字體 */
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('fonts/myfont.woff2') format('woff2'), url('fonts/myfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* 側邊欄 */
+.sidebar {
+    width: 250px;
+    background-color: #000;
+    padding: 20px;
+    transition: transform 0.3s ease-in-out; /* 增加過渡效果 */
+}
+
+.search-bar {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background-color: #222;
+    color: #fff;
+    border-radius: 3px;
+}
+
+.search-bar button {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 10px 0;
+    cursor: pointer;
+    color: #b3b3b3;
+    transition: color 0.2s ease; /* 增加過渡效果 */
+}
+
+.sidebar li:hover, .sidebar li.active {
+    color: #fff;
+}
+
+/* 主要內容區域 */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.main-content h1, .main-content h2 {
+    margin-bottom: 20px;
+}
+
+/* 音樂播放器 */
+.music-player {
+    background-color: #282828;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-controls button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+/* 隨機播放按鈕的樣式 */
+.player-controls button#shuffle.active {
+    color: #007bff; /* 藍色 */
+}
+
+/* 循環播放按鈕的樣式 (active 狀態) */
+.player-controls button#repeat.active {
+    color: #007bff; /* 藍色 */
+}
+
+.song-info {
+    display: flex;
+    align-items: center;
+}
+
+.song-info img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.song-progress {
+    flex: 1;
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+}
+
+.song-progress input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 5px;
+    background: #555;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.song-progress input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.song-progress .time {
+    font-size: 12px;
+    color: #b3b3b3;
+    margin: 0 5px;
+}
+
+/* 播放列表 */
+.playlist-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.playlist-item {
+    background-color: #1e1e1e;
+    padding: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.playlist-item:hover {
+    background-color: #333;
+}
+
+.playlist-item img {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+#playlist-list {
+  list-style: none;
+  padding: 0;
+}
+
+#playlist-list li {
+  padding: 10px;
+  background-color: #1e1e1e;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#playlist-list li:hover {
+  background-color: #333;
+}
+
+/* Genre list and music list */
+.genre-list ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.genre-list li {
+    padding: 8px 12px;
+    background-color: #1e1e1e;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease-in-out; /* 添加 transform 過渡效果 */
+}
+
+.genre-list li:hover, .genre-list li.active {
+    background-color: #333;
+    transform: scale(1.05); /* 點擊時放大一點 */
+}
+
+#music-list {
+    margin-top: 20px;
+}
+
+#music-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+#music-list li {
+    padding: 10px;
+    background-color: #1e1e1e;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#music-list li:hover {
+    background-color: #333;
+}
+
+#music-list li .song-details {
+    flex: 1;
+}
+
+#music-list li .song-actions {
+    display: flex;
+}
+
+#music-list li .song-actions button {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 10px;
+        transform: translateX(0); /* 在小螢幕上始終顯示側邊欄 */
+    }
+    .main-content {
+        padding: 10px;
+    }
+
+    .music-player {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .song-info {
+        margin-bottom: 10px;
+    }
+
+    .song-progress {
+        width: 100%;
+        margin: 10px 0;
+    }
+}
