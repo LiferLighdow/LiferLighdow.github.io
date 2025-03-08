@@ -71,15 +71,21 @@ const musicData = {
         { title: '砂漠の星屑', src: 'music/piano/sabaku_no_hoshikuzu.mp3', cover: 'music/cover/sabaku_no_hoshikuzu.jpg' },
         { title: '風花の夢', src: 'music/piano/kazahana_no_yume.mp3', cover: 'music/cover/kazahana_no_yume.jpg' },
         { title: '風に踊る花たち', src: 'music/piano/kaze_ni_odoru_hanatachi.mp3', cover: 'music/cover/kaze_ni_odoru_hanatachi.jpg' },
-        { title: '悠久の山河に響く音', src: 'music/piano/yuukyuu_no_sanga_ni_hibiku_oto.mp3', cover: 'music/cover/yuukyuu_no_sanga_ni_hibiku_oto.jpg' }
+        { title: '悠久の山河に響く音', src: 'music/piano/yuukyuu_no_sanga_ni_hibiku_oto.mp3', cover: 'music/cover/yuukyuu_no_sanga_ni_hibiku_oto.jpg' },
+		{ title: '静かなる願い', src: 'music/piano/shizukanaru_negai.mp3', cover: 'music/cover/shizukanaru_negai.jpg' },
+		{ title: '思い', src: 'music/piano/omoi.mp3', cover: 'music/cover/omoi.jpg' }
     ],
     game: [
-        { title: 'Game Song 1', src: 'music/game/game1.mp3', cover: 'music/cover/game1.jpg' },
-        { title: 'Game Song 2', src: 'music/game/game2.mp3', cover: 'music/cover/game2.jpg' }
+		{ title: 'NIGHT ZONE', src: 'music/game/night_zone.mp3', cover: 'music/cover/night_zone.jpg' },
+		{ title: 'Stardust Symphony', src: 'music/game/stardust_symphony.mp3', cover: 'music/cover/stardust_symphony.jpg' },
+		{ title: '命日回忌', src: 'music/game/meijitu_kaiki.mp3', cover: 'music/cover/meijitu_kaiki.jpg' }
     ],
     original: [
-        { title: 'Original Song 1', src: 'music/original/original1.mp3', cover: 'music/cover/original1.jpg' },
-        { title: 'Original Song 2', src: 'music/original/original2.mp3', cover: 'music/cover/original2.jpg' }
+		{ title: 'MALBENO5.4', src: 'music/original/malbeno5.4.mp3', cover: 'music/cover/malbeno5.4.jpg' },
+        { title: 'Dlesaws', src: 'music/original/dlesaws.mp3', cover: 'music/cover/dlesaws.jpg' },
+        { title: 'Ⱨ₳ⱤĐ₵ØⱤɆ', src: 'music/original/hardcore.mp3', cover: 'music/cover/hardcore.jpg' },
+        { title: '🌌Feline from the Multiverse 🌌', src: 'music/original/feline.mp3', cover: 'music/cover/feline.jpg' },
+        { title: 'βρΜ≠ℋ', src: 'music/original/bpm.mp3', cover: 'music/cover/bpm.jpg' }
     ]
 };
 
@@ -243,6 +249,55 @@ function loadPlaylistItems() {
         });
     });
 }
+
+// 載入推薦歌曲
+function loadFeaturedSongs() {
+    const featuredSongsContainer = document.querySelector('.featured-songs-container');
+    featuredSongsContainer.innerHTML = ''; // 清空之前的內容
+
+    const featuredCount = 3; // 推薦歌曲數量
+    const featuredSongs = [];
+
+    // 隨機選擇歌曲
+    while (featuredSongs.length < featuredCount) {
+        const genreKeys = Object.keys(musicData);
+        const randomGenreIndex = Math.floor(Math.random() * genreKeys.length);
+        const randomGenre = genreKeys[randomGenreIndex];
+        const randomSongIndex = Math.floor(Math.random() * musicData[randomGenre].length);
+
+        const song = musicData[randomGenre][randomSongIndex];
+        if (!featuredSongs.includes(song)) {
+            featuredSongs.push({ ...song, genre: randomGenre });
+        }
+    }
+
+    // 建立推薦歌曲元素
+    featuredSongs.forEach(song => {
+        const featuredSong = document.createElement('div');
+        featuredSong.classList.add('featured-song');
+        featuredSong.innerHTML = `
+            <img src="${song.cover}" alt="${song.title}">
+            <div class="song-info">
+                <h3>${song.title}</h3>
+                <p>Lifer_Lighdow (${song.genre})</p>
+            </div>
+        `;
+        featuredSongsContainer.appendChild(featuredSong);
+
+        featuredSong.addEventListener('click', () => {
+            // 播放推薦歌曲
+            currentGenre = song.genre;
+            songIndex = musicData[song.genre].indexOf(song);
+            loadSong(song);
+            audio.play();
+            updatePlayButton();
+            switchPage('library'); // 切換到 Your Library 頁面
+        });
+    });
+}
+
+// 在初始化時呼叫 loadFeaturedSongs()
+loadFeaturedSongs();
 
 // 載入播放列表
 function loadPlaylists() {
