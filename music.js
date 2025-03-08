@@ -27,8 +27,8 @@ const musicData = {
         { title: 'Too Late Wishes', src: 'music/pop/too_late_wishes.mp3', cover: 'music/cover/too_late_wishes.jpg' },
         { title: '悲劇の光', src: 'music/pop/higeki_no_hikari.mp3', cover: 'music/cover/higeki_no_hikari.jpg' },
         { title: '祈りの灯火', src: 'music/pop/inori_no_tomoshibi.mp3', cover: 'music/cover/inori_no_tomoshibi.jpg' },
-        { title: 'Infinite_Labyrinth（Female ver.）', src: 'music/pop/infinite_labyrinth_female.mp3', cover: 'music/cover/infinite_labyrinth.jpg' },
-		   { title: 'Infinite_Labyrinth（Male ver.）', src: 'music/pop/infinite_labyrinth_male.mp3', cover: 'music/cover/infinite_labyrinth.jpg' },
+        { title: 'Infinite_Labyrinth（Female ver.）', src: 'music/pop/infinite_labyrinth_female.mp3', cover: 'music/cover/infinite_labyrinth_female.jpg' },
+        { title: 'Infinite_Labyrinth（Male ver.）', src: 'music/pop/infinite_labyrinth_male.mp3', cover: 'music/cover/infinite_labyrinth.jpg' },
         { title: '永遠の光（Male ver.）', src: 'music/pop/eien_no_hikari_male.mp3', cover: 'music/cover/eien_no_hikari_male.jpg' },
         { title: '永遠の光（Female ver.）', src: 'music/pop/eien_no_hikari_female.mp3', cover: 'music/cover/eien_no_hikari_female.jpg' },
         { title: 'あなたの影', src: 'music/pop/anata_no_kage.mp3', cover: 'music/cover/anata_no_kage.jpg' },
@@ -58,6 +58,20 @@ const musicData = {
         { title: '01011001__ɅƧȼℏřØπ', src: 'music/vocaloid/ascron.mp3', cover: 'music/cover/ascron.jpg' },
         { title: '和平の交響曲', src: 'music/vocaloid/wahei_no_koukyoukyoku.mp3', cover: 'music/cover/wahei_no_koukyoukyoku.jpg' },
         { title: '儚い幻', src: 'music/vocaloid/hakanai_maboroshi.mp3', cover: 'music/cover/hakanai_maboroshi.jpg' }
+    ],
+    piano: [
+	    { title: '心の祈り', src: 'music/piano/kokoro_no_inori.mp3', cover: 'music/cover/kokoro_no_inori.jpg' },
+        { title: '静かな時間', src: 'music/piano/shizukana_jikan.mp3', cover: 'music/cover/shizukana_jikan.jpg' },
+        { title: '時間の流れ', src: 'music/piano/jikan_no_nagare.mp3', cover: 'music/cover/jikan_no_nagare.jpg' },
+        { title: '生命の息吹', src: 'music/piano/seimei_no_ibuki.mp3', cover: 'music/cover/seimei_no_ibuki.jpg' },
+        { title: '小さな星', src: 'music/piano/chiisana_hoshi.mp3', cover: 'music/cover/chiisana_hoshi.jpg' },
+        { title: '月夜の微光', src: 'music/piano/tsukiyo_no_bikou.mp3', cover: 'music/cover/tsukiyo_no_bikou.jpg' },
+        { title: '思い出の並木道', src: 'music/piano/omoideno_namikimichi.mp3', cover: 'music/cover/omoideno_namikimichi.jpg' },
+        { title: '星空の囁き', src: 'music/piano/hoshizora_no_sasayaki.mp3', cover: 'music/cover/hoshizora_no_sasayaki.jpg' },
+        { title: '砂漠の星屑', src: 'music/piano/sabaku_no_hoshikuzu.mp3', cover: 'music/cover/sabaku_no_hoshikuzu.jpg' },
+        { title: '風花の夢', src: 'music/piano/kazahana_no_yume.mp3', cover: 'music/cover/kazahana_no_yume.jpg' },
+        { title: '風に踊る花たち', src: 'music/piano/kaze_ni_odoru_hanatachi.mp3', cover: 'music/cover/kaze_ni_odoru_hanatachi.jpg' },
+        { title: '悠久の山河に響く音', src: 'music/piano/yuukyuu_no_sanga_ni_hibiku_oto.mp3', cover: 'music/cover/yuukyuu_no_sanga_ni_hibiku_oto.jpg' }
     ],
     game: [
         { title: 'Game Song 1', src: 'music/game/game1.mp3', cover: 'music/cover/game1.jpg' },
@@ -166,11 +180,9 @@ audio.addEventListener('ended', () => {
     audio.play();
   } else if (repeatMode === 'folder') {
     nextSong(); // 播放資料夾中的下一首
-  }  else {
-    // 停止播放，時間軸歸零
-    audio.currentTime = 0;
-	 audio.pause();
-    updatePlayButton(); // 更新播放按鈕
+  } else {
+    // 停止播放，或者可以設定為播放下一首
+    nextSong()
   }
 });
 
@@ -303,7 +315,7 @@ function searchSongs() {
 
 // 顯示搜尋結果
 function displaySearchResults(results) {
-    searchResultsContainer.innerHTML = ''; // 清空之前的結果
+    searchResultsContainer.innerHTML = ''; // 清空之前的內容
 
     if (results.length === 0) {
         searchResultsContainer.innerHTML = '<p>No results found.</p>';
@@ -340,6 +352,7 @@ searchResultsContainer.addEventListener('click', function(e) {
         loadSong(musicData[genre][index]);
         audio.play();
         updatePlayButton();
+
     }
 });
 
@@ -352,6 +365,8 @@ musicListContainer.addEventListener('click', function(e) {
         loadSong(musicData[genre][index]);
         audio.play();
         updatePlayButton();
+
+
     }
 });
 
