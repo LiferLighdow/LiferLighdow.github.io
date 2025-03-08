@@ -64,11 +64,12 @@
                         <li data-genre="electronic">Electronic</li>
                         <li data-genre="vocaloid">Vocaloid</li>
                         <li data-genre="game">Game</li>
+								<li data-genre="piano">Piano</li>
                         <li data-genre="original">Original</li>
                     </ul>
                 </div>
-                <div id="music-list">
-                   <!-- 音樂列表將在此處動態生成 -->
+                <div id="music-list" data-genre = "${genre}">
+                <!-- 音樂列表將在此處動態生成 -->
                 </div>
                 <div id="search-results">
                    <!-- 搜尋結果將在此處顯示 -->
@@ -81,7 +82,7 @@
     <!-- 音樂播放器 -->
     <div class="music-player">
         <div class="song-info">
-            <img src="music/cover/default.jpg" alt="Song Cover" id="song-cover">
+            <img src="music/cover/default.png" alt="Song Cover" id="song-cover">
             <div>
                 <h3 id="song-title">Song Title</h3>
                 <p>Lifer_Lighdow</p>
