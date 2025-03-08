@@ -320,6 +320,56 @@ body {
     margin-left: 10px;
 }
 
+/* Featured Songs Section */
+.featured-songs {
+    margin-bottom: 20px;
+}
+
+.featured-songs h2 {
+    margin-bottom: 15px;
+}
+
+.featured-songs-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 調整磚塊大小 */
+    gap: 20px;
+}
+
+.featured-song {
+    background-color: #1e1e1e;
+    padding: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center; /* 垂直對齊 */
+}
+
+.featured-song:hover {
+    background-color: #333;
+}
+
+.featured-song img {
+    width: 80px; /* 調整圖片大小 */
+    height: 80px;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.featured-song .song-info {
+    flex: 1;
+}
+
+.featured-song .song-info h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.featured-song .song-info p {
+    margin: 0;
+    color: #b3b3b3;
+}
+
 /* 響應式設計 */
 @media (max-width: 768px) {
     .container {
