@@ -257,17 +257,25 @@ function loadFeaturedSongs() {
 
     const featuredCount = 3; // 推薦歌曲數量
     const featuredSongs = [];
+    const allSongs = [];
+
+    // 將所有歌曲放到一個陣列中
+    for (const genre in musicData) {
+        musicData[genre].forEach(song => {
+            allSongs.push({ ...song, genre });
+        });
+    }
+
+    // 如果歌曲總數少於推薦數量，則只顯示所有歌曲
+    const availableCount = Math.min(featuredCount, allSongs.length);
 
     // 隨機選擇歌曲
-    while (featuredSongs.length < featuredCount) {
-        const genreKeys = Object.keys(musicData);
-        const randomGenreIndex = Math.floor(Math.random() * genreKeys.length);
-        const randomGenre = genreKeys[randomGenreIndex];
-        const randomSongIndex = Math.floor(Math.random() * musicData[randomGenre].length);
+    while (featuredSongs.length < availableCount) {
+        const randomIndex = Math.floor(Math.random() * allSongs.length);
+        const song = allSongs[randomIndex];
 
-        const song = musicData[randomGenre][randomSongIndex];
         if (!featuredSongs.includes(song)) {
-            featuredSongs.push({ ...song, genre: randomGenre });
+            featuredSongs.push(song);
         }
     }
 
