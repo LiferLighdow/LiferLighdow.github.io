@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>影夜</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../../../Novel.css">
+</head>
+<body>
+
+<!-- Top Bar Navigation -->
+<div class="bar-nav">
+    <ul>
+        <li><a href="../../../index.html">首頁</a></li>
+        <li><a href="../../About.html">關於</a></li>
+        <li><a href="../../../Index/繁中網頁.html">服務</a></li>
+        <li><a href="../../../Contact.html">聯絡</a></li>
+    </ul>
+</div>
+
+<div id="container">
+    <button id="sidebar-toggle-button"><i class="fas fa-bars"></i></button>
+    <div id="sidebar">
+        <h2>小說列表</h2>
+        <div class="collapsible">
+            <button class="toggle-button">點擊展開</button>
+            <div id="novel-list-container"></div> <!-- 放置小说列表的容器 -->
+        </div>
+    </div>
+    <div id="content">
+        <h1 class="chapter-title" id="chapter-title"></h1>
+
+        <!-- 音訊播放器和字體控制項 (使用 Flexbox 佈局) -->
+        <div id="audio-controls-container">
+            <div id="audio-player">
+                <audio controls>
+                    <source src="audio/novel.mp3" type="audio/mpeg">
+                    您的瀏覽器不支援音訊播放。
+                </audio>
+            </div>
+
+            <div id="font-controls">
+                <button id="decrease-font">A-</button>
+                <button id="increase-font">A+</button>
+                <span id="font-size-value">1.0rem</span> <!-- 顯示字體大小 -->
+            </div>
+        </div>
+
+        <div id="chapter-content">
+            <p>水野陽翔站在鏡子前，凝視著自己那雙深陷疲憊的眼睛。他的瞳孔裡閃爍著無法言喻的恐懼，仿佛藏著千言萬語，卻無法出口。這是他三年來每一天的例行公事&mdash;&mdash;在這面冰冷的鏡子前自我對話，檢視那日漸扭曲的自己。對他來說，這不僅僅是一面鏡子，而是一扇通往他內心深處的窗口。</p>
+
+<p>「這一切到底是怎麼回事？」陽翔心中反復自問，卻無法找到答案。他的生活仿佛成了一場噩夢，現實與幻境無縫連接，使他的精神狀況每況愈下。每當夜深人靜時，他的內心總會被那些模糊的聲音和影像侵擾，讓他無法找到平靜的片刻。</p>
+
+<p>他試圖冷靜下來，努力讓自己不去思考那些來自黑暗的聲音，但這一切卻越來越難以忍受。陽翔的手心微微出汗，映照在鏡子中的自己，眉頭緊鎖，臉上顯露出一種不安與無助。他知道，這些幻覺不僅僅是他的錯覺，而是他生活中無法抹去的陰影。</p>
+
+<p>「這一定只是我的錯覺&hellip;&hellip;對吧？」陽翔低聲自語，他的聲音中充滿了不安。鏡子中的他似乎也在回應，隨著他的情緒波動而扭曲。隨著每一次呼吸，他都能感受到一種來自心底的沉重，彷彿有某種力量在逐漸吞噬他的存在。</p>
+
+<p>當他試圖轉過身去的時候，耳邊的低語聲卻愈發清晰。那些聲音像是在向他訴說著什麼，卻又因為雜亂而讓他感到無法承受。陽翔用手捂住耳朵，試圖將那些聲音擋在外面，然而他知道，這一切並不能解決問題。</p>
+
+<p>「不要再來了！夠了！」他幾乎是在用力吼叫，但周圍卻是一片死寂，像是一場不斷重複的幻影。他的聲音逐漸被無形的黑暗吞噬，隨之而來的只是更加強烈的低語，彷彿在嘲諷他的無能。</p>
+
+<p>這樣的情景在陽翔的生活中不斷重演。他想要逃避，但卻無法擺脫那些幻聽與幻覺。每當他走進人群中，周圍的喧鬧聲變得模糊而遙遠，取而代之的是那低沉的低語。這些聲音有時如同哀號，有時又如同嘲諷，讓他在每一次社交中都感到如坐針氈。</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2025 Lifer_Lighdow. All rights reserved.</p>
+</footer>
+
+<script src="../../../Novel.js"></script>
+
+</body>
+</html>
