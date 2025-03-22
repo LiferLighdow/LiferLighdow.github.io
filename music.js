@@ -47,7 +47,7 @@ const musicData = {
     electronic: [
         { title: '冊丹し日ヨ几回   日丹亡片', src: 'music/electronic/malbeno_back.mp3', cover: 'music/cover/malbeno_back.jpg' },
         { title: 'まごまごハッピー', src: 'music/electronic/magomago_happy.mp3', cover: 'music/cover/magomago_happy.jpg' },
-	    { title: 'ぐるぐるダンス', src: 'music/electronic/guruguru_dance.mp3', cover: 'music/cover/guruguru_dance.jpg' },
+		  { title: 'ぐるぐるダンス', src: 'music/electronic/guruguru_dance.mp3', cover: 'music/cover/guruguru_dance.jpg' },
         { title: 'にんぎょうのうた', src: 'music/electronic/ningyou_no_uta.mp3', cover: 'music/cover/ningyou_no_uta.jpg' }
     ],
     vocaloid: [
@@ -63,24 +63,24 @@ const musicData = {
     ],
     piano: [
 	    { title: '心の祈り', src: 'music/piano/kokoro_no_inori.mp3', cover: 'music/cover/kokoro_no_inori.jpg' },
-            { title: '静かな時間', src: 'music/piano/shizukana_jikan.mp3', cover: 'music/cover/shizukana_jikan.jpg' },
-            { title: '時間の流れ', src: 'music/piano/jikan_no_nagare.mp3', cover: 'music/cover/jikan_no_nagare.jpg' },
-            { title: '生命の息吹', src: 'music/piano/seimei_no_ibuki.mp3', cover: 'music/cover/seimei_no_ibuki.jpg' },
-            { title: '小さな星', src: 'music/piano/chiisana_hoshi.mp3', cover: 'music/cover/chiisana_hoshi.jpg' },
-            { title: '月夜の微光', src: 'music/piano/tsukiyo_no_bikou.mp3', cover: 'music/cover/tsukiyo_no_bikou.jpg' },
-            { title: '思い出の並木道', src: 'music/piano/omoideno_namikimichi.mp3', cover: 'music/cover/omoideno_namikimichi.jpg' },
-            { title: '星空の囁き', src: 'music/piano/hoshizora_no_sasayaki.mp3', cover: 'music/cover/hoshizora_no_sasayaki.jpg' },
-            { title: '砂漠の星屑', src: 'music/piano/sabaku_no_hoshikuzu.mp3', cover: 'music/cover/sabaku_no_hoshikuzu.jpg' },
-            { title: '風花の夢', src: 'music/piano/kazahana_no_yume.mp3', cover: 'music/cover/kazahana_no_yume.jpg' },
-            { title: '風に踊る花たち', src: 'music/piano/kaze_ni_odoru_hanatachi.mp3', cover: 'music/cover/kaze_ni_odoru_hanatachi.jpg' },
-            { title: '悠久の山河に響く音', src: 'music/piano/yuukyuu_no_sanga_ni_hibiku_oto.mp3', cover: 'music/cover/yuukyuu_no_sanga_ni_hibiku_oto.jpg' },
-	    { title: '静かなる願い', src: 'music/piano/shizukanaru_negai.mp3', cover: 'music/cover/shizukanaru_negai.jpg' },
-	    { title: '思い', src: 'music/piano/omoi.mp3', cover: 'music/cover/omoi.jpg' }
+        { title: '静かな時間', src: 'music/piano/shizukana_jikan.mp3', cover: 'music/cover/shizukana_jikan.jpg' },
+        { title: '時間の流れ', src: 'music/piano/jikan_no_nagare.mp3', cover: 'music/cover/jikan_no_nagare.jpg' },
+        { title: '生命の息吹', src: 'music/piano/seimei_no_ibuki.mp3', cover: 'music/cover/seimei_no_ibuki.jpg' },
+        { title: '小さな星', src: 'music/piano/chiisana_hoshi.mp3', cover: 'music/cover/chiisana_hoshi.jpg' },
+        { title: '月夜の微光', src: 'music/piano/tsukiyo_no_bikou.mp3', cover: 'music/cover/tsukiyo_no_bikou.jpg' },
+        { title: '思い出の並木道', src: 'music/piano/omoideno_namikimichi.mp3', cover: 'music/cover/omoideno_namikimichi.jpg' },
+        { title: '星空の囁き', src: 'music/piano/hoshizora_no_sasayaki.mp3', cover: 'music/cover/hoshizora_no_sasayaki.jpg' },
+        { title: '砂漠の星屑', src: 'music/piano/sabaku_no_hoshikuzu.mp3', cover: 'music/cover/sabaku_no_hoshikuzu.jpg' },
+        { title: '風花の夢', src: 'music/piano/kazahana_no_yume.mp3', cover: 'music/cover/kazahana_no_yume.jpg' },
+        { title: '風に踊る花たち', src: 'music/piano/kaze_ni_odoru_hanatachi.mp3', cover: 'music/cover/kaze_ni_odoru_hanatachi.jpg' },
+        { title: '悠久の山河に響く音', src: 'music/piano/yuukyuu_no_sanga_ni_hibiku_oto.mp3', cover: 'music/cover/yuukyuu_no_sanga_ni_hibiku_oto.jpg' },
+		{ title: '静かなる願い', src: 'music/piano/shizukanaru_negai.mp3', cover: 'music/cover/shizukanaru_negai.jpg' },
+		{ title: '思い', src: 'music/piano/omoi.mp3', cover: 'music/cover/omoi.jpg' }
     ],
     game: [
-	    { title: 'NIGHT ZONE', src: 'music/game/night_zone.mp3', cover: 'music/cover/night_zone.jpg' },
-	    { title: 'Stardust Symphony', src: 'music/game/stardust_symphony.mp3', cover: 'music/cover/stardust_symphony.jpg' },
-	    { title: '命日回忌', src: 'music/game/meijitu_kaiki.mp3', cover: 'music/cover/meijitu_kaiki.jpg' }
+		{ title: 'NIGHT ZONE', src: 'music/game/night_zone.mp3', cover: 'music/cover/night_zone.jpg' },
+		{ title: 'Stardust Symphony', src: 'music/game/stardust_symphony.mp3', cover: 'music/cover/stardust_symphony.jpg' },
+		{ title: '命日回忌', src: 'music/game/meijitu_kaiki.mp3', cover: 'music/cover/meijitu_kaiki.jpg' }
     ],
     original: [
 		{ title: 'MALBENO5.4', src: 'music/original/malbeno5.4.mp3', cover: 'music/cover/malbeno5.4.jpg' },
@@ -132,12 +132,7 @@ function playSong() {
 
 // 下一首
 function nextSong() {
-    if (repeatMode === 'off') {
-        audio.pause();
-        audio.currentTime = 0;
-        updatePlayButton();
-        return;
-    } else if (shuffle) {
+    if (shuffle) {
         songIndex = getRandomSongIndex();
     } else {
         songIndex = (songIndex + 1) % currentSongs.length;
@@ -170,14 +165,11 @@ function nextRepeatMode() {
     if (repeatMode === 'off') {
         repeatMode = 'single';
         repeatBtn.innerHTML = '<i class="fas fa-redo-alt"></i>'; // Font Awesome 圖示
-    } else if (repeatMode === 'single') {
-        repeatMode = 'folder';
-        repeatBtn.innerHTML = '<i class="fas fa-sync-alt"></i>'; // Font Awesome 圖示
     } else {
         repeatMode = 'off';
         repeatBtn.innerHTML = '<i class="fas fa-redo"></i>'; // Font Awesome 圖示
     }
-    // 更新 active class
+ // 更新 active class
     repeatBtn.classList.toggle('active', repeatMode !== 'off');
 }
 
