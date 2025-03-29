@@ -17,7 +17,10 @@ const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
 const libraryGenres = document.querySelectorAll('#library .genre-list li');
 const musicListContainer = document.getElementById('music-list');
+
+const searchResultsPopup = document.getElementById('search-results-popup');
 const searchResultsContainer = document.getElementById('search-results');
+const closeButton = document.querySelector('#search-results-popup .close-button');
 
 // 模擬從資料夾 "掃描" 音樂
 const musicData = {
@@ -47,7 +50,7 @@ const musicData = {
     electronic: [
         { title: '冊丹し日ヨ几回   日丹亡片', src: 'music/electronic/malbeno_back.mp3', cover: 'music/cover/malbeno_back.jpg' },
         { title: 'まごまごハッピー', src: 'music/electronic/magomago_happy.mp3', cover: 'music/cover/magomago_happy.jpg' },
-		  { title: 'ぐるぐるダンス', src: 'music/electronic/guruguru_dance.mp3', cover: 'music/cover/guruguru_dance.jpg' },
+        { title: 'ぐるぐるダンス', src: 'music/electronic/guruguru_dance.mp3', cover: 'music/cover/guruguru_dance.jpg' },
         { title: 'にんぎょうのうた', src: 'music/electronic/ningyou_no_uta.mp3', cover: 'music/cover/ningyou_no_uta.jpg' }
     ],
     vocaloid: [
@@ -62,7 +65,7 @@ const musicData = {
         { title: '儚い幻', src: 'music/vocaloid/hakanai_maboroshi.mp3', cover: 'music/cover/hakanai_maboroshi.jpg' }
     ],
     piano: [
-	    { title: '心の祈り', src: 'music/piano/kokoro_no_inori.mp3', cover: 'music/cover/kokoro_no_inori.jpg' },
+        { title: '心の祈り', src: 'music/piano/kokoro_no_inori.mp3', cover: 'music/cover/kokoro_no_inori.jpg' },
         { title: '静かな時間', src: 'music/piano/shizukana_jikan.mp3', cover: 'music/cover/shizukana_jikan.jpg' },
         { title: '時間の流れ', src: 'music/piano/jikan_no_nagare.mp3', cover: 'music/cover/jikan_no_nagare.jpg' },
         { title: '生命の息吹', src: 'music/piano/seimei_no_ibuki.mp3', cover: 'music/cover/seimei_no_ibuki.jpg' },
@@ -74,16 +77,16 @@ const musicData = {
         { title: '風花の夢', src: 'music/piano/kazahana_no_yume.mp3', cover: 'music/cover/kazahana_no_yume.jpg' },
         { title: '風に踊る花たち', src: 'music/piano/kaze_ni_odoru_hanatachi.mp3', cover: 'music/cover/kaze_ni_odoru_hanatachi.jpg' },
         { title: '悠久の山河に響く音', src: 'music/piano/yuukyuu_no_sanga_ni_hibiku_oto.mp3', cover: 'music/cover/yuukyuu_no_sanga_ni_hibiku_oto.jpg' },
-		{ title: '静かなる願い', src: 'music/piano/shizukanaru_negai.mp3', cover: 'music/cover/shizukanaru_negai.jpg' },
-		{ title: '思い', src: 'music/piano/omoi.mp3', cover: 'music/cover/omoi.jpg' }
+        { title: '静かなる願い', src: 'music/piano/shizukanaru_negai.mp3', cover: 'music/cover/shizukanaru_negai.jpg' },
+        { title: '思い', src: 'music/piano/omoi.mp3', cover: 'music/cover/omoi.jpg' }
     ],
     game: [
-		{ title: 'NIGHT ZONE', src: 'music/game/night_zone.mp3', cover: 'music/cover/night_zone.jpg' },
-		{ title: 'Stardust Symphony', src: 'music/game/stardust_symphony.mp3', cover: 'music/cover/stardust_symphony.jpg' },
-		{ title: '命日回忌', src: 'music/game/meijitu_kaiki.mp3', cover: 'music/cover/meijitu_kaiki.jpg' }
+        { title: 'NIGHT ZONE', src: 'music/game/night_zone.mp3', cover: 'music/cover/night_zone.jpg' },
+        { title: 'Stardust Symphony', src: 'music/game/stardust_symphony.mp3', cover: 'music/cover/stardust_symphony.jpg' },
+        { title: '命日回忌', src: 'music/game/meijitu_kaiki.mp3', cover: 'music/cover/meijitu_kaiki.jpg' }
     ],
     original: [
-		{ title: 'MALBENO5.4', src: 'music/original/malbeno5.4.mp3', cover: 'music/cover/malbeno5.4.jpg' },
+        { title: 'MALBENO5.4', src: 'music/original/malbeno5.4.mp3', cover: 'music/cover/malbeno5.4.jpg' },
         { title: 'Dlesaws', src: 'music/original/dlesaws.mp3', cover: 'music/cover/dlesaws.jpg' },
         { title: 'Ⱨ₳ⱤĐ₵ØⱤɆ', src: 'music/original/hardcore.mp3', cover: 'music/cover/hardcore.jpg' },
         { title: '🌌Feline from the Multiverse 🌌', src: 'music/original/feline.mp3', cover: 'music/cover/feline.jpg' },
@@ -381,24 +384,27 @@ function displaySearchResults(results) {
 
     if (results.length === 0) {
         searchResultsContainer.innerHTML = '<p>No results found.</p>';
-        return;
+        searchResultsPopup.style.display = 'block'; // 顯示彈出視窗
+    } else {
+        const ul = document.createElement('ul');
+        results.forEach(song => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <div class="song-details">
+                    ${song.title} (${song.genre})
+                </div>
+                <div class="song-actions">
+                    <button class="play-song" data-genre="${song.genre}" data-index="${song.index}"><i class="fas fa-play"></i></button>
+                </div>
+            `;
+            li.dataset.genre = song.genre; // 儲存類型資訊
+            li.dataset.index = song.index; // 儲存索引資訊
+            ul.appendChild(li);
+        });
+
+        searchResultsContainer.appendChild(ul);
+		 searchResultsPopup.style.display = 'block'; // 顯示彈出視窗
     }
-
-    const ul = document.createElement('ul');
-    results.forEach(song => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <div class="song-details">
-                ${song.title} (${song.genre})
-            </div>
-            <div class="song-actions">
-                <button class="play-song" data-genre="${song.genre}" data-index="${song.index}"><i class="fas fa-play"></i></button>
-            </div>
-        `;
-        ul.appendChild(li);
-    });
-
-    searchResultsContainer.appendChild(ul);
 }
 
 // 事件委託：將事件監聽器添加到父元素
@@ -414,6 +420,9 @@ searchResultsContainer.addEventListener('click', function(e) {
         loadSong(musicData[genre][index]);
         audio.play();
         updatePlayButton();
+        searchResultsPopup.style.display = 'none';// 關閉彈出視窗
+		  loadMusicList(genre); // 載入歌曲列表
+        updateGenreSelection(genre); //更新樣式
 
     }
 });
@@ -494,9 +503,17 @@ searchInput.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault(); // 防止表單提交
         searchSongs();
+		  searchResultsPopup.style.display = 'block'; // 顯示彈出視窗
         switchPage('library'); // 跳轉到 Library 頁面
     }
 });
 
 // 初始化時顯示 Home 頁面
 switchPage('home');
+
+// 關閉彈出視窗
+closeButton.addEventListener('click', () => {
+    searchResultsPopup.style.display = 'none';
+});
+
+searchResultsPopup.style.display = 'none';//  搜尋結果彈出視窗
