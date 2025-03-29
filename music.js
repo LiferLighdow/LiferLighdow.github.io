@@ -87,7 +87,7 @@ const musicData = {
     ],
     original: [
         { title: 'MALBENO5.4', src: 'music/original/malbeno5.4.mp3', cover: 'music/cover/malbeno5.4.jpg' },
-        { title: 'Dlesaws', src: 'music/original/dlesaws.mp3', cover: 'music/cover/dlesaws.jpg' },
+        { title: 'Dlesaws', src: 'music/original/dlesaws.mp3', cover: 'music/cover/dlesaws.png' },
         { title: 'Ⱨ₳ⱤĐ₵ØⱤɆ', src: 'music/original/hardcore.mp3', cover: 'music/cover/hardcore.jpg' },
         { title: '🌌Feline from the Multiverse 🌌', src: 'music/original/feline.mp3', cover: 'music/cover/feline.jpg' },
         { title: 'βρΜ≠ℋ', src: 'music/original/bpm.mp3', cover: 'music/cover/bpm.jpg' }
@@ -116,12 +116,23 @@ loadPlaylistItems();
 loadMusicList(currentGenre); // 載入預設類型的音樂列表
 updateGenreSelection(currentGenre);
 
+const imageViewerPopup = document.getElementById('image-viewer-popup');
+const imageViewerImage = document.getElementById('image-viewer-image');
+const imageViewerCloseButton = document.querySelector('#image-viewer-popup .close-button');
 // 載入歌曲
 function loadSong(song) {
     songTitle.innerText = song.title;
     songCover.src = song.cover;
     audio.src = song.src;
 }
+songCover.addEventListener('click', () => {
+    imageViewerImage.src = songCover.src; // 設定圖片來源
+    imageViewerPopup.style.display = 'flex'; // 顯示圖片檢視器
+});
+// 關閉圖片檢視器
+imageViewerCloseButton.addEventListener('click', () => {
+    imageViewerPopup.style.display = 'none';
+});
 
 // 播放 / 暫停
 function playSong() {
@@ -517,3 +528,4 @@ closeButton.addEventListener('click', () => {
 });
 
 searchResultsPopup.style.display = 'none';//  搜尋結果彈出視窗
+imageViewerPopup.style.display = 'none'; // 圖片檢視器
