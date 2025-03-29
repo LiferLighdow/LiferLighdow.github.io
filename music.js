@@ -249,7 +249,7 @@ function loadFeaturedSongs() {
     const featuredSongsContainer = document.querySelector('.featured-songs-container');
     featuredSongsContainer.innerHTML = ''; // 清空之前的內容
 
-    const featuredCount = 3; // 推薦歌曲數量
+    const featuredCount = 6; // 推薦歌曲數量
     const featuredSongs = [];
     const allSongs = [];
 
@@ -289,11 +289,14 @@ function loadFeaturedSongs() {
         featuredSong.addEventListener('click', () => {
             // 播放推薦歌曲
             currentGenre = song.genre;
-            songIndex = musicData[song.genre].indexOf(song);
+            const genreSongs = musicData[song.genre]; // 取得該類型的歌曲列表
+            songIndex = genreSongs.indexOf(song); // 在正確的列表中尋找歌曲索引
             loadSong(song);
             audio.play();
             updatePlayButton();
             switchPage('library'); // 切換到 Your Library 頁面
+            loadMusicList(song.genre); // 載入歌曲列表
+            updateGenreSelection(song.genre); //更新樣式
         });
     });
 }
@@ -315,7 +318,8 @@ function loadPlaylists() {
             currentGenre = genre;
             loadMusicList(genre);
             updateGenreSelection(genre);
-            switchPage('library'); //  切換到 Your Library 頁面
+            switchPage('library'); 
+				//  切換到 Your Library 頁面
         });
     });
 }
