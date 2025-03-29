@@ -445,3 +445,33 @@ nav ul li a:hover {
     cursor: pointer;
     color: #fff;
 }
+
+/* 圖片放大檢視視窗 */
+#image-viewer-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* 半透明背景 */
+    z-index: 1001; /* 確保在搜尋結果上方 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#image-viewer-popup img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain; /* 確保圖片完整顯示 */
+}
+
+#image-viewer-popup .close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 30px;
+    color: #fff;
+    cursor: pointer;
+}
