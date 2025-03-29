@@ -398,13 +398,7 @@ nav ul li a:hover {
     .music-player {
         flex-direction: column;
         align-items: center;
-		  transition: bottom 0.3s ease-in-out; /* 加入過渡效果 */
     }
-
-    .music-player.hidden {
-        bottom: -100px; /* 隱藏在頁面底部 */
-    }
-    
 
     .song-info {
         margin-bottom: 10px;
