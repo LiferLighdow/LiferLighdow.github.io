@@ -201,6 +201,7 @@ function updateProgress(e) {
     const { duration, currentTime } = e.target;
     const progressPercent = (currentTime / duration) * 100;
     progress.value = progressPercent;
+    progress.style.setProperty('--progress-percent', `${progressPercent}%`); // 設定 CSS 變數
     currentTimeDisplay.innerText = formatTime(currentTime);
     durationDisplay.innerText = formatTime(duration);
 }
