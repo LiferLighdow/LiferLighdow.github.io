@@ -15,40 +15,47 @@ body {
     display: flex;
     flex-direction: column; /* 使用 Flexbox 垂直排列 */
 }
-	/* Header and Navigation */
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem 0;
-        }
+/* Header and Navigation */
+header {
+    background-color: #1e1e1e; /* 更深的背景色 */
+    color: #fff;
+    padding: 1rem 0;
+    border-bottom: 1px solid #333; /* 可選：添加底邊框 */
+}
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff; /* 品牌色 */
+}
 
-        nav ul {
-            list-style: none;
-            display: flex;
-        }
+nav ul {
+    list-style: none;
+    display: flex;
+}
 
-        nav ul li {
-            margin-left: 1.5rem;
-        }
+nav ul li {
+    margin-left: 1.5rem;
+}
 
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-        }
+nav ul li a {
+    color: #b3b3b3; /* 較柔和的文字顏色 */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+nav ul li a:hover {
+    color: #fff; /* 滑鼠懸停時變亮 */
+}
 			/* Footer */
         footer {
             background-color: #333;
@@ -196,14 +203,17 @@ body {
     outline: none;
     -webkit-transition: .2s;
     transition: opacity .2s;
+    background: linear-gradient(to right, #007bff 0%, #007bff var(--progress-percent), #555 var(--progress-percent), #555 100%); /* 顏色進度條 */
 }
 
 .song-progress input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 15px;
-    height: 15px;
-    background: #fff;
+    /* width: 15px; */  /* 移除寬度 */
+    /* height: 15px; */ /* 移除高度 */
+    width: 0;
+    height: 0;
+    background: transparent;  /* 透明背景 */
     cursor: pointer;
     border-radius: 50%;
 }
@@ -230,7 +240,7 @@ body {
 }
 
 .playlist-item:hover {
-    background-color: #333;
+    background-color: #34495e;
 }
 
 .playlist-item img {
@@ -254,7 +264,7 @@ body {
 }
 
 #playlist-list li:hover {
-  background-color: #333;
+  background-color: #3498db;
 }
 
 /* Genre list and music list */
@@ -275,7 +285,7 @@ body {
 }
 
 .genre-list li:hover, .genre-list li.active {
-    background-color: #333;
+    background-color: #34495e;
     transform: scale(1.05); /* 點擊時放大一點 */
 }
 
@@ -346,7 +356,7 @@ body {
 }
 
 .featured-song:hover {
-    background-color: #333;
+    background-color: #2F4F4F;
 }
 
 .featured-song img {
@@ -388,7 +398,13 @@ body {
     .music-player {
         flex-direction: column;
         align-items: center;
+		  transition: bottom 0.3s ease-in-out; /* 加入過渡效果 */
     }
+
+    .music-player.hidden {
+        bottom: -100px; /* 隱藏在頁面底部 */
+    }
+    
 
     .song-info {
         margin-bottom: 10px;
