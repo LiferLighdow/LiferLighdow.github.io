@@ -29,7 +29,8 @@ const musicData = {
         { title: '空の幻想', src: 'music/pop/sora_no_gensou.mp3', cover: 'music/cover/sora_no_gensou.jpg' },
         { title: 'Too Late Wishes', src: 'music/pop/too_late_wishes.mp3', cover: 'music/cover/too_late_wishes.jpg' },
         { title: '悲劇の光', src: 'music/pop/higeki_no_hikari.mp3', cover: 'music/cover/higeki_no_hikari.jpg' },
-        { title: '祈りの灯火', src: 'music/pop/inori_no_tomoshibi.mp3', cover: 'music/cover/inori_no_tomoshibi.jpg' },
+        { title: '祈りの灯火（Female ver.）', src: 'music/pop/inori_no_tomoshibi_female.mp3', cover: 'music/cover/inori_no_tomoshibi_female.jpg' },
+		  { title: '祈りの灯火（Male ver.）', src: 'music/pop/inori_no_tomoshibi_male.mp3', cover: 'music/cover/inori_no_tomoshibi_male.jpg' },
         { title: 'Infinite_Labyrinth（Female ver.）', src: 'music/pop/infinite_labyrinth_female.mp3', cover: 'music/cover/infinite_labyrinth_female.jpg' },
         { title: 'Infinite_Labyrinth（Male ver.）', src: 'music/pop/infinite_labyrinth_male.mp3', cover: 'music/cover/infinite_labyrinth.jpg' },
         { title: '永遠の光（Male ver.）', src: 'music/pop/eien_no_hikari_male.mp3', cover: 'music/cover/eien_no_hikari_male.jpg' },
@@ -91,7 +92,11 @@ const musicData = {
         { title: 'Ⱨ₳ⱤĐ₵ØⱤɆ', src: 'music/original/hardcore.mp3', cover: 'music/cover/hardcore.jpg' },
         { title: '🌌Feline from the Multiverse 🌌', src: 'music/original/feline.mp3', cover: 'music/cover/feline.jpg' },
         { title: 'βρΜ≠ℋ', src: 'music/original/bpm.mp3', cover: 'music/cover/bpm.jpg' }
-    ]
+    ],
+	 nightcore: [
+	     { title: '祈りの灯火（Nightcore ver.）', src: 'music/nightcore/inori_no_tomoshibi_nightcore.mp3', cover: 'music/cover/inori_no_tomoshibi_nightcore.jpg' },
+		  { title: '夢に縛られたあなた（Nightcore ver.）', src: 'music/nightcore/yume_ni_shibarareta_anata_nightcore.mp3', cover: 'music/cover/yume_ni_shibarareta_anata_nightcore.jpg' },
+	 ]
 };
 
 let currentGenre = 'pop'; // 預設類型
