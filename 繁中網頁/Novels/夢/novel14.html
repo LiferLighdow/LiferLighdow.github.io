@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>影夜</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../../../Novel.css">
+</head>
+<body>
+
+<!-- Top Bar Navigation -->
+<div class="bar-nav">
+    <ul>
+        <li><a href="../../../index.html">首頁</a></li>
+        <li><a href="../../About.html">關於</a></li>
+        <li><a href="../../../Index/繁中網頁.html">服務</a></li>
+        <li><a href="../../../Contact.html">聯絡</a></li>
+    </ul>
+</div>
+
+<div id="container">
+    <button id="sidebar-toggle-button"><i class="fas fa-bars"></i></button>
+    <div id="sidebar">
+        <h2>小說列表</h2>
+        <div class="collapsible">
+            <button class="toggle-button">點擊展開</button>
+            <div id="novel-list-container"></div> <!-- 放置小说列表的容器 -->
+        </div>
+    </div>
+    <div id="content">
+        <h1 class="chapter-title" id="chapter-title"></h1>
+
+        <!-- 音訊播放器和字體控制項 (使用 Flexbox 佈局) -->
+        <div id="audio-controls-container">
+            <div id="audio-player">
+                <audio controls>
+                    <source src="audio/novel1.mp3" type="audio/mpeg">
+                    您的瀏覽器不支援音訊播放。
+                </audio>
+            </div>
+
+            <div id="font-controls">
+                <button id="decrease-font">A-</button>
+                <button id="increase-font">A+</button>
+                <span id="font-size-value">1.0rem</span> <!-- 顯示字體大小 -->
+            </div>
+        </div>
+
+        <div id="chapter-content">
+           <p>關於陽翔和艾利亞的謠言很快傳遍了整個學校，甚至連高年級的學生都在議論紛紛。對於這樣的傳聞，有些人只是笑笑，當作茶餘飯後的談資，但也有些人看不慣陽翔&mdash;&mdash;尤其是那些曾經暗戀艾利亞，卻未能引起她注意的人。他們心中的嫉妒與不甘漸漸轉化為針對陽翔的敵意。</p>
+
+<p>一天放學後，陽翔正準備離開學校，卻在教學樓的側門被幾名男生攔住了。他們都是高年級的學生，其中一個帶頭的高個子露出輕蔑的笑容，雙手插在口袋裡，擋住了陽翔的去路。</p>
+
+<p>「喂，你就是水野陽翔吧？」高個子語氣不善，目光中滿是敵意。</p>
+
+<p>陽翔皺起眉頭，感覺到不妙，試圖繞過他們，但高個子卻伸手一攔，冷冷地說：「別急著走，我們可是特地來找你的。」</p>
+
+<p>「有什麼事？」陽翔冷靜地問，試圖掩蓋內心的緊張。</p>
+
+<p>「還能有什麼事？像你這種人，根本不配靠近艾利亞。」高個子不屑地哼了一聲，身後的幾個男生立刻跟著附和，語氣充滿嘲諷：「是啊，也不知道你是怎麼讓她天天黏著你的。是不是用了什麼見不得人的手段？」</p>
+
+<p>「我和艾利亞只是普通朋友，你們不要亂猜。」陽翔強忍著怒氣，試圖平息這場對峙。</p>
+
+<p>然而，對方顯然並不滿足於他的解釋。高個子冷笑著逼近一步，語氣變得更為挑釁：「朋友？你覺得我們會信嗎？別裝了，像你這種不起眼的傢伙，怎麼可能吸引到她？」</p>
+
+<p>就在氣氛變得愈發緊張的時候，佐藤突然出現在陽翔身後。他毫不猶豫地站到陽翔身旁，擋在那些高年級學生面前：「喂，你們幾個人圍著一個學弟算什麼本事？有種找我試試！」</p>
+
+<p>高個子愣了一下，隨即露出不屑的笑容：「又來一個逞英雄的？行啊，既然你這麼積極，那就一起教訓好了！」</p>
+
+<p>話音剛落，幾個男生便向佐藤圍了過來，推搡與拳頭即將落下。然而，就在這千鈞一髮之際，一道熟悉的聲音從不遠處響起：「你們在幹什麼？」</p>
+
+<p>艾利亞的身影從教學樓的另一側走了過來，她的語氣冷冷的，目光中透著不容置疑的威嚴。她走到陽翔和佐藤面前，站定，與那幾個高年級學生對視，嘴角微微勾起一抹冰冷的笑容：「幾個人欺負兩個同學，挺有意思的啊。」</p>
+
+<p>高個子原本想裝腔作勢，但在艾利亞那令人不寒而慄的目光下，他的氣勢一下子弱了下去。他不甘心地哼了一聲，勉強撐住場面：「艾利亞，這是我們男人之間的事，你最好別插手。」</p>
+
+<p>「哦？」艾利亞挑了挑眉，語氣中滿是挑釁，「那我還真想看看，你們的『男人之間的事』能有多厲害。」</p>
+
+<p>說完，她抬起手，一瞬間，一股不可思議的壓迫感彷彿從四周襲來，那幾個高年級學生的身體像被什麼力量禁錮了一般，動彈不得。艾利亞的眼神冷酷而銳利，聲音低沉卻帶著壓倒性的威懾力：「欺負比你們弱小的人，只能說明你們很可悲。如果再讓我看到你們做這種事，我保證，你們不會有第二次機會。」</p>
+
+<p>那幾個男生的臉色瞬間蒼白，他們顫抖著退後一步，嘴裡磕磕巴巴地道歉：「我們&hellip;&hellip;我們只是開玩笑，不是故意的！」</p>
+
+<p>「開玩笑？」艾利亞冷哼一聲，語氣不屑，「那就記住這次教訓，不要再讓我看到你們。」</p>
+
+<p>高個子咬著牙，終於低下頭，帶著人灰溜溜地離開了。</p>
+
+<p>---</p>
+
+<p>「妳剛才做了什麼？」等那些人走遠，陽翔終於忍不住問道，他隱約感覺到艾利亞使用了某種非凡的力量。</p>
+
+<p>艾利亞轉身看向他，臉上恢復了一如既往的溫柔笑容：「只是給他們一點小小的提醒而已，放心，沒有傷到他們。」</p>
+
+<p>「但是&hellip;&hellip;」陽翔還想追問，卻被佐藤打斷：「陽翔，你還是少管這些了吧！今天如果不是艾利亞，我們可能真要吃虧了。」</p>
+
+<p>佐藤的話讓陽翔無言以對，他低頭看著艾利亞，複雜的情緒在心中翻湧。這一刻，他既感激她的幫助，又無法忽視她身上那份讓人琢磨不透的神秘感。</p>
+
+<p>「謝謝妳。」陽翔低聲說道，語氣中帶著一絲無奈。</p>
+
+<p>「不用謝，」艾利亞微微一笑，轉身朝教學樓外走去，「我說過，我會一直在你身邊的。」</p>
+
+<p>她的身影漸漸消失在夕陽下，留下陽翔和佐藤站在原地。陽翔抬頭望著天邊，內心暗暗感慨：日常，果然又回不到從前了。</p>
+
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2025 Lifer_Lighdow. All rights reserved.</p>
+</footer>
+
+<script src="../../../Novel.js"></script>
+<script src="../../../novelList.js"></script>  <!-- 加入這行 -->
+
+</body>
+</html>
