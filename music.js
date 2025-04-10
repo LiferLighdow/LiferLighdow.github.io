@@ -52,7 +52,9 @@ const musicData = {
         { title: '冊丹し日ヨ几回   日丹亡片', src: 'music/electronic/malbeno_back.mp3', cover: 'music/cover/malbeno_back.jpg' },
         { title: 'まごまごハッピー', src: 'music/electronic/magomago_happy.mp3', cover: 'music/cover/magomago_happy.jpg' },
         { title: 'ぐるぐるダンス', src: 'music/electronic/guruguru_dance.mp3', cover: 'music/cover/guruguru_dance.jpg' },
-        { title: 'にんぎょうのうた', src: 'music/electronic/ningyou_no_uta.mp3', cover: 'music/cover/ningyou_no_uta.jpg' }
+        { title: 'にんぎょうのうた', src: 'music/electronic/ningyou_no_uta.mp3', cover: 'music/cover/ningyou_no_uta.jpg' },
+		  { title: 'Sugary Affection', src: 'music/electronic/sugary_affection.mp3', cover: 'music/cover/sugary_affection.jpg' },
+        { title: 'Slumbering Sea', src: 'music/electronic/slumbering_sea.mp3', cover: 'music/cover/slumbering_sea.jpg' },
     ],
     vocaloid: [
         { title: '人生何のために', src: 'music/vocaloid/jinsei_nan_no_tame_ni.mp3', cover: 'music/cover/jinsei_nan_no_tame_ni.jpg' },
