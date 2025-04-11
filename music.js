@@ -63,7 +63,7 @@ const musicData = {
         { title: '❤꒐ ꒒ꄲ꒦ꏂ ꌦꄲ꒤❤', src: 'music/vocaloid/i_love_you.mp3', cover: 'music/cover/i_love_you.jpg' },
         { title: '罪悪感', src: 'music/vocaloid/zaiakukan.mp3', cover: 'music/cover/zaiakukan.jpg' },
         { title: 'Eternal Moment', src: 'music/vocaloid/eternal_moment.mp3', cover: 'music/cover/eternal_moment.jpg' },
-        { title: '01011001__ɅƧȼℏřØπ', src: 'music/vocaloid/ascron.mp3', cover: 'music/cover/ascron.jpg' },
+        { title: '01011001__ɅƧȼℏřØπ', src: 'music/vocaloid/ascron.mp3', cover: 'music/cover/ascron.gif' },
         { title: '和平の交響曲', src: 'music/vocaloid/wahei_no_koukyoukyoku.mp3', cover: 'music/cover/wahei_no_koukyoukyoku.jpg' },
         { title: '儚い幻', src: 'music/vocaloid/hakanai_maboroshi.mp3', cover: 'music/cover/hakanai_maboroshi.jpg' }
     ],
