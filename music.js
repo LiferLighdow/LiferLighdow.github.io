@@ -92,6 +92,7 @@ const musicData = {
     ],
     original: [
         { title: 'MALBENO5.4', src: 'music/original/malbeno5.4.mp3', cover: 'music/cover/malbeno5.4.jpg' },
+		  { title: 'MALBENO5.4-R.I.P', src: 'music/original/malbeno5.4-r.i.p.mp3', cover: 'music/cover/malbeno5.4-r.i.p.jpg' },
         { title: 'Dlesaws', src: 'music/original/dlesaws.mp3', cover: 'music/cover/dlesaws.png' },
         { title: 'Ⱨ₳ⱤĐ₵ØⱤɆ', src: 'music/original/hardcore.mp3', cover: 'music/cover/hardcore.jpg' },
         { title: '🌌Feline from the Multiverse 🌌', src: 'music/original/feline.mp3', cover: 'music/cover/feline.jpg' },
