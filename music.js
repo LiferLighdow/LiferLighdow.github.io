@@ -55,6 +55,8 @@ const musicData = {
         { title: 'にんぎょうのうた', src: 'music/electronic/ningyou_no_uta.mp3', cover: 'music/cover/ningyou_no_uta.jpg' },
 		  { title: 'Sugary Affection', src: 'music/electronic/sugary_affection.mp3', cover: 'music/cover/sugary_affection.jpg' },
         { title: 'Slumbering Sea', src: 'music/electronic/slumbering_sea.mp3', cover: 'music/cover/slumbering_sea.jpg' },
+		   { title: 'EtCr_musix', src: 'music/electronic/etcr_musix.mp3', cover: 'music/cover/etcr_musix.jpg' },
+        { title: 'Doomsday Conqueror', src: 'music/electronic/doomsday_conqueror.mp3', cover: 'music/cover/doomsday_conqueror.jpg' },
     ],
     vocaloid: [
         { title: '人生何のために', src: 'music/vocaloid/jinsei_nan_no_tame_ni.mp3', cover: 'music/cover/jinsei_nan_no_tame_ni.jpg' },
@@ -199,8 +201,6 @@ audio.addEventListener('ended', () => {
   if (repeatMode === 'single') {
     audio.currentTime = 0;
     audio.play();
-  } else if (repeatMode === 'folder') {
-    nextSong(); // 播放資料夾中的下一首
   } else {
     // 停止播放，或者可以設定為播放下一首
     nextSong()
@@ -473,19 +473,6 @@ function updatePlayButton() {
         playBtn.innerHTML = '<i class="fas fa-pause"></i>';
     }
 }
-
-// 音訊播放結束時的處理
-audio.addEventListener('ended', () => {
-  if (repeatMode === 'single') {
-    audio.currentTime = 0;
-    audio.play();
-  } else if (repeatMode === 'folder') {
-    nextSong(); // 播放資料夾中的下一首
-  } else {
-    // 停止播放，或者可以設定為播放下一首
-    nextSong()
-  }
-});
 
 // 事件監聽器
 playBtn.addEventListener('click', playSong);
