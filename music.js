@@ -6,6 +6,7 @@ const shuffleBtn = document.getElementById('shuffle');
 const repeatBtn = document.getElementById('repeat');
 const songCover = document.getElementById('song-cover');
 const songTitle = document.getElementById('song-title');
+const songArtist = document.getElementById('song-artist'); // 新增作者元素
 const progress = document.getElementById('progress');
 const currentTimeDisplay = document.getElementById('current-time');
 const durationDisplay = document.getElementById('duration');
@@ -30,7 +31,7 @@ const musicData = {
         { title: 'Too Late Wishes', src: 'music/pop/too_late_wishes.mp3', cover: 'music/cover/too_late_wishes.jpg' },
         { title: '悲劇の光', src: 'music/pop/higeki_no_hikari.mp3', cover: 'music/cover/higeki_no_hikari.jpg' },
         { title: '祈りの灯火（Female ver.）', src: 'music/pop/inori_no_tomoshibi_female.mp3', cover: 'music/cover/inori_no_tomoshibi_female.jpg' },
-		  { title: '祈りの灯火（Male ver.）', src: 'music/pop/inori_no_tomoshibi_male.mp3', cover: 'music/cover/inori_no_tomoshibi_male.jpg' },
+        { title: '祈りの灯火（Male ver.）', src: 'music/pop/inori_no_tomoshibi_male.mp3', cover: 'music/cover/inori_no_tomoshibi_male.jpg' },
         { title: 'Infinite_Labyrinth（Female ver.）', src: 'music/pop/infinite_labyrinth_female.mp3', cover: 'music/cover/infinite_labyrinth_female.jpg' },
         { title: 'Infinite_Labyrinth（Male ver.）', src: 'music/pop/infinite_labyrinth_male.mp3', cover: 'music/cover/infinite_labyrinth.jpg' },
         { title: '永遠の光（Male ver.）', src: 'music/pop/eien_no_hikari_male.mp3', cover: 'music/cover/eien_no_hikari_male.jpg' },
@@ -53,9 +54,9 @@ const musicData = {
         { title: 'まごまごハッピー', src: 'music/electronic/magomago_happy.mp3', cover: 'music/cover/magomago_happy.jpg' },
         { title: 'ぐるぐるダンス', src: 'music/electronic/guruguru_dance.mp3', cover: 'music/cover/guruguru_dance.jpg' },
         { title: 'にんぎょうのうた', src: 'music/electronic/ningyou_no_uta.mp3', cover: 'music/cover/ningyou_no_uta.jpg' },
-		  { title: 'Sugary Affection', src: 'music/electronic/sugary_affection.mp3', cover: 'music/cover/sugary_affection.jpg' },
+        { title: 'Sugary Affection', src: 'music/electronic/sugary_affection.mp3', cover: 'music/cover/sugary_affection.jpg' },
         { title: 'Slumbering Sea', src: 'music/electronic/slumbering_sea.mp3', cover: 'music/cover/slumbering_sea.jpg' },
-		   { title: 'EtCr_musix', src: 'music/electronic/etcr_musix.mp3', cover: 'music/cover/etcr_musix.jpg' },
+        { title: 'EtCr_musix', src: 'music/electronic/etcr_musix.mp3', cover: 'music/cover/etcr_musix.jpg' },
         { title: 'Doomsday Conqueror', src: 'music/electronic/doomsday_conqueror.mp3', cover: 'music/cover/doomsday_conqueror.jpg' },
     ],
     vocaloid: [
@@ -92,18 +93,18 @@ const musicData = {
     ],
     original: [
         { title: 'MALBENO5.4', src: 'music/original/malbeno5.4.mp3', cover: 'music/cover/malbeno5.4.jpg' },
-		  { title: 'MALBENO5.4-R.I.P', src: 'music/original/malbeno5.4-r.i.p.mp3', cover: 'music/cover/malbeno5.4-r.i.p.jpg' },
+        { title: 'MALBENO5.4-R.I.P', src: 'music/original/malbeno5.4-r.i.p.mp3', cover: 'music/cover/malbeno5.4-r.i.p.jpg' },
         { title: 'Dlesaws', src: 'music/original/dlesaws.mp3', cover: 'music/cover/dlesaws.png' },
         { title: 'Ⱨ₳ⱤĐ₵ØⱤɆ', src: 'music/original/hardcore.mp3', cover: 'music/cover/hardcore.jpg' },
         { title: '🌌Feline from the Multiverse 🌌', src: 'music/original/feline.mp3', cover: 'music/cover/feline.jpg' },
         { title: 'βρΜ≠ℋ', src: 'music/original/bpm.mp3', cover: 'music/cover/bpm.jpg' },
-		   { title: 'Ɽ͜͝Ʉ͠Ƨ͟Ⱨ͡₵̵Ø͟Ɽ͜Ɇ̸', src: 'music/original/rushcore.mp3', cover: 'music/cover/rushcore.jpg' },
+        { title: 'Ɽ͜͝Ʉ͠Ƨ͟Ⱨ͡₵̵Ø͟Ɽ͜Ɇ̸', src: 'music/original/rushcore.mp3', cover: 'music/cover/rushcore.jpg' },
         { title: '上波', src: 'music/original/uenami.mp3', cover: 'music/cover/uenami.jpg' },
     ],
-	 nightcore: [
-	     { title: '祈りの灯火（Nightcore ver.）', src: 'music/nightcore/inori_no_tomoshibi_nightcore.mp3', cover: 'music/cover/inori_no_tomoshibi_nightcore.jpg' },
-		  { title: '夢に縛られたあなた（Nightcore ver.）', src: 'music/nightcore/yume_ni_shibarareta_anata_nightcore.mp3', cover: 'music/cover/yume_ni_shibarareta_anata_nightcore.jpg' },
-	 ]
+    nightcore: [
+        { title: '祈りの灯火（Nightcore ver.）', src: 'music/nightcore/inori_no_tomoshibi_nightcore.mp3', cover: 'music/cover/inori_no_tomoshibi_nightcore.jpg' },
+        { title: '夢に縛られたあなた（Nightcore ver.）', src: 'music/nightcore/yume_ni_shibarareta_anata_nightcore.mp3', cover: 'music/cover/yume_ni_shibarareta_anata_nightcore.jpg' },
+    ]
 };
 
 let currentGenre = 'pop'; // 預設類型
@@ -131,11 +132,14 @@ updateGenreSelection(currentGenre);
 const imageViewerPopup = document.getElementById('image-viewer-popup');
 const imageViewerImage = document.getElementById('image-viewer-image');
 const imageViewerCloseButton = document.querySelector('#image-viewer-popup .close-button');
+
 // 載入歌曲
 function loadSong(song) {
     songTitle.innerText = song.title;
+    songArtist.innerText = "Lifer_Lighdow"; // 設置作者
     songCover.src = song.cover;
     audio.src = song.src;
+    updateTitleAnimation(); // 初始載入歌曲後更新動畫狀態
 }
 songCover.addEventListener('click', () => {
     imageViewerImage.src = songCover.src; // 設定圖片來源
@@ -195,19 +199,19 @@ function nextRepeatMode() {
         repeatMode = 'off';
         repeatBtn.innerHTML = '<i class="fas fa-redo"></i>'; // Font Awesome 圖示
     }
- // 更新 active class
+    // 更新 active class
     repeatBtn.classList.toggle('active', repeatMode !== 'off');
 }
 
 // 音訊播放結束時的處理
 audio.addEventListener('ended', () => {
-  if (repeatMode === 'single') {
-    audio.currentTime = 0;
-    audio.play();
-  } else {
-    // 停止播放，或者可以設定為播放下一首
-    nextSong()
-  }
+    if (repeatMode === 'single') {
+        audio.currentTime = 0;
+        audio.play();
+    } else {
+        // 停止播放，或者可以設定為播放下一首
+        nextSong()
+    }
 });
 
 // 隨機歌曲索引
@@ -343,8 +347,8 @@ function loadPlaylists() {
             currentGenre = genre;
             loadMusicList(genre);
             updateGenreSelection(genre);
-            switchPage('library'); 
-				//  切換到 Your Library 頁面
+            switchPage('library');
+            //  切換到 Your Library 頁面
         });
     });
 }
@@ -359,11 +363,11 @@ function switchPage(pageId) {
 
 // 載入音樂列表 (根據類型)
 function loadMusicList(genre) {
-  musicListContainer.innerHTML = '';
-  currentSongs = musicData[genre]; // 更新目前的歌曲列表
-  currentSongs.forEach((song, index) => {
-    const li = document.createElement('li');
-    li.innerHTML = `
+    musicListContainer.innerHTML = '';
+    currentSongs = musicData[genre]; // 更新目前的歌曲列表
+    currentSongs.forEach((song, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
       <div class="song-details">
         ${song.title}
       </div>
@@ -371,8 +375,8 @@ function loadMusicList(genre) {
         <button class="play-song" data-genre="${genre}" data-index="${index}"><i class="fas fa-play"></i></button>
       </div>
     `;
-    musicListContainer.appendChild(li);
-  });
+        musicListContainer.appendChild(li);
+    });
 }
 
 // 搜尋功能 (包含任何字)
@@ -390,7 +394,11 @@ function searchSongs() {
     for (const genre in musicData) {
         musicData[genre].forEach((song, index) => {
             if (song.title.toLowerCase().includes(searchTerm)) {
-                results.push({ ...song, genre, index }); // 加入類型資訊
+                results.push({
+                    ...song,
+                    genre,
+                    index
+                }); // 加入類型資訊
             }
         });
     }
@@ -424,7 +432,7 @@ function displaySearchResults(results) {
         });
 
         searchResultsContainer.appendChild(ul);
-		 searchResultsPopup.style.display = 'block'; // 顯示彈出視窗
+        searchResultsPopup.style.display = 'block'; // 顯示彈出視窗
     }
 }
 
@@ -441,8 +449,8 @@ searchResultsContainer.addEventListener('click', function(e) {
         loadSong(musicData[genre][index]);
         audio.play();
         updatePlayButton();
-        searchResultsPopup.style.display = 'none';// 關閉彈出視窗
-		  loadMusicList(genre); // 載入歌曲列表
+        searchResultsPopup.style.display = 'none'; // 關閉彈出視窗
+        loadMusicList(genre); // 載入歌曲列表
         updateGenreSelection(genre); //更新樣式
 
     }
@@ -476,6 +484,68 @@ function updatePlayButton() {
         playBtn.innerHTML = '<i class="fas fa-pause"></i>';
     }
 }
+
+function isFullwidth(char) {
+    // 全形字元的 Unicode 範圍 (大致)
+    const fullwidthRanges = [
+        [0x1100, 0x115f], // Hangul Jamo
+        [0x2e80, 0x303e], // CJK Radicals Supplement, Kangxi Radicals, Ideographic Description Characters, CJK Symbols and Punctuation
+        [0x3041, 0x30ff], // Hiragana, Katakana
+        [0x3130, 0x318e], // Hangul Compatibility Jamo, Hangul Syllables
+        [0x3200, 0x32fe], // Enclosed CJK Letters and Months, CJK Compatibility
+        [0x4e00, 0xa4cf], // CJK Unified Ideographs
+        [0xac00, 0xd7a3], // Hangul Syllables
+        [0xf900, 0xfaff], // CJK Compatibility Ideographs
+        [0xfe10, 0xfe19], // Vertical Forms
+        [0xfe30, 0xfe6b], // CJK Compatibility Forms, Small Form Variants
+        [0xff01, 0xff60], // Halfwidth and Fullwidth Forms
+        [0xffe0, 0xffe6]  // CJK Compatibility Forms
+    ];
+
+    const charCode = char.charCodeAt(0);
+
+    for (const range of fullwidthRanges) {
+        if (charCode >= range[0] && charCode <= range[1]) {
+            return true; // 是全形字元
+        }
+    }
+
+    return false; // 不是全形字元
+}
+
+function updateTitleAnimation() {
+    const titleText = songTitle.innerText;
+    let fullwidthCount = 0;
+    let halfwidthCount = 0;
+
+    for (let i = 0; i < titleText.length; i++) {
+        if (isFullwidth(titleText[i])) {
+            fullwidthCount++;
+        } else {
+            halfwidthCount++;
+        }
+    }
+
+    const equivalentFullwidthLength = fullwidthCount + (halfwidthCount / 2);
+    const shouldAnimate = equivalentFullwidthLength > 12;// 判斷全形字是否超過12個
+
+    if (shouldAnimate) {
+        songTitle.classList.add('animate-title');
+    } else {
+        songTitle.classList.remove('animate-title');
+    }
+}
+
+// 音訊播放結束時的處理
+audio.addEventListener('ended', () => {
+    if (repeatMode === 'single') {
+        audio.currentTime = 0;
+        audio.play();
+    } else {
+        // 停止播放，或者可以設定為播放下一首
+        nextSong()
+    }
+});
 
 // 事件監聽器
 playBtn.addEventListener('click', playSong);
@@ -511,7 +581,7 @@ searchInput.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault(); // 防止表單提交
         searchSongs();
-		  searchResultsPopup.style.display = 'block'; // 顯示彈出視窗
+        searchResultsPopup.style.display = 'block'; // 顯示彈出視窗
         switchPage('library'); // 跳轉到 Library 頁面
     }
 });
@@ -524,5 +594,5 @@ closeButton.addEventListener('click', () => {
     searchResultsPopup.style.display = 'none';
 });
 
-searchResultsPopup.style.display = 'none';//  搜尋結果彈出視窗
+searchResultsPopup.style.display = 'none'; //  搜尋結果彈出視窗
 imageViewerPopup.style.display = 'none'; // 圖片檢視器

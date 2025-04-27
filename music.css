@@ -1,26 +1,30 @@
 /* Reset */
 *, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    font-family: 'MyCustomFont',sans-serif;
+    font-family: 'MyCustomFont', sans-serif;
     background-color: #121212;
     color: #fff;
     margin: 0;
-	 padding: 0;
+    padding: 0;
     min-height: 100vh;
     display: flex;
-    flex-direction: column; /* 使用 Flexbox 垂直排列 */
+    flex-direction: column;
+    /* 使用 Flexbox 垂直排列 */
 }
+
 /* Header and Navigation */
 header {
-    background-color: #1e1e1e; /* 更深的背景色 */
+    background-color: #1e1e1e;
+    /* 更深的背景色 */
     color: #fff;
     padding: 1rem 0;
-    border-bottom: 1px solid #333; /* 可選：添加底邊框 */
+    border-bottom: 1px solid #333;
+    /* 可選：添加底邊框 */
 }
 
 nav {
@@ -35,7 +39,8 @@ nav {
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #007bff; /* 品牌色 */
+    color: #007bff;
+    /* 品牌色 */
 }
 
 nav ul {
@@ -48,21 +53,24 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #b3b3b3; /* 較柔和的文字顏色 */
+    color: #b3b3b3;
+    /* 較柔和的文字顏色 */
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 nav ul li a:hover {
-    color: #fff; /* 滑鼠懸停時變亮 */
+    color: #fff;
+    /* 滑鼠懸停時變亮 */
 }
-			/* Footer */
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 1rem 0;
-        }
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+}
 
 /* 定義自定義字體 */
 @font-face {
@@ -76,7 +84,7 @@ nav ul li a:hover {
 .container {
     display: flex;
     height: 100vh;
-	 flex-grow: 1;
+    flex-grow: 1;
 }
 
 /* 側邊欄 */
@@ -84,7 +92,8 @@ nav ul li a:hover {
     width: 250px;
     background-color: #000;
     padding: 20px;
-    transition: transform 0.3s ease-in-out; /* 增加過渡效果 */
+    transition: transform 0.3s ease-in-out;
+    /* 增加過渡效果 */
 }
 
 .search-bar {
@@ -118,10 +127,12 @@ nav ul li a:hover {
     padding: 10px 0;
     cursor: pointer;
     color: #b3b3b3;
-    transition: color 0.2s ease; /* 增加過渡效果 */
+    transition: color 0.2s ease;
+    /* 增加過渡效果 */
 }
 
-.sidebar li:hover, .sidebar li.active {
+.sidebar li:hover,
+.sidebar li.active {
     color: #fff;
 }
 
@@ -140,7 +151,8 @@ nav ul li a:hover {
     display: block;
 }
 
-.main-content h1, .main-content h2 {
+.main-content h1,
+.main-content h2 {
     margin-bottom: 20px;
 }
 
@@ -157,6 +169,66 @@ nav ul li a:hover {
     align-items: center;
 }
 
+/* 音樂播放器中的歌曲資訊 */
+.music-player .song-info {
+    display: flex;
+    align-items: center;
+    width: 20%;
+    /* 限制 .song-info 的寬度 */
+    overflow: hidden;
+}
+
+.music-player .song-info img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+/* 音樂播放器中的歌曲資訊文字容器 */
+.music-player .song-info .song-details {
+    width: 100%;
+    /* 讓文字容器佔滿剩餘空間 */
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* 音樂播放器中的歌曲標題 */
+.music-player .song-info h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #fff;
+    /* 移除overflow, white-space 和 text-overflow */
+    position: relative;
+    /* 保留相對定位 */
+    animation: none; /* 先關閉動畫，讓 JS 控制 */
+}
+
+.music-player .song-info h3.animate-title {
+    animation: scrollText 15s linear infinite;
+}
+
+/* 音樂播放器中的歌曲作者 */
+.music-player .song-info p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #b3b3b3;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    /* 超過寬度時顯示省略符號 */
+}
+
+/* 推薦歌曲區塊 */
+.player-controls {
+    width: 20%;
+    /* 控制按鈕區域的寬度 */
+    display: flex;
+    justify-content: center;
+    /* 讓按鈕水平居中 */
+    align-items: center;
+}
+
 .player-controls button {
     background: none;
     border: none;
@@ -166,30 +238,9 @@ nav ul li a:hover {
     cursor: pointer;
 }
 
-/* 隨機播放按鈕的樣式 */
-.player-controls button#shuffle.active {
-    color: #007bff; /* 藍色 */
-}
-
-/* 循環播放按鈕的樣式 (active 狀態) */
-.player-controls button#repeat.active {
-    color: #007bff; /* 藍色 */
-}
-
-.song-info {
-    display: flex;
-    align-items: center;
-}
-
-.song-info img {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-    border-radius: 5px;
-}
-
 .song-progress {
     flex: 1;
+    /* 讓進度條佔據剩餘空間 */
     margin: 0 20px;
     display: flex;
     align-items: center;
@@ -203,17 +254,21 @@ nav ul li a:hover {
     outline: none;
     -webkit-transition: .2s;
     transition: opacity .2s;
-    background: linear-gradient(to right, #007bff 0%, #007bff var(--progress-percent), #555 var(--progress-percent), #555 100%); /* 顏色進度條 */
+    background: linear-gradient(to right, #007bff 0%, #007bff var(--progress-percent), #555 var(--progress-percent), #555 100%);
+    /* 顏色進度條 */
 }
 
 .song-progress input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    /* width: 15px; */  /* 移除寬度 */
-    /* height: 15px; */ /* 移除高度 */
+    /* width: 15px; */
+    /* 移除寬度 */
+    /* height: 15px; */
+    /* 移除高度 */
     width: 0;
     height: 0;
-    background: transparent;  /* 透明背景 */
+    background: transparent;
+    /* 透明背景 */
     cursor: pointer;
     border-radius: 50%;
 }
@@ -222,6 +277,21 @@ nav ul li a:hover {
     font-size: 12px;
     color: #b3b3b3;
     margin: 0 5px;
+}
+
+/* 跑馬燈動畫 */
+@keyframes scrollText {
+    0% {
+        transform: translateX(10%);
+    }
+
+    50% {
+        transform: translateX(-50%); /* 向左滾動 */
+    }
+
+    100% {
+        transform: translateX(10%);
+    }
 }
 
 /* 播放列表 */
@@ -250,21 +320,21 @@ nav ul li a:hover {
 }
 
 #playlist-list {
-  list-style: none;
-  padding: 0;
+    list-style: none;
+    padding: 0;
 }
 
 #playlist-list li {
-  padding: 10px;
-  background-color: #1e1e1e;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+    padding: 10px;
+    background-color: #1e1e1e;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
 #playlist-list li:hover {
-  background-color: #3498db;
+    background-color: #3498db;
 }
 
 /* Genre list and music list */
@@ -281,12 +351,15 @@ nav ul li a:hover {
     border-radius: 5px;
     margin: 5px;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease-in-out; /* 添加 transform 過渡效果 */
+    transition: background-color 0.2s ease, transform 0.1s ease-in-out;
+    /* 添加 transform 過渡效果 */
 }
 
-.genre-list li:hover, .genre-list li.active {
+.genre-list li:hover,
+.genre-list li.active {
     background-color: #34495e;
-    transform: scale(1.05); /* 點擊時放大一點 */
+    transform: scale(1.05);
+    /* 點擊時放大一點 */
 }
 
 #music-list {
@@ -341,7 +414,8 @@ nav ul li a:hover {
 
 .featured-songs-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 調整磚塊大小 */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* 調整磚塊大小 */
     gap: 20px;
 }
 
@@ -352,7 +426,8 @@ nav ul li a:hover {
     cursor: pointer;
     transition: background-color 0.2s ease;
     display: flex;
-    align-items: center; /* 垂直對齊 */
+    align-items: center;
+    /* 垂直對齊 */
 }
 
 .featured-song:hover {
@@ -360,7 +435,8 @@ nav ul li a:hover {
 }
 
 .featured-song img {
-    width: 80px; /* 調整圖片大小 */
+    width: 80px;
+    /* 調整圖片大小 */
     height: 80px;
     border-radius: 5px;
     margin-right: 15px;
@@ -389,8 +465,10 @@ nav ul li a:hover {
     .sidebar {
         width: 100%;
         padding: 10px;
-        transform: translateX(0); /* 在小螢幕上始終顯示側邊欄 */
+        transform: translateX(0);
+        /* 在小螢幕上始終顯示側邊欄 */
     }
+
     .main-content {
         padding: 10px;
     }
@@ -418,19 +496,24 @@ nav ul li a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* 半透明背景 */
-    z-index: 1000; /* 確保在最上層 */
-    overflow: auto; /* 內容超出時顯示捲軸 */
+    background-color: rgba(0, 0, 0, 0.7);
+    /* 半透明背景 */
+    z-index: 1000;
+    /* 確保在最上層 */
+    overflow: auto;
+    /* 內容超出時顯示捲軸 */
 }
 
 .search-results-content {
     position: relative;
     background-color: #1e1e1e;
-    margin: 10% auto; /* 垂直和水平居中 */
+    margin: 10% auto;
+    /* 垂直和水平居中 */
     padding: 20px;
     border-radius: 5px;
     width: 80%;
-    max-width: 800px; /* 限制最大寬度 */
+    max-width: 800px;
+    /* 限制最大寬度 */
 }
 
 .search-results-content h2 {
@@ -454,8 +537,10 @@ nav ul li a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* 半透明背景 */
-    z-index: 1001; /* 確保在搜尋結果上方 */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* 半透明背景 */
+    z-index: 1001;
+    /* 確保在搜尋結果上方 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -464,7 +549,8 @@ nav ul li a:hover {
 #image-viewer-popup img {
     max-width: 90%;
     max-height: 90%;
-    object-fit: contain; /* 確保圖片完整顯示 */
+    object-fit: contain;
+    /* 確保圖片完整顯示 */
 }
 
 #image-viewer-popup .close-button {
@@ -474,4 +560,9 @@ nav ul li a:hover {
     font-size: 30px;
     color: #fff;
     cursor: pointer;
+}
+
+/* 移除這個，讓javascript判斷 */
+.animate-title {
+  animation: scrollText 10s linear infinite !important;
 }
