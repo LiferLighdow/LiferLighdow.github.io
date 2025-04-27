@@ -96,7 +96,9 @@ const musicData = {
         { title: 'Dlesaws', src: 'music/original/dlesaws.mp3', cover: 'music/cover/dlesaws.png' },
         { title: 'Ⱨ₳ⱤĐ₵ØⱤɆ', src: 'music/original/hardcore.mp3', cover: 'music/cover/hardcore.jpg' },
         { title: '🌌Feline from the Multiverse 🌌', src: 'music/original/feline.mp3', cover: 'music/cover/feline.jpg' },
-        { title: 'βρΜ≠ℋ', src: 'music/original/bpm.mp3', cover: 'music/cover/bpm.jpg' }
+        { title: 'βρΜ≠ℋ', src: 'music/original/bpm.mp3', cover: 'music/cover/bpm.jpg' },
+		   { title: 'Ɽ͜͝Ʉ͠Ƨ͟Ⱨ͡₵̵Ø͟Ɽ͜Ɇ̸', src: 'music/original/rushcore.mp3', cover: 'music/cover/rushcore.jpg' },
+        { title: '上波', src: 'music/original/uenami.mp3', cover: 'music/cover/uenami.jpg' },
     ],
 	 nightcore: [
 	     { title: '祈りの灯火（Nightcore ver.）', src: 'music/nightcore/inori_no_tomoshibi_nightcore.mp3', cover: 'music/cover/inori_no_tomoshibi_nightcore.jpg' },
