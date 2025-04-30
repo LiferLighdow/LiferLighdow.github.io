@@ -102,7 +102,7 @@ const musicData = {
         { title: 'βρΜ≠ℋ', src: 'music/original/bpm.mp3', cover: 'music/cover/bpm.jpg' },
         { title: 'Ɽ͜͝Ʉ͠Ƨ͟Ⱨ͡₵̵Ø͟Ɽ͜Ɇ̸', src: 'music/original/rushcore.mp3', cover: 'music/cover/rushcore.jpg' },
         { title: '上波', src: 'music/original/uenami.mp3', cover: 'music/cover/uenami.jpg' },
-		  { title: '疾嵐波', src: 'music/original/shiranami.mp3', cover: 'music/cover/shiranami.jpg' },
+        { title: '疾嵐波', src: 'music/original/shiranami.mp3', cover: 'music/cover/shiranami.jpg' },
         { title: '柔らかい波', src: 'music/original/yurakai_nami.mp3', cover: 'music/cover/yurakai_nami.jpg' },
     ],
     nightcore: [
