@@ -22,6 +22,8 @@ const musicListContainer = document.getElementById('music-list');
 const searchResultsPopup = document.getElementById('search-results-popup');
 const searchResultsContainer = document.getElementById('search-results');
 const closeButton = document.querySelector('#search-results-popup .close-button');
+// 取得下載按鈕的參照
+const downloadButton = document.getElementById('download-button');
 
 // 模擬從資料夾 "掃描" 音樂
 const musicData = {
@@ -141,8 +143,38 @@ function loadSong(song) {
     songArtist.innerText = "Lifer_Lighdow"; // 設置作者
     songCover.src = song.cover;
     audio.src = song.src;
-    updateTitleAnimation(); // 初始載入歌曲後更新動畫狀態
+	 // 初始載入歌曲後更新動畫狀態
+    updateTitleAnimation(); 
+	 
+	 // 更新下載連結
+    updateDownloadLink(song.title);
 }
+
+// 更新下載連結
+function updateDownloadLink(title) {
+    const artist = "Lifer_Lighdow"; // 固定藝術家名稱
+    const fileName = `${title} - ${artist}.mp3`; // 自訂檔名
+    downloadButton.onclick = () => {
+        downloadFile(audio.src, fileName);
+    };
+}
+
+// 下載檔案函式
+function downloadFile(url, fileName) {
+    fetch(url)
+        .then(res => res.blob())
+        .then(blob => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(a.href); // 釋放記憶體
+            document.body.removeChild(a); // 移除元素
+        });
+}
+
 songCover.addEventListener('click', () => {
     imageViewerImage.src = songCover.src; // 設定圖片來源
     imageViewerPopup.style.display = 'flex'; // 顯示圖片檢視器
@@ -440,19 +472,19 @@ function displaySearchResults(results) {
 
 // 事件委託：將事件監聽器添加到父元素
 
-searchResultsContainer.addEventListener('click', function(e) {
+ searchResultsContainer.addEventListener('click', function(e) {
     if (e.target.classList.contains('play-song') || e.target.parentNode.classList.contains('play-song')) {
         const genre = e.target.dataset.genre || e.target.parentNode.dataset.genre;
         const index = parseInt(e.target.dataset.index || e.target.parentNode.dataset.index);
 
         currentGenre = genre; // 載入歌曲時，將 currentGenre 更新為所選歌曲的類型
         songIndex = index; // 載入歌曲時，將 songIndex 更新為所選歌曲的索引
-
-        loadSong(musicData[genre][index]);
+		  const song = musicData[genre][index];
+        loadSong(song);
         audio.play();
         updatePlayButton();
-        searchResultsPopup.style.display = 'none'; // 關閉彈出視窗
-        loadMusicList(genre); // 載入歌曲列表
+        searchResultsPopup.style.display = 'none';// 關閉彈出視窗
+		  loadMusicList(genre); // 載入歌曲列表
         updateGenreSelection(genre); //更新樣式
 
     }
@@ -464,11 +496,10 @@ musicListContainer.addEventListener('click', function(e) {
         const index = parseInt(e.target.dataset.index || e.target.parentNode.dataset.index);
 
         songIndex = index;
-        loadSong(musicData[genre][index]);
+		  const song = musicData[genre][index];
+        loadSong(song);
         audio.play();
         updatePlayButton();
-
-
     }
 });
 
