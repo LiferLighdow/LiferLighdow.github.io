@@ -566,3 +566,31 @@ footer {
 .animate-title {
   animation: scrollText 10s linear infinite !important;
 }
+
+/* 定義按鈕的基礎樣式 */
+.player-controls button,
+#download-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: color 0.3s ease; /* 添加顏色過渡效果 */
+}
+
+/* 按鈕的滑鼠懸停效果 */
+.player-controls button:hover,
+#download-button:hover {
+    color: #007bff; /* 滑鼠懸停時變色 */
+}
+
+/* 隨機播放按鈕的樣式 */
+.player-controls button#shuffle.active {
+    color: #007bff; /* 藍色 */
+}
+
+/* 循環播放按鈕的樣式 (active 狀態) */
+.player-controls button#repeat.active {
+    color: #007bff; /* 藍色 */
+}
