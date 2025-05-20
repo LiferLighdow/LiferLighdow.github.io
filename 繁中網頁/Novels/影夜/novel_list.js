@@ -132,6 +132,11 @@ function insertNovelList() {
         chapterLinks.forEach(link => {
             if (link.href === window.location.href) {
                 link.classList.add('active');
+                // 更新標題
+                const currentTitle = document.querySelector('h1.chapter-title');
+                if (currentTitle) {
+                    currentTitle.textContent = link.dataset.title; // 更新網頁標題
+                }
             }
         });
     } else {
