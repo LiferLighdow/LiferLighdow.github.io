@@ -104,7 +104,9 @@ const musicData = {
         { title: '上波', src: 'music/original/uenami.mp3', cover: 'music/cover/uenami.jpg' },
         { title: '疾嵐波', src: 'music/original/shiranami.mp3', cover: 'music/cover/shiranami.jpg' },
         { title: '柔らかい波', src: 'music/original/yurakai_nami.mp3', cover: 'music/cover/yurakai_nami.jpg' },
+		  { title: '千夜の影', src: 'music/original/senya_no_kage.mp3', cover: 'music/cover/senya_no_kage.jpg' },
     ],
+	     
     nightcore: [
         { title: '祈りの灯火（Nightcore ver.）', src: 'music/nightcore/inori_no_tomoshibi_nightcore.mp3', cover: 'music/cover/inori_no_tomoshibi_nightcore.jpg' },
         { title: '夢に縛られたあなた（Nightcore ver.）', src: 'music/nightcore/yume_ni_shibarareta_anata_nightcore.mp3', cover: 'music/cover/yume_ni_shibarareta_anata_nightcore.jpg' },
