@@ -50,14 +50,6 @@ toggleButton.addEventListener('click', () => {
     }
 });
 
-// Highlight the active link based on the current page URL
-/*const chapterLinks = document.querySelectorAll('#chapter-list a'); //取得小說列表的連結(不能寫在這裡)
-chapterLinks.forEach(link => {
-    if (link.href === window.location.href) {
-        link.classList.add('active');
-    }
-});*/
-
 // Function to update the audio source based on the HTML filename
 function updateAudioSource() {
     const path = window.location.pathname;
@@ -68,9 +60,28 @@ function updateAudioSource() {
     audioElement.load();
 }
 
-// Call updateAudioSource() on page load
+// 根據檔案位置設定網頁標題
+function setPageTitle() {
+    const path = window.location.pathname;
+    const parts = path.split('/');
+    let folderName = parts[parts.length - 2]; // 取得上一個資料夾的名稱
+
+    // 解碼 URI 編碼的字串
+    try {
+        folderName = decodeURIComponent(folderName);
+    } catch (e) {
+        console.error('無法解碼資料夾名稱:', e);
+        // 如果解碼失敗，可以使用原始資料夾名稱
+    }
+
+    // 設定網頁標題
+    document.title = folderName;
+}
+
+// Call updateAudioSource() and setPageTitle() on page load
 window.addEventListener('load', () => {
     updateAudioSource();
+    setPageTitle(); // 設定網頁標題
 });
 
 // 側邊欄隱藏/顯示切換
