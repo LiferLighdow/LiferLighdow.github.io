@@ -124,7 +124,7 @@ let repeatMode = 'off'; // 循環播放模式 ('off', 'single', 'folder')
 const playlists = Object.keys(musicData).map(genre => ({
     name: genre,
     description: `Lifer_Lighdow's ${genre} music genre`,
-    cover: `music/cover/${genre}.png`, // 假設封面的命名規則
+    cover: `music/cover/${genre}.webp`, // 假設封面的命名規則
     songs: musicData[genre].map((_, index) => index) // 歌曲索引
 }));
 
