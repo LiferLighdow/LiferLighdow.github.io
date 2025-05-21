@@ -22,8 +22,7 @@ const musicListContainer = document.getElementById('music-list');
 const searchResultsPopup = document.getElementById('search-results-popup');
 const searchResultsContainer = document.getElementById('search-results');
 const closeButton = document.querySelector('#search-results-popup .close-button');
-// 取得下載按鈕的參照
-const downloadButton = document.getElementById('download-button');
+const downloadButton = document.getElementById('download-button');// 取得下載按鈕的參照
 
 // 模擬從資料夾 "掃描" 音樂
 const musicData = {
@@ -104,7 +103,7 @@ const musicData = {
         { title: '上波', src: 'music/original/uenami.mp3', cover: 'music/cover/uenami.jpg' },
         { title: '疾嵐波', src: 'music/original/shiranami.mp3', cover: 'music/cover/shiranami.jpg' },
         { title: '柔らかい波', src: 'music/original/yurakai_nami.mp3', cover: 'music/cover/yurakai_nami.jpg' },
-		  { title: '千夜の影', src: 'music/original/senya_no_kage.mp3', cover: 'music/cover/senya_no_kage.jpg' },
+        { title: '千夜の影', src: 'music/original/senya_no_kage.mp3', cover: 'music/cover/senya_no_kage.jpg' },
     ],
 	     
     nightcore: [
