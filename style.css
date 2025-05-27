@@ -5,6 +5,7 @@ body {
     padding: 0;
     background-color: #f4f4f4;
     color: #333;
+    overflow-x: hidden; /* 防止橫向捲軸 */
 }
 
 /* 定義自定義字體 */
@@ -159,8 +160,8 @@ nav ul li a {
 }
 
 .button {
-    padding: 1rem 2rem;
-    margin: 1rem;
+    padding: 0.8rem 1.5rem; /* Adjust as needed */
+    margin: 0.5rem;       /* Adjust as needed */
     border-radius: 15px;
     display: inline-block;
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
@@ -169,6 +170,14 @@ nav ul li a {
     border: none;
     font-weight: 500;
     cursor: pointer;
+	 box-sizing: border-box; /* VERY IMPORTANT */
+    -webkit-box-sizing: border-box; /* For older Safari */
+    -moz-box-sizing: border-box; /* For older Firefox */
+    /* Your other existing button styles (color, background, border-radius, etc.)
+*/
+    overflow: hidden;      /* Hide overflowing content */
+    text-overflow: ellipsis; /* Add ellipsis for long text */
+    white-space: nowrap;    /* Prevent text from wrapping */
 }
 
 .button:hover {
@@ -215,27 +224,71 @@ footer {
     }
 }
 
-/* Responsive Design (Optional) - Adjust as needed */
+/* Apply box-sizing to all elements */
+*, *::before, *::after {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box; /* For older Safari */
+  -moz-box-sizing: border-box; /* For older Firefox */
+}
+
+
+/* --- Mobile Specific Styles --- */
+
+/* 1. 320x480 (Very small phones) */
+@media (max-width: 320px) {
+    .button {
+        width: 95%;
+        font-size: 0.7rem;
+        padding: 0.4rem 0.8rem; /* Smaller padding */
+        margin: 0.5rem;        /* Smaller margin */
+    }
+}
+
+/* 2. 640x960 (Older iPhones, some Android) */
+@media (min-width: 321px) and (max-width: 640px) and (max-height: 960px) {
+    .button {
+        width: 90%;
+        padding: 0.6rem 1.2rem; /* Adjust padding */
+        margin: 0.7rem;        /* Adjust margin */
+    }
+}
+
+/* 3. 640x1136 (iPhone 5/5s/SE) */
+@media (min-width: 321px) and (max-width: 640px) and (min-height: 961px) and (max-height: 1136px) {
+    .button {
+        width: 85%;
+        padding: 0.7rem 1.4rem; /* Adjust padding */
+        margin: 0.8rem;        /* Adjust margin */
+    }
+}
+
+/* 4. 760x1334 (iPhone 6/7/8) */
+@media (min-width: 641px) and (max-width: 760px) and (max-height: 1334px) {
+    .button {
+        width: 75%;
+        padding: 0.8rem 1.6rem; /* Adjust padding */
+        margin: 0.9rem;        /* Adjust margin */
+    }
+}
+
+/* 5. 1242x2208 (iPhone 6/7/8 Plus) */
+@media (min-width: 761px) and (max-width: 1242px) and (max-height: 2208px) {
+    .button {
+        width: 65%;
+        font-size: 1rem;
+        padding: 0.9rem 1.8rem; /* Adjust padding */
+        margin: 1rem;        /* Adjust margin */
+    }
+}
+
+/* --- General Mobile Adjustments (Fallback) --- */
 @media (max-width: 768px) {
-    nav {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    nav ul {
-        margin-top: 1rem;
-        flex-direction: column;
-    }
-
-    nav ul li {
-        margin: 0.5rem 0;
-    }
-
     .button-container {
         flex-direction: column;
+        align-items: center;
     }
 
-    .hero {
-        height: 500px; /* Adjusted for smaller screens */
+    .button {
+        width: 90%; /* Or adjust as needed */
     }
 }
