@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>精美文字轉語音</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #e9ecef;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #343a40;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 85%;
+      max-width: 700px;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: #495057;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px; /* 縮小與字數顯示的間距 */
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 16px;
+      resize: vertical;
+    }
+
+    /* 語言選擇下拉式選單 */
+    #languageSelect {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 16px;
+      appearance: none; /* 移除預設樣式 */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23495057' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); /* 下拉箭頭圖示 */
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+    }
+
+    /* 橫向捲軸語音選項 */
+    .voice-options-container {
+      overflow-x: auto;
+      white-space: nowrap;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+    }
+
+    .voice-option {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #f8f9fa;
+      color: #495057;
+      transition: background-color 0.3s ease;
+      margin-right: 8px;
+    }
+
+    .voice-option:hover,
+    .voice-option.selected {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .slider-label {
+      margin-right: 15px;
+      width: 80px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      background: #d3d3d3;
+      border-radius: 5px;
+      outline: none;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+
+    input[type="range"]:hover {
+      opacity: 1;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #007bff;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button.cancel-button {
+      background-color: #dc3545;
+    }
+
+    button.cancel-button:hover {
+      background-color: #c82333;
+    }
+
+    /* 字數顯示 */
+    #charCount {
+      text-align: right;
+      color: #6c757d;
+      margin-bottom: 15px; /* 增加與字數顯示的間距 */
+    }
+
+    /* 語速和音調數值顯示 */
+    .slider-value {
+      margin-left: 10px;
+      color: #6c757d;
+      width: 30px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        width: 95%;
+        padding: 30px;
+      }
+      textarea {
+        font-size: 15px;
+      }
+      button {
+        font-size: 16px;
+        padding: 12px 20px;
+      }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: auto;
+      padding: 20px;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>文字轉語音</h1>
+
+  <div class="container">
+    <label for="textToSpeak">輸入文字：</label>
+    <textarea id="textToSpeak"></textarea>
+    <div id="charCount">字數: 0</div>
+
+    <label for="languageSelect">選擇語言：</label>
+    <select id="languageSelect"></select>
+
+    <label>選擇語音：</label>
+    <div class="voice-options-container">
+      <div class="voice-options" id="voiceOptions">
+      </div>
+    </div>
+
+    <div class="slider-container">
+      <label class="slider-label" for="rate">語速：</label>
+      <input type="range" id="rate" min="0.1" max="2" value="1" step="0.1">
+      <span id="rateValue" class="slider-value">1.0</span>
+    </div>
+
+    <div class="slider-container">
+      <label class="slider-label" for="pitch">音調：</label>
+      <input type="range" id="pitch" min="0" max="2" value="1" step="0.1">
+      <span id="pitchValue" class="slider-value">1.0</span>
+    </div>
+
+    <div class="button-container">
+      <button id="toggleSpeak" onclick="toggleSpeak()">
+        <i class="fas fa-play"></i> 播放
+      </button>
+      <button id="cancelSpeak" class="cancel-button" onclick="cancelSpeak()">
+        <i class="fas fa-stop"></i> 取消
+      </button>
+      <button id="downloadButton" onclick="downloadAudio()">
+        <i class="fas fa-download"></i> 下載
+      </button>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2024 文字轉語音應用
+  </footer>
+
+  <script src="https://unpkg.com/js-speech/dist/js-speech.min.js"></script>
+  <script>
+    const synth = window.speechSynthesis;
+    const textInput = document.getElementById('textToSpeak');
+    const languageSelect = document.getElementById('languageSelect');
+    const voiceOptions = document.getElementById('voiceOptions');
+    const rateInput = document.getElementById('rate');
+    const pitchInput = document.getElementById('pitch');
+    const toggleSpeakButton = document.getElementById('toggleSpeak');
+    const cancelSpeakButton = document.getElementById('cancelSpeak');
+    const downloadButton = document.getElementById('downloadButton');
+    const charCountElement = document.getElementById('charCount');
+    const rateValueElement = document.getElementById('rateValue');
+    const pitchValueElement = document.getElementById('pitchValue');
+
+    let voices = [];
+    let currentUtterance = null;
+    let isSpeaking = false;
+    let currentVoice = null;
+    let chunkIndex = 0;
+    let chunks = [];
+    let isPaused = false;
+
+    // 監聽 textarea 的輸入事件
+    textInput.addEventListener('input', updateCharCount);
+
+    // 更新字數
+    function updateCharCount() {
+      const text = textInput.value;
+      charCountElement.textContent = `字數: ${text.length}`;
+    }
+
+    // 更新語速數值
+    function updateRateValue() {
+      rateValueElement.textContent = rateInput.value;
+    }
+
+    // 更新音調數值
+    function updatePitchValue() {
+      pitchValueElement.textContent = pitchInput.value;
+    }
+
+    // 監聽語速輸入框
+    rateInput.addEventListener('input', updateRateValue);
+
+    // 監聽音調輸入框
+    pitchInput.addEventListener('input', updatePitchValue);
+
+
+    // 1.  Populate Language List
+    function populateLanguageList() {
+      const uniqueLanguages = new Set();
+      voices.forEach(voice => {
+        const lang = voice.lang;
+        if (!uniqueLanguages.has(lang)) {
+          uniqueLanguages.add(lang);
+        }
+      });
+
+      languageSelect.innerHTML = '';  // Clear existing options
+      uniqueLanguages.forEach(lang => {
+        const option = document.createElement('option');
+        option.value = lang;
+        option.textContent = lang;  // Or a more user-friendly language name
+        languageSelect.appendChild(option);
+      });
+
+      // Add event listener to language select
+      languageSelect.addEventListener('change', filterVoicesByLanguage);
+    }
+
+
+    // 2. Populate Voice List (filtered by language)
+    function populateVoiceList(selectedLanguage = null) {
+      voiceOptions.innerHTML = '';  // Clear existing options
+
+      const uniqueVoices = [];
+      const seen = new Set();
+
+      const filteredVoices = selectedLanguage ? voices.filter(voice => voice.lang === selectedLanguage) : voices;
+
+      filteredVoices.forEach(voice => {
+        if (!seen.has(voice.name)) {
+          uniqueVoices.push(voice);
+          seen.add(voice.name);
+        }
+      });
+
+
+      uniqueVoices.forEach(voice => {
+        const voiceOption = document.createElement('div');
+        voiceOption.classList.add('voice-option');
+        voiceOption.textContent = voice.name;
+        voiceOption.addEventListener('click', () => selectVoice(voice));
+        voiceOptions.appendChild(voiceOption);
+      });
+
+      if (uniqueVoices.length > 0) {
+        selectVoice(uniqueVoices[0]); // Select first available voice
+      }
+    }
+
+
+    // 3. Filter Voices When Language Changes
+    function filterVoicesByLanguage() {
+      const selectedLanguage = languageSelect.value;
+      populateVoiceList(selectedLanguage); // Repopulate voice list with filtered voices
+    }
+
+
+    // 4. Select Voice
+    function selectVoice(voice) {
+      document.querySelectorAll('.voice-option').forEach(el => el.classList.remove('selected'));
+      const selectedVoiceElement = Array.from(voiceOptions.children).find(el => el.textContent === voice.name);
+      if (selectedVoiceElement) {
+        selectedVoiceElement.classList.add('selected');
+      }
+      currentVoice = voice;
+    }
+
+    // 5. Text Chunking and Speaking
+    function speakLongText(text, chunkSize = 500) {
+      chunks = [];  // Reset chunks array
+      for (let i = 0; i < text.length; i += chunkSize) {
+        chunks.push(text.substring(i, i + chunkSize));
+      }
+      chunkIndex = 0; // Reset index
+      isSpeaking = true; // 確保開始播放時設定為 true
+      isPaused = false; // 確保重新開始時，暫停狀態是 false
+      toggleSpeakButton.innerHTML = '<i class="fas fa-pause"></i> 暫停';
+      speakNextChunk();
+    }
+
+
+    function speakNextChunk() {
+      if (isPaused) return; // 如果是暫停狀態，直接返回，不再朗讀下一個區塊
+
+      if (chunkIndex < chunks.length) {
+        currentUtterance = new SpeechSynthesisUtterance(chunks[chunkIndex]);
+        currentUtterance.voice = currentVoice;
+        currentUtterance.rate = parseFloat(rateInput.value);
+        currentUtterance.pitch = parseFloat(pitchInput.value);
+
+        currentUtterance.onend = () => {
+          chunkIndex++;
+          speakNextChunk();
+        };
+
+        currentUtterance.onerror = (event) => {
+          console.error('SpeechSynthesisUtterance.onerror: ' + event.name);
+          stopSpeaking(); // Correctly stop the speaking process on error
+        };
+
+        synth.speak(currentUtterance);
+
+      } else {
+        stopSpeaking(); // Stop after all chunks are spoken
+      }
+    }
+
+    // 6. Stop Speaking (Helper function)
+    function stopSpeaking() {
+      synth.cancel();
+      isSpeaking = false;
+      isPaused = false;
+      toggleSpeakButton.innerHTML = '<i class="fas fa-play"></i> 播放';
+      chunkIndex = 0; // 重置區塊索引
+    }
+
+    // 7. Toggle Speak (Play/Pause/Resume) - FINAL CORRECTED + LONG TEXT PAUSE FIX
+    function toggleSpeak() {
+        const text = textInput.value;
+
+        if (isSpeaking) {
+            // 暫停
+            synth.pause();
+            isSpeaking = false;
+            isPaused = true;
+            toggleSpeakButton.innerHTML = '<i class="fas fa-play"></i> 繼續';
+
+            // 清除目前播放的區塊的 onend 事件
+            if (currentUtterance) {
+              currentUtterance.onend = null;
+            }
+
+        } else if (isPaused) {
+            // 恢復
+            synth.resume();
+            isSpeaking = true;
+            isPaused = false;
+            toggleSpeakButton.innerHTML = '<i class="fas fa-pause"></i> 暫停';
+        } else {
+            // 開始
+            speakLongText(text);
+        }
+    }
+
+
+    // 8. Cancel Speaking
+    function cancelSpeak() {
+        stopSpeaking();
+    }
+
+    // 9. Download Audio
+    async function downloadAudio() {
+        const text = textInput.value;
+        if (text) {
+            try {
+                const speech = new jsSpeech();
+                speech.export(text, 'audio.mp3');  // Download the audio file
+            } catch (error) {
+                console.error("下載音訊時發生錯誤:", error);
+                alert("無法下載音訊。 請檢查您的瀏覽器設定和網路連線。");
+            }
+        } else {
+            alert("請先輸入文字。");
+        }
+    }
+
+
+    // ---- Initialize ---
+    function initialize() {
+      voices = synth.getVoices(); // Get voices immediately
+
+      populateLanguageList(); // Populate language dropdown
+      filterVoicesByLanguage(); // Populate initial voices
+      updateCharCount(); // 初始化字數
+      updateRateValue(); // 初始化語速數值
+      updatePitchValue(); // 初始化音調數值
+
+      //Event Listener for voiceschanged (in case voices load later)
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = () => {
+          voices = synth.getVoices();
+          populateLanguageList();
+          filterVoicesByLanguage();
+        };
+      }
+    }
+
+    initialize(); // Call initialize
+
+  </script>
+</body>
+</html>
