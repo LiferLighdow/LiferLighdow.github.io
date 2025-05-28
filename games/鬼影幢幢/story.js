@@ -1,4 +1,11 @@
 const storyData = {
+     "gameIntro": {
+        text: "歡迎來到《鬼影幢幢》！\n\n你將扮演一位古宅探險家，受匿名信的邀請，前來解開這座廢棄古宅的謎團，並獲得豐厚的獎金。\n\n請注意，這座古宅充滿了危險和恐怖。你的每一個選擇都將影響你的命運，總共有11個結局。\n\n祝你好運！",
+        buttons: [
+            { text: "確認開始", nextSection: "introduction" }
+        ]
+    },
+    
     "introduction": {
         text: "你收到了一封匿名信，邀請你到一座廢棄已久的古宅探險。傳說這座古宅鬧鬼，曾發生過許多恐怖事件，而且曾有人在此失蹤。\n\n信中提到，如果你能解開古宅的謎團，就能獲得豐厚的獎金。儘管心中忐忑不安，但你還是決定前往，因為你對超自然現象充滿好奇，並且需要這筆錢。\n\n但你也可以選擇忽略這封信...",
         buttons: [
@@ -225,7 +232,8 @@ const storyData = {
       text: "你鼓起勇氣，試圖和洋娃娃溝通。「你想要什麼？我能幫你做什麼？」。\n\n洋娃娃停止了笑聲，它的眼神似乎變得柔和了一些。「我只是想要一個朋友...你能留下來陪我嗎？」。你會...",
       buttons: [
         { text: "留下來陪洋娃娃", nextSection: "dollFriend" },
-        { text: "拒絕洋娃娃", nextSection: "attackDoll" } // 或者回到"newWoodDoor"，讓玩家重新選擇
+        { text: "拒絕洋娃娃", nextSection: "attackDoll" },
+		  { text: "逃離洋娃娃", nextSection: "backToHallway" }
       ]
     },
 
@@ -321,6 +329,23 @@ const storyData = {
     }
 };
 
+const endingLog = [];
+
+const endingSummaries = {
+  "refuseInvitation": "結局一：拒絕邀請",
+  "happyEndingWithGhostGirl": "好結局一：人鬼同居",
+  "dollFriend": "好結局二：摯友娃娃",
+  "ghostDeal": "好結局三：靈魂救贖",
+  "ending": "真結局：逃離古宅",
+  "statue": "壞結局一：石像詛咒",
+  "mirrorWorld": "壞結局二：鏡像世界",
+  "attackDoll": "壞結局三：玩偶詛咒",
+  "musicBox": "壞結局四：音樂盒",
+  "fightGhost": "壞結局五：怨魂",
+  "readSpell": "壞結局六：成為惡魔"
+  // 在這裡添加更多結局的簡短描述詞
+};
+
 function showSection(sectionId) {
     const section = storyData[sectionId];
     if (!section) {
@@ -329,13 +354,34 @@ function showSection(sectionId) {
     }
 
     const main = document.querySelector('main');
-    main.innerHTML = `
+    let sectionHTML = `
       <section id="${sectionId}">
         <p>${section.text.replace(/\n/g, '<br>')}</p>
         ${section.buttons.map(button => `<button class="button" onclick="showSection('${button.nextSection}')">${button.text}</button>`).join('')}
       </section>
     `;
+
+    main.innerHTML = sectionHTML;
+
+    // 判斷是否為結局，如果是，則加入記錄
+    if (endingSummaries.hasOwnProperty(sectionId)) {
+      const endingSummary = endingSummaries[sectionId] || "未知結局";
+      recordEnding(endingSummary);
+    }
 }
 
+function recordEnding(endingSummary) {
+  if (!endingLog.includes(endingSummary)) {
+    endingLog.push(endingSummary);
+    updateEndingLogDisplay();
+  }
+}
+
+function updateEndingLogDisplay() {
+  const endingList = document.getElementById('ending-list');
+  endingList.innerHTML = endingLog.map(ending => `<li>${ending}</li>`).join('');
+}
+
+
 // 初始化遊戲，顯示第一個區塊
-showSection('introduction');
+showSection('gameIntro');

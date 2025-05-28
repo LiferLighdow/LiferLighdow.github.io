@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>鬼影幢幢</title>
   <style>
-    /* (這裡保留先前提供的 CSS 樣式) */
-
+    /* (請在此處加入先前提供的 CSS 樣式) */
     body {
       font-family: 'MyCustomFont', sans-serif;
       background-color: #222;
@@ -166,6 +165,63 @@
         background-color: #bb6666;
     }
 
+    #ending-log {
+      width: 300px;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 15px;
+      color: #ddd;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+      margin-right: 20px; /* 與主要內容區隔 */
+      flex-shrink: 0; /* 防止被壓縮 */
+    }
+
+    #ending-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    #ending-list li {
+      margin-bottom: 12px;
+      font-size: 1em;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0, 0.7); /* 更深的背景 */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      transition: background-color 0.3s ease;
+    }
+
+	 #ending-list li:hover {
+      background-color: rgba(0, 0, 0, 0.9); /* 更深的hover效果 */
+    }
+
+	 .main-container {
+      display: flex;
+      width: 100%;
+      min-height: 70vh;
+    }
+
+	 main {
+      flex-grow: 1; /* 佔據剩餘空間 */
+    }
+
+    .hidden {
+      display: none; /* 用於隱藏記錄 */
+    }
+
+    #toggle-log-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 15px;
+      background-color: #555;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
   </style>
 </head>
 <body>
@@ -185,14 +241,25 @@
       <h1>鬼影幢幢</h1>
     </header>
 
+	 <button id="toggle-log-button">顯示/隱藏 探險記錄</button>
+
+    <div class="main-container">
+        <div id="ending-log" class="hidden">
+            <h3>探險記錄</h3>
+            <ul id="ending-list">
+              <!-- 結局將在這裡動態生成 -->
+            </ul>
+          </div>
+
     <main>
       <!-- 劇情內容將由 JavaScript 動態產生 -->
     </main>
+	</div>
 
     <footer>
-      <p>&copy; 2025 Lifer_Lighdow——鬼影幢幢</p>
+      <p>© 2025 Lifer_Lighdow——鬼影幢幢</p>
     </footer>
-  </div>
+  
 
   <script>
       // 年齡驗證
@@ -208,9 +275,20 @@
 
     declineAgeButton.addEventListener('click', function() {
       alert("您已選擇離開。");
-      // window.location.href = "https://www.google.com";
+       window.location.href = "https://liferlighdow.github.io";
     });
+
+	     // 取得探險記錄和切換按鈕的元素
+    const endingLogElement = document.getElementById('ending-log');
+    const toggleLogButton = document.getElementById('toggle-log-button');
+
+// 切換探險記錄的顯示狀態
+    toggleLogButton.addEventListener('click', function() {
+     endingLogElement.classList.toggle('hidden');
+});
   </script>
+ 
+
   <script src="story.js"></script>
 
 </body>
