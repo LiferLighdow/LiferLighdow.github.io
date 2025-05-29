@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>虛空旅者</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'MyCustomFont', monospace; /* 更具科技感的字體 */
+      background-color: #111;
+      color: #ddd;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-image: url('bg.webp'); /* 替換成適合的背景圖片 */
+      background-size: cover;
+      background-blend-mode: overlay;
+      background-color: rgba(17, 17, 17, 0.8);
+    }
+
+	   /* 定義自定義字體 */
+    @font-face {
+       font-family: 'MyCustomFont';
+        src: url('../../fonts/myfont.woff2') format('woff2'), url('../../fonts/myfont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 800px;
+      padding: 30px;
+      background-color: rgba(30, 40, 50, 0.8);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 150, 200, 0.5);
+      border: 1px solid rgba(0, 150, 200, 0.2);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      color: #00bcd4;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
+      font-size: 3em;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: rgba(30, 40, 50, 0.3);
+      border: 1px solid rgba(0, 150, 200, 0.1);
+      display: block;
+      animation: fadeIn 1s ease-out;
+    }
+
+    p {
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: #2962ff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 7px;
+      transition: background-color 0.3s ease;
+      border: 2px solid #3d5afe;
+      font-size: 1.1em;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(41, 98, 255, 0.5);
+    }
+
+    .button:hover {
+      background-color: #3d5afe;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #888;
+    }
+
+    hr {
+      border: 1px solid rgba(0, 150, 200, 0.2);
+      margin: 20px 0;
+    }
+
+    #age-verification {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #age-verification-content {
+      background-color: #222;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(0, 150, 200, 0.5);
+      border: 1px solid rgba(0, 150, 200, 0.2);
+    }
+
+    #age-verification-content h1 {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        color: #00bcd4;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+
+    #age-verification-content p {
+        font-size: 1.2em;
+        margin-bottom: 25px;
+    }
+
+    #age-verification-content button {
+        padding: 15px 30px;
+        font-size: 1.2em;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #confirm-age {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    #confirm-age:hover {
+      background-color: #0056b3;
+    }
+
+    #decline-age {
+      background-color: #dc3545;
+      color: #fff;
+    }
+
+    #decline-age:hover {
+      background-color: #c82333;
+    }
+
+    #ending-log {
+      width: 300px;
+      padding: 20px;
+      background-color: rgba(30, 40, 50, 0.8);
+      border-radius: 15px;
+      color: #ddd;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+      margin-right: 20px;
+      flex-shrink: 0;
+      border: 1px solid rgba(0, 150, 200, 0.2);
+    }
+
+    #ending-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    #ending-list li {
+      margin-bottom: 12px;
+      font-size: 1em;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: rgba(30, 40, 50, 0.7);
+      box-shadow: 0 2px 5px rgba(0, 150, 200, 0.3);
+      transition: background-color 0.3s ease;
+      border: 1px solid rgba(0, 150, 200, 0.1);
+    }
+
+    #ending-list li:hover {
+      background-color: rgba(30, 40, 50, 0.9);
+    }
+
+    .main-container {
+      display: flex;
+      width: 100%;
+      min-height: 70vh;
+    }
+
+    main {
+      flex-grow: 1;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #toggle-log-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 15px;
+      background-color: #343a40;
+      color: #fff;
+      border: 1px solid #6c757d;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    /* 動畫效果 */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-out;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- 年齡驗證彈窗 -->
+  <div id="age-verification">
+    <div id="age-verification-content">
+      <h1>內容警告</h1>
+      <p>本網站包含可能不適合所有觀眾的內容，包括科幻意象、時空旅行、以及未知領域的探索。您是否已滿18歲，並願意繼續？</p>
+      <button id="confirm-age">我已滿18歲，繼續</button>
+      <button id="decline-age">未滿18歲，離開</button>
+    </div>
+  </div>
+
+  <div class="container" id="main-content" style="display: none;">
+    <header>
+      <h1>虛空旅者</h1>
+    </header>
+
+	 <button id="toggle-log-button">顯示/隱藏 探險記錄</button>
+	 <hr>
+
+    <div class="main-container">
+        <div id="ending-log" class="hidden">
+            <h3>探險記錄</h3>
+            <ul id="ending-list">
+            </ul>
+          </div>
+
+    <main>
+      <!-- 劇情內容將由 JavaScript 動態產生 -->
+    </main>
+	</div>
+
+    <footer>
+      <p>© 2025 Lifer_Lighdow - 虛空旅者</p>
+    </footer>
+
+  <script>
+      // 年齡驗證
+    const ageVerification = document.getElementById('age-verification');
+    const mainContent = document.getElementById('main-content');
+    const confirmAgeButton = document.getElementById('confirm-age');
+    const declineAgeButton = document.getElementById('decline-age');
+
+    confirmAgeButton.addEventListener('click', function() {
+      ageVerification.style.display = 'none';
+      mainContent.style.display = 'block';
+    });
+
+    declineAgeButton.addEventListener('click', function() {
+      alert("您已選擇離開。");
+       window.location.href = "https://liferlighdow.github.io";
+    });
+
+    const endingLogElement = document.getElementById('ending-log');
+    const toggleLogButton = document.getElementById('toggle-log-button');
+
+    toggleLogButton.addEventListener('click', function() {
+      endingLogElement.classList.toggle('hidden');
+    });
+  </script>
+
+  <script src="story.js"></script>
+
+</body>
+</html>
