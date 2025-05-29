@@ -99,14 +99,14 @@ const storyData = {
 	"fleeRiftFromAvoid": {
 		text: "你耗盡了能量，勉強脫離了虛空生物的攻擊範圍。克羅諾斯號損壞嚴重，你只能艱難地維持航行。\n\n克羅諾斯號最終解體，你葬身於虛空之中。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"selfDestruct": {
 		text: "你啟動了克羅諾斯號自毀程式。你希望阻止生命體離開時空斷層，保護其他時空的安全。隨著一陣耀眼的光芒，克羅諾斯號與生命體一同消失在虛空之中。\n\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
@@ -183,7 +183,7 @@ const storyData = {
 	"immerseCrystals": {
 		text: "你將身體完全浸入晶體之中，你感受到無盡的能量湧入你的身體。\n最終，你的身體無法承受如此巨大的能量，你灰飛煙滅。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
@@ -228,14 +228,14 @@ const storyData = {
 	"fleeFromShadow": {
 		text: "你轉身逃跑，但虛空生物的速度更快，牠輕鬆地抓住了你。\n牠把你撕成碎片。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"attackShadow": {
 		text: "你使用武器攻擊虛空生物，但牠的身體似乎不受物理攻擊影響。牠輕鬆地將你吞噬。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
@@ -298,14 +298,14 @@ const storyData = {
 	"controlCronos": {
 		text: "你奮力嘗試控制克羅諾斯號，但時空風暴的力量太過強大。你最終失去了控制，克羅諾斯號被撕成碎片。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"escapePod": {
 		text: "你啟動了緊急逃生系統，乘坐逃生艙離開克羅諾斯號。你漂浮在虛空中，等待救援。\n然而，救援永遠不會到來。你最終在逃生艙中耗盡了氧氣。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
@@ -367,21 +367,21 @@ const storyData = {
 	"fightMonster": {
 		text: "你決定與怪物戰鬥。你使用武器攻擊怪物，但牠的身體堅硬無比，你的攻擊毫無作用。\n怪物輕鬆地將你撕成碎片。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"fleeStation": {
 		text: "你轉身逃離太空站，但怪物緊追不捨。你跑到克羅諾斯號，啟動引擎，準備逃離。\n但在起飛之前，怪物跳上了克羅諾斯號，並摧毀了引擎。\n克羅諾斯號墜毀在太空站上，你與怪物一同死亡。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"findSignalSource": {
 		text: "你決定尋找信號來源。你一路跟著信號來到太空站的中央控制室。在控制室裡，你發現一台古老的電腦。\n電腦螢幕上顯示著一段文字：『歡迎來到虛空。你永遠無法逃脫。』\n電腦突然發射出一道能量束，擊中你的身體。你感到一陣劇痛，然後失去了意識。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
@@ -412,14 +412,14 @@ const storyData = {
 	"payThePrice": {
 		text: "你決定接受代價，離開維度。生物告訴你，你必須放棄你最珍視的東西。\n你思考了很久，最終決定放棄你的記憶。你願意忘記你過去的一切，只為了回到原本的時空。\n你成功離開了維度，但你卻忘記了你是誰，你從哪裡來，你要去哪裡。\n你成為了一個迷失在虛空的靈魂。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"attackCreature": {
 		text: "你決定攻擊這個維度生物。你認為牠對你懷有敵意，你必須先下手為強。\n然而，你的攻擊對牠毫無作用。牠只是發出悲鳴，然後消失在空氣中。\n你突然感到一陣強烈的罪惡感。你毀滅了一個無辜的生命，你也失去了離開這個維度的機會。\n你永遠被困在這個維度之中。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
@@ -442,154 +442,154 @@ const storyData = {
 	"enterDimensionRift": {
 		text: "你決定進入維度裂縫。克羅諾斯號被傳送到一個完全陌生的世界。這裡的一切都顛倒了，重力消失了，時空也失去了意義。\n你感到非常不適，你開始失去理智。\n最終，你被這個世界的瘋狂所吞噬。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
     "tryToReturn": {
         text: "你決定嘗試返回。你啟動了克羅諾斯號的引擎，準備穿越傳送門。\n然而，傳送門已經關閉了，你無法回到原本的時空。\n你被困在這個陌生的維度之中，永遠也無法回家。\n(遊戲結束)",
         buttons: [
-            { text: "重新開始", nextSection: "gameIntro" }
+            { text: "重新開始", nextSection: "prologue" }
         ]
     },
 
     "endingLostInVoid": {
         text: "克羅諾斯號的能量耗盡，導航系統完全癱瘓。你迷失在虛空中，永遠也無法回到原本的時空。\n\n(遊戲結束)",
         buttons: [
-            { text: "重新開始", nextSection: "gameIntro" }
+            { text: "重新開始", nextSection: "prologue" }
         ]
     },
 
     "endingReturnHome": {
         text: "你成功修復了導航系統，並找到了返回原本時空的通道。你帶著虛空的秘密，回到了你的時代。\n\n(遊戲結束)",
         buttons: [
-            { text: "重新開始", nextSection: "gameIntro" }
+            { text: "重新開始", nextSection: "prologue" }
         ]
     },
 
     "endingAncientKnowledge": {
       text: "你掌握了失落文明的知識，成為了時空旅行的宗師，可以自由穿梭於各個時代。\n\n(遊戲結束)",
       buttons: [
-          { text: "重新開始", nextSection: "gameIntro" }
+          { text: "重新開始", nextSection: "prologue" }
       ]
   },
 
   "endingVoidCorrupted": {
       text: "你受到了虛空力量的侵蝕，失去了自我意識，成為了虛空的一部分。\n\n(遊戲結束)",
       buttons: [
-          { text: "重新開始", nextSection: "gameIntro" }
+          { text: "重新開始", nextSection: "prologue" }
       ]
   },
 
   "endingSelfDestruct": {
       text: "你犧牲了自己，阻止了虛空生命體入侵其他時空。你的英勇事蹟將被永遠銘記。\n\n(遊戲結束)",
       buttons: [
-          { text: "重新開始", nextSection: "gameIntro" }
+          { text: "重新開始", nextSection: "prologue" }
       ]
   },
 
   "endingVoidMaster": {
     text: "你完全掌握了虛空的力量，成為了虛空的主宰者。你可以隨意創造和摧毀時空，成為了宇宙中最強大的存在。\n\n(遊戲結束)",
     buttons: [
-        { text: "重新開始", nextSection: "gameIntro" }
+        { text: "重新開始", nextSection: "prologue" }
     ]
 },
 
 	"immerseCrystals": {
 		text: "你將身體完全浸入晶體之中，你感受到無盡的能量湧入你的身體。\n最終，你的身體無法承受如此巨大的能量，你灰飛煙滅。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"endingPlanetDestroyed": {
 		text: "由於過於專注於探索洞穴，你沒有注意到越來越不穩定的能量讀數。當你回到克羅諾斯號時，行星開始瓦解。\n克羅諾斯號被行星爆炸摧毀。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"endingEatenByShadow": {
 		text: "你轉身逃跑，但虛空生物的速度更快，牠輕鬆地抓住了你。\n牠把你撕成碎片。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"endingConsumedByShadow": {
 		text: "你使用武器攻擊虛空生物，但牠的身體似乎不受物理攻擊影響。牠輕鬆地將你吞噬。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"controlCronos": {
 		text: "你奮力嘗試控制克羅諾斯號，但時空風暴的力量太過強大。你最終失去了控制，克羅諾斯號被撕成碎片。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"escapePod": {
 		text: "你啟動了緊急逃生系統，乘坐逃生艙離開克羅諾斯號。你漂浮在虛空中，等待救援。\n然而，救援永遠不會到來。你最終在逃生艙中耗盡了氧氣。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"fightMonster": {
 		text: "你決定與怪物戰鬥。你使用武器攻擊怪物，但牠的身體堅硬無比，你的攻擊毫無作用。\n怪物輕鬆地將你撕成碎片。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"fleeStation": {
 		text: "你轉身逃離太空站，但怪物緊追不捨。你跑到克羅諾斯號，啟動引擎，準備逃離。\n但在起飛之前，怪物跳上了克羅諾斯號，並摧毀了引擎。\n克羅諾斯號墜毀在太空站上，你與怪物一同死亡。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"findSignalSource": {
 		text: "你決定尋找信號來源。你一路跟著信號來到太空站的中央控制室。在控制室裡，你發現一台古老的電腦。\n電腦螢幕上顯示著一段文字：『歡迎來到虛空。你永遠無法逃脫。』\n電腦突然發射出一道能量束，擊中你的身體。你感到一陣劇痛，然後失去了意識。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"enterDimensionRift": {
 		text: "你決定進入維度裂縫。克羅諾斯號被傳送到一個完全陌生的世界。這裡的一切都顛倒了，重力消失了，時空也失去了意義。\n你感到非常不適，你開始失去理智。\n最終，你被這個世界的瘋狂所吞噬。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"tryToReturn": {
 		text: "你決定嘗試返回。你啟動了克羅諾斯號的引擎，準備穿越傳送門。\n然而，傳送門已經關閉了，你無法回到原本的時空。\n你被困在這個陌生的維度之中，永遠也無法回家。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"payThePrice": {
 		text: "你決定接受代價，離開維度。生物告訴你，你必須放棄你最珍視的東西。\n你思考了很久，最終決定放棄你的記憶。你願意忘記你過去的一切，只為了回到原本的時空。\n你成功離開了維度，但你卻忘記了你是誰，你從哪裡來，你要去哪裡。\n你成為了一個迷失在虛空的靈魂。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"attackCreature": {
 		text: "你決定攻擊這個維度生物。你認為牠對你懷有敵意，你必須先下手為強。\n然而，你的攻擊對牠毫無作用。牠只是發出悲鳴，然後消失在空氣中。\n你突然感到一陣強烈的罪惡感。你毀滅了一個無辜的生命，你也失去了離開這個維度的機會。\n你永遠被困在這個維度之中。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"fleeRiftFromAvoid": {
 		text: "你耗盡了能量，勉強脫離了虛空生物的攻擊範圍。克羅諾斯號損壞嚴重，你只能艱難地維持航行。\n\n克羅諾斯號最終解體，你葬身於虛空之中。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
@@ -628,42 +628,42 @@ const storyData = {
 	"befriendTribes": {
 		text: "你嘗試與部落建立聯繫。你用你的知識和科技幫助他們改善生活，並贏得了他們的信任。\n\n隨著時間的流逝，你成為了部落的領袖。你決定放棄回到現代的機會，永遠留在古代地球。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"avoidTribes": {
 		text: "你決定避開部落，繼續探索。你不想改變古代地球的歷史，你只想找到回到現代的方法。\n\n你在古代地球上流浪了很久，但你始終找不到回到現代的方法。最終，你死在了這片陌生的土地上。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"searchForRelics": {
 		text: "你開始搜尋古代遺跡，希望能找到一些可以幫助你回到現代的線索。\n\n你在一個古代神廟中發現了一個神秘的裝置。你嘗試啟動它，但裝置卻爆炸了，你被炸成了碎片。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"tryToReturnToPresent": {
 		text: "你嘗試回到現代，但你沒有足夠的能量來穿越時空。克羅諾斯號被困在古代地球，你永遠也無法回到你的時代。\n\n你最終死在了古代地球上，你的名字和你的故事也將被時間所遺忘。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"repairDevice": {
 		text: "你決定嘗試修復一個科技裝置。經過一番努力，你成功地啟動了它。裝置發射出一道能量束，擊中你的身體。\n\n你感到一陣劇痛，然後失去了意識。當你醒來時，你發現自己變成了一個機器人。你失去了你的人性，你只是一個冰冷的機器。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
 	"setCourse": {
 		text: "你調整航向，前往未知區域。你渴望探索虛空深處的秘密，你不想錯過任何機會。\n\n你在虛空中航行了很久，但你始終沒有發現任何新的東西。虛空是無盡的空虛，你開始感到絕望。\n\n最終，你因為精神崩潰而自殺。\n(遊戲結束)",
 		buttons: [
-			{ text: "重新開始", nextSection: "gameIntro" }
+			{ text: "重新開始", nextSection: "prologue" }
 		]
 	}
 };
