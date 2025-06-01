@@ -127,11 +127,18 @@ const storyData = {
     },
 
     "backToHallway": {
-        text: "你決定回到迴廊。但當你轉身時，發現迴廊變得更加陰暗，肖像畫中的人物似乎更加靠近了。他們的眼神充滿了惡意，彷彿想要把你撕成碎片。\n\n 突然，你感到背後一陣寒意。你慢慢地轉過身，看到一個模糊的身影站在你面前。這個身影伸出手，想要抓住你。\n\n你會...",
+        text: "你決定回到迴廊。但當你轉身時，發現迴廊變得更加陰暗，肖像畫中的人物似乎更加靠近了。他們的眼神充滿了惡意，彷彿想要把你撕成碎片。\n\n 突然，你感到背後一陣寒意。你慢慢地轉過身，看到一個模糊的身影站在你面前。這個身影伸出手，想要抓住你。\n\n你會...\n\n(你有 ${storyData.backToHallway.combatWinChance}% 的機會戰勝這個身影。)", // 顯示戰鬥機率
+        combatWinChance: 60, // 設定戰鬥勝利機率
         buttons: [
             { text: "逃跑", nextSection: "escapeHallway" },
-            { text: "戰鬥", nextSection: "fightHallway" }
+            { text: "戰鬥", nextSection: "performCombat" } // 導向新的戰鬥處理區塊
         ]
+    },
+
+    // 新增的戰鬥處理區塊，用於判斷戰鬥結果並導向
+    "performCombat": {
+        text: "戰鬥結果判定中...", // 這個文本不會被實際顯示，因為會立即跳轉
+        buttons: [] // 這個按鈕也不會被實際顯示
     },
 
     "escapeHallway": {
@@ -144,6 +151,7 @@ const storyData = {
         ]
     },
 
+    // 原始的 fightHallway 區塊，勝利時導向
     "fightHallway": {
         text: "你鼓起勇氣，決定和那個身影戰鬥。你撿起地上的一塊碎石，朝那個身影砸去。那個身影發出痛苦的嚎叫，然後消失在黑暗中。你鬆了一口氣，但你知道它隨時可能回來。\n\n在身影消失的地方，你發現了一個隱藏的通道。你會進入通道嗎？",
         buttons: [
@@ -227,7 +235,7 @@ const storyData = {
       text: "你拿起旁邊的檯燈，狠狠地朝洋娃娃砸去。洋娃娃的頭被打碎了，但它卻發出了更加尖銳的笑聲。\n\n突然，房間裡的燈全部熄滅了。你感到無數隻冰冷的手抓住了你的身體...\n\n你死了。洋娃娃的詛咒應驗了…",
       buttons: [
         { text: "重新開始", nextSection: "introduction" }
-      ]
+        ]
     },
 
     "talkToDoll": {
@@ -250,7 +258,25 @@ const storyData = {
         text: "你打開新鐵門，發現自己進入一間書房。書架上堆滿了古老的書籍，散發著一股奇特的香味。\n\n在書桌上，你發現一本日記，上面記錄著古宅過去發生的恐怖事件。你會閱讀日記嗎？",
         buttons: [
             { text: "閱讀日記", nextSection: "diary" },
-            { text: "離開書房", nextSection: "backToHallway" }
+            { text: "離開書房", nextSection: "backToHallway" },
+            { text: "檢查書桌上的其他物品", nextSection: "mysteriousPaperIntro" } // 新增的選項
+        ]
+    },
+
+    // 新增的神秘紙張介紹區塊
+    "mysteriousPaperIntro": {
+        text: "你在書桌上除了日記，還發現了一張看起來很古老的空白紙張。紙張邊緣泛黃，似乎曾被仔細摺疊過。你感覺這張紙不尋常，或許它隱藏著什麼秘密。\n\n你會嘗試解讀這張紙上的內容嗎？",
+        buttons: [
+            { text: "嘗試解讀紙張上的內容 ✨", nextSection: "interpretMysteriousPaper" }, // 觸發 LLM 呼叫
+            { text: "將紙張放回原處", nextSection: "newIronDoor" } // 返回書房
+        ]
+    },
+
+    // 這個區塊的內容將由 LLM 動態更新
+    "mysteriousPaperResult": {
+        text: "...", // 佔位符，將被替換
+        buttons: [
+            { text: "繼續探索", nextSection: "newIronDoor" } // 讀取生成內容後，返回書房
         ]
     },
 
@@ -279,7 +305,7 @@ const storyData = {
     },
 
     "ghostDeal": {
-        text: "你決定付出代價，聽取鬼魂的故事。鬼魂告訴你古宅過去發生的所有恐怖事件，以及它被困在這裡的原因。\n\n聽完故事，你感到非常悲傷。你決定幫助鬼魂解脫。你按照鬼魂的指示，完成了一個古老的儀式。\n\n鬼魂終於得到了解脫，你也離開了古宅。你雖然沒有得到獎金，但你幫助了一個可憐的靈魂，這比任何金錢都更有價值...",
+        text: "你決定付出代價，聽取鬼魂的故事。鬼魂告訴你古宅過去發生的所有恐怖事件，以及它被困在這裡的原因。\n\n聽完故事，你感到非常悲傷。你決定幫助鬼魂解脫。你按照鬼魂的指示，完成了一個古老的儀式。\n\n鬼魂終於得到了結脫，你也離開了古宅。你雖然沒有得到獎金，但你幫助了一個可憐的靈魂，這比任何金錢都更有價值...",
         buttons: [
             { text: "結束", nextSection: "introduction" }
         ]
@@ -349,6 +375,16 @@ const endingSummaries = {
   "readSpell": "壞結局六：成為惡魔"
 };
 
+// 定義死亡結局的 ID，這些結局的觸發按鈕不應被禁用
+const deathEndings = {
+  "musicBox": true,
+  "mirrorWorld": true,
+  "attackDoll": true,
+  "fightGhost": true,
+  "readSpell": true,
+  "statue": true
+};
+
 /**
  * Loads achieved endings from local storage.
  */
@@ -371,10 +407,113 @@ function saveAchievedEndings() {
 }
 
 /**
+ * Clears all achieved endings from local storage and resets the game state.
+ * This function is made globally accessible for the "Clear Achievements" button.
+ */
+window.clearAllEndings = function() {
+  localStorage.removeItem('achievedEndings');
+  achievedEndings = []; // Reset the in-memory array
+  updateEndingLogDisplay(); // Update the display to show empty log
+  console.log('所有探險成就已清除。');
+};
+
+/**
+ * Calls the Gemini API to interpret the mysterious paper.
+ */
+async function interpretMysteriousPaper() {
+    const main = document.querySelector('main');
+    // 顯示載入訊息和動畫
+    main.innerHTML = `
+        <section id="loadingSection">
+            <p>紙張正在顫動，似乎有什麼文字正在顯現...請稍候片刻...</p>
+            <div style="text-align: center; margin-top: 20px;">
+                <div style="border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid #ff3333; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block;"></div>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        </section>
+    `;
+
+    try {
+        let chatHistory = [];
+        const prompt = "Generate a short, cryptic, and unsettling message found on an old piece of paper in a haunted house. The message should hint at a hidden truth or a past tragedy, but remain vague. Keep it under 50 words. Focus on a sense of dread and mystery. Write it in Traditional Chinese.";
+        chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+        const payload = { contents: chatHistory };
+        const apiKey = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+        console.log('正在呼叫 Gemini API...');
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        console.log('API 響應狀態:', response.status, response.statusText);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('API 響應錯誤:', errorText);
+            throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+        }
+
+        const result = await response.json();
+        console.log('Gemini API 原始結果:', result);
+
+        let generatedText = "紙張上沒有任何文字顯現。或許它只是一張普通的廢紙...";
+        if (result.candidates && result.candidates.length > 0 &&
+            result.candidates[0].content && result.candidates[0].content.parts &&
+            result.candidates[0].content.parts.length > 0) {
+            generatedText = result.candidates[0].content.parts[0].text;
+            console.log('成功從 Gemini API 獲取文本:', generatedText);
+        } else {
+            console.warn("Gemini API 返回的結構不包含預期的內容。可能是空的或格式不符。");
+            // 如果 API 返回的結構不符合預期，也顯示預設訊息
+        }
+
+        // 更新 mysteriousPaperResult 區塊的文本
+        storyData.mysteriousPaperResult.text = `你仔細觀察，紙張上緩緩浮現出一些扭曲的文字：\n\n「${generatedText}」\n\n這段文字讓你感到一陣寒意，似乎揭示了古宅深處不為人知的秘密...`;
+        showSection('mysteriousPaperResult'); // 顯示結果
+    } catch (error) {
+        console.error("呼叫 Gemini API 時發生錯誤:", error);
+        // 如果 API 呼叫失敗，顯示一個替代的錯誤訊息
+        storyData.mysteriousPaperResult.text = "嘗試解讀紙張時，一股莫名的力量阻礙了你。紙張瞬間化為灰燼，什麼也沒有留下。你感到一陣不安...";
+        showSection('mysteriousPaperResult'); // 顯示錯誤訊息
+    }
+}
+
+/**
  * Displays a specific section of the story.
  * @param {string} sectionId The ID of the section to display.
  */
 function showSection(sectionId) {
+    // 特殊處理戰鬥邏輯
+    if (sectionId === "performCombat") {
+        const winChance = storyData.backToHallway.combatWinChance;
+        const randomNumber = Math.random() * 100; // 0-99.99...
+        console.log(`戰鬥機率: ${winChance}%, 隨機數: ${randomNumber}`);
+
+        if (randomNumber < winChance) {
+            // 勝利
+            console.log('戰鬥勝利！');
+            showSection('fightHallway'); // 導向勝利後的區塊
+        } else {
+            // 失敗
+            console.log('戰鬥失敗！');
+            showSection('fightGhost'); // 導向死亡結局
+        }
+        return; // 處理完畢，不繼續渲染 performCombat 區塊
+    }
+
+    // 特殊處理神秘紙張解讀邏輯 (LLM 呼叫)
+    if (sectionId === "interpretMysteriousPaper") {
+        interpretMysteriousPaper(); // 呼叫非同步的 LLM 函數
+        return; // 由非同步函數處理，此處不再繼續渲染
+    }
+
     const section = storyData[sectionId];
     if (!section) {
         console.error(`Section with id "${sectionId}" not found.`);
@@ -382,21 +521,33 @@ function showSection(sectionId) {
     }
 
     const main = document.querySelector('main');
+    let sectionText = section.text;
+
+    // 如果是 backToHallway 區塊，動態插入戰鬥機率
+    if (sectionId === "backToHallway" && section.combatWinChance !== undefined) {
+        sectionText = section.text.replace('${storyData.backToHallway.combatWinChance}', section.combatWinChance);
+    }
+
     let sectionHTML = `
       <section id="${sectionId}">
-        <p>${section.text.replace(/\n/g, '<br>')}</p>
+        <p>${sectionText.replace(/\n/g, '<br>')}</p>
         ${section.buttons.map(button => {
-            // Check if the next section is an ending and if it's already achieved
             const isEnding = endingSummaries.hasOwnProperty(button.nextSection);
             const isAchieved = achievedEndings.includes(button.nextSection);
-            
+            // 檢查目標區塊是否為死亡結局，如果是，則其觸發按鈕不應被禁用
+            const isDeathEndingTrigger = deathEndings.hasOwnProperty(button.nextSection); 
+
             let buttonClass = "button";
             let onClickHandler = `showSection('${button.nextSection}')`;
 
-            if (isEnding && isAchieved) {
+            // 如果按鈕導向 LLM 解讀功能，設定特定的點擊處理器
+            if (button.nextSection === "interpretMysteriousPaper") {
+                onClickHandler = `showSection('interpretMysteriousPaper')`; // 直接呼叫 showSection 來觸發 LLM 邏輯
+            } else if (isEnding && isAchieved && !isDeathEndingTrigger) { 
                 buttonClass += " disabled";
-                // 如果已達成，則按鈕點擊後顯示模態視窗，而不是重新觸發結局
-                onClickHandler = `showModal('${endingSummaries[button.nextSection]}', '${storyData[button.nextSection].text.replace(/'/g, "\\'")}')`; 
+                // 如果已達成且不是死亡結局的觸發按鈕，則點擊後顯示模態視窗
+                // 注意：這裡需要對單引號進行轉義，以避免 JavaScript 語法錯誤
+                onClickHandler = `showModal('${endingSummaries[button.nextSection]}', '${storyData[button.nextSection].text.replace(/'/g, "\\'").replace(/\n/g, "\\n")}')`; 
             }
             return `<button class="${buttonClass}" onclick="${onClickHandler}">${button.text}</button>`;
         }).join('')}
@@ -424,7 +575,12 @@ function recordEnding(endingId) {
     // Show the modal for the newly achieved ending
     const endingTitle = endingSummaries[endingId] || "未知結局";
     const endingText = storyData[endingId].text; // Get the full text of the ending
-    showModal(endingTitle, endingText);
+    // 確保 showModal 函數在鬼影幢幢.html 中已定義
+    if (typeof showModal === 'function') {
+        showModal(endingTitle, endingText);
+    } else {
+        console.warn('showModal 函數未定義。請確保鬼影幢幢.html 已正確載入。');
+    }
   }
 }
 
@@ -433,14 +589,18 @@ function recordEnding(endingId) {
  */
 function updateEndingLogDisplay() {
   const endingList = document.getElementById('ending-list');
-  endingList.innerHTML = achievedEndings.map(endingId => {
-    const summary = endingSummaries[endingId] || "未知結局";
-    return `<li>${summary}</li>`;
-  }).join('');
+  if (endingList) {
+    endingList.innerHTML = achievedEndings.map(endingId => {
+      const summary = endingSummaries[endingId] || "未知結局";
+      return `<li>${summary}</li>`;
+    }).join('');
+  } else {
+    console.warn('找不到 ending-list 元素。');
+  }
 }
 
 // showModal 和 closeModal 函數在鬼影幢幢.html 中定義，因為它們直接操作 DOM 元素。
-// 因此，這裡不再重複定義，確保它們是全域可用的。
+// 這裡不再重複定義，確保它們是全域可用的。
 // 如果您將此文件獨立運行，則需要在此處定義它們：
 /*
 const endingModal = document.getElementById('endingModal');
@@ -448,12 +608,18 @@ const achievedEndingTitle = document.getElementById('achievedEndingTitle');
 const achievedEndingText = document.getElementById('achievedEndingText');
 
 function showModal(title, text) {
-  achievedEndingTitle.innerText = title;
-  achievedEndingText.innerHTML = text.replace(/\n/g, '<br>');
-  endingModal.style.display = 'flex';
+  if (achievedEndingTitle && achievedEndingText && endingModal) {
+    achievedEndingTitle.innerText = title;
+    achievedEndingText.innerHTML = text.replace(/\n/g, '<br>');
+    endingModal.style.display = 'flex';
+  } else {
+    console.error('Modal 元素未找到，無法顯示模態視窗。');
+  }
 }
 
 function closeModal() {
-  endingModal.style.display = 'none';
+  if (endingModal) {
+    endingModal.style.display = 'none';
+  }
 }
 */

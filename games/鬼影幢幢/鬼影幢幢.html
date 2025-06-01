@@ -215,17 +215,26 @@
       display: none; /* 用於隱藏記錄 */
     }
 
-    #toggle-log-button {
+    .control-buttons {
       position: fixed;
       top: 20px;
       left: 20px;
+      display: flex;
+      gap: 10px; /* 按鈕之間的間距 */
+      z-index: 10;
+    }
+
+    .control-buttons button {
       padding: 10px 15px;
       background-color: #555;
       color: #fff;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      z-index: 10;
+    }
+
+    .control-buttons button:hover {
+      background-color: #777;
     }
 
     /* Modal styles */
@@ -296,11 +305,14 @@
       <h1>鬼影幢幢</h1>
     </header>
 
-    <button id="toggle-log-button">顯示/隱藏 探險記錄</button>
+    <div class="control-buttons">
+      <button id="toggle-log-button">顯示/隱藏 探險成就</button>
+      <button id="clear-achievements-button">清除成就</button>
+    </div>
 
     <div class="main-container">
         <div id="ending-log" class="hidden">
-            <h3>探險記錄</h3>
+            <h3>探險成就</h3>
             <ul id="ending-list">
               </ul>
           </div>
@@ -365,11 +377,75 @@
     // 取得探險記錄和切換按鈕的元素
     const endingLogElement = document.getElementById('ending-log');
     const toggleLogButton = document.getElementById('toggle-log-button');
+    const clearAchievementsButton = document.getElementById('clear-achievements-button'); // 新增的清除成就按鈕
 
     // 切換探險記錄的顯示狀態
     toggleLogButton.addEventListener('click', function() {
       endingLogElement.classList.toggle('hidden');
     });
+
+    // 為清除成就按鈕添加事件監聽器
+    clearAchievementsButton.addEventListener('click', function() {
+      // 使用 confirm 替代方案
+      const confirmationModal = document.createElement('div');
+      confirmationModal.id = 'clearConfirmationModal'; // 給確認模態視窗一個ID
+      confirmationModal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+      `;
+      confirmationModal.innerHTML = `
+        <div style="background-color: #333; padding: 30px; border-radius: 10px; text-align: center; color: #fff; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);">
+          <p style="font-size: 1.2em; margin-bottom: 25px;">您確定要清除所有探險成就嗎？此操作無法復原。</p>
+          <button style="padding: 10px 20px; font-size: 1em; border-radius: 5px; border: none; cursor: pointer; background-color: #aa5555; color: #fff; margin-right: 10px;" id="confirmClear">確定</button>
+          <button style="padding: 10px 20px; font-size: 1em; border-radius: 5px; border: none; cursor: pointer; background-color: #55aa55; color: #fff;" id="cancelClear">取消</button>
+        </div>
+      `;
+      document.body.appendChild(confirmationModal);
+
+      document.getElementById('confirmClear').addEventListener('click', function() {
+        if (typeof clearAllEndings === 'function') {
+          clearAllEndings();
+          document.getElementById('clearConfirmationModal').remove(); // 透過ID移除確認模態視窗
+          // 顯示一個成功訊息，並在點擊「確定」後重啟遊戲
+          const successModal = document.createElement('div');
+          successModal.id = 'successConfirmationModal'; // 給成功模態視窗一個ID
+          successModal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+          `;
+          successModal.innerHTML = `
+            <div style="background-color: #333; padding: 30px; border-radius: 10px; text-align: center; color: #fff; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);">
+              <p style="font-size: 1.2em; margin-bottom: 25px;">所有成就已清除！</p>
+              <button style="padding: 10px 20px; font-size: 1em; border-radius: 5px; border: none; cursor: pointer; background-color: #55aa55; color: #fff;" onclick="showSection('gameIntro'); document.getElementById('successConfirmationModal').remove();">確定</button>
+            </div>
+          `;
+          document.body.appendChild(successModal);
+        } else {
+          console.error('clearAllEndings 函數未定義。');
+        }
+      });
+
+      document.getElementById('cancelClear').addEventListener('click', function() {
+        document.getElementById('clearConfirmationModal').remove(); // 透過ID移除確認模態視窗
+      });
+    });
+
 
     // Get the modal elements
     const endingModal = document.getElementById('endingModal');
