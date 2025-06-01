@@ -1,3 +1,5 @@
+console.log('story.js 腳本開始執行'); // 確認 story.js 是否載入
+
 const storyData = {
      "gameIntro": {
         text: "歡迎來到《鬼影幢幢》！\n\n你將扮演一位古宅探險家，受匿名信的邀請，前來解開這座廢棄古宅的謎團，並獲得豐厚的獎金。\n\n請注意，這座古宅充滿了危險和恐怖。你的每一個選擇都將影響你的命運，總共有11個結局。\n\n祝你好運！",
@@ -329,8 +331,10 @@ const storyData = {
     }
 };
 
-const endingLog = [];
+// Array to store achieved ending IDs
+let achievedEndings = [];
 
+// Object mapping ending IDs to their summaries
 const endingSummaries = {
   "refuseInvitation": "結局一：拒絕邀請",
   "happyEndingWithGhostGirl": "好結局一：人鬼同居",
@@ -343,9 +347,33 @@ const endingSummaries = {
   "musicBox": "壞結局四：音樂盒",
   "fightGhost": "壞結局五：怨魂",
   "readSpell": "壞結局六：成為惡魔"
-  // 在這裡添加更多結局的簡短描述詞
 };
 
+/**
+ * Loads achieved endings from local storage.
+ */
+function loadAchievedEndings() {
+  const storedEndings = localStorage.getItem('achievedEndings');
+  if (storedEndings) {
+    achievedEndings = JSON.parse(storedEndings);
+    console.log('已從本地儲存載入結局:', achievedEndings);
+  } else {
+    console.log('本地儲存中沒有找到結局記錄。');
+  }
+}
+
+/**
+ * Saves achieved endings to local storage.
+ */
+function saveAchievedEndings() {
+  localStorage.setItem('achievedEndings', JSON.stringify(achievedEndings));
+  console.log('結局已儲存到本地儲存:', achievedEndings);
+}
+
+/**
+ * Displays a specific section of the story.
+ * @param {string} sectionId The ID of the section to display.
+ */
 function showSection(sectionId) {
     const section = storyData[sectionId];
     if (!section) {
@@ -357,31 +385,75 @@ function showSection(sectionId) {
     let sectionHTML = `
       <section id="${sectionId}">
         <p>${section.text.replace(/\n/g, '<br>')}</p>
-        ${section.buttons.map(button => `<button class="button" onclick="showSection('${button.nextSection}')">${button.text}</button>`).join('')}
+        ${section.buttons.map(button => {
+            // Check if the next section is an ending and if it's already achieved
+            const isEnding = endingSummaries.hasOwnProperty(button.nextSection);
+            const isAchieved = achievedEndings.includes(button.nextSection);
+            
+            let buttonClass = "button";
+            let onClickHandler = `showSection('${button.nextSection}')`;
+
+            if (isEnding && isAchieved) {
+                buttonClass += " disabled";
+                // 如果已達成，則按鈕點擊後顯示模態視窗，而不是重新觸發結局
+                onClickHandler = `showModal('${endingSummaries[button.nextSection]}', '${storyData[button.nextSection].text.replace(/'/g, "\\'")}')`; 
+            }
+            return `<button class="${buttonClass}" onclick="${onClickHandler}">${button.text}</button>`;
+        }).join('')}
       </section>
     `;
 
     main.innerHTML = sectionHTML;
 
-    // 判斷是否為結局，如果是，則加入記錄
+    // Check if the current section is an ending, and if so, record it
     if (endingSummaries.hasOwnProperty(sectionId)) {
-      const endingSummary = endingSummaries[sectionId] || "未知結局";
-      recordEnding(endingSummary);
+      recordEnding(sectionId); // Record the ending ID
     }
 }
 
-function recordEnding(endingSummary) {
-  if (!endingLog.includes(endingSummary)) {
-    endingLog.push(endingSummary);
-    updateEndingLogDisplay();
+/**
+ * Records an achieved ending.
+ * @param {string} endingId The ID of the achieved ending.
+ */
+function recordEnding(endingId) {
+  if (!achievedEndings.includes(endingId)) {
+    achievedEndings.push(endingId);
+    saveAchievedEndings(); // Save to local storage
+    updateEndingLogDisplay(); // Update the display
+    
+    // Show the modal for the newly achieved ending
+    const endingTitle = endingSummaries[endingId] || "未知結局";
+    const endingText = storyData[endingId].text; // Get the full text of the ending
+    showModal(endingTitle, endingText);
   }
 }
 
+/**
+ * Updates the display of the ending log.
+ */
 function updateEndingLogDisplay() {
   const endingList = document.getElementById('ending-list');
-  endingList.innerHTML = endingLog.map(ending => `<li>${ending}</li>`).join('');
+  endingList.innerHTML = achievedEndings.map(endingId => {
+    const summary = endingSummaries[endingId] || "未知結局";
+    return `<li>${summary}</li>`;
+  }).join('');
 }
 
+// showModal 和 closeModal 函數在鬼影幢幢.html 中定義，因為它們直接操作 DOM 元素。
+// 因此，這裡不再重複定義，確保它們是全域可用的。
+// 如果您將此文件獨立運行，則需要在此處定義它們：
+/*
+const endingModal = document.getElementById('endingModal');
+const achievedEndingTitle = document.getElementById('achievedEndingTitle');
+const achievedEndingText = document.getElementById('achievedEndingText');
 
-// 初始化遊戲，顯示第一個區塊
-showSection('gameIntro');
+function showModal(title, text) {
+  achievedEndingTitle.innerText = title;
+  achievedEndingText.innerHTML = text.replace(/\n/g, '<br>');
+  endingModal.style.display = 'flex';
+}
+
+function closeModal() {
+  endingModal.style.display = 'none';
+}
+*/
