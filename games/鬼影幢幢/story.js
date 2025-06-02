@@ -539,17 +539,22 @@ function showSection(sectionId) {
 
             let buttonClass = "button";
             let onClickHandler = `showSection('${button.nextSection}')`;
+            let disabledAttribute = ""; // 初始化 disabled 屬性
 
             // 如果按鈕導向 LLM 解讀功能，設定特定的點擊處理器
             if (button.nextSection === "interpretMysteriousPaper") {
                 onClickHandler = `showSection('interpretMysteriousPaper')`; // 直接呼叫 showSection 來觸發 LLM 邏輯
-            } else if (isEnding && isAchieved && !isDeathEndingTrigger) { 
+            } 
+            // 如果是已達成的結局 AND 不是死亡結局的觸發按鈕，則禁用
+            else if (isEnding && isAchieved && !isDeathEndingTrigger) { 
                 buttonClass += " disabled";
-                // 如果已達成且不是死亡結局的觸發按鈕，則點擊後顯示模態視窗
-                // 注意：這裡需要對單引號進行轉義，以避免 JavaScript 語法錯誤
+                disabledAttribute = "disabled"; // 添加 disabled HTML 屬性
+                // 對於已禁用的按鈕，點擊後顯示結局詳情模態視窗
                 onClickHandler = `showModal('${endingSummaries[button.nextSection]}', '${storyData[button.nextSection].text.replace(/'/g, "\\'").replace(/\n/g, "\\n")}')`; 
             }
-            return `<button class="${buttonClass}" onclick="${onClickHandler}">${button.text}</button>`;
+            // 對於其他按鈕，預設的 onClickHandler `showSection('${button.nextSection}')` 即可。
+
+            return `<button class="${buttonClass}" ${disabledAttribute} onclick="${onClickHandler}">${button.text}</button>`;
         }).join('')}
       </section>
     `;
