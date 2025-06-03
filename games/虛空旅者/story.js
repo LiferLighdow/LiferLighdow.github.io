@@ -1,3 +1,5 @@
+console.log('story.js 腳本開始執行'); // 確認 story.js 是否載入
+
 const storyData = {
     "gameIntro": {
         text: "歡迎來到《虛空旅者》！\n\n你是一名時空旅行者，代號「紅翼」。你的任務是駕駛克羅諾斯號，探索位於已知宇宙邊緣的神秘虛空。\n\n虛空並非空無一物，而是充滿了扭曲的時空斷層和未知的危險。你的每一個決定都至關重要。\n\n總共有25個結局，祝你旅途順利！",
@@ -558,17 +560,27 @@ const storyData = {
 		]
 	},
 
-	"enterDimensionRift": {
-		text: "你決定進入維度裂縫。克羅諾斯號被傳送到一個完全陌生的世界。這裡的一切都顛倒了，重力消失了，時空也失去了意義。\n你感到非常不適，你開始失去理智。\n最終，你被這個世界的瘋狂所吞噬。\n(遊戲結束)",
+    "exploreDimension": {
+        text: "你開始探索這個陌生的維度。這裡的景色奇異而美麗，但同時也充滿了危險。\n你會...",
+        buttons: [
+            { text: "遇到維度生物", nextSection: "meetDimensionCreature" },
+            { text: "發現維度裂縫", nextSection: "findDimensionRift" }
+        ]
+    },
+
+	"meetDimensionCreature": {
+		text: "你在探索維度時，遇到一個奇特的生物。牠看起來像是能量和物質的混合體，散發著柔和的光芒。\n你會...",
 		buttons: [
-			{ text: "重新開始", nextSection: "prologue" }
+			{ text: "嘗試與生物溝通", nextSection: "talkToCreature" },
+			{ text: "攻擊生物", nextSection: "attackCreature" }
 		]
 	},
 
-	"tryToReturn": {
-		text: "你決定嘗試返回。你啟動了克羅諾斯號的引擎，準備穿越傳送門。\n然而，傳送門已經關閉了，你無法回到原本的時空。\n你被困在這個陌生的維度之中，永遠也無法回家。\n(遊戲結束)",
+	"talkToCreature": {
+		text: "你嘗試與生物溝通。牠似乎可以理解你的意圖，並向你展示了一些關於這個維度的景象。\n你得知這個維度曾經是一個繁榮的文明，但最終被一場災難所摧毀。\n生物告訴你，有一種方法可以離開這個維度，但需要付出巨大的代價。\n你會...",
 		buttons: [
-			{ text: "重新開始", nextSection: "prologue" }
+			{ text: "接受代價，離開維度", nextSection: "payThePrice" },
+			{ text: "拒絕代價，繼續探索", nextSection: "exploreDimension" }
 		]
 	},
 
@@ -586,97 +598,60 @@ const storyData = {
 		]
 	},
 
-	"fleeRiftFromAvoid": {
-		text: "你耗盡了能量，勉強脫離了虛空生物的攻擊範圍。克羅諾斯號損壞嚴重，你只能艱難地維持航行。\n\n克羅諾斯號最終解體，你葬身於虛空之中。\n(遊戲結束)",
+	"findDimensionRift": {
+		text: "你在探索維度時，發現一個維度裂縫。裂縫看起來像是時空的一個漏洞，通往一個未知的世界。\n你會...",
+		buttons: [
+			{ text: "進入維度裂縫", nextSection: "enterDimensionRift" },
+			{ text: "分析維度裂縫", nextSection: "analyzeDimensionRift" }
+		]
+	},
+
+	"analyzeDimensionRift": {
+		text: "你嘗試分析維度裂縫，但數據顯示它極其不穩定，隨時可能崩潰。\n你會...",
+		buttons: [
+			{ text: "進入維度裂縫", nextSection: "enterDimensionRift" },
+			{ text: "離開裂縫區域", nextSection: "exploreDimension" }
+		]
+	},
+
+	"enterDimensionRift": {
+		text: "你決定進入維度裂縫。克羅諾斯號被傳送到一個完全陌生的世界。這裡的一切都顛倒了，重力消失了，時空也失去了意義。\n你感到非常不適，你開始失去理智。\n最終，你被這個世界的瘋狂所吞噬。\n(遊戲結束)",
 		buttons: [
 			{ text: "重新開始", nextSection: "prologue" }
 		]
 	},
 
-	"locateReturnRoute": {
-		text: "你嘗試定位返回已知宇宙的路線。經過計算，你發現了一個不穩定的時空通道，但穿越它需要冒很大的風險。\n\n你會...",
-		buttons: [
-			{ text: "穿越時空通道", nextSection: "crossReturnChannel" },
-			{ text: "放棄返回，繼續探索", nextSection: "exploreGalaxy" }
-		]
-	},
-
-	"crossReturnChannel": {
-		text: "你決定穿越時空通道。克羅諾斯號在通道中劇烈震動，你感到時間和空間都在扭曲。你不知道會被傳送到哪裡。\n\n克羅諾斯號最終成功穿越通道，但你發現自己被傳送到了過去，回到了地球的古代。\n你會...",
-		buttons: [
-			{ text: "探索古代地球", nextSection: "exploreAncientEarth" },
-			{ text: "嘗試回到現代", nextSection: "tryToReturnToPresent" }
-		]
-	},
-
-	"exploreAncientEarth": {
-		text: "你駕駛克羅諾斯號降落在古代地球上。你發現這裡充滿了原始的風景和未知的危險。\n\n你會...",
-		buttons: [
-			{ text: "遇到原始部落", nextSection: "meetTribes" },
-			{ text: "搜尋古代遺跡", nextSection: "searchForRelics" }
-		]
-	},
-
-	"meetTribes": {
-		text: "你遇到一個原始部落。他們對你的飛船感到恐懼和敬畏。你會...",
-		buttons: [
-			{ text: "與部落建立聯繫", nextSection: "befriendTribes" },
-			{ text: "避開部落，繼續探索", nextSection: "avoidTribes" }
-		]
-	},
-
-	"befriendTribes": {
-		text: "你嘗試與部落建立聯繫。你用你的知識和科技幫助他們改善生活，並贏得了他們的信任。\n\n隨著時間的流逝，你成為了部落的領袖。你決定放棄回到現代的機會，永遠留在古代地球。\n(遊戲結束)",
-		buttons: [
-			{ text: "重新開始", nextSection: "prologue" }
-		]
-	},
-
-	"avoidTribes": {
-		text: "你決定避開部落，繼續探索。你不想改變古代地球的歷史，你只想找到回到現代的方法。\n\n你在古代地球上流浪了很久，但你始終找不到回到現代的方法。最終，你死在了這片陌生的土地上。\n(遊戲結束)",
-		buttons: [
-			{ text: "重新開始", nextSection: "prologue" }
-		]
-	},
-
-	"searchForRelics": {
-		text: "你開始搜尋古代遺跡，希望能找到一些可以幫助你回到現代的線索。\n\n你在一個古代神廟中發現了一個神秘的裝置。你嘗試啟動它，但裝置卻爆炸了，你被炸成了碎片。\n(遊戲結束)",
-		buttons: [
-			{ text: "重新開始", nextSection: "prologue" }
-		]
-	},
-
-	"tryToReturnToPresent": {
-		text: "你嘗試回到現代，但你沒有足夠的能量來穿越時空。克羅諾斯號被困在古代地球，你永遠也無法回到你的時代。\n\n你最終死在了古代地球上，你的名字和你的故事也將被時間所遺忘。\n(遊戲結束)",
-		buttons: [
-			{ text: "重新開始", nextSection: "prologue" }
-		]
-	},
-
-	"repairDevice": {
-		text: "你決定嘗試修復一個科技裝置。經過一番努力，你成功地啟動了它。裝置發射出一道能量束，擊中你的身體。\n\n你感到一陣劇痛，然後失去了意識。當你醒來時，你發現自己變成了一個機器人。你失去了你的人性，你只是一個冰冷的機器。\n(遊戲結束)",
-		buttons: [
-			{ text: "重新開始", nextSection: "prologue" }
-		]
-	},
-
-	"setCourse": {
-		text: "你調整航向，前往未知區域。你渴望探索虛空深處的秘密，你不想錯過任何機會。\n\n你在虛空中航行了很久，但你始終沒有發現任何新的東西。虛空是無盡的空虛，你開始感到絕望。\n\n最終，你因為精神崩潰而自殺。\n(遊戲結束)",
-		buttons: [
-			{ text: "重新開始", nextSection: "prologue" }
-		]
-	}
+    "tryToReturn": {
+        text: "你決定嘗試返回。你啟動了克羅諾斯號的引擎，準備穿越傳送門。\n然而，傳送門已經關閉了，你無法回到原本的時空。\n你被困在這個陌生的維度之中，永遠也無法回家。\n(遊戲結束)",
+        buttons: [
+            { text: "重新開始", nextSection: "prologue" }
+        ]
+    },
+    "investigateAnomalousSignal": { // New section for LLM integration
+        text: "你追蹤到一個異常信號的來源。它來自一個漂浮在虛空中的巨大、發光的晶體。晶體散發著奇異的能量，並發出微弱的嗡嗡聲。\n\n你會...",
+        buttons: [
+            { text: "嘗試解讀晶體發出的信號 ✨", nextSection: "interpretCrystalSignal" },
+            { text: "遠離晶體，繼續探索", nextSection: "exploreGalaxy" }
+        ]
+    },
+    "interpretCrystalSignal": { // LLM generated content will be placed here
+        text: "正在解讀信號...", // Placeholder text
+        buttons: [
+            { text: "返回", nextSection: "investigateAnomalousSignal" }
+        ]
+    }
 };
 
-const endingLog = [];
+let achievedEndings = []; // 儲存已達成的結局ID
+const LOCAL_STORAGE_KEY = 'voidTravelerEndings'; // 本地儲存的鍵值
 
 const endingSummaries = {
     "endingLostInVoid": "壞結局一：迷失虛空",
     "endingReturnHome": "真結局：重返家園",
     "endingAncientKnowledge": "好結局：掌握古老知識",
     "endingVoidCorrupted": "壞結局二：虛空腐化",
-    "endingSelfDestruct": "結局一：自我犧牲", // 可以被認為是好結局，因為阻止了更大的災難
-    "endingVoidMaster": "結局二：虛空主宰", // 可能是好結局，也可能是壞結局，取決於主宰者如何使用力量
+    "endingSelfDestruct": "結局一：自我犧牲",
+    "endingVoidMaster": "結局二：虛空主宰",
 	"immerseCrystals": "壞結局三：能量超載",
 	"endingPlanetDestroyed": "壞結局四：星球崩毀",
 	"endingEatenByShadow": "壞結局五：遭影吞噬",
@@ -699,7 +674,40 @@ const endingSummaries = {
 	"setCourse": "壞結局二十一：精神崩潰"
 };
 
-function showSection(sectionId) {
+// 移除了 deathEndings 物件，因為現在所有已達成的結局按鈕都會被禁用。
+
+/**
+ * Loads achieved endings from local storage.
+ */
+function loadAchievedEndings() {
+  const storedEndings = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (storedEndings) {
+    achievedEndings = JSON.parse(storedEndings);
+  }
+}
+
+/**
+ * Saves achieved endings to local storage.
+ */
+function saveAchievedEndings() {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(achievedEndings));
+}
+
+/**
+ * Clears all achieved endings from local storage and resets the display.
+ */
+function clearAllEndings() {
+  achievedEndings = [];
+  saveAchievedEndings();
+  updateEndingLogDisplay();
+  console.log('所有探險成就已清除。');
+}
+
+/**
+ * Displays a specific section of the story.
+ * @param {string} sectionId - The ID of the section to display.
+ */
+async function showSection(sectionId) {
     const section = storyData[sectionId];
     if (!section) {
         console.error(`Section with id "${sectionId}" not found.`);
@@ -707,32 +715,123 @@ function showSection(sectionId) {
     }
 
     const main = document.querySelector('main');
+    const loadingIndicator = document.getElementById('loading-indicator');
+
+    // Handle LLM integration
+    if (sectionId === "interpretCrystalSignal") {
+        loadingIndicator.style.display = 'flex'; // Show loading indicator
+        try {
+            const prompt = "請生成一段關於虛空中巨大發光晶體發出的神秘信號的簡短、令人不安的中文訊息。內容應包含對未知危險的暗示。";
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                const llmText = result.candidates[0].content.parts[0].text;
+                storyData[sectionId].text = `晶體發出微弱的嗡嗡聲，你嘗試解讀它傳遞的訊息... \n\n${llmText}\n\n你感到一陣寒意，這段訊息似乎預示著更深層的虛空秘密和潛在的危險。`;
+            } else {
+                storyData[sectionId].text = "晶體發出微弱的嗡嗡聲，你嘗試解讀它傳遞的訊息... \n\n信號被干擾了，你無法完全理解其中的內容。你感到一陣不安。";
+                console.error("LLM response structure unexpected or content missing:", result);
+            }
+        } catch (error) {
+            storyData[sectionId].text = "晶體發出微弱的嗡嗡聲，你嘗試解讀它傳遞的訊息... \n\n通訊失敗，你無法解析晶體的信號。虛空的力量似乎阻礙了你的嘗試。";
+            console.error("Error calling LLM:", error);
+        } finally {
+            loadingIndicator.style.display = 'none'; // Hide loading indicator
+        }
+    }
+
+    let buttonsHTML = section.buttons.map(button => {
+        // Check if the next section is an ending and if it has been achieved
+        const isEnding = endingSummaries.hasOwnProperty(button.nextSection);
+        const isAchieved = achievedEndings.includes(button.nextSection);
+
+        // If it's an achieved ending, add the 'disabled' HTML attribute and remove onclick
+        if (isEnding && isAchieved) {
+            return `<button class="button disabled" disabled>${button.text} (已達成)</button>`;
+        } else {
+            return `<button class="button" onclick="showSection('${button.nextSection}')">${button.text}</button>`;
+        }
+    }).join('');
+
     let sectionHTML = `
       <section id="${sectionId}">
         <p>${section.text.replace(/\n/g, '<br>')}</p>
-        ${section.buttons.map(button => `<button class="button" onclick="showSection('${button.nextSection}')">${button.text}</button>`).join('')}
+        ${buttonsHTML}
       </section>
     `;
 
     main.innerHTML = sectionHTML;
 
+    // If the current section is an ending, record it and show the modal
     if (endingSummaries.hasOwnProperty(sectionId)) {
-      const endingSummary = endingSummaries[sectionId] || "未知結局";
-      recordEnding(endingSummary);
+      recordEnding(sectionId); // Pass the sectionId directly
     }
 }
 
-function recordEnding(endingSummary) {
-  if (!endingLog.includes(endingSummary)) {
-    endingLog.push(endingSummary);
-    updateEndingLogDisplay();
+/**
+ * Records an achieved ending and displays it in the log.
+ * @param {string} endingId - The ID of the achieved ending.
+ */
+function recordEnding(endingId) {
+  if (!achievedEndings.includes(endingId)) {
+    achievedEndings.push(endingId);
+    saveAchievedEndings(); // Save to local storage
+    const endingTitle = endingSummaries[endingId] || "未知結局";
+    const endingText = storyData[endingId].text; // Get the full text of the ending
+    // 確保 showModal 函數在虛空旅者.html 中已定義
+    if (typeof showModal === 'function') {
+        showModal(endingTitle, endingText);
+    } else {
+        console.warn('showModal 函數未定義。請確保虛空旅者.html 已正確載入。');
+    }
   }
 }
 
+/**
+ * Updates the display of the ending log.
+ */
 function updateEndingLogDisplay() {
   const endingList = document.getElementById('ending-list');
-  endingList.innerHTML = endingLog.map(ending => `<li>${ending}</li>`).join('');
+  if (endingList) {
+    endingList.innerHTML = achievedEndings.map(endingId => {
+      const summary = endingSummaries[endingId] || "未知結局";
+      return `<li>${summary}</li>`;
+    }).join('');
+  } else {
+    console.warn('找不到 ending-list 元素。');
+  }
 }
 
+// showModal 和 closeModal 函數在虛空旅者.html 中定義，因為它們直接操作 DOM 元素。
+// 這裡不再重複定義，確保它們是全域可用的。
+// 如果您將此文件獨立運行，則需要在此處定義它們：
+/*
+const endingModal = document.getElementById('endingModal');
+const achievedEndingTitle = document.getElementById('achievedEndingTitle');
+const achievedEndingText = document.getElementById('achievedEndingText');
 
-showSection('gameIntro');
+function showModal(title, text) {
+  if (achievedEndingTitle && achievedEndingText && endingModal) {
+    achievedEndingTitle.innerText = title;
+    achievedEndingText.innerHTML = text.replace(/\n/g, '<br>');
+    endingModal.style.display = 'flex'; // Use flex to center the modal content
+  }
+}
+
+function closeModal() {
+  if (endingModal) {
+    endingModal.style.display = 'none';
+  }
+}
+*/
