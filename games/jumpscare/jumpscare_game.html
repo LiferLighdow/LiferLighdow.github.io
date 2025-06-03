@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>運氣排行榜 - Jumpscare Game</title>
+  <style>
+    /* 全域樣式 */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+
+    h1 {
+      color: #e44d26;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 15px;
+    }
+
+    /* 按鈕樣式 */
+    #baitImage {
+      cursor: pointer;
+      max-width: 300px;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    #baitImage:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    #clickCounter {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-top: 20px;
+      color: #777;
+    }
+
+    /* jumpscare 樣式 */
+    #jumpscareContainer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+    }
+
+    .jumpscareImage {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    /* 運氣排行榜樣式 */
+    #leaderboard {
+      margin-top: 30px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #leaderboard h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    #leaderboard ol {
+      list-style-type: decimal;
+      padding-left: 20px;
+    }
+
+    #leaderboard li {
+      font-size: 1.1em;
+      margin-bottom: 8px;
+    }
+
+    /* 分享按鈕 */
+    #shareButtons {
+      margin-top: 20px;
+    }
+
+    #shareButtons button {
+      background-color: #2980b9;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+
+    #shareButtons button:hover {
+      background-color: #3498db;
+    }
+  </style>
+</head>
+<body>
+  <h1>歡迎來到運氣排行榜！</h1>
+  <p>點擊下方的圖片來測試你的運氣！</p>
+  <img id="baitImage" src="cute_animal_1.jpg" alt="點我" title="點我">
+  <p id="clickCounter">點擊次數: 0</p>
+
+  <!-- jumpscare 容器 -->
+  <div id="jumpscareContainer">
+    <img id="jumpscareImage" class="jumpscareImage" src="" alt="Jumpscare">
+  </div>
+
+  <audio id="jumpscareSound" src="scream.mp3" preload="auto"></audio>
+
+  <!-- 運氣排行榜 -->
+  <div id="leaderboard">
+    <h2>世界紀錄 - 最快被嚇到</h2>
+    <ol id="leaderboardList">
+      <!-- 排行榜項目將在這裡動態生成 -->
+    </ol>
+  </div>
+
+  <!-- 分享按鈕 -->
+  <div id="shareButtons">
+    <button id="shareButton">分享你的運氣！</button>
+  </div>
+
+  <script>
+    const baitImage = document.getElementById("baitImage");
+    const jumpscareContainer = document.getElementById("jumpscareContainer");
+    const jumpscareImage = document.getElementById("jumpscareImage");
+    const jumpscareSound = document.getElementById("jumpscareSound");
+    const clickCounterDisplay = document.getElementById("clickCounter");
+    const leaderboardList = document.getElementById("leaderboardList");
+    const shareButton = document.getElementById("shareButton");
+
+    let clickCount = 0;
+    const triggerCount = 5;
+    let jumpscareTriggered = false;
+
+    // 圖片資源
+    const cuteImages = [
+      "cute_animal_1.jpg",
+      "cute_animal_2.jpg",
+      "cute_animal_3.jpg",
+      "cute_animal_4.jpg",
+      "cute_animal_5.jpg",
+      "cute_animal_6.jpg",
+      "cute_animal_7.jpg",
+      "cute_animal_8.jpg"
+    ];
+
+    const jumpscareImages = [
+      "scary_face_1.jpg",
+      "scary_face_2.jpg",
+      "scary_face_3.jpg",
+      "scary_face_4.jpg"
+    ];
+
+    function getRandomElement(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    // 排行榜的本地儲存鍵
+    const LEADERBOARD_KEY = "jumpscareLeaderboard";
+
+    // 載入排行榜
+    function loadLeaderboard() {
+      const leaderboardData = localStorage.getItem(LEADERBOARD_KEY);
+      if (leaderboardData) {
+        return JSON.parse(leaderboardData);
+      } else {
+        return [
+          { name: "匿名玩家", score: 1 },
+          { name: "神秘人", score: 2 },
+          { name: "超級幸運星", score: 3 },
+          { name: "倒楣鬼", score: 4 },
+          { name: "衰神附體", score: 5 }
+        ];
+      }
+    }
+
+    // 儲存排行榜
+    function saveLeaderboard(leaderboard) {
+      localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard));
+    }
+
+    // 顯示排行榜
+    function displayLeaderboard() {
+      leaderboardList.innerHTML = ""; // 清空現有列表
+      leaderboard.forEach((entry, index) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${entry.name} - ${entry.score} 次`;
+        leaderboardList.appendChild(listItem);
+      });
+    }
+
+    // 初始化排行榜
+    let leaderboard = loadLeaderboard();
+    displayLeaderboard();
+
+    baitImage.addEventListener("click", function() {
+      clickCount++;
+      clickCounterDisplay.textContent = "點擊次數: " + clickCount;
+
+      // 隨機更換可愛圖片
+      baitImage.src = getRandomElement(cuteImages);
+
+      if (clickCount >= triggerCount && !jumpscareTriggered) {
+        jumpscareTriggered = true;
+
+        // 隨機選擇 jumpscare 圖片
+        jumpscareImage.src = getRandomElement(jumpscareImages);
+
+        // 顯示 jumpscare
+        jumpscareContainer.style.display = "flex";
+        jumpscareSound.play();
+
+        // 5 秒後隱藏 jumpscare 並顯示輸入名字的提示框
+        setTimeout(function() {
+          jumpscareContainer.style.display = "none";
+
+          // 提示玩家輸入名字
+          const playerName = prompt("你被嚇了！請輸入你的名字：", "匿名玩家");
+          if (playerName) {
+            leaderboard.push({ name: playerName, score: clickCount });
+            leaderboard.sort((a, b) => a.score - b.score); // 依分數排序
+            leaderboard = leaderboard.slice(0, 5); // 只保留前 5 名
+            saveLeaderboard(leaderboard);
+            displayLeaderboard();
+          }
+
+        }, 5000); // 5000 毫秒 = 5 秒
+      }
+    });
+
+    // 分享功能
+    shareButton.addEventListener("click", function() {
+      const shareText = `我在運氣排行榜上被嚇了 ${clickCount} 次！來挑戰看看：[你的網頁連結]`;
+      if (navigator.share) {
+        navigator.share({
+          title: "運氣排行榜",
+          text: shareText,
+          url: "[你的網頁連結]" // 將 [你的網頁連結] 替換為你的網頁實際連結
+        }).then(() => {
+          console.log("成功分享");
+        }).catch((error) => {
+          console.log("分享失敗", error);
+        });
+      } else {
+        // 如果不支援 Web Share API，顯示一個提示訊息
+        alert("你的瀏覽器不支援分享功能。請手動複製以下文字分享：\n" + shareText);
+      }
+    });
+  </script>
+</body>
+</html>
