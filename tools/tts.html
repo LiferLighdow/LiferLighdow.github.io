@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>精美文字轉語音</title>
+  <title>TTS</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'MyCustomFont', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #e9ecef;
       margin: 0;
       padding: 20px;
@@ -14,6 +14,15 @@
       align-items: center;
       min-height: 100vh;
     }
+
+    /* 定義自定義字體 */
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/myfont.woff2') format('woff2'), url('../fonts/myfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
 
     h1 {
       color: #343a40;
@@ -201,49 +210,49 @@
 </head>
 <body>
 
-  <h1>文字轉語音</h1>
+  <h1>TTS</h1>
 
   <div class="container">
-    <label for="textToSpeak">輸入文字：</label>
+    <label for="textToSpeak">TEXT：</label>
     <textarea id="textToSpeak"></textarea>
     <div id="charCount">字數: 0</div>
 
-    <label for="languageSelect">選擇語言：</label>
+    <label for="languageSelect">LANGUAGE：</label>
     <select id="languageSelect"></select>
 
-    <label>選擇語音：</label>
+    <label>VOICE：</label>
     <div class="voice-options-container">
       <div class="voice-options" id="voiceOptions">
       </div>
     </div>
 
     <div class="slider-container">
-      <label class="slider-label" for="rate">語速：</label>
+      <label class="slider-label" for="rate">SPEED：</label>
       <input type="range" id="rate" min="0.1" max="2" value="1" step="0.1">
       <span id="rateValue" class="slider-value">1.0</span>
     </div>
 
     <div class="slider-container">
-      <label class="slider-label" for="pitch">音調：</label>
+      <label class="slider-label" for="pitch">TONE：</label>
       <input type="range" id="pitch" min="0" max="2" value="1" step="0.1">
       <span id="pitchValue" class="slider-value">1.0</span>
     </div>
 
     <div class="button-container">
       <button id="toggleSpeak" onclick="toggleSpeak()">
-        <i class="fas fa-play"></i> 播放
+        <i class="fas fa-play"></i> PLAY
       </button>
       <button id="cancelSpeak" class="cancel-button" onclick="cancelSpeak()">
-        <i class="fas fa-stop"></i> 取消
+        <i class="fas fa-stop"></i> CANCEL
       </button>
       <button id="downloadButton" onclick="downloadAudio()">
-        <i class="fas fa-download"></i> 下載
+        <i class="fas fa-download"></i> DOWNLOAD
       </button>
     </div>
   </div>
 
   <footer>
-    &copy; 2024 文字轉語音應用
+    &copy; 2025 Lifer_Lighdow. All rights reserved.
   </footer>
 
   <script src="https://unpkg.com/js-speech/dist/js-speech.min.js"></script>
@@ -275,7 +284,7 @@
     // 更新字數
     function updateCharCount() {
       const text = textInput.value;
-      charCountElement.textContent = `字數: ${text.length}`;
+      charCountElement.textContent = `${text.length}/？？？`;
     }
 
     // 更新語速數值
@@ -424,7 +433,7 @@
             synth.pause();
             isSpeaking = false;
             isPaused = true;
-            toggleSpeakButton.innerHTML = '<i class="fas fa-play"></i> 繼續';
+            toggleSpeakButton.innerHTML = '<i class="fas fa-play"></i> CONTINUE';
 
             // 清除目前播放的區塊的 onend 事件
             if (currentUtterance) {
@@ -436,7 +445,7 @@
             synth.resume();
             isSpeaking = true;
             isPaused = false;
-            toggleSpeakButton.innerHTML = '<i class="fas fa-pause"></i> 暫停';
+            toggleSpeakButton.innerHTML = '<i class="fas fa-pause"></i> STOP';
         } else {
             // 開始
             speakLongText(text);
