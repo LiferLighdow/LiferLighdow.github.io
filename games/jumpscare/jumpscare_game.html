@@ -231,7 +231,7 @@
         // 隨機選擇 jumpscare 圖片
         jumpscareImage.src = getRandomElement(jumpscareImages);
 
-        // 顯示 jumpscare
+        // 顯示 jumpscare 並播放音效 (同時)
         jumpscareContainer.style.display = "flex";
         jumpscareSound.play();
 
@@ -240,7 +240,7 @@
           jumpscareContainer.style.display = "none";
 
           // 提示玩家輸入名字
-          const playerName = prompt("你被嚇了！請輸入你的名字：", "匿名玩家");
+          const playerName = prompt("我在運氣排行榜上點了 " + clickCount + " 次才被嚇！ 請輸入你的名字：", "匿名玩家");
           if (playerName) {
             leaderboard.push({ name: playerName, score: clickCount });
             leaderboard.sort((a, b) => a.score - b.score); // 依分數排序
@@ -260,7 +260,7 @@
 
     // 分享功能
     shareButton.addEventListener("click", function() {
-      const shareText = `我在運氣排行榜上被嚇了 ${clickCount} 次！來挑戰看看：[你的網頁連結]`;
+      const shareText = `我在運氣排行榜上點了 ${clickCount} 次才被嚇！來挑戰看看：[你的網頁連結]`;
       if (navigator.share) {
         navigator.share({
           title: "運氣排行榜",
