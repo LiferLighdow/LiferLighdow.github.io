@@ -220,11 +220,10 @@
     displayLeaderboard();
 
     baitImage.addEventListener("click", function() {
+      // 每次點擊都更換圖片
+      baitImage.src = getRandomElement(cuteImages);
       clickCount++;
       clickCounterDisplay.textContent = "點擊次數: " + clickCount;
-
-      // 隨機更換可愛圖片
-      baitImage.src = getRandomElement(cuteImages);
 
       if (clickCount >= triggerCount && !jumpscareTriggered) {
         jumpscareTriggered = true;
@@ -249,6 +248,11 @@
             saveLeaderboard(leaderboard);
             displayLeaderboard();
           }
+
+          // 重置點擊次數和 jumpscareTriggered 標誌
+          clickCount = 0;
+          clickCounterDisplay.textContent = "點擊次數: 0";
+          jumpscareTriggered = false;
 
         }, 5000); // 5000 毫秒 = 5 秒
       }
