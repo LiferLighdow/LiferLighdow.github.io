@@ -22,7 +22,8 @@ const musicListContainer = document.getElementById('music-list');
 const searchResultsPopup = document.getElementById('search-results-popup');
 const searchResultsContainer = document.getElementById('search-results');
 const closeButton = document.querySelector('#search-results-popup .close-button');
-const downloadButton = document.getElementById('download-button');// 取得下載按鈕的參照
+// 取得下載按鈕的參照
+const downloadButton = document.getElementById('download-button');
 
 // 模擬從資料夾 "掃描" 音樂
 const musicData = {
@@ -41,7 +42,8 @@ const musicData = {
         { title: '戦火の中の永遠（Female ver.）', src: 'music/pop/senka_no_naka_no_eien_female.mp3', cover: 'music/cover/senka_no_naka_no_eien_female.jpg' },
         { title: '戦火の中の永遠（Male ver.）', src: 'music/pop/senka_no_naka_no_eien_male.mp3', cover: 'music/cover/senka_no_naka_no_eien_male.jpg' },
         { title: '無垠之心Infiniteこころ의경계', src: 'music/pop/mugin_no_kokoro.mp3', cover: 'music/cover/mugin_no_kokoro.jpg' },
-        { title: '捨てられた子供', src: 'music/pop/suterareta_kodomo.mp3', cover: 'music/cover/suterareta_kodomo.jpg' }
+        { title: '捨てられた子供（Female ver.）', src: 'music/pop/suterareta_kodomo_female.mp3', cover: 'music/cover/suterareta_kodomo_female.jpg' },
+		  { title: '捨てられた子供（Male ver.）', src: 'music/pop/suterareta_kodomo_male.mp3', cover: 'music/cover/suterareta_kodomo_male.jpg' }
     ],
     rock: [
         { title: '卒業おめでとう', src: 'music/rock/sotsugyou_omedetou.mp3', cover: 'music/cover/sotsugyou_omedetou.jpg' },
@@ -103,12 +105,13 @@ const musicData = {
         { title: '上波', src: 'music/original/uenami.mp3', cover: 'music/cover/uenami.jpg' },
         { title: '疾嵐波', src: 'music/original/shiranami.mp3', cover: 'music/cover/shiranami.jpg' },
         { title: '柔らかい波', src: 'music/original/yurakai_nami.mp3', cover: 'music/cover/yurakai_nami.jpg' },
-        { title: '千夜の影', src: 'music/original/senya_no_kage.mp3', cover: 'music/cover/senya_no_kage.jpg' },
+		  { title: '千夜の影', src: 'music/original/senya_no_kage.mp3', cover: 'music/cover/senya_no_kage.jpg' },
     ],
 	     
     nightcore: [
         { title: '祈りの灯火（Nightcore ver.）', src: 'music/nightcore/inori_no_tomoshibi_nightcore.mp3', cover: 'music/cover/inori_no_tomoshibi_nightcore.jpg' },
         { title: '夢に縛られたあなた（Nightcore ver.）', src: 'music/nightcore/yume_ni_shibarareta_anata_nightcore.mp3', cover: 'music/cover/yume_ni_shibarareta_anata_nightcore.jpg' },
+		  { title: '捨てられた子供（Nightcore ver.）', src: 'music/nightcore/suterareta_kodomo_nightcore.mp3', cover: 'music/cover/suterareta_kodomo_nightcore.jpg' },
     ]
 };
 
@@ -123,7 +126,7 @@ let repeatMode = 'off'; // 循環播放模式 ('off', 'single', 'folder')
 const playlists = Object.keys(musicData).map(genre => ({
     name: genre,
     description: `Lifer_Lighdow's ${genre} music genre`,
-    cover: `music/cover/${genre}.webp`, // 假設封面的命名規則
+    cover: `music/cover/${genre}.png`, // 假設封面的命名規則
     songs: musicData[genre].map((_, index) => index) // 歌曲索引
 }));
 
