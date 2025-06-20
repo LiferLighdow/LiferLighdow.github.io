@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lifer_Lighdow Search</title>
+  <script src="pageList.js"></script> <!-- 載入網頁列表 -->
+ <link rel="stylesheet" href="search.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="logo">Lifer_Lighdow Search</div>
+
+    <div class="search-box">
+      <input type="text" class="search-input" placeholder="search..." oninput="suggest()" autocomplete="off" onclick="showSearchHistory()" id="searchInput">
+      <button class="search-button" onclick="search()">search</button>
+      <ul class="autocomplete-list" id="autocompleteList"></ul>
+      <ul class="search-history" id="searchHistoryList"></ul>
+    </div>
+
+     <!-- 推薦連結區塊 -->
+    <div class="recommended-links" id="recommendedLinks">
+      <a href="index.html" class="recommended-link">Home</a>
+      <a href="music.html" class="recommended-link">Music</a>
+      <a href="game.html" class="recommended-link">Games</a>
+      <a href="Contact.html" class="recommended-link">Contact</a>
+    </div>
+
+    <div class="loading-indicator" id="loadingIndicator">searching...</div>
+
+    <ul class="search-results" id="searchResults">
+      <!-- 搜尋結果將在這裡顯示 -->
+    </ul>
+
+    <div class="pagination" id="pagination">
+      <!-- 分頁按鈕將在這裡顯示 -->
+    </div>
+
+    <div class="no-results" id="noResults" style="display: none;">
+      <p>No results were found that match your search criteria. </p>
+		<p>Suggestions: </p>
+		<ul>
+		<li>Please make sure your spelling is correct. </li>
+		<li>Try different keywords. </li>
+		<li>Expand your search criteria. </li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="search.js"></script>
+
+</body>
+</html>

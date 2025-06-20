@@ -1,0 +1,217 @@
+/* 全域樣式 */
+body {
+  font-family: "MyCustomFont", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f8ff; /* 淺藍色背景 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  color: #333; /* 深灰色文字 */
+}
+
+ /* 定義自定義字體 */
+    @font-face {
+       font-family: 'MyCustomFont';
+        src: url('fonts/myfont.woff2') format('woff2'), url('fonts/myfont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+
+.container {
+  width: 80%;
+  max-width: 800px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  background-color: #fff; /* 白色容器 */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 陰影 */
+  padding: 20px;
+}
+
+/* Logo 樣式 */
+.logo {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #2980b9; /* 藍色 Logo */
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* 搜尋框樣式 */
+.search-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 30px; /* 更圓潤的邊框 */
+  padding: 5px 15px;
+  background-color: #fff;
+  margin-bottom: 20px;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.search-button {
+  background-color: #3498db; /* 藍色按鈕 */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #2980b9; /* 深藍色按鈕 */
+}
+
+/* 搜尋結果樣式 */
+.search-results {
+  list-style: none;
+  padding: 0;
+}
+
+.search-result {
+  background-color: #fff;
+  margin-bottom: 15px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease; /* 滑鼠懸停動畫 */
+}
+
+.search-result:hover {
+  transform: translateY(-3px); /* 稍微向上移動 */
+}
+
+.result-title {
+  font-size: 20px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.result-link {
+  color: #2980b9; /* 藍色連結 */
+  text-decoration: none;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.result-description {
+  color: #666;
+  font-size: 14px;
+}
+
+/* 推薦連結樣式 */
+.recommended-links {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.recommended-link {
+  width: 120px;
+  height: 120px;
+  background-color: #ecf0f1; /* 淺灰色背景 */
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  margin-bottom: 10px;
+  transition: transform 0.2s ease;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.recommended-link:hover {
+  transform: scale(1.1);
+  background-color: #d4e6f1; /* 更淺的藍色 */
+}
+
+.recommended-links.hidden {
+  display: none;
+}
+
+/* 載入指示器樣式 */
+.loading-indicator {
+  display: none;
+  text-align: center;
+  margin-top: 10px;
+  font-style: italic;
+  color: #888;
+}
+
+/* 沒有結果樣式 */
+.no-results {
+  text-align: center;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.no-results p {
+  margin-bottom: 10px;
+}
+
+/* 自動完成和搜尋歷史樣式 */
+.autocomplete-list,
+.search-history {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 10;
+  display: none;
+}
+
+.autocomplete-list li,
+.search-history li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.autocomplete-list li:hover,
+.search-history li:hover {
+  background-color: #f0f0f0;
+}
+
+
+/* 小螢幕樣式 */
+@media (max-width: 768px) {
+  .container {
+    width: 95%; /* 在小螢幕上佔據更多寬度 */
+  }
+
+  .recommended-links {
+    justify-content: center; /* 在小螢幕上置中顯示 */
+  }
+
+  .recommended-link {
+    width: 45%; /* 在小螢幕上佔據更多寬度 */
+    margin-right: 5%; /* 增加間距 */
+  }
+}
