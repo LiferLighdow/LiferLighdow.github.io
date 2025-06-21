@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifer_Lighdow創意工坊 - 小說、圖片與對話生成器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 漸層背景 */
+        .gradient-bg {
+            background: linear-gradient(135deg, #6e8efb 0%, #a777e3 100%);
+        }
+        /* 打字機效果 */
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid #4f46e5;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #4f46e5 }
+        }
+        /* 淡入效果 */
+        .fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* 結果框陰影和過渡效果 */
+        .result-box {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        .result-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        /* 加載旋轉動畫 */
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* 自訂確認彈窗 */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .custom-modal {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        /* 聊天氣泡樣式 */
+        .chat-message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            word-wrap: break-word; /* 允許長單詞換行 */
+        }
+        .user-message {
+            background-color: #e0f2fe; /* light blue */
+            align-self: flex-end; /* right-align */
+            border-bottom-right-radius: 0.25rem; /* rounded-br-sm */
+        }
+        .ai-message {
+            background-color: #f3f4f6; /* light gray */
+            align-self: flex-start; /* left-align */
+            border-bottom-left-radius: 0.25rem; /* rounded-bl-sm */
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 font-sans">
+    <!-- 導航欄 -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-book-open text-2xl"></i>
+                    <h1 class="text-2xl font-bold">Lifer_Lighdow創意工坊</h1>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#chat" class="hover:text-gray-200 transition">AI 對話</a>
+                    <a href="#story" class="hover:text-gray-200 transition">小說生成</a>
+                    <a href="#image" class="hover:text-gray-200 transition">圖片生成</a>
+                    <a href="#saved" class="hover:text-gray-200 transition">我的作品</a>
+                </div>
+                <button class="md:hidden text-xl" id="mobile-menu-button">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <!-- 移動端菜單 -->
+            <div class="md:hidden hidden mt-4 pb-2" id="mobile-menu">
+                <a href="#chat" class="block py-2 hover:bg-indigo-700 rounded px-2">AI 對話</a>
+                <a href="#story" class="block py-2 hover:bg-indigo-700 rounded px-2">小說生成</a>
+                <a href="#image" class="block py-2 hover:bg-indigo-700 rounded px-2">圖片生成</a>
+                <a href="#saved" class="block py-2 hover:bg-indigo-700 rounded px-2">我的作品</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄區域 -->
+    <header class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 typewriter">釋放你的創造力</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto fade-in">用AI技術幫助你創作獨一無二的小說、藝術作品和智能對話</p>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <a href="#chat" class="bg-white text-indigo-600 hover:bg-gray-100 font-bold py-3 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-comments mr-2"></i>開始對話
+                </a>
+                <a href="#story" class="bg-white text-indigo-600 hover:bg-gray-100 font-bold py-3 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-book mr-2"></i>開始寫作
+                </a>
+                <a href="#image" class="bg-indigo-800 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 transform hover:scale-105">
+                    <i class="fas fa-image mr-2"></i>生成圖片
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要內容 -->
+    <main class="container mx-auto px-4 py-12">
+        <!-- AI 對話部分 -->
+        <section id="chat" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">AI 對話</h2>
+                <div class="w-20 h-1 bg-indigo-600 mx-auto"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">與我們的 AI 助手即時對話，它能回答問題、提供靈感或閒聊</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden result-box">
+                <div class="p-6 md:p-8 flex flex-col h-[600px]"> <!-- 固定高度以實現滾動 -->
+                    <div id="chat-messages" class="flex-grow overflow-y-auto space-y-4 p-4 mb-4 bg-gray-50 rounded-lg">
+                        <!-- 對話訊息將顯示在這裡 -->
+                        <div class="chat-message ai-message">你好！我是Lifer_Lighdow創意工坊的 AI 助手。有什麼可以幫助你的嗎？</div>
+                    </div>
+                    <div class="flex space-x-3">
+                        <input type="text" id="chat-input" placeholder="輸入你的訊息..." class="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800">
+                        <button id="send-chat-message" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition flex items-center justify-center disabled:opacity-50" disabled>
+                            <i class="fas fa-paper-plane mr-2"></i> 送出
+                        </button>
+                    </div>
+                    <div id="chat-loading" class="hidden text-center mt-4 flex items-center justify-center">
+                        <div class="loading-spinner w-8 h-8 mr-2"></div>
+                        <p class="text-gray-700">AI 正在思考中...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 小說生成部分 -->
+        <section id="story" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">小說生成器</h2>
+                <div class="w-20 h-1 bg-indigo-600 mx-auto"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">輸入一些關鍵詞或情節，我們將為您生成一篇完整的小說</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden result-box">
+                <div class="p-6 md:p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4">創作設定</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">小說類型</label>
+                                    <select id="story-genre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="fantasy">奇幻</option>
+                                        <option value="romance">愛情</option>
+                                        <option value="mystery">懸疑</option>
+                                        <option value="sci-fi">科幻</option>
+                                        <option value="historical">歷史</option>
+                                        <option value="horror">恐怖</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">主角設定</label>
+                                    <input id="story-character" type="text" placeholder="例如: 一位失去記憶的劍客" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">故事背景</label>
+                                    <input id="story-setting" type="text" placeholder="例如: 在一個被魔法籠罩的古代王國" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">情節概要</label>
+                                    <textarea id="story-plot" rows="3" placeholder="描述你想要的故事大綱..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">寫作風格</label>
+                                    <select id="story-style" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="descriptive">描述性</option>
+                                        <option value="concise">簡潔</option>
+                                        <option value="poetic">詩意</option>
+                                        <option value="humorous">幽默</option>
+                                        <option value="dramatic">戲劇性</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">長度</label>
+                                    <select id="story-length" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="short">短篇 (約500字)</option>
+                                        <option value="medium" selected>中篇 (約1000字)</option>
+                                        <option value="long">長篇 (約2000字)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4">生成結果</h3>
+                            <div class="bg-gray-50 p-4 rounded-lg h-96 overflow-y-auto relative" id="story-result-container">
+                                <div id="story-result" class="text-gray-700">
+                                    <p class="text-gray-500 italic">您的小說將在這裡顯示...</p>
+                                </div>
+                                <div id="story-loading" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-80">
+                                    <div class="loading-spinner"></div>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex justify-between">
+                                <button id="generate-story" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition flex items-center">
+                                    <i class="fas fa-magic mr-2"></i> 生成小說
+                                </button>
+                                <button id="save-story" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition flex items-center disabled:opacity-50" disabled>
+                                    <i class="fas fa-save mr-2"></i> 保存
+                                </button>
+                                <button id="copy-story" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition flex items-center">
+                                    <i class="fas fa-copy mr-2"></i> 複製
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 圖片生成部分 -->
+        <section id="image" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">圖片生成器</h2>
+                <div class="w-20 h-1 bg-indigo-600 mx-auto"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">用文字描述您想要的圖片，我們將為您生成獨特的藝術作品</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden result-box">
+                <div class="p-6 md:p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4">圖片設定</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">圖片描述</label>
+                                    <textarea id="image-prompt" rows="3" placeholder="詳細描述您想要的圖片內容..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">藝術風格</label>
+                                    <select id="image-style" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="realistic">寫實風格</option>
+                                        <option value="anime">動漫風格</option>
+                                        <option value="oil-painting">油畫風格</option>
+                                        <option value="watercolor">水彩風格</option>
+                                        <option value="digital-art">數字藝術</option>
+                                        <option value="pixel-art">像素藝術</option>
+                                        <option value="fantasy">奇幻風格</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">色彩風格</label>
+                                    <select id="image-color" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="vibrant">鮮豔色彩</option>
+                                        <option value="pastel">柔和色彩</option>
+                                        <option value="monochrome">單色調</option>
+                                        <option value="dark">暗色調</option>
+                                        <option value="light">亮色調</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">寬高比</label>
+                                        <select id="image-ratio" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                            <option value="1:1">1:1 (正方形)</option>
+                                            <option value="4:3">4:3 (標準)</option>
+                                            <option value="16:9" selected>16:9 (寬屏)</option>
+                                            <option value="9:16">9:16 (豎屏)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-2">生成數量</label>
+                                        <select id="image-count" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                            <option value="1">1張</option>
+                                            <option value="2">2張</option>
+                                            <option value="4" selected>4張</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4">生成結果</h3>
+                            <div class="bg-gray-50 p-4 rounded-lg min-h-96 relative flex items-center justify-center" id="image-result-container">
+                                <div id="image-result" class="grid grid-cols-2 gap-4 w-full h-full">
+                                    <!-- 預設圖片佔位符 -->
+                                    <div class="bg-gray-200 aspect-video flex items-center justify-center text-gray-500 rounded-lg">
+                                        <i class="fas fa-image text-4xl"></i>
+                                    </div>
+                                    <div class="bg-gray-200 aspect-video flex items-center justify-center text-gray-500 rounded-lg">
+                                        <i class="fas fa-image text-4xl"></i>
+                                    </div>
+                                    <div class="bg-gray-200 aspect-video flex items-center justify-center text-gray-500 rounded-lg">
+                                        <i class="fas fa-image text-4xl"></i>
+                                    </div>
+                                    <div class="bg-gray-200 aspect-video flex items-center justify-center text-gray-500 rounded-lg">
+                                        <i class="fas fa-image text-4xl"></i>
+                                    </div>
+                                </div>
+                                <div id="image-loading" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-80 rounded-lg">
+                                    <div class="loading-spinner mb-4"></div>
+                                    <p class="text-gray-700 font-medium">正在生成圖片，請稍候...</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex justify-between">
+                                <button id="generate-image" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition flex items-center">
+                                    <i class="fas fa-paint-brush mr-2"></i> 生成圖片
+                                </button>
+                                <button id="save-image" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition flex items-center disabled:opacity-50" disabled>
+                                    <i class="fas fa-save mr-2"></i> 保存全部
+                                </button>
+                                <button id="download-all" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition flex items-center disabled:opacity-50" disabled>
+                                    <i class="fas fa-download mr-2"></i> 下載全部
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 我的作品部分 -->
+        <section id="saved">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">我的作品</h2>
+                <div class="w-20 h-1 bg-indigo-600 mx-auto"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">查看您之前保存的創作</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden result-box">
+                <div class="p-6 md:p-8">
+                    <div class="flex border-b border-gray-200">
+                        <button id="show-stories" class="px-4 py-2 font-medium text-indigo-600 border-b-2 border-indigo-600">我的小說</button>
+                        <button id="show-images" class="px-4 py-2 font-medium text-gray-500 hover:text-indigo-600">我的圖片</button>
+                    </div>
+                    
+                    <div id="saved-stories" class="py-4">
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="p-4 border border-gray-200 rounded-lg text-center text-gray-500 italic">
+                                <h3 class="font-semibold text-lg text-gray-800">尚未保存任何作品</h3>
+                                <p>您生成的小說將顯示在這裡</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="saved-images" class="py-4 hidden">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="p-4 border border-gray-200 rounded-lg text-center text-gray-500 italic col-span-full">
+                                <h3 class="font-semibold text-lg text-gray-800">尚未保存任何圖片</h3>
+                                <p>您生成的圖片將顯示在這裡</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h2 class="text-xl font-bold flex items-center">
+                        <i class="fas fa-book-open mr-2"></i> Lifer_Lighdow創意工坊
+                    </h2>
+                    <p class="text-gray-400 mt-1">釋放你的創造力</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy;2025 Lifer_Lighdow. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 通知彈窗 -->
+    <div id="notification" class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hidden transform transition-all duration-300 translate-y-2 opacity-0">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="notification-message">操作成功!</span>
+        </div>
+    </div>
+
+    <!-- 自訂確認彈窗 -->
+    <div id="custom-confirm-overlay" class="custom-modal-overlay hidden">
+        <div class="custom-modal">
+            <p id="custom-confirm-message" class="text-gray-800 text-lg mb-6"></p>
+            <div class="flex justify-center space-x-4">
+                <button id="custom-confirm-yes" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-lg transition">是</button>
+                <button id="custom-confirm-no" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-6 rounded-lg transition">否</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 設定 Gemini API Key，在 Canvas 環境中會自動提供。
+        // 此 API Key 可同時用於 Gemini (文字生成) 和 Imagen (圖片生成)。
+        const apiKey = "AIzaSyC16igCtJ1DJRUoEXkIs9o7gwKiFTFdIgM"; // 預設使用 Canvas 環境提供的 Key
+
+        // 可配置的圖片生成 API URL。
+        // 目前使用 Google Imagen 3.0-generate-002。
+        const imageGenerationApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+        
+        // AI 對話的歷史紀錄
+        let chatHistory = [{ role: "model", parts: [{ text: "你好！我是Lifer_Lighdow創意工坊的 AI 助手。有什麼可以幫助你的嗎？" }] }];
+
+        // 移動端菜單切換
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // 我的作品切換
+        document.getElementById('show-stories').addEventListener('click', function() {
+            document.getElementById('saved-stories').classList.remove('hidden');
+            document.getElementById('saved-images').classList.add('hidden');
+            this.classList.add('text-indigo-600', 'border-b-2', 'border-indigo-600');
+            this.classList.remove('text-gray-500');
+            document.getElementById('show-images').classList.add('text-gray-500');
+            document.getElementById('show-images').classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600');
+        });
+
+        document.getElementById('show-images').addEventListener('click', function() {
+            document.getElementById('saved-stories').classList.add('hidden');
+            document.getElementById('saved-images').classList.remove('hidden');
+            this.classList.add('text-indigo-600', 'border-b-2', 'border-indigo-600');
+            this.classList.remove('text-gray-500');
+            document.getElementById('show-stories').classList.add('text-gray-500');
+            document.getElementById('show-stories').classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600');
+        });
+
+        // 顯示通知
+        function showNotification(message, isSuccess = true) {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            
+            notificationMessage.textContent = message;
+            
+            if (isSuccess) {
+                notification.classList.remove('bg-red-500');
+                notification.classList.add('bg-green-500');
+            } else {
+                notification.classList.remove('bg-green-500');
+                notification.classList.add('bg-red-500');
+            }
+            
+            notification.classList.remove('hidden', 'translate-y-2', 'opacity-0');
+            notification.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                notification.classList.remove('translate-y-0', 'opacity-100');
+                notification.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => notification.classList.add('hidden'), 300);
+            }, 3000);
+        }
+
+        // 自訂確認彈窗邏輯
+        let confirmCallback = null;
+        function showCustomConfirm(message, callback) {
+            const overlay = document.getElementById('custom-confirm-overlay');
+            const msgElement = document.getElementById('custom-confirm-message');
+            const yesBtn = document.getElementById('custom-confirm-yes');
+            const noBtn = document.getElementById('custom-confirm-no');
+
+            msgElement.textContent = message;
+            overlay.classList.remove('hidden');
+            confirmCallback = callback;
+
+            yesBtn.onclick = () => {
+                hideCustomConfirm();
+                if (confirmCallback) {
+                    confirmCallback(true);
+                }
+            };
+            noBtn.onclick = () => {
+                hideCustomConfirm();
+                if (confirmCallback) {
+                    confirmCallback(false);
+                }
+            };
+        }
+
+        function hideCustomConfirm() {
+            document.getElementById('custom-confirm-overlay').classList.add('hidden');
+            confirmCallback = null;
+        }
+
+        // AI 對話功能
+        const chatInput = document.getElementById('chat-input');
+        const sendChatMessageBtn = document.getElementById('send-chat-message');
+        const chatMessagesDiv = document.getElementById('chat-messages');
+        const chatLoadingDiv = document.getElementById('chat-loading');
+
+        // 初始化時啟用輸入框和按鈕
+        chatInput.disabled = false;
+        sendChatMessageBtn.disabled = false;
+
+        function addMessageToChat(message, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `chat-message ${sender}-message mb-2`;
+            msgDiv.textContent = message;
+            chatMessagesDiv.appendChild(msgDiv);
+            chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight; // 自動滾動到底部
+        }
+
+        async function sendChatMessage() {
+            const userMessage = chatInput.value.trim();
+            if (userMessage === "") {
+                showNotification("請輸入訊息!", false);
+                return;
+            }
+
+            // 顯示用戶訊息
+            addMessageToChat(userMessage, 'user');
+            chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+            chatInput.value = ''; // 清空輸入框
+
+            // 顯示載入動畫
+            chatLoadingDiv.classList.remove('hidden');
+            sendChatMessageBtn.disabled = true; // 禁用按鈕，防止重複發送
+            chatInput.disabled = true; // 禁用輸入框
+
+            try {
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        temperature: 0.8, // 稍微提高溫度，讓 AI 回答更多樣
+                    }
+                };
+
+                const chatApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                const response = await fetch(chatApiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    const errorMessage = data.error?.message || "AI 回應失敗";
+                    throw new Error(`API 請求失敗: ${errorMessage}`);
+                }
+
+                if (!data.candidates || data.candidates.length === 0 || !data.candidates[0].content || !data.candidates[0].content.parts || data.candidates[0].content.parts.length === 0) {
+                    throw new Error("API 回應格式不正確或內容為空");
+                }
+
+                const aiResponse = data.candidates[0].content.parts[0].text;
+                addMessageToChat(aiResponse, 'ai');
+                chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
+                
+                showNotification("AI 回應成功!");
+
+            } catch (error) {
+                console.error("AI 對話錯誤:", error);
+                addMessageToChat(`錯誤: ${error.message}`, 'ai');
+                showNotification("AI 回應失敗!", false);
+            } finally {
+                chatLoadingDiv.classList.add('hidden');
+                sendChatMessageBtn.disabled = false; // 重新啟用按鈕
+                chatInput.disabled = false; // 重新啟用輸入框
+                chatInput.focus(); // 輸入框重新獲得焦點
+            }
+        }
+
+        sendChatMessageBtn.addEventListener('click', sendChatMessage);
+        chatInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && !sendChatMessageBtn.disabled) {
+                sendChatMessage();
+            }
+        });
+
+
+        // 生成小說
+        document.getElementById('generate-story').addEventListener('click', async function() {
+            const genre = document.getElementById('story-genre').value;
+            const character = document.getElementById('story-character').value;
+            const setting = document.getElementById('story-setting').value;
+            const plot = document.getElementById('story-plot').value;
+            const style = document.getElementById('story-style').value;
+            const length = document.getElementById('story-length').value;
+            
+            if (!character && !setting && !plot) {
+                showNotification("請至少填寫一個創作要素!", false);
+                return;
+            }
+            
+            const loading = document.getElementById('story-loading');
+            const result = document.getElementById('story-result');
+            const saveBtn = document.getElementById('save-story');
+            
+            loading.classList.remove('hidden');
+            result.innerHTML = '';
+            saveBtn.disabled = true; // 在生成過程中禁用保存按鈕
+
+            try {
+                // 構建提示詞
+                let prompt = `請用繁體中文，並以${style}風格寫一篇${genre}小說。`;
+                if (character) prompt += ` 主角設定: ${character}。`;
+                if (setting) prompt += ` 故事背景: ${setting}。`;
+                if (plot) prompt += ` 情節概要: ${plot}。`;
+                
+                // 根據長度調整提示詞和最大輸出字數
+                let maxOutputTokens;
+                switch (length) {
+                    case 'short': 
+                        prompt += ` 請寫成大約500字的完整故事，包含開頭、發展和結局。`; 
+                        maxOutputTokens = 500; 
+                        break;
+                    case 'medium': 
+                        prompt += ` 請寫成大約1000字的完整故事，包含開頭、發展和結局。`; 
+                        maxOutputTokens = 1000; 
+                        break;
+                    case 'long': 
+                        prompt += ` 請寫成大約2000字以上的完整故事，包含開頭、發展和結局。`; 
+                        maxOutputTokens = 2000; 
+                        break;
+                }
+                
+                let storyChatHistory = []; // 獨立的小說生成歷史
+                storyChatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { 
+                    contents: storyChatHistory,
+                    generationConfig: {
+                        maxOutputTokens: maxOutputTokens,
+                        temperature: 0.7,
+                    }
+                };
+                
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    // 檢查是否存在錯誤訊息
+                    const errorMessage = data.error?.message || "生成小說失敗";
+                    throw new Error(`API 請求失敗: ${errorMessage}`);
+                }
+
+                // 處理 Gemini API 的回應結構
+                if (!data.candidates || data.candidates.length === 0 || !data.candidates[0].content || !data.candidates[0].content.parts || data.candidates[0].content.parts.length === 0) {
+                    throw new Error("API 回應格式不正確或內容為空");
+                }
+                
+                const generatedContent = data.candidates[0].content.parts[0].text;
+                
+                // 嘗試從生成內容中提取標題 (假設第一行是標題)
+                const titleMatch = generatedContent.match(/^(.*?)\n/);
+                const title = titleMatch ? titleMatch[1].replace(/["']/g, '') : "未命名小說";
+                const content = generatedContent.replace(/^.*?\n/, '').trim();
+
+                result.innerHTML = `
+                    <h4 class="text-xl font-semibold mb-4">${title}</h4>
+                    <div class="whitespace-pre-line">${content}</div>
+                `;
+                
+                showNotification("小說生成成功!");
+            } catch (error) {
+                console.error("生成小說錯誤:", error);
+                result.innerHTML = `<p class="text-red-500">生成失敗: ${error.message}</p>`;
+                showNotification("生成小說失敗!", false);
+            } finally {
+                loading.classList.add('hidden');
+                saveBtn.disabled = false; // 恢復保存按鈕
+            }
+        });
+
+        // 保存小說
+        document.getElementById('save-story').addEventListener('click', function() {
+            const storyContainer = document.getElementById('story-result');
+            const title = storyContainer.querySelector('h4')?.textContent || "未命名小說";
+            const content = storyContainer.querySelector('div')?.textContent || "";
+            
+            if (!content || content.includes("您的小說將在這裡顯示")) {
+                showNotification("沒有可保存的內容!", false);
+                return;
+            }
+            
+            const savedStories = document.getElementById('saved-stories');
+            // 移除預設的「尚未保存任何作品」提示
+            const defaultMessage = savedStories.querySelector('.text-gray-500.italic');
+            if (defaultMessage) {
+                savedStories.innerHTML = ''; // 清空內容
+            }
+            
+            const storyId = Date.now();
+            const storyElement = document.createElement('div');
+            storyElement.className = 'p-4 border border-gray-200 rounded-lg';
+            storyElement.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <h3 class="font-semibold text-lg text-gray-800">${title}</h3>
+                    <button class="text-red-500 hover:text-red-700 delete-story" data-id="${storyId}" data-type="story">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <p class="text-gray-600 mt-2 line-clamp-3">${content.substring(0, 200)}...</p>
+                <div class="mt-3 flex justify-end space-x-2">
+                    <button class="text-blue-600 hover:text-blue-800 view-story" data-id="${storyId}">
+                        <i class="fas fa-eye mr-1"></i>查看
+                    </button>
+                    <button class="text-green-600 hover:text-green-800 download-story" data-id="${storyId}">
+                        <i class="fas fa-download mr-1"></i>下載
+                    </button>
+                </div>
+                <div id="story-full-${storyId}" class="hidden mt-4 p-3 bg-gray-50 rounded whitespace-pre-line">${content}</div>
+            `;
+            
+            savedStories.prepend(storyElement);
+            showNotification("小說已保存!");
+            
+            // 添加查看完整故事的點擊事件
+            storyElement.querySelector('.view-story').addEventListener('click', function() {
+                const fullStory = storyElement.querySelector(`#story-full-${storyId}`);
+                fullStory.classList.toggle('hidden');
+            });
+            
+            // 添加下載功能
+            storyElement.querySelector('.download-story').addEventListener('click', function() {
+                const blob = new Blob([`${title}\n\n${content}`], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${title}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showNotification("小說已下載!");
+            });
+            
+            // 添加刪除功能
+            storyElement.querySelector('.delete-story').addEventListener('click', function() {
+                showCustomConfirm("確定要刪除這篇小說嗎?", (confirmed) => {
+                    if (confirmed) {
+                        storyElement.remove();
+                        
+                        // 如果沒有其他故事，顯示提示消息
+                        if (savedStories.children.length === 0) {
+                            savedStories.innerHTML = `
+                                <div class="p-4 border border-gray-200 rounded-lg text-center text-gray-500 italic">
+                                    <h3 class="font-semibold text-lg text-gray-800">尚未保存任何作品</h3>
+                                    <p>您生成的小說將顯示在這裡</p>
+                                </div>
+                            `;
+                        }
+                        showNotification("小說已刪除!");
+                    }
+                });
+            });
+        });
+
+        // 複製小說
+        document.getElementById('copy-story').addEventListener('click', function() {
+            const storyContainer = document.getElementById('story-result');
+            const content = storyContainer.textContent || "";
+            
+            if (!content || content.includes("您的小說將在這裡顯示")) {
+                showNotification("沒有可複製的內容!", false);
+                return;
+            }
+            
+            // 使用 document.execCommand('copy') 因為 navigator.clipboard.writeText 可能在 iFrame 中受限
+            const textarea = document.createElement('textarea');
+            textarea.value = content;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showNotification("小說已複製到剪貼板!");
+            } catch (err) {
+                console.error('複製失敗:', err);
+                showNotification("複製失敗，請手動選擇文本複製", false);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        });
+
+        // 生成圖片
+        document.getElementById('generate-image').addEventListener('click', async function() {
+            const promptInput = document.getElementById('image-prompt').value;
+            const style = document.getElementById('image-style').value;
+            const color = document.getElementById('image-color').value;
+            const ratio = document.getElementById('image-ratio').value;
+            const count = parseInt(document.getElementById('image-count').value);
+            
+            if (!promptInput) {
+                showNotification("請輸入圖片描述!", false);
+                return;
+            }
+            
+            const loading = document.getElementById('image-loading');
+            const result = document.getElementById('image-result');
+            const saveBtn = document.getElementById('save-image');
+            const downloadBtn = document.getElementById('download-all');
+            
+            loading.classList.remove('hidden');
+            result.innerHTML = ''; // 清空舊的圖片
+            saveBtn.disabled = true;
+            downloadBtn.disabled = true;
+
+            try {
+                // 根據使用者輸入構建更豐富的圖片提示詞
+                const fullPrompt = `${promptInput}, ${style}風格, ${color}色彩, ${ratio}寬高比`;
+
+                const payload = {
+                    instances: { prompt: fullPrompt },
+                    parameters: { "sampleCount": count }
+                };
+
+                const response = await fetch(imageGenerationApiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                     const errorMessage = data.error?.message || "生成圖片失敗";
+                     throw new Error(`API 請求失敗: ${errorMessage}`);
+                }
+
+                if (!data.predictions || data.predictions.length === 0) {
+                    throw new Error("未收到圖片生成結果。");
+                }
+
+                // 調整網格布局
+                if (count === 1) {
+                    result.className = 'grid grid-cols-1 gap-4 w-full h-full';
+                } else if (count === 2) {
+                    result.className = 'grid grid-cols-2 gap-4 w-full h-full';
+                } else {
+                    result.className = 'grid grid-cols-2 md:grid-cols-4 gap-4 w-full h-full';
+                }
+
+                data.predictions.forEach((prediction, index) => {
+                    if (prediction.bytesBase64Encoded) {
+                        const imageUrl = `data:image/png;base64,${prediction.bytesBase64Encoded}`;
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = 'relative group';
+                        
+                        imgContainer.innerHTML = `
+                            <img src="${imageUrl}" alt="生成的圖片" class="w-full h-full object-cover rounded-lg">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition rounded-lg">
+                                <button class="bg-white text-indigo-600 p-2 rounded-full mr-2 download-single" data-url="${imageUrl}">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="bg-white text-green-600 p-2 rounded-full save-single" data-url="${imageUrl}">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </div>
+                        `;
+                        result.appendChild(imgContainer);
+                    } else {
+                        console.warn(`第 ${index + 1} 張圖片沒有 base64 編碼數據。`);
+                    }
+                });
+                
+                showNotification(`成功生成 ${data.predictions.length} 張圖片!`);
+                saveBtn.disabled = false;
+                downloadBtn.disabled = false;
+
+                // 添加單個圖片下載事件
+                document.querySelectorAll('.download-single').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const imgUrl = this.getAttribute('data-url');
+                        const a = document.createElement('a');
+                        a.href = imgUrl;
+                        a.download = `generated-image-${Date.now()}.png`; // 更改為 .png 副檔名
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        showNotification("圖片已下載!");
+                    });
+                });
+                
+                // 添加單個圖片保存事件
+                document.querySelectorAll('.save-single').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const imgUrl = this.getAttribute('data-url');
+                        saveImageToGallery(imgUrl);
+                    });
+                });
+
+            } catch (error) {
+                console.error("生成圖片錯誤:", error);
+                result.innerHTML = `<p class="text-red-500 text-center col-span-full">生成失敗: ${error.message}</p>`;
+                showNotification("生成圖片失敗!", false);
+            } finally {
+                loading.classList.add('hidden');
+            }
+        });
+
+        // 保存圖片到相冊
+        function saveImageToGallery(imgUrl) {
+            const savedImages = document.getElementById('saved-images');
+            // 移除預設的「尚未保存任何圖片」提示
+            const defaultMessage = savedImages.querySelector('.text-gray-500.italic');
+            if (defaultMessage) {
+                savedImages.innerHTML = ''; // 清空內容
+            }
+            
+            const imgId = Date.now();
+            const imgElement = document.createElement('div');
+            imgElement.className = 'relative group';
+            imgElement.innerHTML = `
+                <img src="${imgUrl}" alt="保存的圖片" class="w-full h-full object-cover rounded-lg">
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition rounded-lg">
+                    <button class="bg-white text-red-500 p-2 rounded-full delete-image" data-id="${imgId}" data-type="image">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            savedImages.prepend(imgElement);
+            showNotification("圖片已保存到相冊!");
+            
+            // 添加刪除功能
+            imgElement.querySelector('.delete-image').addEventListener('click', function() {
+                showCustomConfirm("確定要刪除這張圖片嗎?", (confirmed) => {
+                    if (confirmed) {
+                        imgElement.remove();
+                        
+                        // 如果沒有其他圖片，顯示提示消息
+                        if (savedImages.children.length === 0) {
+                            savedImages.innerHTML = `
+                                <div class="p-4 border border-gray-200 rounded-lg text-center text-gray-500 italic col-span-full">
+                                    <h3 class="font-semibold text-lg text-gray-800">尚未保存任何圖片</h3>
+                                    <p>您生成的圖片將顯示在這裡</p>
+                                </div>
+                            `;
+                        }
+                        showNotification("圖片已刪除!");
+                    }
+                });
+            });
+        }
+
+        // 保存所有圖片
+        document.getElementById('save-image').addEventListener('click', function() {
+            const images = document.querySelectorAll('#image-result img');
+            if (images.length === 0) {
+                showNotification("沒有可保存的圖片!", false);
+                return;
+            }
+            
+            images.forEach(img => {
+                saveImageToGallery(img.src);
+            });
+            
+            showNotification(`已保存 ${images.length} 張圖片到相冊!`);
+        });
+
+        // 下載所有圖片
+        document.getElementById('download-all').addEventListener('click', function() {
+            const images = document.querySelectorAll('#image-result img');
+            if (images.length === 0) {
+                showNotification("沒有可下載的圖片!", false);
+                return;
+            }
+            
+            // 由於瀏覽器限制，我們只能逐一下載
+            images.forEach((img, index) => {
+                setTimeout(() => {
+                    const a = document.createElement('a');
+                    a.href = img.src;
+                    a.download = `generated-image-${Date.now()}-${index}.png`; // 更改為 .png 副檔名
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }, index * 500);
+            });
+            
+            showNotification(`開始下載 ${images.length} 張圖片!`);
+        });
+
+        // 示例提示
+        document.getElementById('image-prompt').addEventListener('focus', function() {
+            if (!this.value) {
+                this.placeholder = "例如: 一隻穿著太空服的貓在月球上喝咖啡";
+            }
+        });
+
+        document.getElementById('story-plot').addEventListener('focus', function() {
+            if (!this.value) {
+                this.placeholder = "例如: 主角發現自己擁有超能力，但每次使用都會失去一段記憶";
+            }
+        });
+    </script>
+</body>
+</html>
