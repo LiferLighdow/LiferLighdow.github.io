@@ -23,7 +23,7 @@
 
       // 檢查搜尋詞是否為空
       if (!searchTerm) {
-        alert("請輸入搜尋詞"); // 顯示提示訊息，你可以修改成更美觀的提示
+        alert("Search bar is empty."); // 顯示提示訊息，你可以修改成更美觀的提示
         return; // 停止搜尋
       }
 
