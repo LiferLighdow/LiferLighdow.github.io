@@ -1,7 +1,7 @@
 // 小說列表資料
 const novelListData = [
     {
-        title: '《微光破曉》',
+        title: '《背上鬼女兒的戀》',
         chapters: [
             { href: 'novel1.html', title: '1.命運的捉弄' },
             { href: 'novel2.html', title: '2.月光下的幽影' },
