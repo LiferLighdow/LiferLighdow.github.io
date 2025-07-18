@@ -4,7 +4,7 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif; /* Use Inter font */
+  font-family: "MyCustomFont", Arial, sans-serif; /* Use MyCustomFont */
   margin: 0;
   padding: 0;
   background-color: #1a1a2e; /* Dark blue background */
@@ -17,6 +17,15 @@ body {
   overflow-x: hidden; /* Prevent horizontal scrolling */
   position: relative; /* For background animation positioning */
   transition: justify-content 0.5s ease; /* Smooth transition for vertical alignment */
+}
+
+/* Define custom font */
+@font-face {
+   font-family: 'MyCustomFont';
+    src: url('fonts/myfont.woff2') format('woff2'), url('fonts/myfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 /* Dynamic background */
@@ -620,7 +629,7 @@ body {
 .calc-button.equals {
   background-color: #61dafb; /* Blue for equals */
   color: #1a1a2e;
-  grid-column: span 2; /* Make equals button span two columns */
+    grid-column: span 2; /* Make equals button span two columns */
 }
 
 .calc-button.equals:hover {
