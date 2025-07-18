@@ -3,38 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact</title>
+    <title>Contact Us</title>
+    <!-- Google Fonts: Poppins for general text, Montserrat for a modern touch -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="images/logo.ico" type="image/x-icon" / >
-    <link rel="shortcut icon" href="images/logo.ico" type="image/x-icon" / >
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for social icons (if needed in header/footer) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" xintegrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        /* General Styles */
         body {
-            font-family: 'MyCustomFont', sans-serif;
+            font-family: 'MyCustomFont', sans-serif; /* 使用更現代的字體 */
             margin: 0;
             padding: 0;
-            background: #f4f4f4;
-            color: #333;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); /* 深色漸變背景 */
+            color: #e0e0e0; /* 淺色文字 */
             min-height: 100vh;
             display: flex;
             flex-direction: column; /* 使用 Flexbox 垂直排列 */
+            overflow-x: hidden; /* 防止橫向捲軸 */
         }
-		  /* 定義自定義字體 */
-@font-face {
-    font-family: 'MyCustomFont';
-    src: url('fonts/myfont.woff2') format('woff2'),
-         url('fonts/myfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
+
+        /* 定義自定義字體 (如果仍需使用) */
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('fonts/myfont.woff2') format('woff2'),
+                 url('fonts/myfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        a {
+            text-decoration: none;
+            color: #8be9fd; /* 淺藍色連結 */
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #6272a4; /* 較深的藍色 */
+        }
 
         /* Header and Navigation */
         header {
-            background-color: #333;
+            background-color: rgba(26, 26, 46, 0.8); /* 半透明深色背景 */
+            backdrop-filter: blur(5px); /* 模糊效果 */
             color: #fff;
             padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         nav {
@@ -47,166 +66,306 @@
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
         nav ul {
             list-style: none;
             display: flex;
+            margin: 0;
+            padding: 0;
         }
 
         nav ul li {
-            margin-left: 1.5rem;
+            margin-left: 2rem;
         }
 
         nav ul li a {
             color: #fff;
-            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding-bottom: 5px;
         }
 
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #8be9fd;
+            left: 0;
+            bottom: 0;
+            transition: width 0.3s ease-in-out;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* Container for the contact form */
         .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-            width: 500px;
+            background-color: rgba(22, 33, 62, 0.7); /* 半透明深色背景 */
+            backdrop-filter: blur(5px); /* 模糊效果 */
+            padding: 40px; /* 增加內距 */
+            border-radius: 15px; /* 更圓潤的邊角 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* 更明顯的陰影 */
+            width: 600px; /* 稍微寬一點 */
             max-width: 90%;
-            margin: 2rem auto; /* 上下間距，並置中 */
+            margin: 3rem auto; /* 增加上下間距，並置中 */
             flex-grow: 1; /* 讓 container 填滿剩餘空間 */
+            border: 1px solid rgba(139, 233, 253, 0.2); /* 細微邊框 */
         }
 
         h1 {
-            color: #333;
-            margin-bottom: 20px;
+            color: #8be9fd; /* 標題顏色與主題協調 */
+            margin-bottom: 30px; /* 增加間距 */
             text-align: center;
+            font-size: 2.5rem; /* 更大的標題 */
+            text-shadow: 0 0 10px rgba(139, 233, 253, 0.5); /* 標題發光 */
         }
 
         .contact-info {
-            margin-bottom: 20px;
-            line-height: 1.6;
-            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.8; /* 增加行高 */
+            color: #b3b3b3; /* 淺灰色文字 */
             text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .contact-info strong {
+            color: #e0e0e0; /* 強調文字 */
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px; /* 增加間距 */
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px; /* 增加間距 */
             font-weight: 500;
-            color: #333;
+            color: #e0e0e0; /* 標籤文字顏色 */
+            font-size: 1.1rem;
         }
 
         input[type="text"],
         textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 15px; /* 增加內距 */
+            border: 1px solid #444; /* 深色邊框 */
+            border-radius: 8px; /* 更圓潤的邊角 */
             box-sizing: border-box;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
+            font-size: 1rem;
+            background-color: #2a2a4a; /* 深色背景 */
+            color: #e0e0e0; /* 文字顏色 */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         input[type="text"]:focus,
         textarea:focus {
-            border-color: #007bff;
+            border-color: #8be9fd; /* 聚焦時邊框變色 */
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.4); /* 聚焦時發光 */
             outline: none;
         }
 
         textarea {
-            min-height: 150px;
+            min-height: 180px; /* 增加高度 */
             resize: vertical;
         }
 
-        input[type="button"]  {
-            background-color: #007bff;
-            color: #fff;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-				margin-top: 10px;
-            width: 100%;
+        /* Button styles */
+        .form-buttons {
+            display: flex;
+            gap: 15px; /* 按鈕間距 */
+            margin-top: 20px;
         }
 
-
-         input[type="button"]:hover {
-            background-color: #3898FF;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        input[type="button"]:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-		  
+        input[type="button"],
         input[type="reset"] {
-            background-color: #6c757d;
-            color: #fff;
-            padding: 12px 24px;
+            flex: 1; /* 讓按鈕平均分配寬度 */
+            padding: 15px 24px; /* 增加內距 */
             border: none;
-            border-radius: 8px;
+            border-radius: 10px; /* 更圓潤的邊角 */
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
-            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            color: #fff; /* 文字顏色 */
+        }
+
+        input[type="button"] {
+            background: linear-gradient(45deg, #2980b9, #3498db); /* 藍色漸變 */
+        }
+
+        input[type="reset"] {
+            background: linear-gradient(45deg, #6c757d, #8d97a0); /* 灰色漸變 */
+        }
+
+        input[type="button"]:hover {
+            background: linear-gradient(45deg, #3498db, #2980b9); /* 懸停時漸變反轉 */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
         input[type="reset"]:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(45deg, #8d97a0, #6c757d); /* 懸停時漸變反轉 */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
+        input[type="button"]:active,
         input[type="reset"]:active {
             transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         #languageSelect {
-		      font: italic small-caps bold 16px 'MyCustomFont', sans-serif;
-            margin-bottom: 20px; /* 增加下方間距 */
-            padding: 10px 15px; /* 增加內距 */
-            border: 1px solid #ddd;
+            margin-bottom: 25px; /* 增加下方間距 */
+            padding: 12px 20px; /* 增加內距 */
+            border: 1px solid #444;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            background-color: #fff;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"); /* 下拉箭頭 */
+            background-color: #2a2a4a; /* 深色背景 */
+            color: #e0e0e0; /* 文字顏色 */
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23e0e0e0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"); /* 下拉箭頭顏色改為淺色 */
             background-repeat: no-repeat;
-            background-position: right 10px center;
+            background-position: right 15px center; /* 調整箭頭位置 */
             background-size: 16px 16px;
-            padding-right: 30px; /* 調整右側內距，留出箭頭空間 */
+            padding-right: 40px; /* 調整右側內距，留出箭頭空間 */
             width: fit-content; /* 寬度根據內容調整 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         #languageSelect:focus {
             outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.25); /* 聚焦時添加陰影 */
+            border-color: #8be9fd;
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.3);
         }
 
         /* Footer */
         footer {
-            background-color: #333;
-            color: #fff;
+            background-color: #1a1a2e; /* 深色頁腳 */
+            color: #aaa;
             text-align: center;
-            padding: 1rem 0;
+            padding: 1.5rem 0;
+            margin-top: auto; /* 讓頁腳始終在底部 */
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Ripple Effect (Optional, if you want it on this page too) */
+        .ripple {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            background-color: rgba(139, 233, 253, 0.6);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Apply box-sizing to all elements */
+        *, *::before, *::after {
+          box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+        }
+
+        /* --- Mobile Specific Styles --- */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 0 1rem;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0.5rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 25px;
+                margin: 2rem auto;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .contact-info {
+                font-size: 1rem;
+            }
+
+            label {
+                font-size: 1rem;
+            }
+
+            input[type="text"],
+            textarea,
+            #languageSelect {
+                padding: 12px;
+                font-size: 0.95rem;
+            }
+
+            input[type="button"],
+            input[type="reset"] {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            input[type="text"],
+            textarea,
+            #languageSelect {
+                padding: 10px;
+            }
+
+            input[type="button"],
+            input[type="reset"] {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -216,10 +375,11 @@
         <nav>
             <div class="logo">Lifer_Lighdow</div>
             <ul>
-                <li><a href="index" data-i18n="home">Home</a></li>
+                <li><a href="index.html" data-i18n="home">Home</a></li>
+                <!-- Adjusted links to match original index.html structure -->
                 <li><a href="music" data-i18n="music">Music</a></li>
-                <li><a href="game" data-i18n="games">Games</a></li>
-                <li><a href="Contact" data-i18n="contact">Contact</a></li>
+                <li><a href="game.html" data-i18n="games">Games</a></li>
+                <li><a href="Contact.html" data-i18n="contact">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -237,21 +397,23 @@
         </div>
         <form id="contactForm">
             <div class="form-group">
-                <label for="subjectInput" data-i18n="subjectLabel">主旨：</label>
+                <label for="subjectInput" data-i18n="subjectLabel">Subject:</label>
                 <input type="text" id="subjectInput" name="subject" size="25" maxlength="50" required>
             </div>
             <div class="form-group">
-                <label for="commentInput" data-i18n="commentLabel">您的寶貴建議：</label>
+                <label for="commentInput" data-i18n="commentLabel">Your Message:</label>
                 <textarea id="commentInput" name="Comment" cols="30" rows="3" required></textarea>
             </div>
-            <a id="mailLink" href=" " target="_blank"><input type="button" id="submitButton" value="Submit" data-i18n="submit"></a>
-            <input type="reset" value="Reset" data-i18n="reset">
+            <div class="form-buttons">
+                <a id="mailLink" href=" " target="_blank"><input type="button" id="submitButton" value="Submit" data-i18n="submit"></a>
+                <input type="reset" value="Reset" data-i18n="reset">
+            </div>
         </form>
         <div id="formMessage"></div>
     </div>
 
     <footer>
-        <p>© 2025 Lifer_Lighdow. All rights reserved.</p>
+        <p>&copy; 2025 Lifer_Lighdow. All rights reserved.</p>
     </footer>
 
     <script>
@@ -264,8 +426,8 @@
                 reset: 'Reset',
                 sent: 'Message sent!',
                 home: 'Home',
-                music: 'Music',
-                games: 'Games',
+                music: 'Music', // Added for consistency
+                games: 'Games', // Added for consistency
                 contact: 'Contact',
             },
             zh_TW: {
@@ -306,6 +468,48 @@
             },
         };
 
+        // Custom alert function to replace window.alert
+        function showAlert(message) {
+            const alertBox = document.createElement('div');
+            alertBox.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #333;
+                color: #fff;
+                padding: 20px 30px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                z-index: 10000;
+                font-family: 'MyCustomFont', sans-serif;
+                font-size: 1.1rem;
+                text-align: center;
+                animation: fadeIn 0.3s ease-out;
+            `;
+            alertBox.textContent = message;
+            document.body.appendChild(alertBox);
+
+            setTimeout(() => {
+                alertBox.style.animation = 'fadeOut 0.3s ease-in forwards';
+                alertBox.addEventListener('animationend', () => alertBox.remove());
+            }, 2000); // Display for 2 seconds
+
+            // CSS for fade in/out animations
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translate(-50%, -60%); }
+                    to { opacity: 1; transform: translate(-50%, -50%); }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translate(-50%, -50%); }
+                    to { opacity: 0; transform: translate(-50%, -60%); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
         function setLanguage(lang) {
             const elements = {
                 title: document.querySelector('h1'),
@@ -313,12 +517,9 @@
                 commentLabel: document.querySelector('label[for="commentInput"]'),
                 submitButton: document.querySelector('#submitButton'),
                 resetButton: document.querySelector('input[type="reset"]'),
-		submit: document.querySelector('a[data-i18n="submit"]'),
-	        reset: document.querySelector('a[data-i18n="reset"]'),
-		sent: document.querySelector('a[data-i18n="sent"]'),
                 home: document.querySelector('a[data-i18n="home"]'),
-		music: document.querySelector('a[data-i18n="music"]'),
-	        games: document.querySelector('a[data-i18n="games"]'),
+                music: document.querySelector('a[data-i18n="music"]'), // Added for consistency
+                games: document.querySelector('a[data-i18n="games"]'), // Added for consistency
                 contact: document.querySelector('a[data-i18n="contact"]'),
             };
             for (const key in elements) {
@@ -349,10 +550,10 @@
 
             const subject = subjectInput.value;
             const comment = commentInput.value;
-            const title = translations[currentLanguage].title;
+            // const title = translations[currentLanguage].title; // This variable is not used
 
             if (subject === "" || comment === "") {
-                alert("(ノ｀Д´)ノ彡┻━┻");
+                showAlert(translations[currentLanguage].alertMessage || "Please fill in all fields."); // Use custom alert
                 return;
             }
 
@@ -362,6 +563,30 @@
             mailLink.click();
             subjectInput.value = "";
             commentInput.value = "";
+            showAlert(translations[currentLanguage].sent); // Show success message
+        });
+
+        // Add an alert message to translations
+        translations.en.alertMessage = "Please fill in all fields.";
+        translations.zh_TW.alertMessage = "請填寫所有欄位。";
+        translations.zh_CN.alertMessage = "请填写所有字段。";
+        translations.ja.alertMessage = "すべての項目を入力してください。";
+
+        // Optional: Add ripple effect to this page if desired
+        document.addEventListener('click', function(e) {
+            const x = e.clientX;
+            const y = e.clientY;
+
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+
+            document.body.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
         });
     </script>
 </body>
