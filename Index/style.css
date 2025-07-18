@@ -1,22 +1,27 @@
+/* style.css */
+
+/* 全局樣式 */
 body {
     margin: 0;
     padding: 0;
-    font-family: 'MyCustomFont', sans-serif;
-    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-    color: white;
+    /* 使用更深邃、科技感的漸變背景 */
+    background: linear-gradient(135deg, #0a192f 0%, #172a45 50%, #0a192f 100%);
+    color: #e6f1ff; /* 淺藍色文字，增加科技感 */
+    font-family: 'MyCustomFont', sans-serif; /* 使用 Inter 字體，更現代 */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
-    overflow-x: hidden;
+    overflow-x: hidden; /* 防止水平滾動 */
     position: relative;
 }
 
+/* 自定義字體（如果需要，請確保路徑正確） */
 @font-face {
-    font-family: 'MyCustomFont';
-    src: url('../fonts/myfont.woff2') format('woff2'),
-         url('../fonts/myfont.woff') format('woff');
+    font-family: 'MyCustomFont'; /* 保留原來的自定義字體 */
+    src: url('fonts/myfont.woff2') format('woff2'),
+         url('fonts/myfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -25,24 +30,34 @@ body {
 /* 導覽列樣式 */
 .navbar {
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    /* 玻璃模糊效果 */
+    background-color: rgba(23, 42, 69, 0.7); /* 深藍色半透明 */
+    backdrop-filter: blur(10px); /* 模糊效果 */
+    -webkit-backdrop-filter: blur(10px); /* 兼容 Safari */
     padding: 1em 0;
     text-align: center;
     position: relative;
     z-index: 2;
+    box-shadow: 0 4px 30px rgba(155, 0, 0, 0.2); /* 輕微陰影 */
+    border-bottom: 1px solid rgba(70, 130, 180, 0.3); /* 底部細線 */
 }
 
 .navbar a {
-    color: white;
+    color: #88ccff; /* 亮藍色文字 */
     text-decoration: none;
     padding: 0.5em 1em;
-    margin: 0 1em;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    margin: 0 0.8em; /* 調整間距 */
+    border-radius: 8px; /* 更圓潤的邊角 */
+    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 .navbar a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(136, 204, 255, 0.15); /* 懸停時亮藍色背景 */
+    color: #e6f1ff; /* 懸停時文字變白 */
+    transform: translateY(-2px); /* 輕微上浮效果 */
+    box-shadow: 0 0 15px rgba(136, 204, 255, 0.4); /* 懸停時發光 */
 }
 
 /* 主要內容樣式 */
@@ -50,36 +65,56 @@ body {
     text-align: center;
     z-index: 1;
     padding: 2em;
+    max-width: 900px; /* 限制最大寬度 */
+    width: 90%; /* 響應式寬度 */
+    margin-top: 3em; /* 增加與導覽列的間距 */
+    background-color: rgba(23, 42, 69, 0.5); /* 半透明背景 */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px 0 rgba(0, 255, 0, 0.37);
+    border: 1px solid rgba(70, 130, 180, 0.2);
+    padding: clamp(1.5em, 5vw, 3em); /* 響應式內邊距 */
 }
 
 h1 {
-    font-size: clamp(2em, 5vw, 4em);
-    margin-bottom: 0.5em;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    font-size: clamp(2.5em, 6vw, 4.5em); /* 更大的響應式字體 */
+    margin-bottom: 0.4em;
+    text-shadow: 0 0 15px rgba(136, 204, 255, 0.8); /* 標題發光效果 */
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #e6f1ff;
 }
 
 h2 {
-    font-size: clamp(1em, 2.5vw, 1.8em);
-    margin-bottom: 2em;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    font-size: clamp(1.2em, 3vw, 2em);
+    margin-bottom: 2.5em; /* 增加間距 */
+    text-shadow: 0 0 8px rgba(136, 204, 255, 0.5); /* 副標題發光效果 */
+    font-weight: 400;
+    color: #c0d8f0;
 }
 
 .button {
     display: inline-block;
-    padding: 1em 2em;
-    margin: 0.5em;
-    font-size: 1.2em;
-    color: white;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.6);
+    padding: clamp(0.8em, 2vw, 1.2em) clamp(1.5em, 4vw, 2.5em); /* 響應式內邊距 */
+    margin: 0.6em;
+    font-size: clamp(1em, 2.5vw, 1.1em); /* 響應式字體大小 */
+    color: #e6f1ff;
+    background: linear-gradient(45deg, rgba(70, 130, 180, 0.2), rgba(136, 204, 255, 0.1));
+    border: 2px solid rgba(136, 204, 255, 0.6); /* 亮藍色邊框 */
     border-radius: 30px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease; /* 更平滑的過渡 */
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(136, 204, 255, 0.2); /* 輕微發光陰影 */
 }
 
 .button:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.1);
+    background: linear-gradient(45deg, rgba(136, 204, 255, 0.3), rgba(70, 130, 180, 0.25));
+    transform: scale(1.05) translateY(-3px); /* 輕微放大並上浮 */
+    border-color: #e6f1ff; /* 懸停時邊框變白 */
+    box-shadow: 0 0 25px rgba(136, 204, 255, 0.8); /* 更強的發光 */
 }
 
 /* 背景動畫樣式 */
@@ -90,34 +125,41 @@ h2 {
     top: 0;
     left: 0;
     z-index: 0;
+    overflow: hidden; /* 確保動畫不會溢出 */
 }
 
 .background-animation::before,
 .background-animation::after {
     content: '';
     position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
-    animation: rotate 10s linear infinite;
+    /* 調整大小和位置以創建更廣闊的視覺效果 */
+    width: 150%;
+    height: 150%;
+    top: -25%;
+    left: -25%;
+    /* 改變徑向漸變顏色，更具科技感 */
+    background: radial-gradient(circle, rgba(70, 130, 180, 0.15) 0%, rgba(10, 25, 47, 0.1) 100%);
+    animation: rotate 20s linear infinite; /* 調整動畫速度 */
+    opacity: 0.7; /* 調整透明度 */
 }
 
 .background-animation::after {
-    animation-duration: 20s;
+    animation-duration: 30s; /* 不同的速度創造層次感 */
+    animation-direction: reverse; /* 反向旋轉 */
+    opacity: 0.5;
+    background: radial-gradient(circle, rgba(136, 204, 255, 0.1) 0%, rgba(10, 25, 47, 0.05) 100%);
 }
 
 @keyframes rotate {
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(360deg);
     }
 }
 
+/* 互動背景 - 點擊效果 */
 .interactive-background {
     position: absolute;
     width: 100%;
@@ -125,33 +167,106 @@ h2 {
     top: 0;
     left: 0;
     z-index: 0;
-    pointer-events: none;
+    pointer-events: none; /* 允許點擊穿透 */
+    overflow: hidden;
 }
 
 .circle {
     position: absolute;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(136, 204, 255, 0.4); /* 亮藍色半透明 */
     pointer-events: none;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out; /* 更快的過渡 */
     opacity: 1;
-    transform: scale(1);
+    transform: scale(0); /* 初始縮放為0 */
+    box-shadow: 0 0 15px rgba(136, 204, 255, 0.6); /* 發光效果 */
 }
 
 .circle.animate {
-    transform: scale(2);
-    opacity: 0;
+    transform: scale(1.5); /* 放大效果 */
+    opacity: 0; /* 逐漸消失 */
 }
 
 /* 頁尾樣式 */
 footer {
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
+    background-color: rgba(23, 42, 69, 0.8); /* 深藍色半透明 */
+    color: #a0c0e0; /* 淺藍灰色文字 */
     text-align: center;
     padding: 1em 0;
-    position: fixed;
+    position: relative; /* 改為相對定位，使其在內容下方 */
     bottom: 0;
     left: 0;
     z-index: 2;
+    margin-top: auto; /* 將頁尾推到底部 */
+    box-shadow: 0 -4px 30px rgba(255, 255, 0, 0.2); /* 輕微陰影 */
+    border-top: 1px solid rgba(70, 130, 180, 0.3); /* 頂部細線 */
+    font-size: 0.9em;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+    .navbar a {
+        margin: 0 0.5em;
+        padding: 0.4em 0.8em;
+        font-size: 0.9em;
+    }
+
+    .container {
+        margin-top: 2em;
+        padding: 1.5em;
+    }
+
+    h1 {
+        font-size: clamp(2em, 8vw, 3.5em);
+    }
+
+    h2 {
+        font-size: clamp(1em, 4vw, 1.6em);
+        margin-bottom: 1.5em;
+    }
+
+    .button {
+        padding: 0.8em 1.5em;
+        margin: 0.4em;
+        font-size: clamp(0.9em, 2.5vw, 1em);
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0.8em 0;
+    }
+
+    .navbar a {
+        display: block; /* 在小螢幕上垂直排列 */
+        margin: 0.3em auto;
+        width: fit-content;
+    }
+
+    .container {
+        padding: 1em;
+        width: 95%;
+    }
+
+    h1 {
+        font-size: clamp(1.8em, 10vw, 3em);
+    }
+
+    h2 {
+        font-size: clamp(0.9em, 5vw, 1.4em);
+        margin-bottom: 1em;
+    }
+
+    .button {
+        display: block; /* 在小螢幕上垂直排列 */
+        width: 80%;
+        max-width: 250px;
+        margin: 0.5em auto;
+        font-size: clamp(0.85em, 3vw, 0.95em);
+    }
+    footer {
+        padding: 0.8em 0;
+        font-size: 0.8em;
+    }
 }
