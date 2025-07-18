@@ -1,217 +1,738 @@
-/* 全域樣式 */
-body {
-  font-family: "MyCustomFont", Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f0f8ff; /* 淺藍色背景 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  color: #333; /* 深灰色文字 */
+/* Global styles */
+*, *::before, *::after {
+  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
- /* 定義自定義字體 */
-    @font-face {
-       font-family: 'MyCustomFont';
-        src: url('fonts/myfont.woff2') format('woff2'), url('fonts/myfont.woff') format('woff');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-    }
+body {
+  font-family: 'Inter', sans-serif; /* Use Inter font */
+  margin: 0;
+  padding: 0;
+  background-color: #1a1a2e; /* Dark blue background */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically initially */
+  min-height: 100vh;
+  color: #e0e0e0; /* Light gray text */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  position: relative; /* For background animation positioning */
+  transition: justify-content 0.5s ease; /* Smooth transition for vertical alignment */
+}
 
+/* Dynamic background */
+.background-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  z-index: -1; /* Ensure it's below content */
+  opacity: 0.8; /* Slightly transparent */
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Clock styles */
+.clock {
+  position: fixed; /* Fixed position relative to the viewport */
+  top: 20px; /* Distance from the top */
+  right: 20px; /* Distance from the right */
+  background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+  backdrop-filter: blur(5px); /* Glassmorphism blur */
+  -webkit-backdrop-filter: blur(5px); /* Safari compatibility */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
+  border-radius: 10px; /* Rounded corners */
+  padding: 10px 15px; /* Padding inside the clock */
+  color: #61dafb; /* Bright blue text color */
+  font-size: 1.2em; /* Font size */
+  font-weight: 600; /* Font weight */
+  z-index: 100; /* Ensure it's above other content */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  transition: opacity 0.3s ease; /* Smooth transition for visibility */
+}
+
+/* Container styles */
 .container {
   width: 80%;
   max-width: 800px;
-  margin-top: 50px;
   margin-bottom: 50px;
-  background-color: #fff; /* 白色容器 */
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 陰影 */
-  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.08); /* Slightly transparent white */
+  border-radius: 15px; /* More rounded corners */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Deeper shadow */
+  backdrop-filter: blur(10px); /* Glassmorphism effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
+  border: 1px solid rgba(255, 255, 255, 0.18); /* Translucent border */
+  padding: 30px; /* Increased padding */
+  animation: fadeIn 0.8s ease-out; /* Container fade-in animation */
+  transition: margin-top 0.5s ease; /* Smooth transition for margin-top */
 }
 
-/* Logo 樣式 */
+/* Class to move container to top when searching */
+.container-top {
+  margin-top: 50px; /* Adjust this value as needed for top position */
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo styles */
 .logo {
-  font-size: 2.5em;
-  font-weight: bold;
-  color: #2980b9; /* 藍色 Logo */
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 2.8em; /* Slightly larger */
+  font-weight: 700; /* Bolder font */
+  color: #e94560; /* Bright red logo */
+  margin-bottom: 30px;
+  text-shadow: 0 0 15px rgba(233, 69, 96, 0.6); /* Glow effect */
   text-align: center;
+  letter-spacing: 1.5px; /* Increased letter spacing */
 }
 
-/* 搜尋框樣式 */
+/* Search box styles */
 .search-box {
   display: flex;
   align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 30px; /* 更圓潤的邊框 */
-  padding: 5px 15px;
-  background-color: #fff;
-  margin-bottom: 20px;
-  width: 100%;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 30px;
+  padding: 8px 20px; /* Adjusted padding */
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-bottom: 25px;
+  width: 100%; /* Ensure it takes full width of its parent */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative; /* For autocomplete and history positioning */
 }
 
 .search-input {
-  flex-grow: 1;
+  flex-grow: 1; /* Allows input to take available space */
   border: none;
   outline: none;
   padding: 10px;
-  font-size: 16px;
+  font-size: 17px; /* Slightly larger */
+  background-color: transparent; /* Transparent background */
+  color: #e0e0e0; /* Light gray text */
+  caret-color: #e94560; /* Cursor color */
+  transition: all 0.3s ease;
+  min-width: 0; /* Allow input to shrink within flex container */
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5); /* Light placeholder text */
+}
+
+.search-input:focus {
+  box-shadow: 0 0 0 2px #e94560; /* Focus glow effect */
+  border-radius: 20px; /* Rounded corners on focus */
 }
 
 .search-button {
-  background-color: #3498db; /* 藍色按鈕 */
+  background-color: #e94560; /* Bright red button */
   color: white;
-  padding: 10px 20px;
+  padding: 10px 25px; /* Adjusted padding */
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  font-size: 17px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  margin-left: 10px;
+  flex-shrink: 0; /* Prevent button from shrinking */
 }
 
 .search-button:hover {
-  background-color: #2980b9; /* 深藍色按鈕 */
+  background-color: #c93450; /* Darker red on hover */
+  transform: translateY(-2px); /* Slightly move up on hover */
+  box-shadow: 0 6px 15px rgba(233, 69, 96, 0.4); /* Hover shadow */
 }
 
-/* 搜尋結果樣式 */
+/* Clear button styles */
+.clear-button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 5px;
+  transition: color 0.2s ease;
+  line-height: 1; /* Adjust vertical alignment */
+  margin-right: 5px;
+  flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.clear-button:hover {
+  color: #e94560;
+}
+
+/* Search results styles */
 .search-results {
   list-style: none;
   padding: 0;
 }
 
 .search-result {
-  background-color: #fff;
-  margin-bottom: 15px;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease; /* 滑鼠懸停動畫 */
+  background-color: rgba(255, 255, 255, 0.05); /* More transparent background */
+  margin-bottom: 18px; /* Increased spacing */
+  padding: 25px; /* Increased padding */
+  border-radius: 12px; /* More rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0; /* Initial transparency for fade-in animation */
+  transform: translateY(20px); /* Initial position for fade-in animation */
+  animation: resultFadeIn 0.5s forwards ease-out; /* Fade-in animation */
+}
+
+@keyframes resultFadeIn {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .search-result:hover {
-  transform: translateY(-3px); /* 稍微向上移動 */
+  transform: translateY(-5px); /* More pronounced upward movement */
+  background-color: rgba(255, 255, 255, 0.1); /* Slightly brighter on hover */
 }
 
 .result-title {
-  font-size: 20px;
-  margin-bottom: 5px;
-  color: #333;
+  font-size: 22px; /* Slightly larger */
+  margin-bottom: 8px;
+  color: #f0f0f0; /* Light title color */
+  font-weight: 600;
 }
 
 .result-link {
-  color: #2980b9; /* 藍色連結 */
+  color: #61dafb; /* Bright blue link */
   text-decoration: none;
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  font-size: 15px;
+  transition: color 0.2s ease;
+}
+
+.result-link:hover {
+  color: #21a1f1; /* Darker on hover */
+  text-decoration: underline;
 }
 
 .result-description {
-  color: #666;
-  font-size: 14px;
+  color: #b0b0b0; /* Lighter description text */
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin-bottom: 10px;
 }
 
-/* 推薦連結樣式 */
+.search-result p:last-child { /* Source and date */
+  font-size: 13px;
+  color: #888;
+  margin-top: 10px;
+}
+
+/* Search term highlight */
+.highlight {
+  background-color: rgba(233, 69, 96, 0.3); /* Bright red translucent background */
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-weight: 700;
+  color: #e94560; /* Highlight text color */
+}
+
+/* Recommended links styles */
 .recommended-links {
   display: flex;
   justify-content: space-around;
-  margin-top: 20px;
+  margin-top: 30px;
   flex-wrap: wrap;
+  gap: 15px; /* Increased spacing */
 }
 
 .recommended-link {
-  width: 120px;
-  height: 120px;
-  background-color: #ecf0f1; /* 淺灰色背景 */
-  border-radius: 15px;
+  width: 130px; /* Slightly larger */
+  height: 130px; /* Slightly larger */
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px; /* More rounded */
   display: flex;
+  flex-direction: column; /* Vertical arrangement */
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  color: #333;
-  margin-bottom: 10px;
-  transition: transform 0.2s ease;
-  font-size: 1.1em;
-  font-weight: bold;
+  color: #f0f0f0;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 1.15em;
+  font-weight: 600;
   text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .recommended-link:hover {
-  transform: scale(1.1);
-  background-color: #d4e6f1; /* 更淺的藍色 */
+  transform: scale(1.05) translateY(-3px); /* More pronounced scaling and upward movement */
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .recommended-links.hidden {
   display: none;
 }
 
-/* 載入指示器樣式 */
+/* Loading indicator styles */
 .loading-indicator {
   display: none;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 20px;
   font-style: italic;
-  color: #888;
+  color: #61dafb; /* Bright blue */
+  font-size: 1.1em;
+  animation: pulse 1.5s infinite; /* Pulse animation */
 }
 
-/* 沒有結果樣式 */
+@keyframes pulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+/* No results styles */
 .no-results {
   text-align: center;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f0f0f0;
 }
 
 .no-results p {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 1.1em;
 }
 
-/* 自動完成和搜尋歷史樣式 */
+.no-results ul {
+  list-style: inside;
+  padding-left: 0;
+  text-align: left;
+  margin-top: 15px;
+}
+
+.no-results li {
+  margin-bottom: 8px;
+  color: #b0b0b0;
+}
+
+/* Autocomplete and search history styles */
 .autocomplete-list,
 .search-history {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 5px); /* Slightly offset downwards */
   left: 0;
   width: 100%;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.15); /* More transparent background */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px; /* More rounded */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   list-style: none;
   padding: 0;
   margin: 0;
   z-index: 10;
   display: none;
+  backdrop-filter: blur(5px); /* Glassmorphism effect */
+  -webkit-backdrop-filter: blur(5px);
+  max-height: 200px; /* Limit height, allow scrolling */
+  overflow-y: auto; /* Show scrollbar if content overflows */
 }
 
 .autocomplete-list li,
 .search-history li {
-  padding: 10px;
+  padding: 12px 15px; /* Adjusted padding */
   cursor: pointer;
+  color: #e0e0e0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Separator line */
+}
+
+.autocomplete-list li:last-child,
+.search-history li:last-child {
+  border-bottom: none; /* No bottom border for the last item */
 }
 
 .autocomplete-list li:hover,
 .search-history li:hover {
-  background-color: #f0f0f0;
+  background-color: rgba(255, 255, 255, 0.25); /* Brighter on hover */
+  color: #61dafb; /* Hover text color */
 }
 
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  gap: 10px; /* Button spacing */
+}
 
-/* 小螢幕樣式 */
+.pagination-button {
+  background-color: rgba(233, 69, 96, 0.8); /* Bright red translucent */
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.pagination-button:hover:not(.active) {
+  background-color: #c93450;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(233, 69, 96, 0.4);
+}
+
+.pagination-button.active {
+  background-color: #61dafb; /* Bright blue active button */
+  cursor: default;
+  box-shadow: 0 4px 10px rgba(97, 218, 251, 0.4);
+}
+
+/* Custom alert box styles */
+.custom-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top */
+  backdrop-filter: blur(5px); /* Blur background */
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.custom-alert-box {
+  background-color: #1a1a2e; /* Dark background */
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  animation: popIn 0.3s ease-out; /* Pop-in animation */
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.custom-alert-box p {
+  font-size: 1.2em;
+  color: #f0f0f0;
+  margin-bottom: 25px;
+}
+
+.custom-alert-box button {
+  background-color: #e94560;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1.1em;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.custom-alert-box button:hover {
+  background-color: #c93450;
+  transform: translateY(-2px);
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(233, 69, 96, 0.5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(233, 69, 96, 0.8);
+}
+
+/* Calculator Button styles */
+.calculator-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: #61dafb; /* Bright blue */
+  color: #1a1a2e; /* Dark text */
+  border: none;
+  border-radius: 30px;
+  padding: 12px 20px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(97, 218, 251, 0.4);
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  z-index: 99; /* Below clock, above content */
+}
+
+.calculator-button:hover {
+  background-color: #21a1f1; /* Darker blue */
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(97, 218, 251, 0.6);
+}
+
+.calculator-button svg {
+  width: 20px;
+  height: 20px;
+  stroke: #1a1a2e; /* Icon color */
+}
+
+/* Calculator Modal Overlay */
+.calculator-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001; /* Above custom alert */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Calculator Modal */
+.calculator-modal {
+  background-color: rgba(255, 255, 255, 0.1); /* Transparent white */
+  border-radius: 15px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  width: 320px; /* Fixed width for calculator */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  animation: popIn 0.3s ease-out; /* Pop-in animation */
+}
+
+.calculator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #f0f0f0;
+  margin-bottom: 15px;
+}
+
+.calculator-header .close-button {
+  background: none;
+  border: none;
+  color: #e94560;
+  font-size: 2em;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.calculator-header .close-button:hover {
+  color: #c93450;
+}
+
+.calculator-display {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #61dafb;
+  font-size: 2.5em;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: right;
+  margin-bottom: 20px;
+  overflow: hidden; /* Prevent text overflow */
+  white-space: nowrap; /* Keep text on one line */
+  text-overflow: ellipsis; /* Add ellipsis if text overflows */
+  font-weight: 300;
+  min-height: 70px; /* Ensure consistent height */
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.calculator-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.calc-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #f0f0f0;
+  border: none;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 1.5em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.calc-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.calc-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.calc-button.operator {
+  background-color: rgba(233, 69, 96, 0.8); /* Red for operators */
+  color: white;
+}
+
+.calc-button.operator:hover {
+  background-color: #c93450;
+}
+
+.calc-button.equals {
+  background-color: #61dafb; /* Blue for equals */
+  color: #1a1a2e;
+  grid-column: span 2; /* Make equals button span two columns */
+}
+
+.calc-button.equals:hover {
+  background-color: #21a1f1;
+}
+
+.calc-button.clear-all,
+.calc-button.backspace {
+  background-color: rgba(255, 165, 0, 0.8); /* Orange for clear/delete */
+  color: white;
+}
+
+.calc-button.clear-all:hover,
+.calc-button.backspace:hover {
+  background-color: rgba(255, 140, 0, 0.9);
+}
+
+/* Removed .calc-button.zero as '0' button will now span 1 column */
+
+
+/* Responsive styles for small screens */
 @media (max-width: 768px) {
   .container {
-    width: 95%; /* 在小螢幕上佔據更多寬度 */
+    width: 95%;
+    padding: 20px;
+  }
+
+  /* Adjust container-top for small screens */
+  .container-top {
+    margin-top: 30px; /* Smaller margin for top position on small screens */
+  }
+
+  .logo {
+    font-size: 2.2em;
+    margin-bottom: 20px;
+  }
+
+  .search-box {
+    padding: 6px 15px;
+  }
+
+  .search-input {
+    font-size: 15px;
+  }
+
+  .search-button {
+    padding: 8px 20px;
+    font-size: 15px;
   }
 
   .recommended-links {
-    justify-content: center; /* 在小螢幕上置中顯示 */
+    flex-direction: column; /* Vertical arrangement on small screens */
+    align-items: center;
+    gap: 10px;
   }
 
   .recommended-link {
-    width: 45%; /* 在小螢幕上佔據更多寬度 */
-    margin-right: 5%; /* 增加間距 */
+    width: 80%; /* Take more width */
+    height: 100px;
+    font-size: 1em;
+  }
+
+  .search-result {
+    padding: 18px;
+  }
+
+  .result-title {
+    font-size: 19px;
+  }
+
+  .result-link {
+    font-size: 13px;
+  }
+
+  .result-description {
+    font-size: 13.5px;
+  }
+
+  .pagination-button {
+    padding: 8px 15px;
+    font-size: 0.9em;
+  }
+
+  /* Adjust clock position for small screens */
+  .clock {
+    top: 10px;
+    right: 10px;
+    font-size: 1em;
+    padding: 8px 12px;
+  }
+
+  /* Calculator button adjustment for small screens */
+  .calculator-button {
+    bottom: 15px;
+    left: 15px;
+    padding: 10px 15px;
+    font-size: 1em;
+  }
+
+  /* Calculator modal adjustment for small screens */
+  .calculator-modal {
+    width: 90%; /* Take more width on small screens */
+    padding: 15px;
+  }
+
+  .calculator-display {
+    font-size: 2em;
+    padding: 15px;
+  }
+
+  .calc-button {
+    font-size: 1.2em;
+    padding: 12px;
   }
 }

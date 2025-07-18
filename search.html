@@ -1,50 +1,106 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en"> <!-- Changed language to English -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lifer_Lighdow Search</title>
-  <script src="pageList.js"></script> <!-- 載入網頁列表 -->
- <link rel="stylesheet" href="search.css">
+  <!-- Load Google Fonts - Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <script src="pageList.js"></script> <!-- Load page list -->
+  <link rel="stylesheet" href="search.css">
 </head>
 <body>
+
+  <div class="background-animation"></div> <!-- Dynamic background element -->
+
+  <div id="clock" class="clock"></div> <!-- Clock element added here -->
 
   <div class="container">
     <div class="logo">Lifer_Lighdow Search</div>
 
     <div class="search-box">
-      <input type="text" class="search-input" placeholder="search..." oninput="suggest()" autocomplete="off" onclick="showSearchHistory()" id="searchInput">
-      <button class="search-button" onclick="search()">search</button>
+      <input type="text" class="search-input" placeholder="Search..." oninput="suggest()" autocomplete="off" onclick="showSearchHistory()" id="searchInput">
+      <button class="clear-button" id="clearSearchButton" style="display: none;">&times;</button> <!-- Clear button -->
+      <button class="search-button" onclick="search()">Search</button> <!-- Changed text to English -->
       <ul class="autocomplete-list" id="autocompleteList"></ul>
       <ul class="search-history" id="searchHistoryList"></ul>
     </div>
 
-     <!-- 推薦連結區塊 -->
+    <!-- Recommended links section -->
     <div class="recommended-links" id="recommendedLinks">
-      <a href="index" class="recommended-link">Home</a>
-      <a href="music" class="recommended-link">Music</a>
-      <a href="game" class="recommended-link">Games</a>
-      <a href="Contact" class="recommended-link">Contact</a>
+      <a href="index.html" class="recommended-link">Home</a> <!-- Changed text to English -->
+      <a href="music.html" class="recommended-link">Music</a> <!-- Changed text to English -->
+      <a href="game.html" class="recommended-link">Games</a> <!-- Changed text to English -->
+      <a href="Contact.html" class="recommended-link">Contact</a> <!-- Changed text to English -->
     </div>
 
-    <div class="loading-indicator" id="loadingIndicator">searching...</div>
+    <div class="loading-indicator" id="loadingIndicator">Searching...</div> <!-- Changed text to English -->
 
     <ul class="search-results" id="searchResults">
-      <!-- 搜尋結果將在這裡顯示 -->
+      <!-- Search results will be displayed here -->
     </ul>
 
     <div class="pagination" id="pagination">
-      <!-- 分頁按鈕將在這裡顯示 -->
+      <!-- Pagination buttons will be displayed here -->
     </div>
 
     <div class="no-results" id="noResults" style="display: none;">
-      <p>No results were found that match your search criteria. </p>
-		<p>Suggestions: </p>
-		<ul>
-		<li>Please make sure your spelling is correct. </li>
-		<li>Try different keywords. </li>
-		<li>Expand your search criteria. </li>
+      <p>No results were found that match your search criteria.</p> <!-- Changed text to English -->
+      <p>Suggestions:</p> <!-- Changed text to English -->
+      <ul>
+        <li>Please make sure your spelling is correct.</li> <!-- Changed text to English -->
+        <li>Try different keywords.</li> <!-- Changed text to English -->
+        <li>Expand your search criteria.</li> <!-- Changed text to English -->
       </ul>
+    </div>
+  </div>
+
+  <!-- Custom message box -->
+  <div id="customAlertDialog" class="custom-alert-overlay" style="display: none;">
+    <div class="custom-alert-box">
+      <p id="customAlertMessage"></p>
+      <button onclick="document.getElementById('customAlertDialog').style.display = 'none';">OK</button> <!-- Changed text to English -->
+    </div>
+  </div>
+
+  <!-- Calculator Button -->
+  <button id="calculatorButton" class="calculator-button">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calculator"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M17 10H7"/><path d="M17 14H7"/><path d="M14 18H7"/><path d="M17 6H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Z"/></svg>
+    Calculator
+  </button>
+
+  <!-- Calculator Modal -->
+  <div id="calculatorModal" class="calculator-modal-overlay" style="display: none;">
+    <div class="calculator-modal">
+      <div class="calculator-header">
+        Calculator
+        <button class="close-button" id="closeCalculatorButton">&times;</button>
+      </div>
+      <div class="calculator-display" id="calculatorDisplay">0</div>
+      <div class="calculator-buttons">
+        <button class="calc-button clear-all">AC</button>
+        <button class="calc-button backspace">DEL</button>
+        <button class="calc-button operator">%</button>
+        <button class="calc-button operator">/</button>
+        <button class="calc-button number">7</button>
+        <button class="calc-button number">8</button>
+        <button class="calc-button number">9</button>
+        <button class="calc-button operator">*</button>
+        <button class="calc-button number">4</button>
+        <button class="calc-button number">5</button>
+        <button class="calc-button number">6</button>
+        <button class="calc-button operator">-</button>
+        <button class="calc-button number">1</button>
+        <button class="calc-button number">2</button>
+        <button class="calc-button number">3</button>
+        <button class="calc-button operator">+</button>
+        <button class="calc-button number">0</button> <!-- Removed 'zero' class -->
+        <button class="calc-button decimal">.</button>
+        <button class="calc-button equals">=</button> <!-- Moved equals button here -->
+      </div>
     </div>
   </div>
 
