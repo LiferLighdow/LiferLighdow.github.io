@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2048 Game</title>
+    <title>科技感 2048</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <!-- 引入外部 CSS 檔案 -->
     <link rel="stylesheet" href="2048.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- 引入 Font Awesome 圖標庫 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
@@ -72,15 +74,14 @@
         </div>
     </div>
 
-    <footer style="text-align: center; margin-top: 20px; font-size: 12px; color: #776e65;">
-        <a href="../game.html" onclick="window.history.back();" style="color: #CBD5E0; text-decoration: none;">
-            <i class="fas fa-arrow-left" style="margin-right: 5px;"></i> Back
-        </a>
-        <br>
-        © 2025 Lifer_Lighdow. All rights reserved.
-    </footer>
-
 </div>
+
+<footer>
+    <a href="#" onclick="window.history.back();" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Menu
+    </a>
+    <p>© 2025 Lifer_Lighdow. All rights reserved.</p>
+</footer>
 
 <script src="./data/bind_polyfill.js"></script>
 <script src="2048.js"></script>

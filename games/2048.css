@@ -1,30 +1,4 @@
-body,
-html {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(45deg, #FF0000, #FF7F00, #FFFF00, #00FF00, #0000FF, #4B0082, #8B00FF); /* 從紅到紫的漸變 */
-    background-size: 400% 400%;
-    animation: gradientAnimation 15s ease infinite; /* 動畫效果 */
-    color: #fff;/* 淺色文字 */
-    font-family: "MyCustomFont", sans-serif;
-    font-size: 18px;
-}
-
-@keyframes gradientAnimation {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-/* 定義自定義字體 */
+/* Custom Font Definition */
 @font-face {
     font-family: 'MyCustomFont';
     src: url('../fonts/myfont.woff2') format('woff2'),
@@ -34,22 +8,155 @@ html {
     font-display: swap;
 }
 
-body {
-    margin: 80px 0;
+/* Global Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    /* 深色科技感背景，不傷眼 */
+    background: linear-gradient(to bottom right, #0a0a1a, #1a1a3a);
+    background-size: cover;
+    color: #e0f7fa; /* 淺藍色文字，高對比度 */
+    font-family: "MyCustomFont", sans-serif;
+    font-size: 18px;
+    /* 使用 min-height 確保內容超出時可以滾動 */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden; /* 防止水平滾動 */
+    overflow-y: auto; /* 允許垂直滾動 */
 }
 
-input {
+.container {
+    width: 500px;
+    margin: 20px auto; /* 調整上下邊距 */
+    padding: 20px;
+    background: rgba(20, 20, 40, 0.8); /* 半透明深色容器 */
+    border: 2px solid #00f0ff; /* 科技感邊框 */
+    border-radius: 15px; /* 更圓潤的邊角 */
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.5); /* 強烈科技感光暈 */
+    box-sizing: border-box; /* 包含內邊距和邊框在寬度內 */
+}
+
+/* Heading */
+.heading {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space between title and scores */
+    align-items: center; /* Vertically align items */
+    margin-bottom: 20px; /* Add some space below the heading */
+}
+
+h1.title {
+    font-size: 70px; /* 調整字體大小 */
+    font-weight: bold;
+    margin: 0;
+    color: #00ffcc; /* 霓虹綠色 */
+    text-shadow: 0 0 15px #00ffcc, 0 0 25px #00ffcc; /* 發光效果 */
+}
+
+/* Scores */
+.scores-container {
+    text-align: right;
+    display: flex; /* 使用 flex 佈局 */
+    gap: 10px; /* 分數容器間距 */
+}
+
+.score-container, .best-container {
+    position: relative;
     display: inline-block;
-    background: #334155; /* 較淺的按鈕背景 */
-    border-radius: 5px;
-    padding: 0 20px;
+    background: rgba(40, 40, 60, 0.7); /* 深色半透明背景 */
+    padding: 10px 20px; /* 調整內邊距 */
+    font-size: 22px; /* 調整字體大小 */
+    line-height: 1.2;
+    font-weight: bold;
+    border-radius: 8px; /* 更圓潤的邊角 */
+    color: #e0f7fa; /* 淺藍色文字 */
+    margin-top: 5px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); /* 輕微發光陰影 */
+    border: 1px solid rgba(0, 240, 255, 0.3); /* 科技感邊框 */
+}
+
+.score-container:after, .best-container:after {
+    position: relative; /* 改為相對定位 */
+    display: block; /* 獨立一行 */
+    width: 100%;
+    top: 5px; /* 調整位置 */
+    left: 0;
+    text-transform: uppercase;
+    font-size: 11px; /* 調整字體大小 */
+    line-height: 1.2;
+    text-align: center;
+    color: #94A3B8;
+}
+
+.score-container .score-addition {
+    position: absolute;
+    right: 50%; /* 居中 */
+    transform: translateX(50%); /* 居中 */
+    color: #00ffcc; /* 霓虹綠色 */
+    font-size: 25px;
+    line-height: 25px;
+    font-weight: bold;
+    opacity: 0; /* 預設隱藏 */
+    animation: score-pop-up 0.5s ease-out forwards; /* 新增動畫 */
+    z-index: 100;
+}
+
+@keyframes score-pop-up {
+    0% {
+        opacity: 0;
+        transform: translate(50%, 0px);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(50%, -20px); /* 向上浮動 */
+    }
+    100% {
+        opacity: 0;
+        transform: translate(50%, -40px); /* 繼續向上浮動並消失 */
+    }
+}
+
+.score-container:after {
+    content: "SCORE";
+}
+
+.best-container:after {
+    content: "BEST";
+}
+
+/* Game Intro */
+.above-game {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space between intro text and button */
+    align-items: center; /* Vertically align items */
+    margin-top: 20px;
+    margin-bottom: 20px; /* Add some space below this section */
+}
+
+.game-intro {
+    color: #e0f7fa;
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+    line-height: 40px; /* 與按鈕對齊 */
+    margin-bottom: 0;
+    font-size: 1.1em;
+}
+
+/* Buttons */
+.restart-button, .game-message a {
+    display: inline-block;
+    background: linear-gradient(to right, #007bff, #00c6ff); /* 藍色漸變 */
+    border-radius: 8px; /* 更圓潤的邊角 */
+    padding: 10px 20px;
     text-decoration: none;
-    color: #CBD5E0;
-    height: 40px;
-    line-height: 42px;
+    color: #fff;
+    height: auto; /* 自動高度 */
+    line-height: 1.2;
     cursor: pointer;
     font: inherit;
-    border: none;
+    border: 1px solid #00f0ff; /* 科技感邊框 */
     outline: none;
     box-sizing: border-box;
     font-weight: bold;
@@ -57,260 +164,159 @@ input {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    transition: background-color 0.2s ease; /* Hover效果 */
+    transition: all 0.3s ease; /* 更平滑的過渡 */
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3); /* 發光效果 */
 }
 
-input:hover {
-    background-color: #475569; /* Hover時變更背景顏色 */
+.restart-button {
+    margin-top: 0; /* Align with intro text */
 }
 
-input[type="text"], input[type="email"] {
-    cursor: auto;
-    background: #4B5563;
-    font-weight: normal;
-    color: #CBD5E0;
-    padding: 0 15px;
-    border: 1px solid #64748B; /* 加上邊框 */
+.restart-button:hover, .game-message a:hover {
+    background: linear-gradient(to right, #00c6ff, #007bff);
+    transform: translateY(-2px); /* 輕微上浮 */
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
 }
 
-input[type="text"]::-webkit-input-placeholder, input[type="email"]::-webkit-input-placeholder {
-    color: #94A3B8;
+.restart-button:active, .game-message a:active {
+    transform: translateY(0); /* 按下效果 */
+    box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
 }
 
-input[type="text"]::-moz-placeholder, input[type="email"]::-moz-placeholder {
-    color: #94A3B8;
-}
-
-input[type="text"]:-ms-input-placeholder, input[type="email"]:-ms-input-placeholder {
-    color: #94A3B8;
-}
-
-.heading:after {
-    content: "";
-    display: block;
-    clear: both;
-}
-
-h1.title {
-    font-size: 80px;
-    font-weight: bold;
-    margin: 0;
-    display: block;
-    float: left;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加上陰影 */
-}
-
-/* 移除 keyframes 樣式，因為他會和footer的back鍵衝突 */
-
-.scores-container {
-    float: right;
-    text-align: right;
-}
-
-.score-container, .best-container {
-    position: relative;
-    display: inline-block;
-    background: #4B5563;
-    padding: 15px 25px;
-    font-size: 25px;
-    height: 25px;
-    line-height: 47px;
-    font-weight: bold;
-    border-radius: 5px;
-    color: white;
-    margin-top: 8px;
-    text-align: center;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* 加上陰影 */
-}
-
-.score-container:after, .best-container:after {
-    position: absolute;
-    width: 100%;
-    top: 10px;
-    left: 0;
-    text-transform: uppercase;
-    font-size: 13px;
-    line-height: 13px;
-    text-align: center;
-    color: #94A3B8;
-}
-
-.score-container .score-addition, .best-container .score-addition {
-    position: absolute;
-    right: 30px;
-    color: #F87171;
-    font-size: 25px;
-    line-height: 25px;
-    font-weight: bold;
-    color: rgba(248, 113, 113, 0.9);
-    z-index: 100;
-    animation: none; /* 移除衝突 */
-    -webkit-animation-fill-mode: both;
-    -moz-animation-fill-mode: both;
-    animation-fill-mode: both;
-}
-
-.score-container:after {
-    content: "Score";
-}
-
-.best-container:after {
-    content: "Best";
-}
-
-p {
-    margin-top: 0;
-    margin-bottom: 10px;
-    line-height: 1.65;
-}
-
-a {
-    color: #CBD5E0;
-    font-weight: bold;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-strong.important {
-    text-transform: uppercase;
-}
-
-hr {
-    border: none;
-    border-bottom: 1px solid #4B5563;
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
-
-.container {
-    width: 500px;
-    margin: 0 auto;
-}
-
-/* 移除 keyframes 樣式，因為他會和 footer 的 back 鍵衝突 */
-
+/* Game Container */
 .game-container {
-    margin-top: 40px;
+    margin-top: 30px; /* 調整上邊距 */
     position: relative;
     padding: 15px;
     cursor: default;
-    -webkit-touch-callout: none;
-    -ms-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -ms-touch-action: none;
-    touch-action: none;
-    background: #334155;
-    border-radius: 6px;
-    width: 500px;
-    height: 500px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
+    background: rgba(30, 30, 50, 0.9); /* 深色科技感背景 */
+    border-radius: 10px;
+    /* 固定寬度，方便內部計算 */
+    width: 470px;
+    height: 470px; /* 保持正方形 */
     box-sizing: border-box;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5); /* 加上陰影 */
+    box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.3), 0 0 20px rgba(0, 240, 255, 0.4); /* 內外發光陰影 */
 }
 
+/* Game Message (Win/Lose) */
 .game-message {
-    display: none;
+    display: none; /* 預設隱藏 */
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(30, 41, 59, 0.85); /* 深色背景 */
-    z-index: 100;
+    background: rgba(10, 10, 30, 0.95); /* 更深的半透明背景 */
+    /* 提高 z-index 確保在最上層 */
+    z-index: 9999; /* 確保在最上層 */
     padding-top: 40px;
     text-align: center;
-    animation: none;/* 移除衝突 */
-    -webkit-animation-fill-mode: both;
-    -moz-animation-fill-mode: both;
-    animation-fill-mode: both;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .game-message p {
-    font-size: 60px;
+    font-size: 55px; /* 調整字體大小 */
     font-weight: bold;
-    height: 60px;
-    line-height: 60px;
-    margin-top: 222px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加上陰影 */
+    line-height: 1.2;
+    margin-top: 180px; /* 調整垂直位置 */
+    color: #00ffcc; /* 霓虹綠色 */
+    text-shadow: 0 0 15px #00ffcc, 0 0 25px #00ffcc; /* 發光效果 */
 }
 
 .game-message .lower {
-    display: block;
-    margin-top: 29px;
-}
-
-.game-message .mailing-list {
-    margin-top: 52px;
-}
-
-.game-message .mailing-list strong {
-    display: block;
-    margin-bottom: 10px;
-}
-
-.game-message .mailing-list .mailing-list-email-field {
-    width: 230px;
-    margin-right: 5px;
-}
-
-.game-message a {
-    display: inline-block;
-    background: #334155;
-    border-radius: 5px;
-    padding: 0 20px;
-    text-decoration: none;
-    color: #CBD5E0;
-    height: 40px;
-    line-height: 42px;
-    cursor: pointer;
-    margin-left: 9px;
-    transition: background-color 0.2s ease; /* Hover效果 */
-}
-
-.game-message a:hover {
-    background-color: #475569; /* Hover時變更背景顏色 */
+    margin-top: 30px; /* 調整按鈕組上邊距 */
+    display: flex; /* 使用 flex 佈局 */
+    justify-content: center; /* 水平居中 */
+    gap: 15px; /* 按鈕間距 */
 }
 
 .game-message a.keep-playing-button {
-    display: none;
+    background: linear-gradient(to right, #28a745, #218838); /* 綠色漸變 */
+    border-color: #28a745;
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.4);
+}
+.game-message a.keep-playing-button:hover {
+    background: linear-gradient(to right, #218838, #28a745);
+    box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
 }
 
-.game-message .score-sharing {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 10px;
+.game-message a.retry-button {
+    background: linear-gradient(to right, #dc3545, #c82333); /* 紅色漸變 */
+    border-color: #dc3545;
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+}
+.game-message a.retry-button:hover {
+    background: linear-gradient(to right, #c82333, #dc3545);
+    box-shadow: 0 0 20px rgba(220, 53, 69, 0.8);
 }
 
+/* 勝利訊息的樣式 */
 .game-message.game-won {
-    background: rgba(237, 194, 46, 0.7);
-    color: #334155; /* 深色文字 */
+    display: flex; /* 顯示訊息 */
+    flex-direction: column; /* 垂直排列內容 */
+    justify-content: center; /* 垂直居中 */
+    align-items: center; /* 水平居中 */
+    background: rgba(0, 180, 255, 0.95); /* 勝利時的藍色背景 */
+    color: #fff;
+    animation: fadein 0.5s ease-out forwards; /* 淡入動畫 */
+}
+.game-message.game-won p {
+    color: #fff;
+    text-shadow: 0 0 15px #fff, 0 0 25px #fff;
 }
 
-.game-message.game-won a.keep-playing-button {
-    display: inline-block;
+/* 失敗訊息的樣式 */
+.game-message.game-over {
+    display: flex; /* 顯示訊息 */
+    flex-direction: column; /* 垂直排列內容 */
+    justify-content: center; /* 垂直居中 */
+    align-items: center; /* 水平居中 */
+    background: rgba(255, 50, 50, 0.95); /* 失敗時的紅色背景 */
+    color: #fff;
+    /* 更豐富的失敗動畫：先淡入，然後結合縮放、旋轉和晃動 */
+    animation: fadein 0.5s ease-out forwards, game-over-rich-fail 1.2s ease-out 0.2s forwards;
+}
+.game-message.game-over p {
+    color: #fff;
+    text-shadow: 0 0 15px #fff, 0 0 25px #fff;
 }
 
-.game-message.game-won, .game-message.game-over {
-    display: block;
+/* 更豐富的遊戲失敗動畫 */
+@keyframes game-over-rich-fail {
+    0% {
+        transform: scale(0.8) rotate(0deg);
+        filter: blur(5px) brightness(0.5); /* 模糊和變暗 */
+        opacity: 0;
+    }
+    20% {
+        transform: scale(1.1) rotate(5deg);
+        filter: blur(0px) brightness(1.2); /* 清晰和變亮 */
+        opacity: 1;
+    }
+    40% {
+        transform: scale(1) rotate(-5deg);
+        filter: blur(0px) brightness(1);
+    }
+    60% {
+        transform: scale(1.05) rotate(3deg);
+        filter: blur(0px) brightness(1.1);
+    }
+    80% {
+        transform: scale(1) rotate(-3deg);
+        filter: blur(0px) brightness(1);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        filter: blur(0px) brightness(1);
+    }
 }
 
-.game-message.game-won p, .game-message.game-over p {
-    animation: none;/* 移除衝突 */
-    -webkit-animation-fill-mode: both;
-    -moz-animation-fill-mode: both;
-    animation-fill-mode: both;
-}
 
-.game-message.game-won .mailing-list, .game-message.game-over .mailing-list {
-    animation: none;/* 移除衝突 */
-    -webkit-animation-fill-mode: both;
-    -moz-animation-fill-mode: both;
-    animation-fill-mode: both;
-}
-
+/* Grid */
 .grid-container {
     position: absolute;
     z-index: 1;
@@ -331,125 +337,51 @@ hr {
 }
 
 .grid-cell {
-    width: 106.25px;
-    height: 106.25px;
+    /* 根據新的遊戲容器尺寸調整 */
+    width: 96.25px;
+    height: 96.25px;
     margin-right: 15px;
     float: left;
-    border-radius: 5px;
-    background: rgba(75, 85, 99, 0.5); /* 更深的背景 */
+    border-radius: 8px; /* 更圓潤的邊角 */
+    background: rgba(50, 50, 70, 0.6); /* 深色半透明背景 */
+    box-shadow: inset 0 0 8px rgba(0, 240, 255, 0.1); /* 內發光 */
 }
 
 .grid-cell:last-child {
     margin-right: 0;
 }
 
+/* Tiles */
 .tile-container {
     position: absolute;
     z-index: 2;
 }
 
 .tile, .tile .tile-inner {
-    width: 107px;
-    height: 107px;
-    line-height: 116.25px;
-    border-radius: 5px;
+    /* 根據新的遊戲容器尺寸調整 */
+    width: 96.25px;
+    height: 96.25px;
+    line-height: 96.25px; /* 垂直居中文字 */
+    border-radius: 8px;
 }
 
-.tile.tile-position-1-1 {
-    -webkit-transform: translate(0px, 0px);
-    -moz-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-}
-
-.tile.tile-position-1-2 {
-    -webkit-transform: translate(0px, 121px);
-    -moz-transform: translate(0px, 121px);
-    transform: translate(0px, 121px);
-}
-
-.tile.tile-position-1-3 {
-    -webkit-transform: translate(0px, 242px);
-    -moz-transform: translate(0px, 242px);
-    transform: translate(0px, 242px);
-}
-
-.tile.tile-position-1-4 {
-    -webkit-transform: translate(0px, 363px);
-    -moz-transform: translate(0px, 363px);
-    transform: translate(0px, 363px);
-}
-
-.tile.tile-position-2-1 {
-    -webkit-transform: translate(121px, 0px);
-    -moz-transform: translate(121px, 0px);
-    transform: translate(121px, 0px);
-}
-
-.tile.tile-position-2-2 {
-    -webkit-transform: translate(121px, 121px);
-    -moz-transform: translate(121px, 121px);
-    transform: translate(121px, 121px);
-}
-
-.tile.tile-position-2-3 {
-    -webkit-transform: translate(121px, 242px);
-    -moz-transform: translate(121px, 242px);
-    transform: translate(121px, 242px);
-}
-
-.tile.tile-position-2-4 {
-    -webkit-transform: translate(121px, 363px);
-    -moz-transform: translate(121px, 363px);
-    transform: translate(121px, 363px);
-}
-
-.tile.tile-position-3-1 {
-    -webkit-transform: translate(242px, 0px);
-    -moz-transform: translate(242px, 0px);
-    transform: translate(242px, 0px);
-}
-
-.tile.tile-position-3-2 {
-    -webkit-transform: translate(242px, 121px);
-    -moz-transform: translate(242px, 121px);
-    transform: translate(242px, 121px);
-}
-
-.tile.tile-position-3-3 {
-    -webkit-transform: translate(242px, 242px);
-    -moz-transform: translate(242px, 242px);
-    transform: translate(242px, 242px);
-}
-
-.tile.tile-position-3-4 {
-    -webkit-transform: translate(242px, 363px);
-    -moz-transform: translate(242px, 363px);
-    transform: translate(242px, 363px);
-}
-
-.tile.tile-position-4-1 {
-    -webkit-transform: translate(363px, 0px);
-    -moz-transform: translate(363px, 0px);
-    transform: translate(363px, 0px);
-}
-
-.tile.tile-position-4-2 {
-    -webkit-transform: translate(363px, 121px);
-    -moz-transform: translate(363px, 121px);
-    transform: translate(363px, 121px);
-}
-
-.tile.tile-position-4-3 {
-    -webkit-transform: translate(363px, 242px);
-    -moz-transform: translate(363px, 242px);
-    transform: translate(363px, 242px);
-}
-
-.tile.tile-position-4-4 {
-    -webkit-transform: translate(363px, 363px);
-    -moz-transform: translate(363px, 363px);
-    transform: translate(363px, 363px);
-}
+/* Tile positions - recalculated for new grid cell size */
+.tile.tile-position-1-1 { transform: translate(0px, 0px); }
+.tile.tile-position-1-2 { transform: translate(0px, 111.25px); }
+.tile.tile-position-1-3 { transform: translate(0px, 222.5px); }
+.tile.tile-position-1-4 { transform: translate(0px, 333.75px); }
+.tile.tile-position-2-1 { transform: translate(111.25px, 0px); }
+.tile.tile-position-2-2 { transform: translate(111.25px, 111.25px); }
+.tile.tile-position-2-3 { transform: translate(111.25px, 222.5px); }
+.tile.tile-position-2-4 { transform: translate(111.25px, 333.75px); }
+.tile.tile-position-3-1 { transform: translate(222.5px, 0px); }
+.tile.tile-position-3-2 { transform: translate(222.5px, 111.25px); }
+.tile.tile-position-3-3 { transform: translate(222.5px, 222.5px); }
+.tile.tile-position-3-4 { transform: translate(222.5px, 333.75px); }
+.tile.tile-position-4-1 { transform: translate(333.75px, 0px); }
+.tile.tile-position-4-2 { transform: translate(333.75px, 111.25px); }
+.tile.tile-position-4-3 { transform: translate(333.75px, 222.5px); }
+.tile.tile-position-4-4 { transform: translate(333.75px, 333.75px); }
 
 .tile {
     position: absolute;
@@ -458,570 +390,225 @@ hr {
 }
 
 .tile .tile-inner {
-    border-radius: 5px;
+    border-radius: 8px;
     text-align: center;
     font-weight: bold;
     z-index: 10;
     font-size: 40px;
-    color: #000; /* 淺色文字 */
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* 加上陰影 */
-	 position: relative; /* 添加相對定位 */
-    transform-style: preserve-3d; /* 啟用 3D 變換 */
-    transition: all 0.3s ease; /* 添加平滑過渡效果 */
+    color: #f0f8ff; /* 淺色文字，高對比度 */
+    box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.2), 0 0 15px rgba(0, 240, 255, 0.3); /* 內外發光陰影 */
+    position: relative;
+    transform-style: preserve-3d;
+    transition: all 0.3s ease;
 }
 
-.tile .tile-inner::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: inherit; /* 繼承背景顏色 */
-    border-radius: inherit; /* 繼承邊角半徑 */
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); /* 內陰影效果 */
-    transform: translateZ(-3px); /* 向後移動一點，形成深度 */
-}
-
-.tile:active .tile-inner {
-    transform: translateY(2px); /* 按下時向下移動 */
-}
-
-.tile:active .tile-inner::before {
-    transform: translateZ(-1px); /* 按下時略微向上移動內陰影 */
-}
-
-/* 方塊顏色 */
-.tile.tile-2 .tile-inner {
-    background: #FFCDD2; /* 淺紅色 */
-}
-
-.tile.tile-4 .tile-inner {
-    background: #FFAB91; /* 淺橙色 */
-}
-
-.tile.tile-8 .tile-inner {
-    background: #FFCC80; /* 淺黃色 */
-}
-
-.tile.tile-16 .tile-inner {
-    background: #DCEDC8; /* 淺綠色 */
-}
-
-.tile.tile-32 .tile-inner {
-    background: #B2EBF2; /* 淺青色 */
-}
-
-.tile.tile-64 .tile-inner {
-    background: #BBDEFB; /* 淺藍色 */
-}
-
-@media screen and (max-width: 520px) {
-    .tile.tile-64 .tile-inner {
-        font-size: 17px;
-    }
-}
-
-.tile.tile-128 .tile-inner {
-    background: #E1BEE7; /* 淺紫色 */
-    font-size: 35px;
-}
-
-@media screen and (max-width: 520px) {
-    .tile.tile-128 .tile-inner {
-        font-size: 13px;
-    }
-}
-
-.tile.tile-256 .tile-inner {
-    background: #F8BBD0; /* 淺粉色 */
-    font-size: 30px;
-}
-
-@media screen and (max-width: 520px) {
-    .tile.tile-256 .tile-inner {
-        font-size: 17px;
-    }
-}
-
-.tile.tile-512 .tile-inner {
-    background: #D1C4E9; /* 較深的淺紫色 */
-    font-size: 30px;
-}
-
-@media screen and (max-width: 520px) {
-    .tile.tile-512 .tile-inner {
-        font-size: 17px;
-    }
-}
-
-.tile.tile-1024 .tile-inner {
-    background: #C8E6C9; /* 較深的淺綠色 */
-    font-size: 30px;
-}
-
-@media screen and (max-width: 520px) {
-    .tile.tile-1024 .tile-inner {
-        font-size: 17px;
-    }
-}
-
-.tile.tile-2048 .tile-inner {
-    background: #B2DFDB; /* 較深的淺青色 */
-    font-size: 30px;
-}
-
-@media screen and (max-width: 520px) {
-    .tile.tile-2048 .tile-inner {
-        font-size: 17px;
-    }
-}
-
+/* Tile colors - using a sci-fi inspired palette */
+.tile.tile-2 .tile-inner { background: #007bff; } /* Blue */
+.tile.tile-4 .tile-inner { background: #00c6ff; } /* Lighter Blue */
+.tile.tile-8 .tile-inner { background: #00ffcc; } /* Neon Green */
+.tile.tile-16 .tile-inner { background: #39ff14; } /* Brighter Neon Green */
+.tile.tile-32 .tile-inner { background: #ffea00; } /* Yellow */
+.tile.tile-64 .tile-inner { background: #ff9900; } /* Orange */
+.tile.tile-128 .tile-inner { background: #ff5e00; font-size: 35px;} /* Darker Orange */
+.tile.tile-256 .tile-inner { background: #ff005e; font-size: 30px;} /* Pinkish Red */
+.tile.tile-512 .tile-inner { background: #9900ff; font-size: 30px;} /* Purple */
+.tile.tile-1024 .tile-inner { background: #6a0572; font-size: 30px;} /* Darker Purple */
+.tile.tile-2048 .tile-inner { background: #8e2de2; font-size: 30px;} /* Violet */
 .tile.tile-super .tile-inner {
-    color: #CBD5E0;
-    background: #1E293B;
+    color: #fff;
+    background: linear-gradient(to right, #ff00cc, #3333ff); /* Rainbow/Super gradient */
     font-size: 30px;
+    box-shadow: 0 0 30px rgba(255, 0, 204, 0.8), 0 0 40px rgba(51, 51, 255, 0.8); /* 強烈發光 */
 }
 
-@media screen and (max-width: 520px) {
-    .tile.tile-super .tile-inner {
-        font-size: 17px;
-    }
-}
-
+/* Animations - keeping original 2048 animations for tile appearance and merge */
 @-webkit-keyframes appear {
-    0% {
-        opacity: 0;
-        -webkit-transform: scale(0);
-        -moz-transform: scale(0);
-        transform: scale(0);
-    }
- 
-    100% {
-        opacity: 1;
-        -webkit-transform: scale(1);
-        -moz-transform: scale(1);
-        transform: scale(1);
-    }
+    0% { opacity: 0; -webkit-transform: scale(0); transform: scale(0); }
+    100% { opacity: 1; -webkit-transform: scale(1); transform: scale(1); }
 }
- 
 @-moz-keyframes appear {
-    0% {
-        opacity: 0;
-        -webkit-transform: scale(0);
-        -moz-transform: scale(0);
-        transform: scale(0);
-    }
- 
-    100% {
-        opacity: 1;
-        -webkit-transform: scale(1);
-        -moz-transform: scale(1);
-        transform: scale(1);
-    }
+    0% { opacity: 0; -moz-transform: scale(0); transform: scale(0); }
+    100% { opacity: 1; -moz-transform: scale(1); transform: scale(1); }
 }
- 
 @keyframes appear {
-    0% {
-        opacity: 0;
-        -webkit-transform: scale(0);
-        -moz-transform: scale(0);
-        transform: scale(0);
-    }
- 
-    100% {
-        opacity: 1;
-        -webkit-transform: scale(1);
-        -moz-transform: scale(1);
-        transform: scale(1);
-    }
+    0% { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
 }
- 
 .tile-new .tile-inner {
-    -webkit-animation: appear 200ms ease 100ms;
-    -moz-animation: appear 200ms ease 100ms;
     animation: appear 200ms ease 100ms;
-    -webkit-animation-fill-mode: backwards;
-    -moz-animation-fill-mode: backwards;
     animation-fill-mode: backwards;
 }
- 
+
 @-webkit-keyframes pop {
-    0% {
-        -webkit-transform: scale(0);
-        -moz-transform: scale(0);
-        transform: scale(0);
-    }
- 
-    50% {
-        -webkit-transform: scale(1.2);
-        -moz-transform: scale(1.2);
-        transform: scale(1.2);
-    }
- 
-    100% {
-        -webkit-transform: scale(1);
-        -moz-transform: scale(1);
-        transform: scale(1);
-    }
+    0% { -webkit-transform: scale(0); transform: scale(0); }
+    50% { -webkit-transform: scale(1.2); transform: scale(1.2); }
+    100% { -webkit-transform: scale(1); transform: scale(1); }
 }
- 
 @-moz-keyframes pop {
-    0% {
-        -webkit-transform: scale(0);
-        -moz-transform: scale(0);
-        transform: scale(0);
-    }
- 
-    50% {
-        -webkit-transform: scale(1.2);
-        -moz-transform: scale(1.2);
-        transform: scale(1.2);
-    }
- 
-    100% {
-        -webkit-transform: scale(1);
-        -moz-transform: scale(1);
-        transform: scale(1);
-    }
+    0% { opacity: 0; -moz-transform: scale(0); transform: scale(0); } /* Added opacity: 0 for consistency */
+    50% { opacity: 1; -moz-transform: scale(1.2); transform: scale(1.2); } /* Added opacity: 1 */
+    100% { opacity: 1; -moz-transform: scale(1); transform: scale(1); } /* Added opacity: 1 */
 }
- 
 @keyframes pop {
-    0% {
-        -webkit-transform: scale(0);
-        -moz-transform: scale(0);
-        transform: scale(0);
-    }
- 
-    50% {
-        -webkit-transform: scale(1.2);
-        -moz-transform: scale(1.2);
-        transform: scale(1.2);
-    }
- 
-    100% {
-        -webkit-transform: scale(1);
-        -moz-transform: scale(1);
-        transform: scale(1);
-    }
+    0% { transform: scale(0); opacity: 0; } /* Added opacity: 0 */
+    50% { transform: scale(1.2); opacity: 1; } /* Added opacity: 1 */
+    100% { transform: scale(1); opacity: 1; } /* Added opacity: 1 */
 }
- 
 .tile-merged .tile-inner {
     z-index: 20;
-    -webkit-animation: pop 200ms ease 100ms;
-    -moz-animation: pop 200ms ease 100ms;
     animation: pop 200ms ease 100ms;
-    -webkit-animation-fill-mode: backwards;
-    -moz-animation-fill-mode: backwards;
     animation-fill-mode: backwards;
 }
- 
-.above-game:after {
-    content: "";
-    display: block;
-    clear: both;
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 30px; /* 調整上邊距 */
+    font-size: 14px; /* 調整字體大小 */
+    color: #94a3b8; /* 柔和的淺灰色 */
 }
 
-.game-intro {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加上陰影 */
-    float: left;
-    line-height: 42px;
-    margin-bottom: 0;
-}
-
-.restart-button {
-    display: inline-block;
-    background: #334155;
-    border-radius: 5px;
-    padding: 0 20px;
+.back-link {
+    color: #00f0ff; /* 科技藍色 */
     text-decoration: none;
-    color: #CBD5E0;
-    height: 40px;
-    line-height: 42px;
-    cursor: pointer;
-    display: block;
-    text-align: center;
-    float: right;text-shadow: 2px 2px 4px rgba(0, 255, 255, 0.5); /* 加上陰影 */
-    transition: background-color 0.2s ease; /* Hover效果 */
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    display: inline-flex; /* 讓圖標和文字對齊 */
+    align-items: center;
+    margin-bottom: 10px; /* 與版權資訊的間距 */
 }
 
-.restart-button:hover {
-    background-color: #475569; /* Hover時變更背景顏色 */
+.back-link:hover {
+    color: #00c6ff;
+    text-shadow: 0 0 10px #00c6ff;
 }
 
-.game-explanation {
-    margin-top: 50px;
+.back-link i {
+    margin-right: 8px; /* 圖標與文字間距 */
 }
 
-.sharing {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.sharing > iframe, .sharing > span, .sharing > form {
-    display: inline-block;
-    vertical-align: middle;
-}
-
+/* Responsive Design */
 @media screen and (max-width: 520px) {
-    html, body {
-        font-size: 15px;
-    }
-
     body {
-        margin: 20px 0;
-        padding: 0 20px;
-    }
-
-    h1.title {
-        font-size: 27px;
-        margin-top: 15px;
+        margin: 10px 0;
+        padding: 0 10px;
     }
 
     .container {
-        width: 280px;
-        margin: 0 auto;
+        width: 100%;
+        max-width: 320px; /* 限制最大寬度，確保在非常小的螢幕上也不會過大 */
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    h1.title {
+        font-size: 45px; /* 更小的標題 */
+        margin-top: 10px;
+        float: none; /* 不浮動 */
+        text-align: center; /* 居中 */
+    }
+
+    .scores-container {
+        float: none; /* 不浮動 */
+        justify-content: center; /* 居中 */
+        margin-top: 15px;
     }
 
     .score-container, .best-container {
-        margin-top: 0;
-        padding: 15px 10px;
-        min-width: 40px;
+        padding: 8px 15px;
+        font-size: 18px;
+        min-width: unset; /* 移除最小寬度限制 */
     }
 
-    .heading {
-        margin-bottom: 10px;
+    .score-container:after, .best-container:after {
+        font-size: 10px;
+        top: 3px;
+    }
+
+    .above-game {
+        display: flex; /* 使用 flex 佈局 */
+        flex-direction: column; /* 垂直排列 */
+        align-items: center; /* 居中 */
+        margin-top: 15px;
     }
 
     .game-intro {
-        width: 55%;
-        display: block;
-        box-sizing: border-box;
-        line-height: 1.65;
+        width: 100%;
+        text-align: center;
+        line-height: 1.5;
+        margin-bottom: 15px;
+        font-size: 1em;
     }
 
     .restart-button {
-        width: 42%;
-        padding: 0;
-        display: block;
-        box-sizing: border-box;
-        margin-top: 2px;
+        width: auto; /* 自動寬度 */
+        padding: 8px 15px;
+        margin-top: 0;
+        float: none; /* 不浮動 */
     }
 
     .game-container {
-        margin-top: 17px;
+        margin-top: 20px;
+        padding: 10px; /* 保持內邊距 */
+        width: 280px; /* 調整為 280px，以便內部計算更精確，避免小數點誤差 */
+        height: 280px; /* 保持正方形 */
         position: relative;
-        padding: 10px;
-        cursor: default;
-        -webkit-touch-callout: none;
-        -ms-touch-callout: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -ms-touch-action: none;
-        touch-action: none;
-        background: #334155;
-        border-radius: 6px;
-        width: 280px;
-        height: 280px;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5); /* 加上陰影 */
     }
 
-    .game-message {
-        display: none;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: rgba(30, 41, 59, 0.85);
-        z-index: 100;
-        padding-top: 40px;
-        text-align: center;
-        animation: none;/* 移除衝突 */
-        -webkit-animation-fill-mode: both;
-        -moz-animation-fill-mode: both;
-        animation-fill-mode: both;
+    /* 調整手機版網格和方塊大小 */
+    /* 遊戲容器內部可用寬度 = 280px (width) - 2 * 10px (padding) = 260px */
+    /* 網格單元寬度 = (260px - 3 * 10px (margin)) / 4 = 230px / 4 = 57.5px */
+    .grid-cell {
+        width: 57.5px;
+        height: 57.5px;
+        margin-right: 10px; /* 調整間距 */
+        float: left; /* 保持浮動 */
+        border-radius: 5px;
     }
 
-    .game-message p {
-        font-size: 30px !important;
-        height: 30px !important;
-        line-height: 30px !important;
-        margin-top: 32% !important;
-        margin-bottom: 0 !important;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 加上陰影 */
+    .grid-row {
+        margin-bottom: 10px; /* 調整行間距 */
+        /* 使用 flexbox 確保行內元素對齊，並處理最後一個元素的間距 */
+        display: flex;
+        justify-content: space-between; /* 均勻分佈 */
     }
 
-    .game-message .lower {
-        margin-top: 10px !important;
+    .grid-cell:last-child {
+        margin-right: 0; /* 確保最後一個格子沒有右邊距 */
     }
 
-    .game-message.game-won .score-sharing {
-        margin-top: 10px;
+    .tile, .tile .tile-inner {
+        width: 57.5px; /* 調整方塊大小 */
+        height: 57.5px;
+        line-height: 57.5px; /* 垂直居中文字 */
+        font-size: 20px; /* 調整文字大小 */
+        border-radius: 5px;
     }
 
-    .game-message.game-over .mailing-list {
-        margin-top: 25px;
+    /* Adjust tile positions for smaller grid - these need to be relative to the new cell size */
+    /* Step = cell_width + margin_right = 57.5px + 10px = 67.5px */
+    .tile.tile-position-1-1 { transform: translate(0px, 0px); }
+    .tile.tile-position-1-2 { transform: translate(0px, 67.5px); }
+    .tile.tile-position-1-3 { transform: translate(0px, 135px); }
+    .tile.tile-position-1-4 { transform: translate(0px, 202.5px); }
+    .tile.tile-position-2-1 { transform: translate(67.5px, 0px); }
+    .tile.tile-position-2-2 { transform: translate(67.5px, 67.5px); }
+    .tile.tile-position-2-3 { transform: translate(67.5px, 135px); }
+    .tile.tile-position-2-4 { transform: translate(67.5px, 202.5px); }
+    .tile.tile-position-3-1 { transform: translate(135px, 0px); }
+    .tile.tile-position-3-2 { transform: translate(135px, 67.5px); }
+    .tile.tile-position-3-3 { transform: translate(135px, 135px); }
+    .tile.tile-position-3-4 { transform: translate(135px, 202.5px); }
+    .tile.tile-position-4-1 { transform: translate(202.5px, 0px); }
+    .tile.tile-position-4-2 { transform: translate(202.5px, 67.5px); }
+    .tile.tile-position-4-3 { transform: translate(202.5px, 135px); }
+    .tile.tile-position-4-4 { transform: translate(202.5px, 202.5px); }
+
+    .tile.tile-128 .tile-inner,
+    .tile.tile-256 .tile-inner,
+    .tile.tile-512 .tile-inner,
+    .tile.tile-1024 .tile-inner,
+    .tile.tile-2048 .tile-inner,
+    .tile.tile-super .tile-inner {
+        font-size: 15px; /* 更小的數字 */
     }
-
-    .game-message .mailing-list {
-        margin-top: 10px;
-    }
-
-    .game-message .mailing-list .mailing-list-email-field {
-        width: 180px;
-    }
-
-    .sharing > iframe, .sharing > span, .sharing > form {
-        display: block;
-        margin: 0 auto;
-        margin-bottom: 20px;
-    }
-}
-
-.pp-donate button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: none;
-    font: inherit;
-    color: inherit;
-    display: inline-block;
-    background: #334155;
-    border-radius: 5px;
-    padding: 0 20px;
-    text-decoration: none;
-    color: #CBD5E0;
-    height: 40px;
-    line-height: 42px;
-    cursor: pointer;
-    transition: background-color 0.2s ease; /* Hover效果 */
-}
-
-.pp-donate button:hover {
-    background-color: #475569; /* Hover時變更背景顏色 */
-}
-
-.pp-donate button img {
-    vertical-align: -4px;
-    margin-right: 8px;
-}
-
-.btc-donate {
-    position: relative;
-    margin-left: 10px;
-    display: inline-block;
-    background: #334155;
-    border-radius: 5px;
-    padding: 0 20px;
-    text-decoration: none;
-    color: #CBD5E0;
-    height: 40px;
-    line-height: 42px;
-    cursor: pointer;
-    transition: background-color 0.2s ease; /* Hover效果 */
-}
-
-.btc-donate:hover {
-    background-color: #475569; /* Hover時變更背景顏色 */
-}
-
-.btc-donate img {
-    vertical-align: -4px;
-    margin-right: 8px;
-}
-
-.btc-donate a {
-    color: #CBD5E0;
-    text-decoration: none;
-    font-weight: normal;
-}
-
-.btc-donate .address {
-    cursor: auto;
-    position: absolute;
-    width: 340px;
-    right: 50%;
-    margin-right: -170px;
-    padding-bottom: 7px;
-    top: -30px;
-    opacity: 0;
-    pointer-events: none;
-    transition: 400ms ease;
-    transition-property: top, opacity;
-}
-
-.btc-donate .address:after {
-    position: absolute;
-    border-top: 10px solid #334155;
-    border-right: 7px solid transparent;
-    border-left: 7px solid transparent;
-    content: "";
-    bottom: 0px;
-    left: 50%;
-    margin-left: -7px;
-}
-
-.btc-donate .address code {
-    background-color: #334155;
-    padding: 10px 15px;
-    width: 100%;
-    border-radius: 5px;
-    line-height: 1;
-    font-weight: normal;
-    font-size: 15px;
-    font-family: Consolas, "Liberation Mono", Courier, monospace;
-    text-align: center;
-}
-
-.btc-donate:hover .address, .btc-donate .address:hover .address {
-    opacity: 1;
-    top: -45px;
-    pointer-events: auto;
-}
-
-@media screen and (max-width: 480px) {
-    .btc-donate {
-        width: 120px;
-    }
-
-    .btc-donate .address {
-        margin-right: -150px;
-        width: 300px;
-    }
-
-    .btc-donate .address code {
-        font-size: 13px;
-    }
-
-    .btc-donate .address:after {
-        left: 50%;
-        bottom: 2px;
-    }
-}
-
-/* Footer樣式 */
-footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 12px;
-    color: #776e65;
-}
-
-footer a {
-    color: #CBD5E0;
-    text-decoration: none;
-    transition: color 0.2s ease; /* 文字顏色過渡效果 */
-}
-
-footer a:hover {
-    color: #94A3B8; /* Hover時變更文字顏色 */
-}
-
-footer i {
-    margin-right: 5px;
 }
