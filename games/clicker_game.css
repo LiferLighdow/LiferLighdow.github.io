@@ -1,0 +1,322 @@
+/* 定義自定義字體 */
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/myfont.woff2') format('woff2'),
+         url('../fonts/myfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* 全局樣式 */
+body {
+    font-family: 'MyCustomFont', sans-serif; /* 應用自定義字體 */
+    text-align: center;
+    background: linear-gradient(to bottom right, #1a1a2e, #16213e); /* 深色科技感漸變背景 */
+    color: #e0f7fa; /* 淺藍色文字 */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* 允許頁尾在底部 */
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden; /* 防止水平滾動 */
+}
+
+/* 遊戲容器 */
+#gameContainer {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr; /* 更平衡的網格佈局 */
+    width: 95%; /* 佔用更多寬度 */
+    max-width: 1400px; /* 增加最大寬度 */
+    margin: 20px auto;
+    background: rgba(25, 30, 45, 0.8); /* 半透明深色背景 */
+    border: 2px solid #00f0ff; /* 科技感邊框 */
+    border-radius: 15px; /* 更圓潤的邊角 */
+    box-shadow: 0 0 40px rgba(0, 240, 255, 0.6); /* 強烈科技感光暈 */
+    overflow: hidden;
+    position: relative; /* 用於浮動文字 */
+}
+
+/* 各面板通用樣式 */
+#inventory, #centerPanel, #functions {
+    padding: 25px;
+    background: rgba(30, 35, 50, 0.7); /* 面板背景 */
+    border-right: 1px solid rgba(0, 240, 255, 0.2); /* 分隔線 */
+    box-sizing: border-box; /* 包含內邊距和邊框在寬度內 */
+}
+
+#functions {
+    border-right: none; /* 最右側面板無右邊框 */
+    overflow-y: auto; /* 允許滾動 */
+    max-height: 80vh; /* 限制高度 */
+}
+
+/* 標題樣式 */
+h1, h2 {
+    color: #00ffcc; /* 霓虹綠色 */
+    text-shadow: 0 0 10px #00ffcc; /* 發光效果 */
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 2.8em;
+    margin-top: 0;
+}
+
+h2 {
+    font-size: 1.8em;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* 金錢顯示 */
+#money {
+    font-size: 3.5em;
+    color: #00ffcc; /* 霓虹綠色金錢 */
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px #00ffcc, 0 0 30px #00ffcc; /* 更強烈的發光 */
+    animation: pulse-tech 2s infinite alternate; /* 科技脈衝動畫 */
+}
+
+/* 點擊按鈕 */
+#clickButton {
+    padding: 20px 40px;
+    font-size: 1.5em;
+    background: linear-gradient(to right, #007bff, #00c6ff); /* 藍色漸變 */
+    color: #fff;
+    border: 2px solid #00f0ff; /* 科技感邊框 */
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.5); /* 發光效果 */
+    font-weight: bold;
+}
+
+#clickButton:hover {
+    background: linear-gradient(to right, #00c6ff, #007bff);
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.8);
+}
+
+#clickButton:active {
+    transform: scale(0.95);
+}
+
+/* 訊息顯示 */
+#message {
+    font-size: 1.2em;
+    color: #00ffcc; /* 霓虹綠色 */
+    margin-top: 20px;
+    text-shadow: 0 0 8px #00ffcc;
+    animation: fadeinout 3s forwards; /* 訊息淡入淡出 */
+}
+
+/* 浮動文字 */
+.floating-text {
+    position: absolute;
+    font-size: 1.4em;
+    color: #00ffcc; /* 霓虹綠色 */
+    text-shadow: 0 0 10px #00ffcc;
+    animation: floatUpTech 1s forwards; /* 科技感浮動動畫 */
+    pointer-events: none; /* 穿透點擊事件 */
+    z-index: 10;
+}
+
+/* 升級區塊 */
+.upgrade {
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 240, 255, 0.2); /* 科技感邊框 */
+    border-radius: 10px;
+    background: rgba(40, 45, 60, 0.6); /* 升級區塊背景 */
+    display: flex;
+    flex-direction: column; /* 垂直排列 */
+    align-items: flex-start; /* 左對齊 */
+    gap: 10px; /* 按鈕間距 */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.upgrade:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
+}
+
+.upgrade p {
+    margin: 0;
+    line-height: 1.6;
+    color: #e0f7fa;
+    font-size: 1.1em;
+}
+
+/* 通用按鈕樣式 */
+button {
+    padding: 12px 25px;
+    font-size: 1.05em;
+    cursor: pointer;
+    background: linear-gradient(to right, #007bff, #00c6ff); /* 默認藍色漸變 */
+    color: white;
+    border: 1px solid #00f0ff;
+    border-radius: 8px;
+    margin: 5px 0; /* 調整外邊距 */
+    transition: all 0.3s ease;
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+    font-family: 'MyCustomFont', sans-serif; /* 應用自定義字體 */
+    font-weight: bold;
+}
+
+button:hover {
+    background: linear-gradient(to right, #00c6ff, #007bff);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button:disabled {
+    background: #555;
+    border-color: #777;
+    color: #bbb;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* 升級按鈕特定樣式 */
+.upgrade button:last-child { /* 針對升級按鈕 */
+    background: linear-gradient(to right, #ff8c00, #ffc800); /* 橙色漸變 */
+    border-color: #ffc800;
+    box-shadow: 0 0 8px rgba(255, 200, 0, 0.3);
+}
+
+.upgrade button:last-child:hover {
+    background: linear-gradient(to right, #ffc800, #ff8c00);
+    box-shadow: 0 0 15px rgba(255, 200, 0, 0.6);
+}
+
+/* Prestige 按鈕 */
+#prestigeButton {
+    background: linear-gradient(to right, #dc3545, #ff4d4d); /* 紅色漸變 */
+    border-color: #ff4d4d;
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+    margin-top: 25px;
+    padding: 15px 30px;
+    font-size: 1.15em;
+}
+
+#prestigeButton:hover {
+    background: linear-gradient(to right, #ff4d4d, #dc3545);
+    box-shadow: 0 0 20px rgba(255, 77, 77, 0.8);
+}
+
+/* 額外功能按鈕 */
+#extraFeatures button {
+    background: linear-gradient(to right, #6a0572, #8e2de2); /* 紫色漸變 */
+    border-color: #8e2de2;
+    box-shadow: 0 0 8px rgba(142, 45, 226, 0.3);
+    margin-bottom: 10px;
+    width: 100%; /* 佔滿寬度 */
+    text-align: left; /* 文字左對齊 */
+    padding-left: 15px; /* 內邊距 */
+}
+
+#extraFeatures button:hover {
+    background: linear-gradient(to right, #8e2de2, #6a0572);
+    box-shadow: 0 0 15px rgba(142, 45, 226, 0.6);
+}
+
+/* 返回連結 */
+.back-link {
+    color: #00f0ff; /* 科技藍色 */
+    text-decoration: none;
+    margin-top: 20px;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.back-link:hover {
+    color: #00c6ff;
+    text-shadow: 0 0 10px #00c6ff;
+}
+
+/* 頁尾樣式 */
+footer {
+    background: rgba(10, 10, 20, 0.7);
+    color: #888;
+    text-align: center;
+    padding: 15px;
+    margin-top: auto;
+    width: 100%;
+    border-top: 1px solid rgba(0, 240, 255, 0.1);
+    font-size: 0.9em;
+}
+
+/* 動畫定義 */
+@keyframes pulse-tech {
+    0% { color: #00ffcc; text-shadow: 0 0 20px #00ffcc, 0 0 30px #00ffcc; }
+    50% { color: #00e6b8; text-shadow: 0 0 10px #00e6b8, 0 0 20px #00e6b8; }
+    100% { color: #00ffcc; text-shadow: 0 0 20px #00ffcc, 0 0 30px #00ffcc; }
+}
+
+@keyframes floatUpTech {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-70px); /* 浮動更高 */
+        opacity: 0;
+    }
+}
+
+@keyframes fadeinout {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* 響應式設計 */
+@media (max-width: 1024px) {
+    #gameContainer {
+        grid-template-columns: 1fr; /* 單列佈局 */
+        width: 90%;
+        max-height: 95vh; /* 限制高度 */
+        overflow-y: auto; /* 允許滾動 */
+    }
+
+    #inventory, #centerPanel, #functions {
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 240, 255, 0.2); /* 底部邊框 */
+    }
+
+    #functions {
+        max-height: none; /* 不限制高度 */
+    }
+}
+
+@media (max-width: 768px) {
+    h1 { font-size: 2.2em; }
+    h2 { font-size: 1.5em; }
+    #money { font-size: 3em; }
+    #clickButton { padding: 15px 30px; font-size: 1.3em; }
+    button { padding: 10px 20px; font-size: 0.95em; }
+    .upgrade { padding: 15px; }
+    .upgrade p { font-size: 1em; }
+}
+
+@media (max-width: 480px) {
+    h1 { font-size: 1.8em; }
+    h2 { font-size: 1.3em; }
+    #money { font-size: 2.5em; }
+    #clickButton { padding: 12px 25px; font-size: 1.1em; }
+    button { padding: 8px 15px; font-size: 0.9em; }
+    .upgrade { padding: 10px; }
+    .upgrade p { font-size: 0.9em; }
+    #extraFeatures button { text-align: center; padding-left: 15px; }
+}
