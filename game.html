@@ -1,55 +1,71 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Lifer_Lighdow's Game</title>
-    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+    <!-- Google Fonts: Poppins for general text, Montserrat for a modern touch -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="images/logo.ico" type="image/x-icon" / >
-    <link rel="shortcut icon" href="images/logo.ico" type="image/x-icon" / >
-    <script src="live2d.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" href="images/logo.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="images/logo.ico" type="image/x-icon" />
     <style>
+        /* General Styles */
         html,
         body {
-            height: auto;
+            height: 100%; /* Ensure full height for background gradient */
             margin: 0;
             overflow-x: hidden;
         }
 
         body {
-		      font-family: 'MyCustomFont', sans-serif; /* 使用自定義字體 */
+            font-family: 'MyCustomFont', sans-serif; /* 使用更現代的字體 */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            background: linear-gradient(to bottom, #e6f7ff, #191970);
-            background-color: #e6f7ff;
-            /*background-color: #e6f7ff; /* Light blue background */
-            transition: background-color 0.5s ease;
-            /* Smooth transition */
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); /* 深色漸變背景 */
+            color: #e0e0e0; /* 淺色文字 */
+            transition: background 0.5s ease; /* Smooth transition */
         }
 
-		  /* 定義自定義字體 */
-@font-face {
-    font-family: 'MyCustomFont';
-    src: url('fonts/myfont.woff2') format('woff2'),
-         url('fonts/myfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
+        /* 自定義字體 (如果仍需使用) */
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('fonts/myfont.woff2') format('woff2'),
+                 url('fonts/myfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        a {
+            text-decoration: none;
+            color: #8be9fd; /* 淺藍色連結 */
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #6272a4; /* 較深的藍色 */
+        }
 
         /* Header and Navigation */
         header {
-            background-color: #333;
+            background-color: rgba(26, 26, 46, 0.8); /* 半透明深色背景 */
+            backdrop-filter: blur(5px); /* 模糊效果 */
             color: #fff;
             padding: 1rem 0;
             width: 100%; /* Header 寬度 100% */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         nav {
@@ -62,93 +78,176 @@
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
         nav ul {
             list-style: none;
             display: flex;
+            margin: 0;
+            padding: 0;
         }
 
         nav ul li {
-            margin-left: 1.5rem;
+            margin-left: 2rem;
         }
 
         nav ul li a {
             color: #fff;
-            text-decoration: none;
-        }
-      /* 排列標頭和語言選擇器 */
-
-	 .header-container {
-		 display: flex;
-		 width: 100%;
-		 justify-content: space-between; /* 讓語言選擇器靠右 */
-		 align-items: center; /* 垂直居中對齊 */
-		 padding: 10px 20px; /* 增加一些內邊距 */
-		 box-sizing: border-box; /* 確保內邊距不影響總寬度 */
-	 }
-
-        #stage {
+            font-weight: 500;
             position: relative;
-            margin-bottom: 20px;
-            display: flex;
-            /* 水平排列內容 */
-            flex-direction: column;
-            /* 垂直排列內 */
-            align-items: center;
-            /* 水平居中 */
+            padding-bottom: 5px;
         }
 
-        #stage button {
+        nav ul li a::after {
+            content: '';
             position: absolute;
-            padding: 0;
+            width: 0;
+            height: 2px;
+            background-color: #8be9fd;
+            left: 0;
+            bottom: 0;
+            transition: width 0.3s ease-in-out;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* Top Container for Language Selector and Clock */
+        .top-container {
+            display: flex;
+            justify-content: flex-end; /* Align clock to right */
+            align-items: center;
+            margin-top: 2rem; /* 增加與 header 的間距 */
+            margin-bottom: 2rem; /* 增加與 Live2D 的間距 */
+            width: 90%; /* 佔用大部分寬度 */
+            max-width: 1200px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        /* Clock Container */
+        .calendar-container {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* 元素之間的間距 */
+            background-color: rgba(22, 33, 62, 0.7); /* 半透明深色背景 */
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            z-index: 5; /* Ensure clock is visible */
+        }
+
+        .calendar-container h1 {
+            font-size: 1.2rem; /* 較小的標題 */
+            margin: 0;
+            font-weight: 700;
+            color: #8be9fd; /* 淺藍色 */
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(139, 233, 253, 0.3);
+        }
+
+        .date,
+        .year,
+        .time {
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: #e0e0e0;
+        }
+
+        /* Time Pulse Animation */
+        .time {
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                color: #e0e0e0;
+            }
+            100% {
+                transform: scale(1.05);
+                opacity: 0.9;
+                color: #8be9fd;
+            }
+        }
+
+        /* Live2D Platform Title */
+        #title-container {
+            text-align: center;
+            font-size: 2.2rem; /* 更大的標題 */
+            font-weight: 700;
+            margin-bottom: 2rem; /* 增加與 Live2D 的距離 */
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            letter-spacing: 1px;
+        }
+
+        /* Live2D Stage */
+        #stage {
+            position: relative; /* Make it a positioning context for absolute buttons */
+            margin-bottom: 3rem; /* 增加與遊戲連結的間距 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px; /* 增加內距 */
+            background-color: rgba(22, 33, 62, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(139, 233, 253, 0.2);
         }
 
         #inner {
             position: relative;
-            background-color: #999;
+            background-color: #333; /* Live2D 內部的背景色 */
             clip-path: circle(120px at center);
+            border-radius: 50%; /* 確保圓形裁剪 */
+            overflow: hidden; /* 隱藏超出部分 */
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); /* 內陰影 */
         }
 
         #cover {
             position: absolute;
-            background: linear-gradient(to bottom, #ff69b4, #ffc0cb);
-            /* Gradient pink */
+            background: linear-gradient(to bottom, #ff69b4, #ffc0cb); /* Gradient pink */
             width: 100%;
             height: 100%;
             bottom: 10%;
-            transition: all 1s;
+            transition: all 1s ease-in-out; /* 更平滑的過渡 */
             box-shadow: 0 0 0 5px rgba(0, 0, 0, .1);
         }
 
         #text {
             position: absolute;
-            top: 70%;
-            /* Vertically center the text container */
+            top: 50%; /* 垂直居中 */
             left: 50%;
             transform: translate(-50%, -50%);
-            /* Precisely center the container */
             text-align: center;
-            opacity: 0.4;
+            opacity: 0.7; /* 稍微提高透明度 */
             font-weight: bold;
+            color: #fff; /* 文字顏色 */
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
 
-        #text .top {
-            font-size: 1.8em;
-            /* Larger size */
+        #text .top,
+        #text .bottom {
+            font-size: 1.5em; /* 調整大小 */
             display: block;
-            /* Force to the next line */
+            margin: 5px 0;
         }
 
         #text .bottom {
-            font-size: 1.8em;
-            /* Larger size */
-            display: block;
-            /* Force to the next line */
-            color: darkgreen;
-            /* 暗綠色 */
+            color: #aaffaa; /* 淺綠色 */
         }
 
         #detail {
@@ -161,29 +260,65 @@
 
         #handle {
             position: absolute;
-            background: #ccc;
-            bottom: -2px;
+            background: #666; /* 深灰色 */
+            bottom: -5px; /* 調整位置 */
             box-shadow: 0 1px 0 1px rgba(0, 0, 0, .1);
-            height: 8px;
+            height: 10px; /* 調整高度 */
             left: 50%;
-            margin-left: -15px;
-            width: 30px;
+            margin-left: -20px; /* 調整寬度 */
+            width: 40px;
             cursor: pointer;
+            border-radius: 5px; /* 圓角 */
+            transition: background 0.3s ease;
         }
 
-	   #music-toggle {
-		  position: absolute;
-		  bottom: 40px; /* 调整音樂按鈕 */
-		  right: 10px; /* 靠到按鈕區的最右邊 */
-		  transform: translateX(0%); /* 取消水平居中 */
-		  width: 32px;
-		  height: 32px;
-		  background-size: cover;
-		  border: none;
-		  cursor: pointer;
-		  outline: none;
-		  background-image: url('img/music_pause.png');
-	   }
+        #handle:hover {
+            background: #8be9fd; /* 懸停變色 */
+        }
+
+        #live2d {
+            cursor: grab;
+            height: 350px; /* 調整大小 */
+            width: 350px;
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(139, 233, 253, 0.5); /* 發光效果 */
+        }
+
+        #live2d:active {
+            cursor: grabbing;
+        }
+
+        /* Control Buttons (Info, Music, Refresh) - Absolutely positioned within #stage */
+        #stage button {
+            position: absolute; /* Revert to absolute positioning */
+            background-color: rgba(139, 233, 253, 0.2); /* 半透明淺藍色 */
+            color: #8be9fd; /* 圖標顏色 */
+            border: 1px solid #8be9fd;
+            border-radius: 50%; /* 圓形按鈕 */
+            width: 50px; /* 尺寸 */
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 10; /* Ensure buttons are above other elements */
+        }
+
+        /* General hover for info and refresh buttons */
+        #stage button:not(#music-toggle):hover {
+            background-color: #8be9fd;
+            color: #1a1a2e; /* 懸停時顏色反轉 */
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        #stage button:active {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
 
         #info {
             left: 40px;
@@ -195,135 +330,253 @@
             bottom: 20px;
         }
 
-        #live2d {
-            cursor: grab;
-            height: 300px;
-            width: 300px;
+        #music-toggle {
+            /* Positioned relative to #stage, inside the frame */
+            bottom: 20px; /* Adjust as needed to be inside the frame */
+            left: 50%;
+            transform: translateX(-50%); /* Keep horizontally centered */
+            width: 50px; /* Consistent size */
+            height: 50px; /* Consistent size */
+            /* Removed background-image properties as we're using Material Icons */
         }
 
-        #live2d:active {
-            cursor: grabbing;
+        /* Specific hover for music toggle to combine transforms */
+        #music-toggle:hover {
+            transform: translateX(-50%) translateY(-10px) scale(1.1); /* 向上移動 10px，保持水平居中 */
+            background-color: #8be9fd; /* 懸停時顏色反轉 */
+            color: #1a1a2e;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
-        #language-selector {
-            display: inline-block; /* Horizontally align */
-            margin-right: 20px; /* Add some spacing */
-        }
 
-        /* Game Link Buttons */
+        /* Game Link Buttons Container - Added horizontal scroll */
         #game-links-container {
-            display: flex;
-            flex-wrap: wrap; /* Allow buttons to wrap to the next line */
-            justify-content: center; /* Center buttons */
-            max-width: 800px; /* Adjust as needed */
-            margin: 0 auto; /* Center the container */
-            margin-top: 20px; /* 調整與 Live2D 模型的距離 */
+            display: flex; /* Use flexbox */
+            flex-wrap: nowrap; /* Prevent wrapping */
+            overflow-x: auto; /* Enable horizontal scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            justify-content: flex-start; /* Align items to the start for scrolling */
+            gap: 15px; /* 按鈕間距 */
+            max-width: 100%; /* Take full width */
+            padding: 0 20px; /* Add padding for scrollable area */
+            margin-top: 8rem; /* 增加上方空位 */
+            margin-bottom: 3rem; /* 保持下方空位 */
+            scroll-snap-type: x mandatory; /* Optional: Snap to items */
+            padding-bottom: 15px; /* Space for scrollbar */
+            z-index: 20; /* Ensure game links are on top of other elements */
+            background-color: rgba(22, 33, 62, 0.7); /* Add a background to ensure stacking context */
+            border-radius: 10px; /* Match other rounded elements */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Add shadow */
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        #game-links-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        #game-links-container {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
 
         .game-link {
-            margin: 5px;
-            padding: 10px 15px; /* Adjusted padding */
-            background-color: #007bff;
+            flex-shrink: 0; /* Prevent items from shrinking */
+            padding: 12px 25px; /* 調整內距 */
+            background: linear-gradient(45deg, #2980b9, #3498db); /* 藍色漸變 */
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px; /* 圓角 */
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* 3D effect */
+            display: inline-flex; /* 讓內容居中 */
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            min-width: 120px; /* 最小寬度 */
+            scroll-snap-align: start; /* Optional: Snap to start of item */
+            position: relative; /* Establish a new stacking context for z-index on hover */
         }
 
         .game-link:hover {
-            background-color: #0056b3;
+            background: linear-gradient(45deg, #3498db, #2980b9); /* 懸停時漸變反轉 */
+            /* Removed transform: translateY(-5px); */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            z-index: 21; /* Ensure hovered game link is on top of siblings */
         }
 
-        /* Body styles to center the calendar */
-        .calendar-container {
-            display: flex;
-            /* Arrange items in a row */
-            align-items: center;
-            padding: 1px;
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-            height: 50px;
-            /* Adjusted height */
-            color: #4169E1;
-            margin-left: 20px;
-            /* Add spacing to the left */
+        .game-link:active {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        .calendar-container>div {
-            margin: 0 10px;
-            /* Space between each item */
-        }
-
-        .calendar-container h1 {
-            font-size: 18px;
-            /* Smaller for inline display */
-            margin: 0;
-            font-weight: bold;
-            color: #00a600;
-            letter-spacing: 0.6px;
-            text-transform: uppercase;
-        }
-
-        .date,
-        .year,
-        .time {
-            font-size: 16px;
-            /* Smaller for inline display */
-            margin-top: 0;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-
-         /* Body styles to center the calendar */
-
-        /* Style the time with pulse animation */
-        .time {
-            animation: pulse 1.5s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
-        }
-
+        /* Footer */
         footer {
-            background-color: #333;
-            color: #fff;
+            background-color: #1a1a2e; /* 深色頁腳 */
+            color: #aaa;
             text-align: center;
-            padding: 1rem 0;
+            padding: 1.5rem 0;
             width: 100%; /* Footer 寬度 100% */
             margin-top: auto; /* 將 Footer 推到最下方 */
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Align Selectors and Clock Horizontally */
-        .top-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            width: 100%; /* Ensure it takes full width */
-        }
-	/* 標題容器 */
-        #title-container {
-            text-align: center;
-            font-size: 24px; /* 調整大小 */
-            font-weight: bold;
-            margin-bottom: 10px; /* 調整與 Live2D 的距離 */
+        /* Ripple Effect (Optional, if you want it on this page too) */
+        .ripple {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            background-color: rgba(139, 233, 253, 0.6);
+            pointer-events: none;
+            z-index: 9999;
         }
 
-        .space {
-            width: 32px;
+        /* Apply box-sizing to all elements */
+        *, *::before, *::after {
+          box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+        }
+
+        /* --- Mobile Specific Styles --- */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 0 1rem;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0.5rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .top-container {
+                flex-direction: column;
+                gap: 1.5rem;
+                margin-top: 1.5rem;
+                margin-bottom: 1.5rem;
+                width: 95%;
+            }
+
+            .calendar-container {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .calendar-container h1 {
+                font-size: 1.1rem;
+            }
+
+            .date, .year, .time {
+                font-size: 0.9rem;
+            }
+
+            #title-container {
+                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+            }
+
+            #stage {
+                padding: 15px;
+                margin-bottom: 2rem;
+            }
+
+            #live2d {
+                width: 250px;
+                height: 250px;
+            }
+
+            /* Control buttons on mobile */
+            #stage button {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+
+            #info {
+                left: 15px; /* Adjust for smaller screens */
+                bottom: 15px;
+            }
+
+            #refresh {
+                right: 15px; /* Adjust for smaller screens */
+                bottom: 15px;
+            }
+
+            #music-toggle {
+                bottom: 20px; /* Adjusted for mobile to be inside frame */
+                left: 50%;
+                transform: translateX(-50%);
+                width: 45px;
+                height: 45px;
+            }
+
+            #game-links-container {
+                gap: 10px;
+                margin: 3rem auto; /* Adjusted for mobile */
+                padding: 0 15px;
+            }
+
+            .game-link {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+                min-width: unset; /* Allow smaller width on mobile */
+                flex-grow: 1; /* Allow buttons to grow to fill space */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.3rem;
+            }
+            #title-container {
+                font-size: 1.5rem;
+            }
+            #live2d {
+                width: 200px;
+                height: 200px;
+            }
+            /* Control buttons on very small mobile */
+            #stage button {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            #info {
+                left: 10px;
+                bottom: 10px;
+            }
+            #refresh {
+                right: 10px;
+                bottom: 10px;
+            }
+            #music-toggle {
+                bottom: 15px; /* Adjusted for very small screens to be inside frame */
+                left: 50%;
+                transform: translateX(-50%);
+                width: 40px;
+                height: 40px;
+            }
+            .game-link {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -333,25 +586,24 @@
         <nav>
             <div class="logo">Lifer_Lighdow</div>
             <ul>
-                <li><a href="index" data-translate="home">Home</a></li>
-                <li><a href="music" data-translate="music">Music</a></li>
-                <li><a href="game" data-translate="games">Games</a></li>
-                <li><a href="Contact" data-translate="contact">Contact</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="music">Music</a></li>
+                <li><a href="game.html">Games</a></li>
+                <li><a href="Contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="top-container">
-        <select id="language-selector"></select>
         <div class="calendar-container">
-            <h1 data-translate="systemTime">System Time</h1>
-            <div data-translate='date' class="date" id="current-date"></div>
-            <div data-translate='year' class="year" id="current-year"></div>
+            <h1>System Time</h1>
+            <div class="date" id="current-date"></div>
+            <div class="year" id="current-year"></div>
             <div class="time" id="current-time"></div>
         </div>
     </div>
 
-    <div id="title-container" data-translate="gamePlatform">Live2D Game Platform</div>
+    <div id="title-container">Live2D Game Platform</div>
 
     <div id="stage">
         <div id="inner">
@@ -363,13 +615,14 @@
                 <div id="detail"></div>
                 <div id="handle"></div>
             </div>
-            <canvas class="mb-4" id="live2d" width="300" height="300"></canvas>
+            <canvas id="live2d" width="350" height="350"></canvas>
         </div>
 
-        <button class="btn btn-link" id="info"><i class="fa fa-lg fa-info"></i></button>
-	   <button id="music-toggle"></button>
-	  <div class = "space"></div>
-        <button class="btn btn-link" id="refresh"><i class="fa fa-lg fa-sync-alt"></i></button>
+        <!-- Control Buttons -->
+        <button id="info"><i class="fa fa-lg fa-info"></i></button>
+        <!-- Music Toggle Button with Material Icon -->
+        <button id="music-toggle"><i class="material-icons" id="music-icon"></i></button>
+        <button id="refresh"><i class="fa fa-lg fa-sync-alt"></i></button>
     </div>
 
     <!-- Game Links -->
@@ -382,6 +635,8 @@
 
     <audio id="bg-music" loop autoplay src="music/original/dlesaws.mp3"></audio>
 
+    <!-- live2d.js script MUST be loaded before the main script that uses it -->
+    <script src="live2d.js"></script>
     <script>
 /*
  * _(:з」∠)_
@@ -391,21 +646,23 @@
 
 /*
  * This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 window.addEventListener("load", () => {
     "use strict";
 
-    if (!CSS.supports("clip-path", "circle(120px at center)")) {
-        document.getElementById("stage").innerHTML = '<img src="./screenshots/screenshot-1.png">';
-        return;
+    // Check if live2d.js has loaded and defined loadlive2d
+    if (typeof loadlive2d === 'undefined') {
+        console.error("Error: loadlive2d function is not defined. live2d.js might not have loaded correctly or is missing.");
+        document.getElementById("stage").innerHTML = '<img src="./screenshots/screenshot-1.png" alt="Live2D Screenshot" style="max-width: 100%; height: auto; display: block; margin: auto;">'; // Fallback image with styling
+        return; // Stop further execution if Live2D is critical
     }
 
     const apiPath = "https://live2d.fghrsh.net/api";
@@ -422,8 +679,13 @@ window.addEventListener("load", () => {
         localStorage.setItem("modelId", modelId);
         if (modelTexturesId === undefined) modelTexturesId = 0;
         localStorage.setItem("modelTexturesId", modelTexturesId);
-        loadlive2d("live2d", `${apiPath}/get/?id=${modelId}-${modelTexturesId}`, null);
-        console.log("live2d", `Model ${modelId}-${modelTexturesId} loaded`);
+        // Ensure loadlive2d is available before calling it
+        if (typeof loadlive2d !== 'undefined') {
+            loadlive2d("live2d", `${apiPath}/get/?id=${modelId}-${modelTexturesId}`, null);
+            console.log("live2d", `Model ${modelId}-${modelTexturesId} loaded`);
+        } else {
+            console.error("Attempted to call loadlive2d, but it's still not defined.");
+        }
         setTimeout(() => {
             coverPosition("80%");
             state = 2;
@@ -442,6 +704,10 @@ window.addEventListener("load", () => {
                     coverPosition("80%");
                     loading = false;
                 }, 1000);
+            }).catch(error => {
+                console.error("Error loading random model:", error);
+                showAlert("Failed to load new model. Please try again later.");
+                loading = false;
             });
     }
 
@@ -449,138 +715,61 @@ window.addEventListener("load", () => {
         document.getElementById("cover").style.bottom = pos;
     }
 
-    // 多語言支持
-    const translations = {
-        "en": {
-            "title": "Live2D Game Platform",
-	     "gamePlatform": "Live2D Game Platform",
-            "game1": "2048",
-            "game2": "Game 2",
-            "game3": "Game 3",
-            "systemTime": "System Time",
-            "date": "Date",
-            "year": "Year",
-            "home": "Home",
-            "music": "Music",
-            "games": "Games",
-            "contact": "Contact",
-            "cuteQuotes": [
-                "You can do it! I believe in you~",
-                "Fighting! You're amazing!",
-                "Don't give up! You're so close!",
-                "You're the best! Keep going!",
-                "I'm cheering for you! Ganbatte!"
-            ]
-        },
-        "ja": {
-            "title": "Live2D ゲームプラットフォーム",
-	    "gamePlatform": "Live2D ゲームプラットフォーム",
-            "game1": "2048",
-            "game2": "ゲーム 2",
-            "game3": "ゲーム 3",
-            "systemTime": "システム時間",
-            "date": "日付",
-            "year": "年",
-            "home": "ホーム",
-            "music": "音楽",
-            "games": "ゲーム",
-            "contact": "お問い合わせ",
-            "cuteQuotes": [
-                "あなたならできる！信じてるよ～",
-                "ファイト！すごいね！",
-                "あきらめないで！もうすぐだよ！",
-                "あなたは最高！頑張って！",
-                "応援してるよ！頑張って！"
-            ]
-        },
-        "zh-TW": {
-            "title": "Live2D 遊戲平台",
-	     "gamePlatform": "Live2D 遊戲平台",
-            "game1": "2048",
-            "game2": "遊戲 2",
-            "game3": "遊戲 3",
-            "systemTime": "系統時間",
-            "date": "日期",
-            "year": "年份",
-            "home": "首頁",
-            "music": "音樂",
-            "games": "遊戲",
-            "contact": "聯絡",
-            "cuteQuotes": [
-                "你可以的！我相信你～",
-                "加油！你好棒！",
-                "不要放棄！你快到了！",
-                "你是最棒的！繼續加油！",
-                "我為你加油！ 加油！"
-            ]
-        },
-        "zh-CN": {
-            "title": "Live2D 游戏平台",
-	    "gamePlatform": "Live2D 游戏平台",
-            "game1": "2048",
-            "game2": "游戏 2",
-            "game3": "游戏 3",
-            "systemTime": "系统时间",
-            "date": "日期",
-            "year": "年份",
-            "home": "首页",
-            "music": "音乐",
-            "games": "游戏",
-            "contact": "联系",
-            "cuteQuotes": [
-                "你可以的！我相信你～",
-                "加油！你好棒！",
-                "不要放弃！你快到了！",
-                "你是最棒的！继续加油！",
-                "我为你加油！ 加油！"
-            ]
-        }
-    };
+    // Simplified encouragement quotes (English only)
+    const cuteQuotes = [
+        "You can do it! I believe in you~",
+        "Fighting! You're amazing!",
+        "Don't give up! You're so close!",
+        "You're the best! Keep going!",
+        "I'm cheering for you! Ganbatte!"
+    ];
 
-    function updateContent(lang) {
-        const elements = document.querySelectorAll('[data-translate]');
-        elements.forEach(element => {
-            const key = element.dataset.translate;
-            if (translations[lang] && translations[lang][key]) {
-                element.innerHTML = translations[lang][key]; // 使用 innerHTML for the copyright
-                element.placeholder = translations[lang][key]; // 更新 placeholder
+    // Custom alert function to replace window.alert
+    function showAlert(message) {
+        const alertBox = document.createElement('div');
+        alertBox.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            color: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            font-family: 'MyCustomFont', sans-serif;
+            font-size: 1.1rem;
+            text-align: center;
+            animation: fadeIn 0.3s ease-out;
+        `;
+        alertBox.textContent = message;
+        document.body.appendChild(alertBox);
+
+        setTimeout(() => {
+            alertBox.style.animation = 'fadeOut 0.3s ease-in forwards';
+            alertBox.addEventListener('animationend', () => alertBox.remove());
+        }, 2000); // Display for 2 seconds
+
+        // CSS for fade in/out animations
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translate(-50%, -60%); }
+                to { opacity: 1; transform: translate(-50%, -50%); }
             }
-        });
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translate(-50%, -50%); }
+                to { opacity: 0; transform: translate(-50%, -60%); }
+            }
+        `;
+        document.head.appendChild(style);
     }
 
-    // 初始化
-    let currentLanguage = localStorage.getItem('language') || 'en';
-    const languageSelector = document.getElementById('language-selector');
-    languageSelector.innerHTML = `
-        <option value="en">English</option>
-        <option value="ja">日本語</option>
-        <option value="zh-TW">繁體中文</option>
-        <option value="zh-CN">简体中文</option>
-    `;
-    languageSelector.value = currentLanguage;
-    updateContent(currentLanguage);
-
-    // 切換語言
-    languageSelector.addEventListener('change', function() {
-        const selectedLanguage = this.value;
-        localStorage.setItem('language', selectedLanguage);
-        updateContent(selectedLanguage);
-    });
-
-    // 取得鼓勵話語
-    function getEncouragement(lang) {
-        let encouragement = "";
-        if (translations[lang] && translations[lang].cuteQuotes) {
-            const quotes = translations[lang].cuteQuotes;
-            encouragement = quotes[Math.floor(Math.random() * quotes.length)];
-        } else {
-            encouragement = "You can do it!";
-        }
-        return encouragement;
-    }
-
+    // Get encouragement (now directly uses cuteQuotes array)
     document.getElementById("info").addEventListener("click", () => {
-        alert(getEncouragement(currentLanguage));
+        const encouragement = cuteQuotes[Math.floor(Math.random() * cuteQuotes.length)];
+        showAlert(encouragement); // Use custom alert
     });
 
     document.getElementById("refresh").addEventListener("click", () => {
@@ -602,137 +791,136 @@ window.addEventListener("load", () => {
         }
     });
 
-    // 時鐘
-	    function updateDateTime() {
-            let now = new Date();
+    // 時鐘 (Simplified to English only)
+    function updateDateTime() {
+        let now = new Date();
+        let dateText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+        let timeText = now.toLocaleTimeString('en-US');
+        let yearText = now.getFullYear();
 
-            // Get current date, time, and year
-            let dateText = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-            let timeText = now.toLocaleTimeString();
-            let yearText = now.getFullYear();
+        document.getElementById('current-date').textContent = dateText;
+        document.getElementById('current-year').textContent = `Year: ${yearText}`;
+        document.getElementById('current-time').textContent = `Time: ${timeText}`;
+    }
 
-            document.getElementById('current-date').textContent = dateText;
-            document.getElementById('current-year').textContent = `Year: ${yearText}`;
-            document.getElementById('current-time').textContent = `Time: ${timeText}`;
-        }
+    // Update every second
+    setInterval(updateDateTime, 1000);
 
-        // Update every second
-        setInterval(updateDateTime, 1000);
+    // Initial call to set date/time immediately
+    updateDateTime();
 
-        // Initial call to set date/time immediately
-        updateDateTime();
-	// 動態生成遊戲鏈接
-        const gameLinksContainer = document.getElementById("game-links-container");
-        const gameURLs = [
-            "games/2048", "games/clicker_game_tw", "games/clicker_game",
-            "https://example.com/game4", "https://example.com/game5", "https://example.com/game6",
-            "https://example.com/game7", "https://example.com/game8", "https://example.com/game9",
-            "https://example.com/game10", "https://example.com/game11", "https://example.com/game12",
-            "https://example.com/game13", "https://example.com/game14", "https://example.com/game15",
-            "https://example.com/game16", "https://example.com/game17", "https://example.com/game18",
-            "https://example.com/game19", "https://example.com/game20", "https://example.com/game21",
-            "https://example.com/game22", "https://example.com/game23", "https://example.com/game24",
-            "https://example.com/game25", "https://example.com/game26", "https://example.com/game27",
-            "https://example.com/game28", "https://example.com/game29", "https://example.com/game30",
-            "https://example.com/game31", "https://example.com/game32", "https://example.com/game33",
-            "https://example.com/game34", "https://example.com/game35", "https://example.com/game36",
-            "https://example.com/game37", "https://example.com/game38", "https://example.com/game39",
-            "https://example.com/game40", "https://example.com/game41", "https://example.com/game42",
-            "https://example.com/game43", "https://example.com/game44", "https://example.com/game45",
-            "https://example.com/game46", "https://example.com/game47", "https://example.com/game48",
-            "https://example.com/game49", "https://example.com/game50"
-        ];
+    // 動態生成遊戲鏈接
+    const gameLinksContainer = document.getElementById("game-links-container");
+    const gameURLs = [
+        "games/2048", "games/clicker_game_tw", "games/clicker_game",
+        "https://example.com/game4", "https://example.com/game5",
+        "https://example.com/game6", "https://example.com/game7",
+        "https://example.com/game8", "https://example.com/game9",
+        "https://example.com/game10"
+    ];
 
-        const gameNames = [
-		"2048","放置遊戲","clicker game",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?","?",
-		"?","?",
-	];
+    // Define game names (English only)
+    const gameNames = [
+        "2048", "Clicker Game TW", "Clicker Game",
+        "Game 4", "Game 5", "Game 6", "Game 7", "Game 8", "Game 9", "Game 10"
+    ];
 
+    function updateGameLinks() {
+        gameLinksContainer.innerHTML = ''; // Clear existing links
         gameURLs.forEach((url, index) => {
             const link = document.createElement("a");
             link.href = url;
             link.className = "game-link";
             link.target = "_blank";
-            link.textContent = gameNames[index]; // 使用 gameNames 数组
+            link.textContent = gameNames[index] || `Game ${index + 1}`; // Fallback if name is missing
             link.style.backgroundColor = getRandomColor();
+            link.style.scrollSnapAlign = 'start'; /* Ensure scroll-snap-align is set for each item */
             gameLinksContainer.appendChild(link);
         });
+    }
 
-        // Helper function to generate random colors
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
+    // Helper function to generate random colors
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
         }
-	 // Function to update background color based on the current time
-        function updateBackgroundColor() {
-            const now = new Date();
-            const hours = now.getHours();
-            let startColor, endColor;
-			 let bodyElement = document.body;
+        return color;
+    }
 
-            // Define background colors for different time periods
-            if (hours >= 6 && hours < 18) { // Morning to Afternoon
-                startColor = "#e6f7ff"; // Light blue
-                endColor = "#a6d4ff";
-            } else { // Evening to Night
-                startColor = "#a6d4ff";
-                endColor = "#191970"; // Midnight blue
-            }
+    // Function to update background color based on the current time
+    function updateBackgroundColor() {
+        const now = new Date();
+        const hours = now.getHours();
+        let startColor, endColor;
+        let bodyElement = document.body;
 
-           bodyElement.style.background = `linear-gradient(to bottom, ${startColor}, ${endColor})`;
+        // Define background colors for different time periods
+        if (hours >= 6 && hours < 18) { // Morning to Afternoon
+            startColor = "#1a1a2e"; // Dark blue
+            endColor = "#16213e"; // Slightly lighter dark blue
+        } else { // Evening to Night
+            startColor = "#16213e";
+            endColor = "#0f3460"; // Midnight blue
         }
-	  // Update every 30 seconds
-        setInterval(updateBackgroundColor, 30000);
 
-        // Initial call to set background color immediately
-        updateBackgroundColor();
-	 // 音樂控制
-        let audio = document.getElementById("bg-music");
-        let musicToggleButton = document.getElementById("music-toggle");
-		  let isPlaying = false;
+       bodyElement.style.background = `linear-gradient(135deg, ${startColor}, ${endColor})`; // Use 135deg for consistency
+    }
+    // Update every 30 seconds
+    setInterval(updateBackgroundColor, 30000);
 
-		  //音樂按鈕樣式
-		  musicToggleButton.style.font = "italic small-caps bold 14px cursive";
-		   musicToggleButton.style.top = "50%"; // 調整與 Live2D 模型垂直對齊
-		  musicToggleButton.style.right = "0%"; // 靠右邊
-		  musicToggleButton.style.transform = "translate(0%, -50%)"; // 垂直居中，不水平居中
-		  musicToggleButton.style.position = "absolute";
+    // Initial call to set background color immediately
+    updateBackgroundColor();
 
-		  //設定文字
-		  musicToggleButton.style.backgroundImage = "url('images/play.png')"; // 初始圖片
+    // 音樂控制
+    let audio = document.getElementById("bg-music");
+    let musicToggleButton = document.getElementById("music-toggle");
+    let musicIcon = document.getElementById("music-icon"); // Get the icon element
+    let isPlaying = false;
 
+    // Set initial icon based on music state
+    if (localStorage.getItem('musicPlaying') === 'true') {
+        audio.play();
+        isPlaying = true;
+        musicIcon.textContent = "pause"; // Material Icon for pause
+    } else {
+        musicIcon.textContent = "play_arrow"; // Material Icon for play
+    }
 
-        musicToggleButton.addEventListener("click", function() {
-            if (isPlaying) {
-                audio.pause();
-                musicToggleButton.style.backgroundImage = "url('images/play.png')"; // 替換為播放圖片
-            } else {
-                audio.play();
-                musicToggleButton.style.backgroundImage = "url('images/pause.png')"; // 替換為暫停圖片
-            }
-            isPlaying = !isPlaying;
-        });
+    musicToggleButton.addEventListener("click", function() {
+        if (isPlaying) {
+            audio.pause();
+            musicIcon.textContent = "play_arrow"; // Change icon to play
+            localStorage.setItem('musicPlaying', 'false');
+        } else {
+            audio.play();
+            musicIcon.textContent = "pause"; // Change icon to pause
+            localStorage.setItem('musicPlaying', 'true');
+        }
+        isPlaying = !isPlaying;
+    });
+
+    // Optional: Add ripple effect to this page if desired
+    document.addEventListener('click', function(e) {
+        const x = e.clientX;
+        const y = e.clientY;
+
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+
+        document.body.appendChild(ripple);
+
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+
+    // Ensure game links are generated on load
+    updateGameLinks();
 });
-</script>
+    </script>
 </body>
 </html>
