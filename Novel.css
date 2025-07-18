@@ -1,9 +1,19 @@
+/*
+ * Novel.css - 提升小說閱讀介面樣式
+ *
+ * 這個檔案包含了小說閱讀器的所有視覺樣式定義。
+ * 目標是讓介面更具現代感和美觀性，同時保留所有原有功能。
+ */
+
+/* 基礎樣式 */
 body {
-    font-family: 'MyCustomFont', sans-serif;
-    line-height: 1.8;
+    font-family: 'MyCustomFont', sans-serif; /* 使用自定義字體，並提供通用字體回退 */
+    line-height: 1.8; /* 增加行高，提升閱讀舒適度 */
     margin: 0;
-    background-color: #f8f9fa;
-    color: #343a40;
+    background-color: #eef2f7; /* 淺藍灰色背景，更柔和 */
+    color: #333; /* 深灰色文字，提高對比度 */
+    scroll-behavior: smooth; /* 平滑滾動效果 */
+    transition: background-color 0.3s ease, color 0.3s ease; /* 為暗色模式切換添加過渡 */
 }
 
 /* 定義自定義字體 */
@@ -12,114 +22,161 @@ body {
     src: url('fonts/myfont.woff2') format('woff2'), url('fonts/myfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
-    font-display: swap;
+    font-display: swap; /* 確保字體載入時的顯示行為 */
 }
 
+/* 主容器樣式 */
 #container {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* 更明顯的陰影，增加立體感 */
+    margin: 30px auto; /* 增加上下外邊距 */
     max-width: 1200px;
-    display: flex;
-    min-height: 80vh;
+    display: flex; /* 使用 Flexbox 佈局 */
+    min-height: 85vh; /* 增加最小高度 */
+    background-color: #ffffff; /* 白色背景 */
+    border-radius: 12px; /* 圓角邊框 */
+    overflow: hidden; /* 確保內容不會溢出圓角 */
     position: relative; /* 讓按鈕可以相對於 container 定位 */
+    transition: box-shadow 0.3s ease, background-color 0.3s ease; /* 為暗色模式切換添加過渡 */
 }
 
+/* 側邊欄樣式 */
 #sidebar {
-    background-color: #ffffff;
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef); /* 淺色漸變背景 */
     border-right: 1px solid #dee2e6;
     padding: 30px;
     width: 300px; /* 原始寬度 */
     min-width: 0; /* 移除最小寬度限制 */
-    overflow-y: auto; /* 启用垂直滚动 */
-    transition: all 0.3s ease; /* 平滑過渡效果 */
+    overflow-y: auto; /* 啟用垂直滾動 */
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* 更平滑的過渡效果 */
     flex-shrink: 0; /* 防止側邊欄被壓縮 */
     max-height: 100vh; /* 限制最大高度 */
+    position: sticky; /* 讓側邊欄在滾動時保持在視窗內 */
+    top: 0; /* 保持在頂部 */
 }
 
+/* 側邊欄隱藏時的樣式 */
+#sidebar.hidden {
+    width: 0;
+    padding: 0;
+    border-right: none;
+    overflow: hidden;
+    opacity: 0; /* 隱藏時透明度為0 */
+}
+
+/* 章節列表樣式 */
 #chapter-list {
     list-style: none;
     padding: 0;
     margin: 0;
     overflow-y: auto; /* 確保在列表本身出現滾動條 */
     max-height: 60vh; /* 調整為適合你的佈局 */
-}
-
-#sidebar.hidden {
-    width: 0;
-    padding: 0;
-    border-right: none;
-    overflow: hidden;
-}
-
-#content {
-    padding: 30px;
-    flex-grow: 1;
-    overflow-y: auto;
-}
-
-h1, h2, h3 {
-    font-weight: 700;
-}
-
-h1.chapter-title {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 10px;
-    position: relative; /* 讓按鈕可以相對於標題定位 */
+    padding-right: 10px; /* 避免滾動條遮擋內容 */
 }
 
 #chapter-list li {
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* 調整列表項間距 */
 }
 
 #chapter-list a {
     display: block;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 12px 15px; /* 增加內距 */
+    border-radius: 8px; /* 圓角 */
     text-decoration: none;
-    color: #343a40;
-    transition: background-color 0.3s ease;
+    color: #555; /* 較深的文字顏色 */
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; /* 增加過渡效果 */
+    font-weight: 500; /* 稍微加粗字體 */
 }
 
 #chapter-list a:hover {
-    background-color: #e9ecef;
+    background-color: #e0f2f7; /* 淺藍色背景 */
+    color: #007bff; /* 主題藍色文字 */
+    transform: translateX(5px); /* 懸停時輕微右移 */
 }
 
 #chapter-list a.active {
-    background-color: #007bff;
+    background-color: #007bff; /* 主題藍色背景 */
     color: white;
+    font-weight: bold; /* 加粗活動連結字體 */
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2); /* 增加陰影 */
+}
+
+/* 內容區域樣式 */
+#content {
+    padding: 40px; /* 增加內距 */
+    flex-grow: 1;
+    overflow-y: auto;
+    line-height: 1.9; /* 再次調整行高，確保閱讀舒適 */
+}
+
+/* 章節內容區域樣式 */
+#chapter-content {
+    position: relative; /* 設置為相對定位，以便內部絕對定位的按鈕能正確定位 */
+    padding-top: 50px; /* 為暗色模式按鈕預留空間 */
+}
+
+/* 標題樣式 */
+h1, h2, h3 {
+    font-weight: 700;
+    color: #2c3e50; /* 深藍灰色標題 */
+    margin-bottom: 1em;
+    transition: color 0.3s ease; /* 為暗色模式切換添加過渡 */
+}
+
+h1.chapter-title {
+    margin-bottom: 30px; /* 增加底部外邊距 */
+    border-bottom: 2px solid #e9ecef; /* 更明顯的底線 */
+    padding-bottom: 15px;
+    position: relative; /* 讓按鈕可以相對於標題定位 */
+    font-size: 2.2em; /* 增大章節標題字體 */
+    transition: border-color 0.3s ease; /* 為暗色模式切換添加過渡 */
 }
 
 p {
-    margin-bottom: 1em;
-    font-size: 1rem; /* 使用 rem 单位 */
+    margin-bottom: 1.5em; /* 增加段落間距 */
+    font-size: 1rem; /* 使用 rem 單位 */
+    color: #444; /* 調整段落文字顏色 */
+    transition: color 0.3s ease; /* 為暗色模式切換添加過渡 */
 }
 
 /* 可收合列表樣式 */
 .collapsible #chapter-list {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: max-height 0.4s ease-out; /* 更平滑的展開/收合動畫 */
 }
 
 .collapsible.open #chapter-list {
-    max-height: 1000vh; /* 根據需要調整 - 非常大，基本等于没有限制，让内部可以滚动 */
+    max-height: 1000vh; /* 根據需要調整 - 非常大，基本等于沒有限制，讓內部可以滾動 */
 }
 
+/* 收合/展開按鈕樣式 */
 .toggle-button {
     width: 100%;
-    padding: 10px;
+    padding: 12px 15px; /* 增加內距 */
     border: none;
-    background-color: #f0f0f0;
+    background-color: #f0f4f8; /* 淺藍灰色背景 */
     text-align: left;
     cursor: pointer;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    border-radius: 8px; /* 圓角 */
+    margin-bottom: 15px; /* 增加底部外邊距 */
+    font-weight: bold;
+    color: #34495e; /* 深色文字 */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease; /* 為暗色模式切換添加過渡 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* 輕微陰影 */
 }
 
+.toggle-button:hover {
+    background-color: #e2eaf2; /* 懸停時變色 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 懸停時陰影變大 */
+}
+
+/* 響應式設計 */
 @media (max-width: 768px) {
     #container {
         flex-direction: column;
+        margin: 0; /* 手機上移除外邊距 */
+        border-radius: 0; /* 手機上移除圓角 */
+        min-height: 100vh; /* 手機上佔滿整個視窗高度 */
     }
 
     #sidebar {
@@ -127,24 +184,41 @@ p {
         border-right: none;
         border-bottom: 1px solid #dee2e6;
         overflow-y: auto; /* 手機上側邊欄也允許捲動 */
+        position: static; /* 手機上取消 sticky 定位 */
+        padding: 20px; /* 調整內距 */
+    }
+
+    #content {
+        padding: 20px; /* 調整內距 */
+    }
+
+    #chapter-content {
+        padding-top: 40px; /* 手機上調整閱讀區頂部填充 */
     }
 }
 
+/* 頁腳樣式 */
 footer {
     text-align: center;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-top: 1px solid #ddd;
-    margin-top: 20px;
+    padding: 15px; /* 增加內距 */
+    background-color: #f0f4f8; /* 淺藍灰色背景 */
+    border-top: 1px solid #e9ecef;
+    margin-top: 30px; /* 增加頂部外邊距 */
+    color: #666; /* 較淺的文字顏色 */
+    transition: background-color 0.3s ease, border-top-color 0.3s ease, color 0.3s ease; /* 為暗色模式切換添加過渡 */
 }
 
+/* 導航條樣式 */
 .bar-nav {
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: #2c3e50; /* 深藍色背景 */
     padding: 1em 0;
     text-align: center;
-    position: relative;
-    z-index: 1;
+    position: sticky; /* 導航條固定在頂部 */
+    top: 0; /* 固定在頂部 */
+    z-index: 100; /* 確保導航條在最上層 */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 增加陰影 */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 為暗色模式切換添加過渡 */
 }
 
 .bar-nav ul {
@@ -156,21 +230,21 @@ footer {
 }
 
 .bar-nav li {
-    margin: 0 10px;
+    margin: 0 15px; /* 增加連結間距 */
 }
 
 .bar-nav a {
     color: white;
     text-decoration: none;
-    padding: 0.5em 1em;
-    margin: 0 1em;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    padding: 0.8em 1.5em; /* 增加內距 */
+    border-radius: 25px; /* 更圓的邊框 */
+    transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease; /* 為暗色模式切換添加過渡 */
+    font-weight: 600; /* 加粗字體 */
 }
 
 .bar-nav a:hover {
-    color: #343a40;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.2); /* 懸停時背景變淺 */
+    transform: translateY(-2px); /* 懸停時輕微上移 */
 }
 
 /* 音訊播放器和字體控制項的容器 */
@@ -178,60 +252,247 @@ footer {
     display: flex; /* 使用 Flexbox 佈局 */
     justify-content: center; /* 水平置中對齊 */
     align-items: center; /* 垂直置中對齊 */
-    margin-bottom: 20px;
+    margin-bottom: 30px; /* 增加底部外邊距 */
+    flex-wrap: wrap; /* 允許換行 */
+    gap: 20px; /* 元素間距 */
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 為暗色模式切換添加過渡 */
 }
 
 /* 音訊播放器樣式 */
 #audio-player {
-    /* text-align: center;  移除，因為 audio-controls-container 會處理置中 */
-    margin-right: 20px; /* 在音訊播放器和字體控制項之間加入一些間距 */
+    margin-right: 0; /* 移除固定右邊距，使用 gap */
+}
+
+#audio-player audio {
+    width: 250px; /* 固定音訊播放器寬度 */
+    height: 40px; /* 固定音訊播放器高度 */
 }
 
 /* 字體控制項樣式 */
 #font-controls {
     display: flex; /* 讓按鈕和數值水平排列 */
     align-items: center; /* 垂直置中對齊 */
+    background-color: #e6f7ff; /* 淺藍色背景 */
+    border-radius: 8px;
+    padding: 8px 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 為暗色模式切換添加過渡 */
 }
 
 #font-controls button {
-    padding: 8px 15px;
-    margin: 0 5px;
+    padding: 10px 18px; /* 增加內距 */
+    margin: 0 8px; /* 調整間距 */
     border: none;
-    background-color: #007bff;
+    background-color: #007bff; /* 主題藍色 */
     color: white;
-    border-radius: 5px;
+    border-radius: 20px; /* 更圓的按鈕 */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); /* 增加陰影 */
 }
 
 #font-controls button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* 懸停時變深 */
+    transform: translateY(-2px); /* 懸停時輕微上移 */
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); /* 懸停時陰影變大 */
 }
 
 #font-size-value {
     margin-left: 5px;
-    font-size: 1rem;
+    font-size: 1.1rem; /* 增大字體大小數值 */
+    font-weight: bold;
+    color: #007bff;
+    transition: color 0.3s ease; /* 為暗色模式切換添加過渡 */
 }
 
 /* 側邊欄寬度切換按鈕 */
 #sidebar-toggle-button {
     position: absolute; /* 絕對定位 */
-    top: 10px; /* 距離頂部 10px */
-    left: 10px; /* 距離左側 10px */
-    padding: 5px; /* 減少內距 */
+    top: 20px; /* 距離頂部 20px */
+    left: 20px; /* 距離左側 20px */
+    padding: 10px; /* 增加內距 */
     border: none;
-    background-color: rgba(255, 255, 255, 0.8); /* 半透明背景 */
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明背景 */
     cursor: pointer;
-    border-radius: 5px;
-    z-index: 10; /* 確保按鈕在最上層 */
+    border-radius: 50%; /* 圓形按鈕 */
+    z-index: 110; /* 確保按鈕在最上層 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, color 0.3s ease; /* 為暗色模式切換添加過渡 */
+    display: flex; /* 讓圖示居中 */
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* 固定按鈕寬度 */
+    height: 40px; /* 固定按鈕高度 */
+    color: #555; /* 圖示顏色 */
+}
+
+#sidebar-toggle-button:hover {
+    background-color: rgba(240, 240, 240, 0.95);
+    transform: scale(1.05); /* 懸停時輕微放大 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 #sidebar-toggle-button i {
-    font-size: 1.2rem; /* 圖示大小 */
+    font-size: 1.4rem; /* 圖示大小 */
 }
 
 /* 側邊欄隱藏時按鈕樣式 */
 #sidebar-toggle-button.sidebar-hidden {
-    top: 10px;
-    left: 10px;
+    left: 20px; /* 保持在左側 */
+    background-color: #007bff; /* 隱藏時變為主題藍色 */
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+}
+
+#sidebar-toggle-button.sidebar-hidden:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+/* 暗色模式按鈕樣式 */
+#dark-mode-button {
+    position: absolute; /* 相對於 chapter-content 定位 */
+    top: 20px; /* 距離 chapter-content 頂部 */
+    right: 20px; /* 距離 chapter-content 右側 */
+    padding: 10px; /* 調整內距 */
+    border: none;
+    background-color: white; /* 預設為白色背景 */
+    color: black; /* 預設為黑色圖示 */
+    border-radius: 50%; /* 圓形按鈕 */
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    z-index: 1000;
+    font-size: 1.4rem; /* 調整圖示大小 */
+    width: 40px; /* 固定寬度 */
+    height: 40px; /* 固定高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#dark-mode-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 暗色模式下的樣式調整 (由 JavaScript 控制 class) */
+body.dark-mode {
+    background-color: #343a40; /* 深色背景 */
+    color: #f8f9fa; /* 淺色文字 */
+}
+
+body.dark-mode #container {
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1); /* 淺色陰影 */
+    background-color: #495057; /* 深色容器背景 */
+}
+
+body.dark-mode #sidebar {
+    background: linear-gradient(to bottom, #495057, #343a40); /* 深色漸變背景 */
+    border-right-color: #6c757d;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+    color: #f8f9fa; /* 淺色標題 */
+}
+
+body.dark-mode h1.chapter-title {
+    border-bottom-color: #6c757d;
+}
+
+body.dark-mode p {
+    color: #e0e0e0; /* 淺色段落文字 */
+}
+
+body.dark-mode .toggle-button {
+    background-color: #5a6268; /* 深色按鈕背景 */
+    color: #f8f9fa; /* 淺色按鈕文字 */
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .toggle-button:hover {
+    background-color: #6c757d;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode footer {
+    background-color: #495057;
+    border-top-color: #6c757d;
+    color: white; /* 頁尾文字反白 */
+}
+
+body.dark-mode .bar-nav {
+    background-color: #212529; /* 更深的導航條背景 */
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .bar-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white; /* 確保懸停時文字顏色仍為白色 */
+}
+
+body.dark-mode #audio-controls-container {
+    background-color: #5a6268;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode #font-controls {
+    background-color: #6c757d;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode #font-controls button {
+    background-color: #0056b3; /* 在暗色模式下按鈕顏色略深 */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.1);
+}
+
+body.dark-mode #font-controls button:hover {
+    background-color: #003f80;
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.2);
+}
+
+body.dark-mode #font-size-value {
+    color: #90caf9; /* 淺藍色數值 */
+}
+
+body.dark-mode #sidebar-toggle-button {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode #sidebar-toggle-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode #sidebar-toggle-button.sidebar-hidden {
+    background-color: #0056b3; /* 暗色模式下隱藏按鈕顏色 */
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+}
+
+body.dark-mode #sidebar-toggle-button.sidebar-hidden:hover {
+    background-color: #003f80;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+/* 暗色模式按鈕在暗色模式下的樣式 */
+body.dark-mode #dark-mode-button {
+    background-color: #343a40; /* 暗色模式下按鈕背景變深 */
+    color: #f8f9fa; /* 暗色模式下按鈕圖示變淺 */
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode #dark-mode-button:hover {
+    background-color: #212529; /* 更深的懸停背景 */
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
 }

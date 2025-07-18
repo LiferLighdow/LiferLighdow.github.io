@@ -14,12 +14,13 @@ const decreaseFontButton = document.getElementById('decrease-font');
 const increaseFontButton = document.getElementById('increase-font');
 const collapsible = document.querySelector('.collapsible');
 const toggleButton = document.querySelector('.toggle-button');
-const chapterTitle = document.getElementById('chapter-title');
+const chapterTitle = document.getElementById('chapter-title'); // 確保取得章節標題元素
 const audioElement = document.querySelector('#audio-player audio');
 const fontSizeValueDisplay = document.getElementById('font-size-value'); // 取得顯示字體大小的元素
 const sidebar = document.getElementById('sidebar'); // 取得側邊欄元素
 const sidebarToggleButton = document.getElementById('sidebar-toggle-button'); // 取得側邊欄切換按鈕
 const footer = document.querySelector('footer'); // 取得 footer 元素
+const container = document.getElementById('container'); // 取得主容器元素
 
 // Default font size (using rem for accessibility)
 let currentFontSize = 1;
@@ -86,20 +87,6 @@ function createDarkModeButton() {
     darkModeButton = document.createElement('button');
     darkModeButton.innerHTML = '<i class="fas fa-moon"></i>'; // 使用 Font Awesome 月亮圖示
     darkModeButton.id = 'dark-mode-button'; // 設定按鈕的 ID，方便之後調整樣式
-    darkModeButton.style.cssText = `
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        padding: 5px; /* 減少內距 */
-        border: none;
-        background-color: white; /* 白色背景 */
-        color: black; /* 黑色圖示 */
-        border-radius: 5px;
-        cursor: pointer;
-        transition: color 0.3s ease, background-color 0.3s ease; /* 加入背景颜色过渡效果 */
-        z-index: 1000;
-        font-size: 1.2rem; /* 调整图标大小 */
-    `; // 設定按鈕的樣式
 
     // 加入按鈕點擊事件
     darkModeButton.addEventListener('click', () => {
@@ -107,51 +94,27 @@ function createDarkModeButton() {
         toggleDarkMode();
     });
 
-    // 將按鈕加入到 body 中
-    document.body.appendChild(darkModeButton);
+    // 將按鈕加入到 container 中，使其相對於整個容器定位
+    if (container) { // 確保 container 元素存在
+        container.appendChild(darkModeButton);
+    } else {
+        console.warn("未找到 container 元素，暗色模式按鈕將不會被加入。");
+        // 作為備用方案，可以考慮加入到 body
+        document.body.appendChild(darkModeButton);
+    }
 }
 
 // 切換暗色模式
 function toggleDarkMode() {
     const body = document.body;
-    const sidebar = document.getElementById('sidebar');
-    const container = document.getElementById('container');
+    // 根據 darkMode 狀態，切換 body 元素的 'dark-mode' 類別
+    body.classList.toggle('dark-mode', darkMode);
 
+    // 僅更新暗色模式按鈕的圖示，其顏色和背景由 CSS 控制
     if (darkMode) {
         darkModeButton.innerHTML = '<i class="fas fa-sun"></i>'; // 變更為太陽圖示
-        darkModeButton.style.backgroundColor = 'white'; /*白色背景 */
-        darkModeButton.style.color = 'black';  /*黑色圖示*/
-        body.style.backgroundColor = '#343a40';
-        body.style.color = '#f8f9fa';
-        if (sidebar) {
-            sidebar.style.backgroundColor = '#495057';
-            sidebar.style.borderRightColor = '#6c757d';
-        }
-        if (container) {
-             container.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.1)';
-        }
-        if (footer) { // 更改 footer 的顏色
-            footer.style.backgroundColor = '#495057';
-            footer.style.borderTopColor = '#6c757d';
-        }
-
     } else {
         darkModeButton.innerHTML = '<i class="fas fa-moon"></i>'; // 變更為月亮圖示
-         darkModeButton.style.backgroundColor = 'white'; /*白色背景 */
-         darkModeButton.style.color = 'black';  /*黑色圖示*/
-        body.style.backgroundColor = '#f8f9fa';
-        body.style.color = '#343a40';
-        if (sidebar) {
-            sidebar.style.backgroundColor = '#ffffff';
-            sidebar.style.borderRightColor = '#dee2e6';
-        }
-        if (container) {
-            container.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
-        }
-        if (footer) { // 更改 footer 的顏色
-            footer.style.backgroundColor = '#f0f0f0';
-            footer.style.borderTopColor = '#ddd';
-        }
     }
 }
 
