@@ -1,14 +1,16 @@
-/* General Styles */
 body {
-    font-family: 'MyCustomFont', sans-serif; /* 使用自定義字體 */
+    font-family: 'MyCustomFont', sans-serif; /* 使用更現代的字體 */
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); /* 深色漸變背景 */
+    color: #e0e0e0; /* 淺色文字 */
     overflow-x: hidden; /* 防止橫向捲軸 */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-/* 定義自定義字體 */
+/* 定義自定義字體 (如果仍需使用) */
 @font-face {
     font-family: 'MyCustomFont';
     src: url('fonts/myfont.woff2') format('woff2'),
@@ -18,17 +20,26 @@ body {
     font-display: swap;
 }
 
-/* 其他 CSS 樣式 (如前) */
 a {
     text-decoration: none;
-    color: #007bff;
+    color: #8be9fd; /* 淺藍色連結 */
+    transition: color 0.3s ease;
 }
 
-/* Header and Navigation (unchanged) */
+a:hover {
+    color: #6272a4; /* 較深的藍色 */
+}
+
+/* Header and Navigation */
 header {
-    background-color: #333;
+    background-color: rgba(26, 26, 46, 0.8); /* 半透明深色背景 */
+    backdrop-filter: blur(5px); /* 模糊效果 */
     color: #fff;
     padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 nav {
@@ -41,48 +52,100 @@ nav {
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
 nav ul {
     list-style: none;
     display: flex;
+    margin: 0;
+    padding: 0;
 }
 
 nav ul li {
-    margin-left: 1.5rem;
+    margin-left: 2rem;
 }
 
 nav ul li a {
     color: #fff;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: #8be9fd;
+    left: 0;
+    bottom: 0;
+    transition: width 0.3s ease-in-out;
+}
+
+nav ul li a:hover::after {
+    width: 100%;
 }
 
 /* Hero Section (Cover) */
 .hero {
     position: relative;
     overflow: hidden;
-    height: 700px; /* Increased height */
+    height: 80vh; /* 佔用更多視窗高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1; /* 讓hero部分佔據剩餘空間 */
+}
+
+/* 動態背景效果 */
+.animated-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #0f3460, #16213e, #1a1a2e);
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+    opacity: 0.7; /* 增加透明度，讓圖片輪播可見 */
+    z-index: 0; /* 確保在圖片輪播下方 */
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .hero-slides {
-    display: flex;
+    position: absolute; /* 讓圖片輪播作為背景的一部分 */
+    top: 0;
+    left: 0;
     width: calc(100% * 13); /* 13 slides */
-    transition: transform 0.5s ease-in-out;
     height: 100%;
+    display: flex;
+    transition: transform 0.8s ease-in-out; /* 更平滑的過渡 */
+    opacity: 0.3; /* 降低透明度，使其更像背景 */
+    z-index: 1; /* 在動態背景之上，但在疊層之下 */
 }
 
 .hero-slide {
     width: calc(100% / 13);
     flex-shrink: 0;
     height: 100%;
-    overflow: hidden; /* 確保圖片不超出範圍 */
+    overflow: hidden;
 }
 
 .hero-slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* 確保圖片填滿容器 */
+    object-fit: cover;
     display: block;
 }
 
@@ -92,7 +155,7 @@ nav ul li a {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.5); /* 更深的疊層，突出內容 */
     color: white;
     display: flex;
     flex-direction: column;
@@ -100,109 +163,148 @@ nav ul li a {
     justify-content: center;
     text-align: center;
     padding: 2rem;
+    z-index: 2; /* 確保內容在最上層 */
+    backdrop-filter: blur(3px); /* 輕微模糊效果 */
 }
 
 .profile-image-container {
     position: relative;
     z-index: 2;
+    margin-bottom: 2rem; /* 增加間距 */
 }
 
 .profile-image {
-    width: 25vw;
-    max-width: 300px;
+    width: 20vw; /* 略小一點 */
+    max-width: 250px; /* 最大寬度 */
     height: auto;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 1rem;
-    border: 5px solid #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 6px solid #8be9fd; /* 鮮豔的邊框 */
+    box-shadow: 0 0 20px rgba(139, 233, 253, 0.6), 0 0 40px rgba(139, 233, 253, 0.3); /* 發光效果 */
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-image:hover {
+    transform: scale(1.05); /* 懸停放大 */
 }
 
 .hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 3.5rem; /* 更大的標題 */
+    margin-bottom: 0.8rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7); /* 文字發光 */
+    letter-spacing: 1.5px;
 }
 
 .hero p {
-    font-size: 1.2rem;
-    color: #eee;
+    font-size: 1.5rem; /* 更大的段落文字 */
+    color: #b3b3b3;
+    margin-top: 0;
 }
 
 /* Social Links */
 .social-links {
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
 .social-links a {
     display: inline-block;
-    margin: 0 0.5rem;
-    color: white;
-    font-size: 1.5rem;
-    transition: color 0.3s ease;
+    margin: 0 0.8rem;
+    color: #e0e0e0;
+    font-size: 2rem; /* 更大的圖標 */
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .social-links a:hover {
-    color: #ddd;
+    color: #8be9fd; /* 懸停變色 */
+    transform: translateY(-5px) scale(1.1); /* 懸停上浮並放大 */
 }
 
-/* Buttons Section (unchanged) */
+/* Buttons Section */
 .buttons {
-    padding: 2rem 0;
+    padding: 3rem 0; /* 增加上下間距 */
     text-align: center;
+    background-color: rgba(22, 33, 62, 0.7); /* 與主背景協調的深色 */
+    box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.2); /* 內陰影效果 */
 }
 
 .button-container {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    gap: 1.5rem; /* 按鈕之間的間距 */
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .button {
-    padding: 0.8rem 1.5rem; /* Adjust as needed */
-    margin: 0.5rem;       /* Adjust as needed */
-    border-radius: 15px;
-    display: inline-block;
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    padding: 1rem 2.5rem; /* 更大的點擊區域 */
+    border-radius: 10px; /* 稍微方正的圓角 */
+    display: flex; /* 讓內容居中 */
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* 圖標與文字間距 */
+    transition: all 0.4s cubic-bezier(.25,.8,.25,1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
     color: white;
     border: none;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 1.1rem; /* 更大的字體 */
     cursor: pointer;
-	 box-sizing: border-box; /* VERY IMPORTANT */
-    -webkit-box-sizing: border-box; /* For older Safari */
-    -moz-box-sizing: border-box; /* For older Firefox */
-    /* Your other existing button styles (color, background, border-radius, etc.)
-*/
-    overflow: hidden;      /* Hide overflowing content */
-    text-overflow: ellipsis; /* Add ellipsis for long text */
-    white-space: nowrap;    /* Prevent text from wrapping */
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+}
+
+/* 按鈕背景漸變和懸停效果 */
+.button1 { background: linear-gradient(45deg, #2980b9, #3498db); }
+.button2 { background: linear-gradient(45deg, #c0392b, #e74c3c); }
+.button3 { background: linear-gradient(45deg, #8e44ad, #9b59b6); }
+.button4 { background: linear-gradient(45deg, #27ae60, #2ecc71); }
+.button5 { background: linear-gradient(45deg, #34495e, #5a6a7c); } /* 搜尋按鈕 */
+
+.button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1); /* 懸停時的疊層 */
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-in-out;
+    z-index: -1;
+}
+
+.button:hover::before {
+    transform: scaleX(1);
 }
 
 .button:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.4), 0 8px 10px rgba(0,0,0,0.3);
+    transform: translateY(-5px); /* 懸停上浮更多 */
 }
-
-/* Different button colors (unchanged) */
-.button1 { background-color: #2980b9; }
-.button2 { background-color: #e74c3c; }
-.button3 { background-color: #8e44ad; }
-.button4 { background-color: #27ae60; }
-.button5 { background-color: #000; }
 
 .button:active {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Footer (unchanged) */
+/* Footer */
 footer {
-    background-color: #333;
-    color: #fff;
+    background-color: #1a1a2e; /* 深色頁腳 */
+    color: #aaa;
     text-align: center;
-    padding: 1rem 0;
+    padding: 1.5rem 0;
+    margin-top: auto; /* 讓頁腳始終在底部 */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Ripple Effect */
@@ -213,9 +315,9 @@ footer {
     border-radius: 50%;
     transform: scale(0);
     animation: ripple 0.6s linear;
-    background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(139, 233, 253, 0.6); /* 漣漪顏色與主題協調 */
     pointer-events: none;
-    z-index: 9999; /* 確保在最上層 */
+    z-index: 9999;
 }
 
 @keyframes ripple {
@@ -228,68 +330,85 @@ footer {
 /* Apply box-sizing to all elements */
 *, *::before, *::after {
   box-sizing: border-box;
-  -webkit-box-sizing: border-box; /* For older Safari */
-  -moz-box-sizing: border-box; /* For older Firefox */
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
 }
 
 
 /* --- Mobile Specific Styles --- */
 
-/* 1. 320x480 (Very small phones) */
-@media (max-width: 320px) {
-    .button {
-        width: 95%;
-        font-size: 0.7rem;
-        padding: 0.4rem 0.8rem; /* Smaller padding */
-        margin: 0.5rem;        /* Smaller margin */
-    }
-}
-
-/* 2. 640x960 (Older iPhones, some Android) */
-@media (min-width: 321px) and (max-width: 640px) and (max-height: 960px) {
-    .button {
-        width: 90%;
-        padding: 0.6rem 1.2rem; /* Adjust padding */
-        margin: 0.7rem;        /* Adjust margin */
-    }
-}
-
-/* 3. 640x1136 (iPhone 5/5s/SE) */
-@media (min-width: 321px) and (max-width: 640px) and (min-height: 961px) and (max-height: 1136px) {
-    .button {
-        width: 85%;
-        padding: 0.7rem 1.4rem; /* Adjust padding */
-        margin: 0.8rem;        /* Adjust margin */
-    }
-}
-
-/* 4. 760x1334 (iPhone 6/7/8) */
-@media (min-width: 641px) and (max-width: 760px) and (max-height: 1334px) {
-    .button {
-        width: 75%;
-        padding: 0.8rem 1.6rem; /* Adjust padding */
-        margin: 0.9rem;        /* Adjust margin */
-    }
-}
-
-/* 5. 1242x2208 (iPhone 6/7/8 Plus) */
-@media (min-width: 761px) and (max-width: 1242px) and (max-height: 2208px) {
-    .button {
-        width: 65%;
-        font-size: 1rem;
-        padding: 0.9rem 1.8rem; /* Adjust padding */
-        margin: 1rem;        /* Adjust margin */
-    }
-}
-
-/* --- General Mobile Adjustments (Fallback) --- */
+/* 通用手機調整 */
 @media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        padding: 0 1rem;
+    }
+
+    nav ul {
+        margin-top: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    nav ul li {
+        margin: 0.5rem 1rem;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+
+    .profile-image {
+        width: 35vw; /* 手機上圖片更大 */
+        max-width: 200px;
+    }
+
+    .social-links a {
+        font-size: 1.8rem;
+        margin: 0 0.6rem;
+    }
+
     .button-container {
         flex-direction: column;
         align-items: center;
+        gap: 1rem;
     }
 
     .button {
-        width: 90%; /* Or adjust as needed */
+        width: 90%; /* 手機上按鈕佔滿寬度 */
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* 針對更小的手機螢幕 */
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .profile-image {
+        width: 45vw;
+    }
+
+    .social-links a {
+        font-size: 1.5rem;
+    }
+
+    .button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
     }
 }

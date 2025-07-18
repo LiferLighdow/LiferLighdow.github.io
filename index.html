@@ -7,13 +7,17 @@
     <meta name="description" content="Life is like a symphony, with cause and effect composing its beautiful melody.">
     <meta name="keywords" content="Lifer_Lighdow, Lifer, Lighdow">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Font Awesome for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" xintegrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts: Poppins for general text, Montserrat for a modern touch -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="icon" href="images/logo.ico" type="image/x-icon" / >
-    <link rel="shortcut icon" href="images/logo.ico" type="image/x-icon" / >
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-	 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Material Symbols Outlined for the search icon -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
+    <!-- Favicon -->
+    <link rel="icon" href="images/logo.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="images/logo.ico" type="image/x-icon" />
 </head>
 <body>
 
@@ -21,15 +25,18 @@
         <nav>
             <div class="logo">Lifer_Lighdow</div>
             <ul>
-                <li><a href="index">Home</a></li>
+                <li><a href="index.html">Home</a></li>
                 <li><a href="music">Music</a></li>
-                <li><a href="game">Games</a></li>
-                <li><a href="Contact">Contact</a></li>
+                <li><a href="game.html">Games</a></li>
+                <li><a href="Contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <section class="hero">
+        <!-- 動態背景層 -->
+        <div class="animated-background"></div>
+        <!-- 圖片輪播層 (可選擇保留或移除，此處保留並使其更為背景化) -->
         <div class="hero-slides">
             <div class="hero-slide"><img src="images/hero-slide1.jpg" alt="Slide 1"></div>
             <div class="hero-slide"><img src="images/hero-slide2.jpg" alt="Slide 2"></div>
@@ -49,9 +56,9 @@
             <div class="profile-image-container">
                 <img src="images/profile.jpg" alt="Lifer_Lighdow" class="profile-image">
                 <div class="social-links">
-                    <a href="https://www.youtube.com/channel/UCQV71earvPicg7EbVlcbO-g/%2520" target="_blank"><i class="fab fa-youtube"></i></a>
-                    <a href="https://x.com/LiferLighdow" target="_blank"><i class="fab fa-twitter"></i></a>
-                    <a href="Contact" target="_blank"><i class="fas fa-envelope"></i></a>
+                    <a href="https://www.youtube.com/channel/UCQV71earvPicg7EbVlcbO-g/%2520" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://x.com/LiferLighdow" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="Contact.html" target="_blank" aria-label="Email"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
             <div class="hero-content">
@@ -63,11 +70,13 @@
 
     <section class="buttons">
         <div class="button-container">
-            <a href="Index/English website" class="button button1">English</a>
-            <a href="Index/日本語ウェブサイト" class="button button2">日本語</a>
-            <a href="Index/繁中網頁" class="button button3">繁體中文</a>
-            <a href="Index/简中网页" class="button button4">简体中文</a>
-	    <a href="search" class="button button5"><span class="material-symbols-outlined">search</span></a>
+            <a href="Index/English website.html" class="button button1">English</a>
+            <a href="Index/日本語ウェブサイト.html" class="button button2">日本語</a>
+            <a href="Index/繁中網頁.html" class="button button3">繁體中文</a>
+            <a href="Index/简中网页.html" class="button button4">简体中文</a>
+            <a href="search.html" class="button button5">
+                <span class="material-symbols-outlined">search</span>
+            </a>
         </div>
     </section>
 
@@ -77,13 +86,12 @@
 
     <script src="script.js"></script>
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-RGZTFS780N"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-RGZTFS780N');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RGZTFS780N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RGZTFS780N');
+    </script>
 </body>
 </html>
