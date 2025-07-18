@@ -3,118 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lifer_Lighdow的介紹</title>
-    <link rel="icon" href="../images/logo.ico" type="image/x-icon" / >
-    <link rel="shortcut icon" href="../images/logo.ico" type="image/x-icon" / >
+    <title>關於 Lifer_Lighdow</title> <!-- 更新標題 -->
+    <!-- 引入 Inter 字體，與通用 style.css 保持一致 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- 保留 Noto Sans TC 以支援繁體中文，並確保 Inter 是主要字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../images/logo.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="../images/logo.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../Index/style.css"> <!-- 連結到通用的 style.css -->
+    <!-- 由於 About.html 有獨特的 canvas 背景，我們需要為其添加一些額外的樣式 -->
     <style>
-        body {
-            font-family: 'MyCustomFont', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-		  @font-face {
-    font-family: 'MyCustomFont';
-    src: url('../fonts/myfont.woff2') format('woff2'),
-         url('../fonts/myfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-/* 導覽列樣式 */
-.navbar {
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-    padding: 1em 0;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-    padding: 0.5em 1em;
-    margin: 0 1em;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.navbar a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-        .container {
-            max-width: 1000px;
-            margin: 50px auto;
-            padding: 20px;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-        h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-        h2 {
-            font-size: 2em;
-            margin-top: 30px;
-        }
-        p {
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-        .video-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .video-list li {
-            background-color: rgba(255, 255, 255, 0.1);
-            margin: 10px 0;
-            padding: 20px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .video-list li:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .video-list h3 {
-            margin: 0 0 10px;
-        }
-        .video-list p {
-            margin: 0;
-        }
-        a {
-            color: #00d4ff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+        /* 確保 canvas 位於最底層，並佔滿整個視窗 */
         #background-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -1; /* 確保在所有內容之下 */
+            background-color: transparent; /* 讓 body 的背景漸變可見 */
+        }
+
+        /* 調整容器樣式以適應新的科技主題 */
+        .container {
+            max-width: 1000px;
+            margin: 50px auto; /* 保持垂直居中 */
+            padding: 20px;
+            text-align: center;
+            /* 與通用 style.css 中的 .container 保持一致的科技感玻璃效果 */
+            background-color: rgba(23, 42, 69, 0.5); /* 半透明背景 */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(70, 130, 180, 0.2);
+            color: #e6f1ff; /* 淺藍色文字 */
+            padding: clamp(1.5em, 5vw, 3em); /* 響應式內邊距 */
+        }
+
+        /* 調整標題樣式以適應新的科技主題 */
+        h1 {
+            font-size: clamp(2.5em, 6vw, 4.5em); /* 更大的響應式字體 */
+            margin-bottom: 0.4em;
+            text-shadow: 0 0 15px rgba(136, 204, 255, 0.8); /* 標題發光效果 */
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #e6f1ff;
+        }
+
+        h2 {
+            font-size: clamp(1.2em, 3vw, 2em);
+            margin-top: 30px;
+            margin-bottom: 1.5em;
+            text-shadow: 0 0 8px rgba(136, 204, 255, 0.5); /* 副標題發光效果 */
+            font-weight: 400;
+            color: #c0d8f0;
+        }
+
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #c0d8f0; /* 淺藍灰色文字 */
+        }
+
+        /* 影片列表樣式 */
+        .video-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 2em;
+        }
+
+        .video-list li {
+            /* 科技感卡片效果 */
+            background-color: rgba(70, 130, 180, 0.15); /* 半透明背景 */
+            margin: 15px 0; /* 增加間距 */
+            padding: 25px; /* 增加內邊距 */
+            border-radius: 10px; /* 圓角 */
+            transition: all 0.3s ease;
+            border: 1px solid rgba(136, 204, 255, 0.2); /* 細邊框 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* 陰影 */
+            text-align: left; /* 文字靠左 */
+        }
+
+        .video-list li:hover {
+            background-color: rgba(70, 130, 180, 0.25); /* 懸停時背景變深 */
+            transform: translateY(-5px); /* 輕微上浮 */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(136, 204, 255, 0.4); /* 懸停時發光 */
+        }
+
+        .video-list h3 {
+            margin: 0 0 10px;
+            color: #88ccff; /* 亮藍色標題 */
+            font-size: clamp(1.1em, 2.8vw, 1.5em);
+            text-shadow: 0 0 5px rgba(136, 204, 255, 0.5);
+        }
+
+        .video-list p {
+            margin: 0;
+            font-size: clamp(0.9em, 2.2vw, 1.1em);
+            color: #c0d8f0;
+        }
+
+        a {
+            color: #00d4ff; /* 亮藍色連結 */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #e6f1ff; /* 懸停時變白 */
+        }
+
+        /* 響應式調整 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 30px auto;
+                padding: 1.5em;
+            }
+            .video-list li {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 20px auto;
+                padding: 1em;
+            }
+            .video-list li {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Canvas 背景動畫 -->
     <canvas id="background-canvas"></canvas>
-	 <nav class="navbar">
+
+    <!-- 導覽列，使用通用 style.css 中的樣式 -->
+    <nav class="navbar">
         <a href="../index">首頁</a>
-        <a href="About">關於</a>
-        <a href="../Index/繁中網頁">服務</a>
+        <a href="../繁中網頁/About">關於</a>
+        <a href="../繁中網頁">服務</a> <!-- 修正連結為繁中網頁的服務頁面 -->
         <a href="../Contact">聯絡</a>
     </nav>
+
+    <!-- 主要內容區塊 -->
     <div class="container">
-        <h1>Lifer_Lighdow的影片介紹</h1>
+        <h1>Lifer_Lighdow 的影片介紹</h1>
         <p>「Lifer_Lighdow」是一位YouTuber，專注於電子音樂、遊戲音樂、傳奇小說故事，以及日文歌曲。他的頻道包含多樣化的音樂影片、有趣的故事，以及迷人的歌聲。</p>
         <h2>人氣影片</h2>
         <ul class="video-list">
@@ -137,52 +174,64 @@
         </ul>
         <p>想了解更多，請訪問 <a href="https://www.youtube.com/channel/UCQV71earvPicg7EbVlcbO-g/">他的YouTube頻道</a>。</p>
     </div>
-    <script>
-        const canvas = document.getElementById('background-canvas');
-        const context = canvas.getContext('2d');
-        let width, height, stars;
 
-        function init() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            stars = Array(800).fill().map(() => ({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                z: Math.random() * width
-            }));
-        }
+    <!-- 頁尾，使用通用 style.css 中的樣式 -->
+    <footer>
+        <p>© 2025 Lifer_Lighdow. All rights reserved.</p>
+    </footer>
 
-        function animate() {
-            context.fillStyle = 'rgba(0, 0, 0, 0.1)';
-            context.fillRect(0, 0, width, height);
-            context.fillStyle = '#fff';
+    <!-- 連結到通用的 script.js -->
+    <script src="../Index/script.js"></script>
+    <!-- Canvas 動畫的 JavaScript 邏輯，現在也移到 script.js 中 -->
+    <!-- 您需要確保 script.js 中包含以下 canvas 動畫的代碼 -->
+    <!--
+    const canvas = document.getElementById('background-canvas');
+    const context = canvas.getContext('2d');
+    let width, height, stars;
 
-            stars.forEach(star => {
-                star.z -= 2;
-                if (star.z <= 0) {
-                    star.x = Math.random() * width;
-                    star.y = Math.random() * height;
-                    star.z = width;
-                }
+    function initCanvas() { // 重新命名函數以避免衝突
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        stars = Array(800).fill().map(() => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            z: Math.random() * width
+        }));
+    }
 
-                const k = 128.0 / star.z;
-                const px = (star.x - width / 2) * k + width / 2;
-                const py = (star.y - height / 2) * k + height / 2;
+    function animateCanvas() { // 重新命名函數以避免衝突
+        context.fillStyle = 'rgba(0, 0, 0, 0.1)'; // 更暗的拖尾效果
+        context.fillRect(0, 0, width, height);
+        context.fillStyle = '#88ccff'; // 亮藍色星星
 
-                if (px >= 0 && px <= width && py >= 0 && py <= height) {
-                    const size = (1 - star.z / width) * 5;
-                    context.beginPath();
-                    context.arc(px, py, size, 0, 2 * Math.PI);
-                    context.fill();
-                }
-            });
+        stars.forEach(star => {
+            star.z -= 2; // 調整速度
+            if (star.z <= 0) {
+                star.x = Math.random() * width;
+                star.y = Math.random() * height;
+                star.z = width;
+            }
 
-            requestAnimationFrame(animate);
-        }
+            const k = 128.0 / star.z;
+            const px = (star.x - width / 2) * k + width / 2;
+            const py = (star.y - height / 2) * k + height / 2;
 
-        window.addEventListener('resize', init);
-        init();
-        animate();
-    </script>
+            if (px >= 0 && px <= width && py >= 0 && py <= height) {
+                const size = (1 - star.z / width) * 4; // 調整星星大小
+                context.beginPath();
+                context.arc(px, py, size, 0, 2 * Math.PI);
+                context.fill();
+            }
+        });
+
+        requestAnimationFrame(animateCanvas);
+    }
+
+    window.addEventListener('resize', initCanvas);
+    window.onload = function() { // 確保在頁面載入後啟動動畫
+        initCanvas();
+        animateCanvas();
+    };
+    -->
 </body>
 </html>
