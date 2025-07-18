@@ -1,0 +1,477 @@
+/* General Styles */
+html,
+body {
+    height: 100%; /* Ensure full height for background gradient */
+    margin: 0;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Montserrat', 'Poppins', sans-serif; /* 使用更現代的字體 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); /* 深色漸變背景 */
+    color: #e0e0e0; /* 淺色文字 */
+    transition: background 0.5s ease; /* Smooth transition */
+}
+
+/* 自定義字體 (如果仍需使用) */
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('fonts/myfont.woff2') format('woff2'),
+         url('fonts/myfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+a {
+    text-decoration: none;
+    color: #8be9fd; /* 淺藍色連結 */
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #6272a4; /* 較深的藍色 */
+}
+
+/* Top Container for Language Selector and Clock */
+.top-container {
+    display: flex;
+    justify-content: flex-end; /* Align clock to right */
+    align-items: center;
+    margin-top: 2rem; /* 增加與 header 的間距 */
+    margin-bottom: 2rem; /* 增加與 Live2D 的間距 */
+    width: 90%; /* 佔用大部分寬度 */
+    max-width: 1200px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Clock Container */
+.calendar-container {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* 元素之間的間距 */
+    background-color: rgba(22, 33, 62, 0.7); /* 半透明深色背景 */
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(139, 233, 253, 0.2);
+    z-index: 5; /* Ensure clock is visible */
+}
+
+.calendar-container h1 {
+    font-size: 1.2rem; /* 較小的標題 */
+    margin: 0;
+    font-weight: 700;
+    color: #8be9fd; /* 淺藍色 */
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px rgba(139, 233, 253, 0.3);
+}
+
+.date,
+.year,
+.time {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: #e0e0e0;
+}
+
+/* Time Pulse Animation */
+.time {
+    animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        color: #e0e0e0;
+    }
+    100% {
+        transform: scale(1.05);
+        opacity: 0.9;
+        color: #8be9fd;
+    }
+}
+
+/* Live2D Platform Title */
+#title-container {
+    text-align: center;
+    font-size: 2.2rem; /* 更大的標題 */
+    font-weight: 700;
+    margin-bottom: 2rem; /* 增加與 Live2D 的距離 */
+    color: #fff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+    letter-spacing: 1px;
+}
+
+/* Live2D Stage */
+#stage {
+    position: relative; /* Make it a positioning context for absolute buttons */
+    margin-bottom: 3rem; /* 增加與遊戲連結的間距 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px; /* 增加內距 */
+    background-color: rgba(22, 33, 62, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(139, 233, 253, 0.2);
+}
+
+#inner {
+    position: relative;
+    background-color: #333; /* Live2D 內部的背景色 */
+    clip-path: circle(120px at center);
+    border-radius: 50%; /* 確保圓形裁剪 */
+    overflow: hidden; /* 隱藏超出部分 */
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); /* 內陰影 */
+}
+
+#cover {
+    position: absolute;
+    background: linear-gradient(to bottom, #ff69b4, #ffc0cb); /* Gradient pink */
+    width: 100%;
+    height: 100%;
+    bottom: 10%;
+    transition: all 1s ease-in-out; /* 更平滑的過渡 */
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, .1);
+}
+
+#text {
+    position: absolute;
+    top: 50%; /* 垂直居中 */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    opacity: 0.7; /* 稍微提高透明度 */
+    font-weight: bold;
+    color: #fff; /* 文字顏色 */
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+#text .top,
+#text .bottom {
+    font-size: 1.5em; /* 調整大小 */
+    display: block;
+    margin: 5px 0;
+}
+
+#text .bottom {
+    color: #aaffaa; /* 淺綠色 */
+}
+
+#detail {
+    position: absolute;
+    background: rgba(255, 255, 255, .1);
+    width: 100%;
+    height: 10px;
+    bottom: 0;
+}
+
+#handle {
+    position: absolute;
+    background: #666; /* 深灰色 */
+    bottom: -5px; /* 調整位置 */
+    box-shadow: 0 1px 0 1px rgba(0, 0, 0, .1);
+    height: 10px; /* 調整高度 */
+    left: 50%;
+    margin-left: -20px; /* 調整寬度 */
+    width: 40px;
+    cursor: pointer;
+    border-radius: 5px; /* 圓角 */
+    transition: background 0.3s ease;
+}
+
+#handle:hover {
+    background: #8be9fd; /* 懸停變色 */
+}
+
+#live2d {
+    cursor: grab;
+    height: 350px; /* 調整大小 */
+    width: 350px;
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(139, 233, 253, 0.5); /* 發光效果 */
+}
+
+#live2d:active {
+    cursor: grabbing;
+}
+
+/* Control Buttons (Info, Music, Refresh) - Absolutely positioned within #stage */
+#stage button {
+    position: absolute; /* Revert to absolute positioning */
+    background-color: rgba(139, 233, 253, 0.2); /* 半透明淺藍色 */
+    color: #8be9fd; /* 圖標顏色 */
+    border: 1px solid #8be9fd;
+    border-radius: 50%; /* 圓形按鈕 */
+    width: 50px; /* 尺寸 */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 10; /* Ensure buttons are above other elements */
+}
+
+/* General hover for info and refresh buttons */
+#stage button:not(#music-toggle):hover {
+    background-color: #8be9fd;
+    color: #1a1a2e; /* 懸停時顏色反轉 */
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+#stage button:active {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#info {
+    left: 40px;
+    bottom: 20px;
+}
+
+#refresh {
+    right: 40px;
+    bottom: 20px;
+}
+
+#music-toggle {
+    /* Positioned relative to #stage, inside the frame */
+    bottom: 20px; /* Adjust as needed to be inside the frame */
+    left: 50%;
+    transform: translateX(-50%); /* Keep horizontally centered */
+    width: 50px; /* Consistent size */
+    height: 50px; /* Consistent size */
+}
+
+/* Specific hover for music toggle to combine transforms */
+#music-toggle:hover {
+    transform: translateX(-50%) translateY(-10px) scale(1.1); /* 向上移動 10px，保持水平居中 */
+    background-color: #8be9fd; /* 懸停時顏色反轉 */
+    color: #1a1a2e;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+
+/* Game Link Buttons Container - Added horizontal scroll */
+#game-links-container {
+    display: flex; /* Use flexbox */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    justify-content: flex-start; /* Align items to the start for scrolling */
+    gap: 15px; /* 按鈕間距 */
+    max-width: 100%; /* Take full width */
+    padding: 0 20px; /* Add padding for scrollable area */
+    margin-top: 8rem; /* 增加上方空位 */
+    margin-bottom: 3rem; /* 保持下方空位 */
+    scroll-snap-type: x mandatory; /* Optional: Snap to items */
+    padding-bottom: 15px; /* Space for scrollbar */
+    z-index: 20; /* Ensure game links are on top of other elements */
+    background-color: rgba(22, 33, 62, 0.7); /* Add a background to ensure stacking context */
+    border-radius: 10px; /* Match other rounded elements */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Add shadow */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#game-links-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#game-links-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.game-link {
+    flex-shrink: 0; /* Prevent items from shrinking */
+    padding: 12px 25px; /* 調整內距 */
+    background: linear-gradient(45deg, #2980b9, #3498db); /* 藍色漸變 */
+    color: white;
+    border: none;
+    border-radius: 10px; /* 圓角 */
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; /* 讓內容居中 */
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.05rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    min-width: 120px; /* 最小寬度 */
+    scroll-snap-align: start; /* Optional: Snap to start of item */
+    position: relative; /* Establish a new stacking context for z-index on hover */
+}
+
+.game-link:hover {
+    background: linear-gradient(45deg, #3498db, #2980b9); /* 懸停時漸變反轉 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    z-index: 21; /* Ensure hovered game link is on top of siblings */
+}
+
+.game-link:active {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+footer {
+    background-color: #1a1a2e; /* 深色頁腳 */
+    color: #aaa;
+    text-align: center;
+    padding: 1.5rem 0;
+    width: 100%; /* Footer 寬度 100% */
+    margin-top: auto; /* 將 Footer 推到最下方 */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Ripple Effect (Optional, if you want it on this page too) */
+.ripple {
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    background-color: rgba(139, 233, 253, 0.6);
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Apply box-sizing to all elements */
+*, *::before, *::after {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+/* --- Mobile Specific Styles --- */
+@media (max-width: 768px) {
+    .top-container {
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        width: 95%;
+    }
+
+    .calendar-container {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .calendar-container h1 {
+        font-size: 1.1rem;
+    }
+
+    .date, .year, .time {
+        font-size: 0.9rem;
+    }
+
+    #title-container {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    #stage {
+        padding: 15px;
+        margin-bottom: 2rem;
+    }
+
+    #live2d {
+        width: 250px;
+        height: 250px;
+    }
+
+    /* Control buttons on mobile */
+    #stage button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+
+    #info {
+        left: 15px; /* Adjust for smaller screens */
+        bottom: 15px;
+    }
+
+    #refresh {
+        right: 15px; /* Adjust for smaller screens */
+        bottom: 15px;
+    }
+
+    #music-toggle {
+        bottom: 20px; /* Adjusted for mobile to be inside frame */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 45px;
+        height: 45px;
+    }
+
+    #game-links-container {
+        gap: 10px;
+        margin: 3rem auto; /* Adjusted for mobile */
+        padding: 0 15px;
+    }
+
+    .game-link {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+        min-width: unset; /* Allow smaller width on mobile */
+        flex-grow: 1; /* Allow buttons to grow to fill space */
+    }
+}
+
+@media (max-width: 480px) {
+    #title-container {
+        font-size: 1.5rem;
+    }
+    #live2d {
+        width: 200px;
+        height: 200px;
+    }
+    /* Control buttons on very small mobile */
+    #stage button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    #info {
+        left: 10px;
+        bottom: 10px;
+    }
+    #refresh {
+        right: 10px;
+        bottom: 10px;
+    }
+    #music-toggle {
+        bottom: 15px; /* Adjusted for very small screens to be inside frame */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 40px;
+    }
+    .game-link {
+        padding: 8px 15px;
+        font-size: 0.85rem;
+    }
+}
