@@ -53,6 +53,13 @@ const pageList = [
     url: "game.html",
     description: "Our mini game interface",
     keywords: ["遊戲", "電玩", "Game"]
+  },
+
+  {
+    title: "P̵̛̥̱̯͚͚̂̔̔̀͒͢r̷̨͖͖̤̄̑͛̉̉͝ǫ̶̛̯̯̭̰̿̌j̵̧̖̥͍̖͒̐͡e҈̢̛͔͙̪͑́̓̆͐c̷̢̣͍̰̗̿̂͊̉͝ͅẗ̵̝͖́̊̋̾̑͢͡4҈̡̖̠̱҇̏͗̔͌̎7̷̨̳̳̮҇̅̃͑",
+    url: "project47/files.html",
+    description: "8%8]^8#[$*6[%&3[596]^3%&$[$8$3^#[^6%^$]3[5@[87&[[#5379#9]93]9&*6$[*%57^2^%&]7389",
+    keywords: ["遊戲", "電玩", "Game"]
   }
 
 ];
