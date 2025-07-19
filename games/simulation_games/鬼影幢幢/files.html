@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鬼影幢幢</title>
+  <style>
+    body {
+      font-family: 'MyCustomFont', sans-serif;
+      background-color: #222;
+      color: #ddd;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-image: url('bg.webp'); /* 更恐怖的背景圖片 */
+      background-size: cover;
+      background-blend-mode: multiply;
+      background-color: rgba(34, 34, 34, 0.7); /* 使用 rgba，最後一個值是透明度 (0 ~ 1) */
+    }
+
+    /* 定義自定義字體 */
+    @font-face {
+        font-family: 'MyCustomFont';
+        src: url('../../fonts/myfont.woff2') format('woff2'), url('../../fonts/myfont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 800px;
+      padding: 30px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); /* 更強烈的紅色陰影 */
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      color: #ff3333;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.9);
+      font-size: 3em;
+    }
+
+    section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: block;
+      animation: fadeIn 1s ease-out;
+    }
+
+    p {
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: #660000;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 7px;
+      transition: background-color 0.3s ease;
+      border: 2px solid #880000;
+      font-size: 1.1em;
+      cursor: pointer;
+      margin: 5px; /* Add some margin for buttons */
+    }
+
+    .button:hover {
+      background-color: #880000;
+    }
+
+    /* Style for disabled buttons */
+    .button.disabled {
+      background-color: #444;
+      border-color: #555;
+      color: #999;
+      cursor: not-allowed;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #888;
+    }
+
+    /* 動畫效果 */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-out;
+    }
+
+    #age-verification {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #age-verification-content {
+      background-color: #333;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+
+    #age-verification-content h1 {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        color: #ff4444;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+
+    #age-verification-content p {
+        font-size: 1.2em;
+        margin-bottom: 25px;
+    }
+
+    #age-verification-content button {
+        padding: 15px 30px;
+        font-size: 1.2em;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    #confirm-age {
+        background-color: #55aa55;
+        color: #fff;
+        margin-right: 10px;
+    }
+
+    #confirm-age:hover {
+        background-color: #66bb66;
+    }
+
+    #decline-age {
+        background-color: #aa5555;
+        color: #fff;
+    }
+
+    #decline-age:hover {
+        background-color: #bb6666;
+    }
+
+    #ending-log {
+      width: 300px;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 15px;
+      color: #ddd;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+      margin-right: 20px; /* 與主要內容區隔 */
+      flex-shrink: 0; /* 防止被壓縮 */
+    }
+
+    #ending-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    #ending-list li {
+      margin-bottom: 12px;
+      font-size: 1em;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0, 0.7); /* 更深的背景 */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      transition: background-color 0.3s ease;
+    }
+
+    #ending-list li:hover {
+      background-color: rgba(0, 0, 0, 0.9); /* 更深的hover效果 */
+    }
+
+    .main-container {
+      display: flex;
+      width: 100%;
+      min-height: 70vh;
+    }
+
+    main {
+      flex-grow: 1; /* 佔據剩餘空間 */
+    }
+
+    .hidden {
+      display: none; /* 用於隱藏記錄 */
+    }
+
+    .control-buttons {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      gap: 10px; /* 按鈕之間的間距 */
+      z-index: 10;
+    }
+
+    .control-buttons button {
+      padding: 10px 15px;
+      background-color: #555;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .control-buttons button:hover {
+      background-color: #777;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1001; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #333;
+      margin: auto;
+      padding: 30px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+      text-align: center;
+      position: relative;
+    }
+
+    .close-button {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+    }
+
+    .close-button:hover,
+    .close-button:focus {
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .ending-achieved-message {
+        font-size: 1.5em;
+        color: #ffcc00;
+        margin-bottom: 20px;
+    }
+
+    /* 存取被拒絕疊加層 */
+    .access-denied-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95); /* 近乎全黑 */
+        color: #ff0000; /* 紅色警告 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 3em;
+        font-weight: bold;
+        text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255, 0, 0, 0.7);
+        z-index: 10001; /* 確保在最上層 */
+        animation: glitch-overlay 0.8s infinite alternate; /* 故障動畫 */
+        text-align: center;
+        padding: 1em;
+        box-sizing: border-box;
+    }
+
+    .access-denied-overlay p {
+        margin: 0.5em 0;
+        animation: text-flicker-red 0.5s infinite alternate;
+    }
+
+    @keyframes glitch-overlay {
+        0% { transform: translate(0, 0); opacity: 1; }
+        25% { transform: translate(5px, -5px); opacity: 0.9; }
+        50% { transform: translate(-5px, 5px); opacity: 1; }
+        75% { transform: translate(2px, 2px); opacity: 0.95; }
+        100% { transform: translate(-2px, -2px); opacity: 1; }
+    }
+
+    @keyframes text-flicker-red {
+        0% { opacity: 1; text-shadow: 0 0 15px #ff0000; }
+        50% { opacity: 0.8; text-shadow: 0 0 5px #ff0000; }
+        100% { opacity: 1; text-shadow: 0 0 15px #ff0000; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 存取被拒絕疊加層 -->
+  <div id="accessDeniedOverlay" class="access-denied-overlay" style="display: none;">
+      <p>存取被拒絕</p>
+      <p>未經授權的連線嘗試</p>
+      <p>系統已鎖定</p>
+  </div>
+
+  <div id="age-verification">
+    <div id="age-verification-content">
+      <h1>內容警告</h1>
+      <p>本網站包含可能不適合所有觀眾的內容，包括恐怖意象、暴力描述和令人不安的主題。您是否已滿18歲，並願意繼續？</p>
+      <button id="confirm-age">我已滿18歲，繼續</button>
+      <button id="decline-age">未滿18歲，離開</button>
+    </div>
+  </div>
+
+  <div class="container" id="main-content" style="display: none;">
+    <header>
+      <h1>鬼影幢幢</h1>
+    </header>
+
+    <div class="control-buttons">
+      <button id="toggle-log-button">顯示/隱藏 探險成就</button>
+      <button id="clear-achievements-button">清除成就</button>
+    </div>
+
+    <div class="main-container">
+        <div id="ending-log" class="hidden">
+            <h3>探險成就</h3>
+            <ul id="ending-list">
+              </ul>
+          </div>
+
+    <main>
+      </main>
+    </div>
+
+    <footer>
+      <p>© 2025 Lifer_Lighdow——鬼影幢幢</p>
+    </footer>
+  </div>
+
+  <div id="endingModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <p class="ending-achieved-message">恭喜你達成結局！</p>
+      <h2 id="achievedEndingTitle"></h2>
+      <p id="achievedEndingText"></p>
+      <button class="button" onclick="showSection('gameIntro'); closeModal()">重新開始</button>
+    </div>
+  </div>
+
+  <script>
+    console.log('鬼影幢幢.html 腳本開始執行');
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const accessDeniedOverlay = document.getElementById('accessDeniedOverlay');
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessGranted = urlParams.get('access_granted');
+
+        if (accessGranted !== 'true') {
+            accessDeniedOverlay.style.display = 'flex';
+            document.body.style.pointerEvents = 'none'; // 禁用所有互動
+            // 可以選擇性地隱藏其他內容，只顯示拒絕訊息
+            document.getElementById('age-verification').style.display = 'none';
+            document.getElementById('main-content').style.display = 'none';
+            return; // 阻止後續腳本執行
+        } else {
+            // 如果有 access_granted=true，移除該參數以防止直接複製連結後門
+            if (window.history.replaceState) {
+                const newUrl = window.location.origin + window.location.pathname;
+                window.history.replaceState({path: newUrl}, '', newUrl);
+            }
+        }
+
+        // 年齡驗證
+        const ageVerification = document.getElementById('age-verification');
+        const mainContent = document.getElementById('main-content');
+        const confirmAgeButton = document.getElementById('confirm-age');
+        const declineAgeButton = document.getElementById('decline-age');
+
+        confirmAgeButton.addEventListener('click', function() {
+          ageVerification.style.display = 'none';
+          mainContent.style.display = 'block';
+        });
+
+        declineAgeButton.addEventListener('click', function() {
+          // Use a custom modal or message box instead of alert()
+          const modal = document.createElement('div');
+          modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+          `;
+          modal.innerHTML = `
+            <div style="background-color: #333; padding: 30px; border-radius: 10px; text-align: center; color: #fff; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);">
+              <p style="font-size: 1.2em; margin-bottom: 25px;">您已選擇離開。</p>
+              <button style="padding: 10px 20px; font-size: 1em; border-radius: 5px; border: none; cursor: pointer; background-color: #aa5555; color: #fff;" onclick="window.location.href = 'https://liferlighdow.github.io';">確認</button>
+            </div>
+          `;
+          document.body.appendChild(modal);
+        });
+
+        // 取得探險記錄和切換按鈕的元素
+        const endingLogElement = document.getElementById('ending-log');
+        const toggleLogButton = document.getElementById('toggle-log-button');
+        const clearAchievementsButton = document.getElementById('clear-achievements-button'); // 新增的清除成就按鈕
+
+        // 切換探險記錄的顯示狀態
+        toggleLogButton.addEventListener('click', function() {
+          endingLogElement.classList.toggle('hidden');
+        });
+
+        // 為清除成就按鈕添加事件監聽器
+        clearAchievementsButton.addEventListener('click', function() {
+          // 使用 confirm 替代方案
+          const confirmationModal = document.createElement('div');
+          confirmationModal.id = 'clearConfirmationModal'; // 給確認模態視窗一個ID
+          confirmationModal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+          `;
+          confirmationModal.innerHTML = `
+            <div style="background-color: #333; padding: 30px; border-radius: 10px; text-align: center; color: #fff; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);">
+              <p style="font-size: 1.2em; margin-bottom: 25px;">您確定要清除所有探險成就嗎？此操作無法復原。</p>
+              <button style="padding: 10px 20px; font-size: 1em; border-radius: 5px; border: none; cursor: pointer; background-color: #aa5555; color: #fff; margin-right: 10px;" id="confirmClear">確定</button>
+              <button style="padding: 10px 20px; font-size: 1em; border-radius: 5px; border: none; cursor: pointer; background-color: #55aa55; color: #fff;" id="cancelClear">取消</button>
+            </div>
+          `;
+          document.body.appendChild(confirmationModal);
+
+          document.getElementById('confirmClear').addEventListener('click', function() {
+            if (typeof clearAllEndings === 'function') {
+              clearAllEndings();
+              document.getElementById('clearConfirmationModal').remove(); // 透過ID移除確認模態視窗
+              // 顯示一個成功訊息，並在點擊「確定」後重啟遊戲
+              const successModal = document.createElement('div');
+              successModal.id = 'successConfirmationModal'; // 給成功模態視窗一個ID
+              successModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+              `;
+              successModal.innerHTML = `
+                <div style="background-color: #333; padding: 30px; border-radius: 10px; text-align: center; color: #fff; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);">
+                  <p style="font-size: 1.2em; margin-bottom: 25px;">所有成就已清除！</p>
+                  <button style="padding: 10px 20px; font-size: 1em; border-radius: 5px; border: none; cursor: pointer; background-color: #55aa55; color: #fff;" onclick="showSection('gameIntro'); document.getElementById('successConfirmationModal').remove();">確定</button>
+                </div>
+              `;
+              document.body.appendChild(successModal);
+            } else {
+              console.error('clearAllEndings 函數未定義。');
+            }
+          });
+
+          document.getElementById('cancelClear').addEventListener('click', function() {
+            document.getElementById('clearConfirmationModal').remove(); // 透過ID移除確認模態視窗
+          });
+        });
+
+
+        // Get the modal elements
+        const endingModal = document.getElementById('endingModal');
+        const closeButton = document.querySelector('.close-button');
+        const achievedEndingTitle = document.getElementById('achievedEndingTitle');
+        const achievedEndingText = document.getElementById('achievedEndingText');
+
+        // When the user clicks on <span> (x), close the modal
+        closeButton.onclick = function() {
+          closeModal();
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == endingModal) {
+            closeModal();
+          }
+        }
+
+        function showModal(title, text) {
+          achievedEndingTitle.innerText = title;
+          achievedEndingText.innerHTML = text.replace(/\n/g, '<br>');
+          endingModal.style.display = 'flex'; // Use flex to center the modal content
+        }
+
+        function closeModal() {
+          endingModal.style.display = 'none';
+        }
+        
+        // 確保在 DOM 完全載入後才初始化遊戲
+        console.log('DOM 內容已載入，開始初始化遊戲。');
+        loadAchievedEndings(); // Load endings from local storage
+        updateEndingLogDisplay(); // Update the log display
+        showSection('gameIntro'); // Display the intro section
+    });
+  </script>
+
+  <script src="story.js"></script>
+
+</body>
+</html>
