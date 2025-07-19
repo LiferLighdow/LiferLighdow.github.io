@@ -1,0 +1,124 @@
+/* 共用樣式 - 針對官能小說風格的調整 */
+body {
+    /* 更深沉的背景色，營造私密氛圍 */
+    font-family: 'Georgia', serif; /* 選擇更具文學感和優雅的襯線字體 */
+    background-color: #1a1a1a; /* 深炭灰色 */
+    color: #e0e0e0; /* 淺灰色文字，與深色背景形成對比 */
+    line-height: 1.8; /* 增加行高，提升閱讀舒適度 */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    max-width: 960px;
+    margin: 40px auto; /* 增加上下邊距，讓內容更突出 */
+    background-color: #2c2c2c; /* 容器背景色，比 body 稍亮，有層次感 */
+    padding: 30px; /* 增加內邊距 */
+    border-radius: 12px; /* 更圓潤的邊角 */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5); /* 更明顯的陰影，增加深度 */
+}
+
+h1 {
+    font-family: 'Arial', sans-serif; /* 標題使用簡潔的無襯線字體 */
+    color: #E63946; /* 濃郁的紅色，暗示激情與禁忌 */
+    text-align: center;
+    margin-bottom: 30px; /* 增加標題與內容的間距 */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* 輕微文字陰影，增加質感 */
+}
+
+p {
+    margin-bottom: 20px; /* 增加段落間距 */
+    text-align: justify; /* 兩端對齊，使文本更整齊 */
+}
+
+a {
+    color: #E63946; /* 連結顏色與標題一致 */
+    text-decoration: none;
+    transition: color 0.3s ease-in-out; /* 平滑過渡效果 */
+}
+
+a:hover {
+    color: #FF6B6B; /* 懸停時顏色變亮 */
+    text-decoration: underline;
+}
+
+/* 解鎖按鈕的樣式 */
+a[onclick*='showContent'] {
+    display: block; /* 讓按鈕獨佔一行 */
+    width: fit-content; /* 寬度適應內容 */
+    margin: 30px auto; /* 居中顯示，並增加上下間距 */
+    padding: 15px 30px;
+    background-color: #E63946; /* 顯眼的紅色背景 */
+    color: #ffffff; /* 白色文字 */
+    border-radius: 50px; /* 膠囊狀按鈕 */
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase; /* 文字大寫 */
+    letter-spacing: 1px; /* 字元間距 */
+    box-shadow: 0 4px 10px rgba(230, 57, 70, 0.4); /* 陰影與按鈕顏色協調 */
+    transition: all 0.3s ease-in-out; /* 所有屬性平滑過渡 */
+    cursor: pointer;
+}
+
+a[onclick*='showContent']:hover {
+    background-color: #FF6B6B; /* 懸停時背景色變亮 */
+    box-shadow: 0 6px 15px rgba(255, 107, 107, 0.6); /* 陰影更明顯 */
+    transform: translateY(-2px); /* 輕微上浮效果 */
+}
+
+/* 新增的「下一集」按鈕樣式 */
+.next-episode-button {
+    display: block;
+    width: fit-content;
+    margin: 20px auto 30px auto; /* 調整上下間距 */
+    padding: 12px 25px;
+    background-color: #457B9D; /* 較為沉穩的藍色 */
+    color: #ffffff;
+    border-radius: 50px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 3px 8px rgba(69, 123, 157, 0.4);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.next-episode-button:hover {
+    background-color: #61A0C0; /* 懸停時顏色變亮 */
+    box-shadow: 0 5px 12px rgba(97, 160, 192, 0.6);
+    transform: translateY(-2px);
+}
+
+
+.warning {
+    color: #FF6B6B; /* 警告文字使用較亮的紅色 */
+    font-weight: bold;
+    text-align: center;
+    margin-top: 40px; /* 增加與內容的間距 */
+    padding: 15px;
+    border: 1px solid #FF6B6B; /* 邊框強調 */
+    border-radius: 8px;
+    background-color: rgba(255, 107, 107, 0.1); /* 輕微的背景色 */
+}
+
+/* 隱藏內容的通用樣式 */
+.hidden-content,
+.hidden-content1,
+.hidden-content2 {
+    display: none; /* 預設隱藏所有隱藏內容區塊 */
+    padding-top: 20px; /* 顯示後與上方內容的間距 */
+    border-top: 1px dashed rgba(255, 255, 255, 0.1); /* 虛線分隔，暗示內容的解鎖 */
+    margin-top: 20px;
+}
+
+/* 顯示內容的樣式 */
+.show-content {
+    display: block; /* 點擊連結後顯示內容 */
+}
+
+/* 嘗試3.html 中第二個按鈕的初始隱藏樣式 */
+.hidden-button {
+    display: none; /* 預設隱藏該按鈕 */
+}
