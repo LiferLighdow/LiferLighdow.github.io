@@ -1,4 +1,6 @@
- let money = 0;
+document.addEventListener("DOMContentLoaded", () => {
+    // Game state variables
+    let money = 0;
     let autoClickers = 0;
     let farms = 0;
     let mines = 0;
@@ -14,23 +16,15 @@
     let bankLevel = 1;
     let stockExchangeLevel = 1;
 
-    // Upgrade Amount Values (Default)
-    const initialClickerUpgradeAmountValue = 1;
-    const initialAutoClickerUpgradeAmountValue = 1;
-    const initialFarmUpgradeAmountValue = 1;
-    const initialMineUpgradeAmountValue = 1;
-    const initialBankUpgradeAmountValue = 1;
-    const initialStockExchangeUpgradeAmountValue = 1;
+    // Base production values (these do not change with level, but are multipliers for levels)
+    const baseClickValue = 1; // Base money per click for Clicker
+    const baseAutoClickerValue = 1; // Base money per second for Auto Clicker
+    const baseFarmValue = 5; // Base money per second for Farm
+    const baseMineValue = 20; // Base money per second for Mine
+    const baseBankValue = 100; // Base money per second for Bank
+    const baseStockExchangeValue = 500; // Base money per second for Stock Exchange
 
-    // Current Upgrade Amount Values (Changes during gameplay)
-    let clickerUpgradeAmountValue = initialClickerUpgradeAmountValue;
-    let autoClickerUpgradeAmountValue = initialAutoClickerUpgradeAmountValue;
-    let farmUpgradeAmountValue = initialFarmUpgradeAmountValue;
-    let mineUpgradeAmountValue = initialMineUpgradeAmountValue;
-    let bankUpgradeAmountValue = initialBankUpgradeAmountValue;
-    let stockExchangeUpgradeAmountValue = initialStockExchangeUpgradeAmountValue;
-
-    // Cost Values (Changes during gameplay)
+    // Cost values (prices change during gameplay)
     let clickerUpgradeCostValue = 10;
     let autoClickerUpgradeCostValue = 50;
     let farmUpgradeCostValue = 250;
@@ -38,454 +32,438 @@
     let bankUpgradeCostValue = 5000;
     let stockExchangeUpgradeCostValue = 25000;
 
-    // Building Costs (Default)
     let autoClickerCostValue = 10;
     let farmCostValue = 50;
     let mineCostValue = 200;
     let bankCostValue = 1000;
     let stockExchangeCostValue = 5000;
 
-    let nextResetLevelValue = 10; // Level required to "Reset Game"
+    // Store initial costs for "Reset Assets"
+    const initialClickerUpgradeCost = 10;
+    const initialAutoClickerUpgradeCost = 50;
+    const initialFarmUpgradeCost = 250;
+    const initialMineUpgradeCost = 1000;
+    const initialBankUpgradeCost = 5000;
+    const initialStockExchangeUpgradeCost = 25000;
 
-    let prestigeCost = 10000; // Initial Prestige Cost
+    const initialAutoClickerCost = 10;
+    const initialFarmCost = 50;
+    const initialMineCost = 200;
+    const initialBankCost = 1000;
+    const initialStockExchangeCost = 5000;
 
-    // HTML Elements
-    const moneyDisplay = document.getElementById('money');
-    const clickButton = document.getElementById('clickButton');
-    const autoClickerButton = document.getElementById('autoClickerButton');
-    const farmButton = document.getElementById('farmButton');
-    const mineButton = document.getElementById('mineButton');
-    const bankButton = document.getElementById('bankButton');
-    const stockExchangeButton = document.getElementById('stockExchangeButton');
-    const prestigeButton = document.getElementById('prestigeButton');
-    const message = document.getElementById('message');
-    const clickValueDisplay = document.getElementById('clickValueDisplay');
-    const resetGameButton = document.getElementById('resetGameButton');
-    const megaBonusButton = document.getElementById('megaBonusButton');
-    const nextResetLevel = document.getElementById('nextResetLevel'); // Reset button level requirement display
-    const fullResetButton = document.getElementById('fullResetButton'); // Full Reset button
+    let nextResetLevelValue = 10;
+    let prestigeCost = 10000;
 
-    const myLevelDisplay = document.getElementById('myLevelDisplay'); // My Level Display
+    // Bonus cooldowns (seconds)
+    let collectBonusCooldown = 0;
+    const COLLECT_BONUS_MAX_COOLDOWN = 300; // 5 minutes
+    let megaBonusCooldown = 0;
+    const MEGA_BONUS_MAX_COOLDOWN = 1800; // 30 minutes
 
-    const clickerLevelDisplay = document.getElementById('clickerLevel');
-    const autoClickerCountDisplay = document.getElementById('autoClickerCount');
-    const farmCountDisplay = document.getElementById('farmCount');
-    const mineCountDisplay = document.getElementById('mineCount');
-    const bankCountDisplay = document.getElementById('bankCount');
-    const stockExchangeCountDisplay = document.getElementById('stockExchangeCount');
+    // HTML element bindings
+    const moneyDisplay = document.getElementById("money");
+    const clickButton = document.getElementById("clickButton");
+    const clickValueDisplay = document.getElementById("clickValueDisplay");
+    const messageDisplay = document.getElementById("message");
+    const floatingTextContainer = document.getElementById("gameContainer"); // Floating text container is gameContainer
 
-    const autoClickerLevelDisplay = document.getElementById('autoClickerLevelDisplay');
-    const farmLevelDisplay = document.getElementById('farmLevelDisplay');
-    const mineLevelDisplay = document.getElementById('mineLevelDisplay');
-    const bankLevelDisplay = document.getElementById('bankLevelDisplay');
-    const stockExchangeLevelDisplay = document.getElementById('stockExchangeLevelDisplay');
+    const myLevelDisplay = document.getElementById("myLevelDisplay");
 
-    const clickerUpgradeButton = document.getElementById('clickerUpgradeButton');
+    const clickerCountDisplay = document.getElementById("clickerCount");
+    const clickerLevelDisplay = document.getElementById("clickerLevel");
+    const clickerUpgradeButton = document.getElementById("clickerUpgradeButton");
+    const clickerUpgradeCostDisplay = document.getElementById("clickerUpgradeCost");
+    const clickerUpgradeAmountDisplay = document.getElementById("clickerUpgradeAmount");
 
-    const autoClickerUpgradeButton = document.getElementById('autoClickerUpgradeButton');
-    const farmUpgradeButton = document.getElementById('farmUpgradeButton');
-    const mineUpgradeButton = document.getElementById('mineUpgradeButton');
-    const bankUpgradeButton = document.getElementById('bankUpgradeButton');
-    const stockExchangeUpgradeButton = document.getElementById('stockExchangeUpgradeButton');
+    const autoClickerCountDisplay = document.getElementById("autoClickerCount");
+    const autoClickerLevelDisplay = document.getElementById("autoClickerLevelDisplay");
+    const autoClickerButton = document.getElementById("autoClickerButton");
+    const autoClickerCostDisplay = document.getElementById("autoClickerCost");
+    const autoClickerUpgradeButton = document.getElementById("autoClickerUpgradeButton");
+    const autoClickerUpgradeCostDisplay = document.getElementById("autoClickerUpgradeCost");
+    const autoClickerUpgradeAmountDisplay = document.getElementById("autoClickerUpgradeAmount");
 
-    const clickerUpgradeCost = document.getElementById('clickerUpgradeCost');
-    const clickerUpgradeAmount = document.getElementById('clickerUpgradeAmount');
+    const farmCountDisplay = document.getElementById("farmCount");
+    const farmLevelDisplay = document.getElementById("farmLevelDisplay");
+    const farmButton = document.getElementById("farmButton");
+    const farmCostDisplay = document.getElementById("farmCost");
+    const farmUpgradeButton = document.getElementById("farmUpgradeButton");
+    const farmUpgradeCostDisplay = document.getElementById("farmUpgradeCost");
+    const farmUpgradeAmountDisplay = document.getElementById("farmUpgradeAmount");
 
-    const autoClickerUpgradeCost = document.getElementById('autoClickerUpgradeCost');
-    const autoClickerUpgradeAmount = document.getElementById('autoClickerUpgradeAmount');
+    const mineCountDisplay = document.getElementById("mineCount");
+    const mineLevelDisplay = document.getElementById("mineLevelDisplay");
+    const mineButton = document.getElementById("mineButton");
+    const mineCostDisplay = document.getElementById("mineCost");
+    const mineUpgradeButton = document.getElementById("mineUpgradeButton");
+    const mineUpgradeCostDisplay = document.getElementById("mineUpgradeCost");
+    const mineUpgradeAmountDisplay = document.getElementById("mineUpgradeAmount");
 
-    const farmUpgradeCost = document.getElementById('farmUpgradeCost');
-    const farmUpgradeAmount = document.getElementById('farmUpgradeAmount');
+    const bankCountDisplay = document.getElementById("bankCount");
+    const bankLevelDisplay = document.getElementById("bankLevelDisplay");
+    const bankButton = document.getElementById("bankButton");
+    const bankCostDisplay = document.getElementById("bankCost");
+    const bankUpgradeButton = document.getElementById("bankUpgradeButton");
+    const bankUpgradeCostDisplay = document.getElementById("bankUpgradeCost");
+    const bankUpgradeAmountDisplay = document.getElementById("bankUpgradeAmount");
 
-    const mineUpgradeCost = document.getElementById('mineUpgradeCost');
-    const mineUpgradeAmount = document.getElementById('mineUpgradeAmount');
+    const stockExchangeCountDisplay = document.getElementById("stockExchangeCount");
+    const stockExchangeLevelDisplay = document.getElementById("stockExchangeLevelDisplay");
+    const stockExchangeButton = document.getElementById("stockExchangeButton");
+    const stockExchangeCostDisplay = document.getElementById("stockExchangeCost");
+    const stockExchangeUpgradeButton = document.getElementById("stockExchangeUpgradeButton");
+    const stockExchangeUpgradeCostDisplay = document.getElementById("stockExchangeUpgradeCost");
+    const stockExchangeUpgradeAmountDisplay = document.getElementById("stockExchangeUpgradeAmount");
 
-    const bankUpgradeCost = document.getElementById('bankUpgradeCost');
-    const bankUpgradeAmount = document.getElementById('bankUpgradeAmount');
+    const prestigeButton = document.getElementById("prestigeButton");
+    const prestigeCostDisplay = document.getElementById("prestigeCostDisplay");
+    const nextResetLevelDisplay = document.getElementById("nextResetLevel");
 
-    const stockExchangeUpgradeCost = document.getElementById('stockExchangeUpgradeCost');
-    const stockExchangeUpgradeAmount = document.getElementById('stockExchangeUpgradeAmount');
+    const collectBonusButton = document.getElementById("collectBonusButton");
+    const megaBonusButton = document.getElementById("megaBonusButton");
+    const resetGameButton = document.getElementById("resetGameButton");
+    const fullResetButton = document.getElementById("fullResetButton");
 
-    const autoClickerCost = document.getElementById('autoClickerCost');
-    const farmCost = document.getElementById('farmCost');
-    const mineCost = document.getElementById('mineCost');
-    const bankCost = document.getElementById('bankCost');
-    const stockExchangeCost = document.getElementById('stockExchangeCost');
+    // Instruction button and modal elements
+    const showInstructionsButton = document.getElementById("showInstructionsButton");
+    const instructionModal = document.getElementById("instructionModal");
+    const closeButton = instructionModal.querySelector(".close-button");
 
-    const collectBonusButton = document.getElementById('collectBonusButton');
-    let bonusReady = true; // Default bonus is ready
-    let megaBonusReady = true;
 
-    // Helper function to format time as HH:MM:SS
+    // Helper functions
+    function formatNumber(num) {
+        // Ensure all numbers display two decimal places
+        if (num >= 1000000000000) return (num / 1000000000000).toFixed(2) + "T";
+        if (num >= 1000000000) return (num / 1000000000).toFixed(2) + "B";
+        if (num >= 1000000) return (num / 1000000).toFixed(2) + "M";
+        if (num >= 1000) return (num / 1000).toFixed(2) + "K";
+        return num.toFixed(2); // Fix: numbers less than 1000 also show two decimal places
+    }
+
     function formatTime(seconds) {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = seconds % 60;
-
-        const formattedHours = String(hours).padStart(2, '0');
-        const formattedMinutes = String(minutes).padStart(2, '0');
-        const formattedSeconds = String(remainingSeconds).padStart(2, '0');
-
-        return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return [h, m, s]
+            .map(v => v < 10 ? "0" + v : v)
+            .filter((v, i) => v !== "00" || i > 0)
+            .join(":");
     }
 
-    // Function: Show Message
     function showMessage(msg) {
-        message.textContent = msg;
-        message.style.animation = 'none'; // Restart animation
-        setTimeout(() => {
-            message.style.animation = null;
-        }, 10);  // Trigger re-render to play animation
+        messageDisplay.textContent = msg;
+        messageDisplay.style.opacity = 1;
+        messageDisplay.style.animation = 'none'; // Reset animation
+        void messageDisplay.offsetWidth; // Trigger reflow
+        messageDisplay.style.animation = 'fadeinout 3s forwards'; // Reapply animation
     }
 
-    // Function: Update Money Display
-    function updateMoneyDisplay() {
-        moneyDisplay.textContent = `Money: ${money.toFixed(2)}`;
-    }
-
-    // Function: Update Button Availability
-    function updateButtonAvailability() {
-        bankButton.disabled = farms < 10;
-        stockExchangeButton.disabled = mines < 5;
-        resetGameButton.disabled = myLevel < nextResetLevelValue; // Level requirement adjusts based on current level
-    }
-
-    // Function: Update Inventory Display
-    function updateInventoryDisplay() {
-        myLevelDisplay.textContent = myLevel; // Update My Level
-        clickerLevelDisplay.textContent = clickerLevel.toFixed(1);
-        clickValueDisplay.textContent = clickerLevel;
-        autoClickerCountDisplay.textContent = autoClickers;
-        farmCountDisplay.textContent = farms;
-        mineCountDisplay.textContent = mines;
-        bankCountDisplay.textContent = banks;
-        stockExchangeCountDisplay.textContent = stockExchanges;
-
-        autoClickerLevelDisplay.textContent = autoClickerLevel.toFixed(1);
-        farmLevelDisplay.textContent = farmLevel.toFixed(1);
-        mineLevelDisplay.textContent = mineLevel.toFixed(1);
-        bankLevelDisplay.textContent = bankLevel.toFixed(1);
-        stockExchangeLevelDisplay.textContent = stockExchangeLevel.toFixed(1);
-
-        nextResetLevel.textContent = nextResetLevelValue;
-    }
-
-    // Function: Show Floating Text
     function showFloatingText(x, y, text) {
-        const floatingText = document.createElement('div');
-        floatingText.className = 'floating-text';
+        const floatingText = document.createElement("div");
+        floatingText.classList.add("floating-text");
         floatingText.textContent = text;
-        floatingText.style.left = x + 'px';
-        floatingText.style.top = y + 'px';
-        document.body.appendChild(floatingText);
+        
+        // Ensure floating text is positioned relative to gameContainer
+        const containerRect = floatingTextContainer.getBoundingClientRect();
+        floatingText.style.left = `${x - containerRect.left}px`;
+        floatingText.style.top = `${y - containerRect.top}px`;
+        
+        floatingTextContainer.appendChild(floatingText);
 
-        // Remove element after animation ends
         floatingText.addEventListener('animationend', () => {
             floatingText.remove();
         });
     }
 
-    // Function: Update Upgrade Button Text
+    function updateMoneyDisplay() {
+        moneyDisplay.textContent = `Money: ${formatNumber(money)}`;
+    }
+
+    function updateButtonAvailability() {
+        // Clicker upgrade
+        clickerUpgradeButton.disabled = money < clickerUpgradeCostValue;
+
+        // Auto Clicker buy and upgrade
+        autoClickerButton.disabled = money < autoClickerCostValue;
+        autoClickerUpgradeButton.disabled = money < autoClickerUpgradeCostValue;
+
+        // Farm buy and upgrade
+        farmButton.disabled = money < farmCostValue;
+        farmUpgradeButton.disabled = money < farmUpgradeCostValue;
+
+        // Mine buy and upgrade
+        mineButton.disabled = money < mineCostValue;
+        mineUpgradeButton.disabled = money < mineUpgradeCostValue;
+
+        // Bank buy and upgrade (requires farms)
+        bankButton.disabled = money < bankCostValue || farms < 10;
+        bankUpgradeButton.disabled = money < bankUpgradeCostValue;
+
+        // Stock Exchange buy and upgrade (requires mines)
+        stockExchangeButton.disabled = money < stockExchangeCostValue || mines < 5;
+        stockExchangeUpgradeButton.disabled = money < stockExchangeUpgradeCostValue;
+
+        // Prestige button
+        prestigeButton.disabled = money < prestigeCost;
+
+        // Reset Assets button
+        resetGameButton.disabled = myLevel < nextResetLevelValue;
+
+        // Bonus buttons
+        collectBonusButton.disabled = collectBonusCooldown > 0;
+        megaBonusButton.disabled = megaBonusCooldown > 0;
+    }
+
+    function updateInventoryDisplay() {
+        myLevelDisplay.textContent = myLevel;
+
+        clickerCountDisplay.textContent = "1"; // Fix: Clicker quantity should be fixed at 1
+        clickerLevelDisplay.textContent = clickerLevel; // Clicker level
+
+        autoClickerCountDisplay.textContent = autoClickers;
+        autoClickerLevelDisplay.textContent = autoClickerLevel;
+
+        farmCountDisplay.textContent = farms;
+        farmLevelDisplay.textContent = farmLevel;
+
+        mineCountDisplay.textContent = mines;
+        mineLevelDisplay.textContent = mineLevel;
+
+        bankCountDisplay.textContent = banks;
+        bankLevelDisplay.textContent = bankLevel;
+
+        stockExchangeCountDisplay.textContent = stockExchanges;
+        stockExchangeLevelDisplay.textContent = stockExchangeLevel;
+    }
+
+    // Calculate actual production for current clicker and buildings
+    function getCurrentClickAmount() {
+        return baseClickValue * clickerLevel * myLevel;
+    }
+
+    function getCurrentAutoClickerIncomePerUnit() {
+        return baseAutoClickerValue * autoClickerLevel;
+    }
+
+    function getCurrentFarmIncomePerUnit() {
+        return baseFarmValue * farmLevel;
+    }
+
+    function getCurrentMineIncomePerUnit() {
+        return baseMineValue * mineLevel;
+    }
+
+    function getCurrentBankIncomePerUnit() {
+        return baseBankValue * bankLevel;
+    }
+
+    function getCurrentStockExchangeIncomePerUnit() {
+        return baseStockExchangeValue * stockExchangeLevel;
+    }
+
+
     function updateUpgradeButtonText() {
-        clickerUpgradeCost.textContent = clickerUpgradeCostValue.toFixed(0);
-        clickerUpgradeAmount.textContent = clickerUpgradeAmountValue.toFixed(0);
+        // Clicker displays total money per click
+        clickValueDisplay.textContent = formatNumber(getCurrentClickAmount());
+        clickerUpgradeCostDisplay.textContent = formatNumber(clickerUpgradeCostValue);
+        clickerUpgradeAmountDisplay.textContent = formatNumber(getCurrentClickAmount() + (baseClickValue * myLevel)); // Show total after upgrade
 
-        autoClickerUpgradeCost.textContent = autoClickerUpgradeCostValue.toFixed(0);
-        autoClickerUpgradeAmount.textContent = autoClickerUpgradeAmountValue.toFixed(1);
+        // Other buildings display "per unit" production
+        autoClickerUpgradeCostDisplay.textContent = formatNumber(autoClickerUpgradeCostValue);
+        autoClickerUpgradeAmountDisplay.textContent = formatNumber(getCurrentAutoClickerIncomePerUnit());
 
-        farmUpgradeCost.textContent = farmUpgradeCostValue.toFixed(0);
-        farmUpgradeAmount.textContent = farmUpgradeAmountValue.toFixed(1);
+        farmUpgradeCostDisplay.textContent = formatNumber(farmUpgradeCostValue);
+        farmUpgradeAmountDisplay.textContent = formatNumber(getCurrentFarmIncomePerUnit());
 
-        mineUpgradeCost.textContent = mineUpgradeCostValue.toFixed(0);
-        mineUpgradeAmount.textContent = mineUpgradeAmountValue.toFixed(1);
+        mineUpgradeCostDisplay.textContent = formatNumber(mineUpgradeCostValue);
+        mineUpgradeAmountDisplay.textContent = formatNumber(getCurrentMineIncomePerUnit());
 
-        bankUpgradeCost.textContent = bankUpgradeCostValue.toFixed(0);
-        bankUpgradeAmount.textContent = bankUpgradeAmountValue.toFixed(1);
+        bankUpgradeCostDisplay.textContent = formatNumber(bankUpgradeCostValue);
+        bankUpgradeAmountDisplay.textContent = formatNumber(getCurrentBankIncomePerUnit());
 
-        stockExchangeUpgradeCost.textContent = stockExchangeUpgradeCostValue.toFixed(0);
-        stockExchangeUpgradeAmount.textContent = stockExchangeUpgradeAmountValue.toFixed(1);
-
-        updatePrestigeButtonText(); // Ensure Prestige button updates with upgrade values
+        stockExchangeUpgradeCostDisplay.textContent = formatNumber(stockExchangeUpgradeCostValue);
+        stockExchangeUpgradeAmountDisplay.textContent = formatNumber(getCurrentStockExchangeIncomePerUnit());
     }
 
-    // Function: Update Prestige Button Text
-    function updatePrestigeButtonText() {
-        prestigeButton.textContent = `Prestige (Requires ${prestigeCost.toFixed(0)} Money, Upgrade My Level +1)`;
-    }
-
-    // Function: Update Building Cost Text
     function updateBuildingCostText() {
-        autoClickerCost.textContent = autoClickerCostValue.toFixed(0);
-        farmCost.textContent = farmCostValue.toFixed(0);
-        mineCost.textContent = mineCostValue.toFixed(0);
-        bankCost.textContent = bankCostValue.toFixed(0);
-        stockExchangeCost.textContent = stockExchangeCostValue.toFixed(0);
+        autoClickerCostDisplay.textContent = formatNumber(autoClickerCostValue);
+        farmCostDisplay.textContent = formatNumber(farmCostValue);
+        mineCostDisplay.textContent = formatNumber(mineCostValue);
+        bankCostDisplay.textContent = formatNumber(bankCostValue);
+        stockExchangeCostDisplay.textContent = formatNumber(stockExchangeCostValue);
     }
 
-    // Function: Update All UI
+    function updatePrestigeButtonText() {
+        prestigeCostDisplay.textContent = formatNumber(prestigeCost);
+        nextResetLevelDisplay.textContent = nextResetLevelValue;
+    }
+
+    function updateBonusButtonText() {
+        collectBonusButton.textContent = collectBonusCooldown > 0 ? `Collect Bonus (${formatTime(collectBonusCooldown)})` : "Collect Bonus (5:00)";
+        // Fix Mega Bonus display amount calculation to show actual bonus
+        const megaBonusAmountDisplay = myLevel * 10000;
+        megaBonusButton.textContent = megaBonusCooldown > 0 ? `Mega Bonus (${formatTime(megaBonusCooldown)})` : `Mega Bonus (${formatNumber(megaBonusAmountDisplay)}, 30:00)`;
+    }
+
     function updateAllUI() {
         updateMoneyDisplay();
-        updateInventoryDisplay();
         updateButtonAvailability();
+        updateInventoryDisplay();
         updateUpgradeButtonText();
         updateBuildingCostText();
+        updatePrestigeButtonText();
+        updateBonusButtonText();
     }
 
-
-    // Click to Earn Money
-    clickButton.addEventListener('click', (event) => {
-        const clickValue = 1 * myLevel * clickerLevel;
-        money += clickValue;
+    // Event Listeners
+    clickButton.addEventListener("click", (event) => {
+        const clickAmount = getCurrentClickAmount(); // Fix: Use getCurrentClickAmount
+        money += clickAmount;
+        showFloatingText(event.clientX, event.clientY, `+${formatNumber(clickAmount)}`);
         updateMoneyDisplay();
-
-        // Get click position
-        const x = event.clientX;
-        const y = event.clientY;
-
-        // Show floating text
-        showFloatingText(x, y, `+${clickValue.toFixed(2)} Money!`);
+        updateButtonAvailability();
     });
 
-    // Upgrade Clicker
-    clickerUpgradeButton.addEventListener('click', () => {
+    clickerUpgradeButton.addEventListener("click", () => {
         if (money >= clickerUpgradeCostValue) {
             money -= clickerUpgradeCostValue;
-            clickerLevel += clickerUpgradeAmountValue;
-            clickerUpgradeCostValue *= 1.1; // Price multiplies by 1.1
-            clickerUpgradeAmountValue = myLevel;  //set to current level for next upgrade
-            updateAllUI(); // Using AllUI
-            clickValueDisplay.textContent = clickerLevel;
-            showMessage("Clicker Upgraded!");
+            clickerLevel++; // Level up
+            clickerUpgradeCostValue = Math.ceil(clickerUpgradeCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Clicker upgraded to Level ${clickerLevel}!`);
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-    // Buy Auto Clicker
-    autoClickerButton.addEventListener('click', () => {
+    autoClickerButton.addEventListener("click", () => {
         if (money >= autoClickerCostValue) {
             money -= autoClickerCostValue;
             autoClickers++;
-            autoClickerCostValue *= 1.1; // Price multiplies by 1.1
-            updateAllUI(); // Using AllUI
-            showMessage("Auto Clicker Purchased!");
+            autoClickerCostValue = Math.ceil(autoClickerCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Bought ${autoClickers} Auto Clicker(s)!`);
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-    // Upgrade Auto Clicker
-    autoClickerUpgradeButton.addEventListener('click', () => {
+    autoClickerUpgradeButton.addEventListener("click", () => {
         if (money >= autoClickerUpgradeCostValue) {
             money -= autoClickerUpgradeCostValue;
-            autoClickerLevel += autoClickerUpgradeAmountValue;
-            autoClickerUpgradeCostValue *= 1.1; // Price multiplies by 1.1
-            autoClickerUpgradeAmountValue = myLevel;  //set to current level for next upgrade
-            updateAllUI();  // Using AllUI
-            showMessage("Auto Clicker Upgraded!");
+            autoClickerLevel++; // Level up
+            autoClickerUpgradeCostValue = Math.ceil(autoClickerUpgradeCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Auto Clicker upgraded to Level ${autoClickerLevel}!`);
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-    // Buy Farm
-    farmButton.addEventListener('click', () => {
+    farmButton.addEventListener("click", () => {
         if (money >= farmCostValue) {
             money -= farmCostValue;
             farms++;
-            farmCostValue *= 1.1; // Price multiplies by 1.1
-            updateAllUI();  // Using AllUI
-            showMessage("Farm Purchased!");
+            farmCostValue = Math.ceil(farmCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Bought ${farms} Farm(s)!`);
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-    // Upgrade Farm
-    farmUpgradeButton.addEventListener('click', () => {
+    farmUpgradeButton.addEventListener("click", () => {
         if (money >= farmUpgradeCostValue) {
             money -= farmUpgradeCostValue;
-            farmLevel += farmUpgradeAmountValue;
-            farmUpgradeCostValue *= 1.1; // Price multiplies by 1.1
-            farmUpgradeAmountValue = myLevel;  //set to current level for next upgrade
-            updateAllUI(); // Using AllUI
-            showMessage("Farm Upgraded!");
+            farmLevel++; // Level up
+            farmUpgradeCostValue = Math.ceil(farmUpgradeCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Farm upgraded to Level ${farmLevel}!`);
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-    // Buy Mine
-    mineButton.addEventListener('click', () => {
+    mineButton.addEventListener("click", () => {
         if (money >= mineCostValue) {
             money -= mineCostValue;
             mines++;
-            mineCostValue *= 1.1; // Price multiplies by 1.1
-            updateAllUI(); // Using AllUI
-            showMessage("Mine Purchased!");
+            mineCostValue = Math.ceil(mineCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Bought ${mines} Mine(s)!`);
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-    // Upgrade Mine
-    mineUpgradeButton.addEventListener('click', () => {
+    mineUpgradeButton.addEventListener("click", () => {
         if (money >= mineUpgradeCostValue) {
             money -= mineUpgradeCostValue;
-            mineLevel += mineUpgradeAmountValue;
-            mineUpgradeCostValue *= 1.1; // Price multiplies by 1.1
-            mineUpgradeAmountValue = myLevel;  //set to current level for next upgrade
-            updateAllUI(); // Using AllUI
-            showMessage("Mine Upgraded!");
+            mineLevel++; // Level up
+            mineUpgradeCostValue = Math.ceil(mineUpgradeCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Mine upgraded to Level ${mineLevel}!`);
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-    // Buy Bank
-    bankButton.addEventListener('click', () => {
-        if (money >= bankCostValue) {
+    bankButton.addEventListener("click", () => {
+        if (money >= bankCostValue && farms >= 10) {
             money -= bankCostValue;
             banks++;
-            bankCostValue *= 1.1; // Price multiplies by 1.1
-            updateAllUI(); // Using AllUI
-            showMessage("Bank Purchased!");
+            bankCostValue = Math.ceil(bankCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Bought ${banks} Bank(s)!`);
+        } else if (farms < 10) {
+            showMessage("Requires 10 Farms to buy a Bank!");
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-    // Upgrade Bank
-    bankUpgradeButton.addEventListener('click', () => {
+    bankUpgradeButton.addEventListener("click", () => {
         if (money >= bankUpgradeCostValue) {
             money -= bankUpgradeCostValue;
-            bankLevel += bankUpgradeAmountValue;
-            bankUpgradeCostValue *= 1.1; // Price multiplies by 1.1
-            bankUpgradeAmountValue = myLevel;  //set to current level for next upgrade
-            updateAllUI(); // Using AllUI
-            showMessage("Bank Upgraded!");
+            bankLevel++; // Level up
+            bankUpgradeCostValue = Math.ceil(bankUpgradeCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Bank upgraded to Level ${bankLevel}!`);
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-
-    // Buy Stock Exchange
-    stockExchangeButton.addEventListener('click', () => {
-        if (money >= stockExchangeCostValue) {
+    stockExchangeButton.addEventListener("click", () => {
+        if (money >= stockExchangeCostValue && mines >= 5) {
             money -= stockExchangeCostValue;
             stockExchanges++;
-            stockExchangeCostValue *= 1.1; // Price multiplies by 1.1
-            updateAllUI(); // Using AllUI
-            showMessage("Stock Exchange Purchased!");
+            stockExchangeCostValue = Math.ceil(stockExchangeCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Bought ${stockExchanges} Stock Exchange(s)!`);
+        } else if (mines < 5) {
+            showMessage("Requires 5 Mines to buy a Stock Exchange!");
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-    // Upgrade Stock Exchange
-    stockExchangeUpgradeButton.addEventListener('click', () => {
+    stockExchangeUpgradeButton.addEventListener("click", () => {
         if (money >= stockExchangeUpgradeCostValue) {
             money -= stockExchangeUpgradeCostValue;
-            stockExchangeLevel += stockExchangeUpgradeAmountValue;
-            stockExchangeUpgradeCostValue *= 1.1; // Price multiplies by 1.1
-            stockExchangeUpgradeAmountValue = myLevel;  //set to current level for next upgrade
-            updateAllUI(); // Using AllUI
-            showMessage("Stock Exchange Upgraded!");
+            stockExchangeLevel++; // Level up
+            stockExchangeUpgradeCostValue = Math.ceil(stockExchangeUpgradeCostValue * 1.1);
+            updateAllUI();
+            showMessage(`Stock Exchange upgraded to Level ${stockExchangeLevel}!`);
         } else {
-            showMessage("Not Enough Money!");
+            showMessage("Insufficient funds!");
         }
     });
 
-
-    // Prestige
-    prestigeButton.addEventListener('click', () => {
+    prestigeButton.addEventListener("click", () => {
         if (money >= prestigeCost) {
-            money = 0;
-            autoClickers = 0;
-            farms = 0;
-            mines = 0;
-            banks = 0;
-            stockExchanges = 0;
-            myLevel++; // Increase My Level
-            updateMoneyDisplay();
-            updateInventoryDisplay();
-            updateButtonAvailability();
-            showMessage("Prestige Performed! My Level +1");
-            prestigeCost *= 1.1; // Price increases to 1.1 times the original price
-            updateAllUI(); // Make sure to update all data
-        } else {
-            showMessage("Not Enough Money!");
-        }
-    });
-
-    // Collect Bonus Function
-    collectBonusButton.addEventListener('click', () => {
-        if (bonusReady) {
-            // Random bonus amount (e.g., 5% to 15% of current money)
-            const bonusAmount = money * (0.05 + Math.random() * 0.1); // 0.05 ~ 0.15
-            money += bonusAmount;
-            updateMoneyDisplay();
-
-            showMessage(`Collected Bonus +${bonusAmount.toFixed(2)} Money!`);
-            bonusReady = false; // Set to cooldown
-
-            // Disable button and change text
-            collectBonusButton.disabled = true;
-            collectBonusButton.textContent = "Bonus Cooldown (05:00)";
-
-            // Start cooldown timer
-            let timeLeft = 300; // 5 minutes in seconds
-            const timerInterval = setInterval(() => {
-                timeLeft--;
-                collectBonusButton.textContent = `Bonus Cooldown (${formatTime(timeLeft)})`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    bonusReady = true; // Cooldown complete
-                    collectBonusButton.disabled = false; // Enable button
-                    collectBonusButton.textContent = "Collect Bonus (5:00)"; // Reset button text
-                }
-            }, 1000);
-        } else {
-            showMessage("Bonus on Cooldown, Please come back later!");
-        }
-    });
-
-    // Mega Bonus Function
-    megaBonusButton.addEventListener('click', () => {
-        if (megaBonusReady) {
-            const bonusAmount = myLevel * 10000; // My Level * 10000
-            money += bonusAmount;
-            updateMoneyDisplay();
-
-            showMessage(`Received Mega Bonus +${bonusAmount.toFixed(2)} Money!`);
-            megaBonusReady = false;
-
-            megaBonusButton.disabled = true;
-            megaBonusButton.textContent = "Mega Bonus Cooldown (30:00)";
-
-            let timeLeft = 30 * 60; // 30 minutes in seconds
-            const timerInterval = setInterval(() => {
-                timeLeft--;
-                megaBonusButton.textContent = `Mega Bonus Cooldown (${formatTime(timeLeft)})`;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    megaBonusReady = true;
-                    megaBonusButton.disabled = false;
-                    megaBonusButton.textContent = "Mega Bonus (My Level * 10000, 30:00)";
-                }
-            }, 1000);
-        } else {
-            showMessage("Mega Bonus on Cooldown, Please come back later!");
-        }
-    });
-
-    // Reset Game Function (Keep My Level)
-    resetGameButton.addEventListener('click', () => {
-        if (myLevel >= nextResetLevelValue) {
-
-            // Reset all variables except My Level
+            // Reset all resources and building quantities
             money = 0;
             autoClickers = 0;
             farms = 0;
@@ -493,7 +471,7 @@
             banks = 0;
             stockExchanges = 0;
 
-            // Reset levels
+            // Reset all building levels to 1
             clickerLevel = 1;
             autoClickerLevel = 1;
             farmLevel = 1;
@@ -501,95 +479,183 @@
             bankLevel = 1;
             stockExchangeLevel = 1;
 
-            // Reset prices
-            clickerUpgradeCostValue = 10;
-            autoClickerUpgradeCostValue = 50;
-            farmUpgradeCostValue = 250;
-            mineUpgradeCostValue = 1000;
-            bankUpgradeCostValue = 5000;
-            stockExchangeUpgradeCostValue = 25000;
+            // Prestige DOES NOT reset upgrade/buy costs.
+            // Costs remain as they were before Prestige.
 
-            autoClickerCostValue = 10;
-            farmCostValue = 50;
-            mineCostValue = 200;
-            bankCostValue = 1000;
-            stockExchangeCostValue = 5000;
+            myLevel++; // My Level increases
+            prestigeCost = Math.ceil(prestigeCost * 2); // Prestige cost increases
+            
+            // Reset bonus cooldowns
+            collectBonusCooldown = 0;
+            megaBonusCooldown = 0;
 
-            nextResetLevelValue = myLevel + 10
-
-            // Reset Upgrade Values
-            clickerUpgradeAmountValue = initialClickerUpgradeAmountValue;
-            autoClickerUpgradeAmountValue = initialAutoClickerUpgradeAmountValue;
-            farmUpgradeAmountValue = initialFarmUpgradeAmountValue;
-            mineUpgradeAmountValue = initialMineUpgradeAmountValue;
-            bankUpgradeAmountValue = initialBankUpgradeAmountValue;
-            stockExchangeUpgradeAmountValue = initialStockExchangeUpgradeAmountValue;
-
-            updateAllUI(); // Make sure to update all data
-
-            showMessage("Game Reset!");
+            updateAllUI();
+            showMessage(`Prestige successful! My Level increased to ${myLevel}!`);
         } else {
-            showMessage(`Need to Reach My Level ${nextResetLevelValue} to Reset Game!`);
+            showMessage("Insufficient funds for Prestige!");
         }
     });
 
-    // Full Reset Game Function
-    fullResetButton.addEventListener('click', () => {
-        money = 0;
-        autoClickers = 0;
-        farms = 0;
-        mines = 0;
-        banks = 0;
-        stockExchanges = 0;
-        myLevel = 1;
+    collectBonusButton.addEventListener("click", () => {
+        if (collectBonusCooldown <= 0) {
+            const bonusAmount = money * (0.05 + Math.random() * 0.10); // 5% to 15%
+            money += bonusAmount;
+            collectBonusCooldown = COLLECT_BONUS_MAX_COOLDOWN;
+            updateAllUI();
+            showMessage(`Collected ${formatNumber(bonusAmount)} money bonus!`);
+        } else {
+            showMessage(`Bonus on cooldown, please wait ${formatTime(collectBonusCooldown)}`);
+        }
+    });
 
-        clickerLevel = 1;
-        autoClickerLevel = 1;
-        farmLevel = 1;
-        mineLevel = 1;
-        bankLevel = 1;
-        stockExchangeLevel = 1;
+    megaBonusButton.addEventListener("click", () => {
+        if (megaBonusCooldown <= 0) {
+            const bonusAmount = myLevel * 10000;
+            money += bonusAmount;
+            megaBonusCooldown = MEGA_BONUS_MAX_COOLDOWN;
+            updateAllUI();
+            showMessage(`Received ${formatNumber(bonusAmount)} Mega Bonus!`);
+        } else {
+            showMessage(`Mega Bonus on cooldown, please wait ${formatTime(megaBonusCooldown)}`);
+        }
+    });
 
-        clickerUpgradeAmountValue = initialClickerUpgradeAmountValue;
-        autoClickerUpgradeAmountValue = initialAutoClickerUpgradeAmountValue;
-        farmUpgradeAmountValue = initialFarmUpgradeAmountValue;
-        mineUpgradeAmountValue = initialMineUpgradeAmountValue;
-        bankUpgradeAmountValue = initialBankUpgradeAmountValue;
-        stockExchangeUpgradeAmountValue = initialStockExchangeUpgradeAmountValue;
+    resetGameButton.addEventListener("click", () => {
+        if (myLevel >= nextResetLevelValue) {
+            // Reset all resources and building quantities
+            money = 0;
+            autoClickers = 0;
+            farms = 0;
+            mines = 0;
+            banks = 0;
+            stockExchanges = 0;
 
-        clickerUpgradeCostValue = 10;
-        autoClickerUpgradeCostValue = 50;
-        farmUpgradeCostValue = 250;
-        mineUpgradeCostValue = 1000;
-        bankUpgradeCostValue = 5000;
-        stockExchangeUpgradeCostValue = 25000;
+            // Reset all building levels to 1
+            clickerLevel = 1;
+            autoClickerLevel = 1;
+            farmLevel = 1;
+            mineLevel = 1;
+            bankLevel = 1;
+            stockExchangeLevel = 1;
 
-        autoClickerCostValue = 10;
-        farmCostValue = 50;
-        mineCostValue = 200;
-        bankCostValue = 1000;
-        stockExchangeCostValue = 5000;
+            // Reset upgrade costs to initial values (This is specific to "Reset Assets")
+            clickerUpgradeCostValue = initialClickerUpgradeCost;
+            autoClickerUpgradeCostValue = initialAutoClickerUpgradeCost;
+            farmUpgradeCostValue = initialFarmUpgradeCost;
+            mineUpgradeCostValue = initialMineUpgradeCost;
+            bankUpgradeCostValue = initialBankUpgradeCost;
+            stockExchangeUpgradeCostValue = initialStockExchangeUpgradeCost;
 
-        nextResetLevelValue = 10;
-        prestigeCost = 10000;
+            // Reset buy costs to initial values (This is specific to "Reset Assets")
+            autoClickerCostValue = initialAutoClickerCost;
+            farmCostValue = initialFarmCost;
+            mineCostValue = initialMineCost;
+            bankCostValue = initialBankCost;
+            stockExchangeCostValue = initialStockExchangeCost;
 
-        updateAllUI();
-        showMessage("Game Fully Reset!");
+            nextResetLevelValue = myLevel + 10; // Next reset level requirement increases
+            
+            // Reset bonus cooldowns
+            collectBonusCooldown = 0;
+            megaBonusCooldown = 0;
+
+            updateAllUI();
+            showMessage(`Assets reset! Next reset level requirement: ${nextResetLevelValue}.`);
+        } else {
+            showMessage(`My Level needs to be ${nextResetLevelValue} to reset assets!`);
+        }
+    });
+
+    fullResetButton.addEventListener("click", () => {
+        // Replace confirm() with a custom modal in a real application, as confirm() might not display in an iframe.
+        // For simplicity, using window.confirm() as a temporary fallback here.
+        const confirmReset = window.confirm("Are you sure you want to fully reset the game? All progress will be lost!");
+        if (confirmReset) {
+            money = 0;
+            autoClickers = 0;
+            farms = 0;
+            mines = 0;
+            banks = 0;
+            stockExchanges = 0;
+            myLevel = 1;
+
+            clickerLevel = 1;
+            autoClickerLevel = 1;
+            farmLevel = 1;
+            mineLevel = 1;
+            bankLevel = 1;
+            stockExchangeLevel = 1;
+
+            // Reset upgrade costs to initial values
+            clickerUpgradeCostValue = initialClickerUpgradeCost;
+            autoClickerUpgradeCostValue = initialAutoClickerUpgradeCost;
+            farmUpgradeCostValue = initialFarmUpgradeCost;
+            mineUpgradeCostValue = initialMineUpgradeCost;
+            bankUpgradeCostValue = initialBankUpgradeCost;
+            stockExchangeUpgradeCostValue = initialStockExchangeUpgradeCost;
+
+            // Reset buy costs to initial values
+            autoClickerCostValue = initialAutoClickerCost;
+            farmCostValue = initialFarmCost;
+            mineCostValue = initialMineCost;
+            bankCostValue = initialBankCost;
+            stockExchangeCostValue = initialStockExchangeCost;
+
+            nextResetLevelValue = 10;
+            prestigeCost = 10000;
+
+            // Reset bonus cooldowns
+            collectBonusCooldown = 0;
+            megaBonusCooldown = 0;
+
+            updateAllUI();
+            showMessage("Game Fully Reset!");
+        }
     });
 
     // Automatically Generate Money
     setInterval(() => {
         let passiveIncome = (
-            (autoClickers * autoClickerLevel) +
-            (farms * 5 * farmLevel) +
-            (mines * 20 * mineLevel) +
-            (banks * 100 * bankLevel) + // Bank upgrades affect income
-            (stockExchanges * 500 * stockExchangeLevel) // Stock Exchange upgrades affect income
-        );
+            (autoClickers * getCurrentAutoClickerIncomePerUnit()) +
+            (farms * getCurrentFarmIncomePerUnit()) +
+            (mines * getCurrentMineIncomePerUnit()) +
+            (banks * getCurrentBankIncomePerUnit()) +
+            (stockExchanges * getCurrentStockExchangeIncomePerUnit())
+        ) * myLevel; // My Level as a global multiplier
 
-        money += passiveIncome / 10;
+        money += passiveIncome / 10; // Passive income per second (divided by 10 for 100ms interval)
         updateMoneyDisplay();
-    }, 100);
+        updateButtonAvailability();
+    }, 100); // Update every 100 milliseconds
 
-    // Initial Setup
+    // Bonus cooldown timer
+    setInterval(() => {
+        if (collectBonusCooldown > 0) {
+            collectBonusCooldown--;
+        }
+        if (megaBonusCooldown > 0) {
+            megaBonusCooldown--;
+        }
+        updateBonusButtonText();
+    }, 1000); // Update every second
+
+    // Instruction button event listener
+    showInstructionsButton.addEventListener("click", () => {
+        instructionModal.style.display = "flex"; // Show modal
+    });
+
+    // Close button event listener
+    closeButton.addEventListener("click", () => {
+        instructionModal.style.display = "none"; // Hide modal
+    });
+
+    // Click outside modal to hide (optional)
+    instructionModal.addEventListener("click", (event) => {
+        if (event.target === instructionModal) {
+            instructionModal.style.display = "none";
+        }
+    });
+
+    // Initialize UI
     updateAllUI();
+});

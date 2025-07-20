@@ -13,28 +13,29 @@
 <div id="gameContainer">
 
     <div id="inventory">
-        <h2><i class="fas fa-box-open"></i> My Stats</h2>
+        <h2><i class="fas fa-box-open"></i> Inventory</h2>
         <p>My Level: <span id="myLevelDisplay">1</span></p>
-        <p>Clicker (Level <span id="clickerLevel">1</span>): <span id="clickerCount">1</span></p>
-        <p>Auto Clicker (Level <span id="autoClickerLevelDisplay">1</span>): <span id="autoClickerCount">0</span></p>
-        <p>Farm (Level <span id="farmLevelDisplay">1</span>): <span id="farmCount">0</span></p>
-        <p>Mine (Level <span id="mineLevelDisplay">1</span>): <span id="mineCount">0</span></p>
-        <p>Bank (Level <span id="bankLevelDisplay">1</span>): <span id="bankCount">0</span></p>
-        <p>Stock Exchange (Level <span id="stockExchangeLevelDisplay">1</span>): <span id="stockExchangeCount">0</span></p>
+        <!-- Clicker quantity should be fixed at 1, level changes -->
+        <p>Clicker (Level <span id="clickerLevel">1</span>): <span id="clickerCount">1</span> Unit</p>
+        <p>Auto Clickers (Level <span id="autoClickerLevelDisplay">1</span>): <span id="autoClickerCount">0</span> Units</p>
+        <p>Farms (Level <span id="farmLevelDisplay">1</span>): <span id="farmCount">0</span> Units</p>
+        <p>Mines (Level <span id="mineLevelDisplay">1</span>): <span id="mineCount">0</span> Units</p>
+        <p>Banks (Level <span id="bankLevelDisplay">1</span>): <span id="bankCount">0</span> Units</p>
+        <p>Stock Exchanges (Level <span id="stockExchangeLevelDisplay">1</span>): <span id="stockExchangeCount">0</span> Units</p>
 
         <div id="extraFeatures">
             <h2><i class="fas fa-cogs"></i> Extra Features</h2>
             <button id="collectBonusButton"><i class="fas fa-gift"></i> Collect Bonus (5:00)</button>
             <button id="megaBonusButton"><i class="fas fa-star"></i> Mega Bonus (My Level * 10000, 30:00)</button>
-            <button id="resetGameButton"><i class="fas fa-redo"></i> Reset Items (Keep Current Level, Level Requirement: <span id = "nextResetLevel">10</span>)</button>
-            <button id="fullResetButton"><i class="fas fa-power-off"></i> Full Reset Game</button>
+            <button id="resetGameButton"><i class="fas fa-redo"></i> Reset Assets (Keep My Level, Level Req: <span id = "nextResetLevel">10</span>)</button>
+            <button id="fullResetButton"><i class="fas fa-power-off"></i> Full Game Reset</button>
         </div>
     </div>
 
     <div id="centerPanel">
-        <h1>Lifer_Lighdow Sci-Fi Clicker</h1>
+        <h1>Lifer_Lighdow Sci-Fi Clicker Game</h1>
         <p id="money">Money: 0</p>
-        <button id="clickButton"><i class="fas fa-hand-pointer"></i> Click for Money (+<span id="clickValueDisplay">1</span>)</button>
+        <button id="clickButton"><i class="fas fa-hand-pointer"></i> Click to Earn (Per Click: +<span id="clickValueDisplay">1</span>)</button>
         <div id="message"></div>
     </div>
 
@@ -43,42 +44,51 @@
 
         <div class="upgrade">
             <p>Clicker</p>
-            <button id="clickerUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="clickerUpgradeCost">10</span>, +<span id="clickerUpgradeAmount">1</span>)</button>
+            <!-- Display total click amount, not increment -->
+            <button id="clickerUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="clickerUpgradeCost">10</span>, Total Per Click: <span id="clickerUpgradeAmount">1</span>)</button>
         </div>
 
         <div class="upgrade">
             <p>Auto Clicker</p>
             <button id="autoClickerButton"><i class="fas fa-robot"></i> Buy (Cost: <span id="autoClickerCost">10</span>)</button>
-            <button id="autoClickerUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="autoClickerUpgradeCost">50</span>, +<span id = "autoClickerUpgradeAmount">0.5</span>)</button>
+            <!-- Display per unit production -->
+            <button id="autoClickerUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="autoClickerUpgradeCost">50</span>, Per Unit Prod: <span id = "autoClickerUpgradeAmount">1</span>/sec)</button>
         </div>
 
         <div class="upgrade">
             <p>Farm</p>
             <button id="farmButton"><i class="fas fa-tractor"></i> Buy (Cost: <span id="farmCost">50</span>)</button>
-            <button id="farmUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="farmUpgradeCost">250</span>, +<span id = "farmUpgradeAmount">0.5</span>)</button>
+            <!-- Display per unit production -->
+            <button id="farmUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="farmUpgradeCost">250</span>, Per Unit Prod: <span id = "farmUpgradeAmount">5</span>/sec)</button>
         </div>
 
         <div class="upgrade">
             <p>Mine</p>
             <button id="mineButton"><i class="fas fa-gem"></i> Buy (Cost: <span id="mineCost">200</span>)</button>
-            <button id="mineUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="mineUpgradeCost">1000</span>, +<span id = "mineUpgradeAmount">0.5</span>)</button>
+            <!-- Display per unit production -->
+            <button id="mineUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="mineUpgradeCost">1000</span>, Per Unit Prod: <span id = "mineUpgradeAmount">20</span>/sec)</button>
         </div>
 
         <div class="upgrade">
             <p>Bank (Requires 10 Farms)</p>
             <button id="bankButton" disabled><i class="fas fa-university"></i> Buy (Cost: <span id="bankCost">1000</span>)</button>
-            <button id="bankUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="bankUpgradeCost">5000</span>, +<span id = "bankUpgradeAmount">0.5</span>)</button>
+            <!-- Display per unit production -->
+            <button id="bankUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="bankUpgradeCost">5000</span>, Per Unit Prod: <span id = "bankUpgradeAmount">100</span>/sec)</button>
         </div>
 
         <div class="upgrade">
             <p>Stock Exchange (Requires 5 Mines)</p>
             <button id="stockExchangeButton" disabled><i class="fas fa-chart-area"></i> Buy (Cost: <span id="stockExchangeCost">5000</span>)</button>
-            <button id="stockExchangeUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="stockExchangeUpgradeCost">25000</span>, +<span id = "stockExchangeUpgradeAmount">0.5</span>)</button>
+            <!-- Display per unit production -->
+            <button id="stockExchangeUpgradeButton"><i class="fas fa-arrow-alt-circle-up"></i> Upgrade (Cost: <span id="stockExchangeUpgradeCost">25000</span>, Per Unit Prod: <span id = "stockExchangeUpgradeAmount">500</span>/sec)</button>
         </div>
 
         <button id="prestigeButton"><i class="fas fa-level-up-alt"></i> Prestige (Requires <span id="prestigeCostDisplay">10000</span> Money, Upgrade My Level +1)</button>
 
     </div>
+
+    <!-- Instruction Button -->
+    <button id="showInstructionsButton" class="instruction-button"><i class="fas fa-info-circle"></i> Instructions</button>
 
 </div>
 
@@ -89,7 +99,40 @@
 <footer>
     <p>© 2025 Lifer_Lighdow. All rights reserved.</p>
 </footer>
-    
+
+<!-- Game Instructions Modal -->
+<div id="instructionModal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2><i class="fas fa-book-open"></i> Game Instructions</h2>
+        <p>Welcome to Lifer_Lighdow Sci-Fi Clicker Game!</p>
+        <h3><i class="fas fa-bullseye"></i> Game Objective:</h3>
+        <ul>
+            <li>Click the "Click to Earn" button to gain money.</li>
+            <li>Use money to buy and upgrade various buildings (Auto Clickers, Farms, Mines, Banks, Stock Exchanges) to increase passive income.</li>
+            <li>Upon reaching certain conditions, you can "Prestige" to increase your "My Level", which provides higher click and passive income bonuses.</li>
+            <li>"Reset Assets" will reset all buildings and money, but keep "My Level" and increase the level requirement for the next reset.</li>
+            <li>"Full Game Reset" will revert all data to its initial state.</li>
+        </ul>
+        <h3><i class="fas fa-building"></i> Building Functions:</h3>
+        <ul>
+            <li><strong>Clicker:</strong> Increases the amount of money earned per click.</li>
+            <li><strong>Auto Clickers:</strong> Automatically generate money per second.</li>
+            <li><strong>Farms:</strong> Generate passive money.</li>
+            <li><strong>Mines:</strong> Generate more passive money.</li>
+            <li><strong>Banks:</strong> Requires 10 Farms to purchase, provides significant passive money.</li>
+            <li><strong>Stock Exchanges:</strong> Requires 5 Mines to purchase, provides massive passive money.</li>
+        </ul>
+        <h3><i class="fas fa-lightbulb"></i> Strategy:</h3>
+        <p>Balance your click income and passive income, allocating resources wisely for purchases and upgrades. When progress slows down, consider performing a Prestige to gain powerful bonuses and accelerate your game!</p>
+        <p><strong>Note on Prestige vs. Reset Assets:</strong></p>
+        <ul>
+            <li><strong>Prestige:</strong> Resets your money and all building *quantities* and *levels* back to initial, but *keeps* the current prices of all upgrades and buildings. Your "My Level" increases, providing a permanent multiplier.</li>
+            <li><strong>Reset Assets:</strong> Resets your money, all building *quantities*, *levels*, AND *prices* back to their initial values. Your "My Level" is kept, but the requirement for the next "Reset Assets" increases. This is useful for starting a fresh economic cycle with accumulated "My Level" benefits.</li>
+        </ul>
+    </div>
+</div>
+
 <script src="clicker_game.js"></script>
 
 </body>

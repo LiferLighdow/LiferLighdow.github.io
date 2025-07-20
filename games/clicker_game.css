@@ -36,7 +36,7 @@ body {
     border-radius: 15px; /* 更圓潤的邊角 */
     box-shadow: 0 0 40px rgba(0, 240, 255, 0.6); /* 強烈科技感光暈 */
     overflow: hidden;
-    position: relative; /* 用於浮動文字 */
+    position: relative; /* 用於浮動文字和說明按鈕定位 */
 }
 
 /* 各面板通用樣式 */
@@ -281,6 +281,138 @@ footer {
     100% { opacity: 0; }
 }
 
+/* 新增的說明按鈕樣式 */
+.instruction-button {
+    position: absolute;
+    top: 15px; /* 距離頂部 */
+    right: 15px; /* 距離右側 */
+    padding: 10px 18px;
+    font-size: 1em;
+    background: linear-gradient(to right, #8e2de2, #4a00e0); /* 紫色漸變 */
+    border-color: #8e2de2;
+    box-shadow: 0 0 10px rgba(142, 45, 226, 0.5);
+    z-index: 100; /* 確保在遊戲容器之上 */
+}
+.instruction-button:hover {
+    background: linear-gradient(to right, #4a00e0, #8e2de2);
+    box-shadow: 0 0 20px rgba(142, 45, 226, 0.8);
+}
+
+/* 浮動視窗 (Modal) 樣式 */
+.modal-overlay {
+    display: none; /* 預設隱藏 */
+    position: fixed; /* 固定在視窗上 */
+    z-index: 1000; /* 確保在最上層 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* 如果內容超出，允許滾動 */
+    background-color: rgba(0, 0, 0, 0.8); /* 半透明黑色背景 */
+    backdrop-filter: blur(5px); /* 模糊背景 */
+    display: flex; /* 使用 flexbox 居中內容 */
+    justify-content: center;
+    align-items: center;
+    animation: fadeInModal 0.3s ease-out forwards; /* 淡入動畫 */
+}
+
+.modal-content {
+    background: linear-gradient(to bottom right, #2a2a4a, #1f1f3f); /* 模態框背景 */
+    margin: auto;
+    padding: 30px;
+    border: 2px solid #00f0ff; /* 科技感邊框 */
+    border-radius: 15px;
+    width: 90%;
+    max-width: 700px; /* 最大寬度 */
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.7); /* 強烈光暈 */
+    position: relative;
+    color: #e0f7fa; /* 文字顏色 */
+    text-align: left;
+    transform: translateY(-20px); /* 初始位置略微上移 */
+    animation: slideInModal 0.4s ease-out forwards; /* 滑入動畫 */
+}
+
+.modal-content h2 {
+    color: #00ffcc; /* 標題顏色 */
+    text-shadow: 0 0 8px #00ffcc;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-content h3 {
+    color: #00c6ff; /* 副標題顏色 */
+    text-shadow: 0 0 5px #00c6ff;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 1.4em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-content p, .modal-content ul {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.modal-content ul {
+    list-style: none; /* 移除預設列表點 */
+    padding-left: 0;
+}
+
+.modal-content ul li {
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.modal-content ul li::before {
+    content: '\2022'; /* 使用圓點符號 */
+    color: #00ffcc; /* 霓虹綠點 */
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+    position: absolute;
+    left: 0;
+}
+
+/* 關閉按鈕 */
+.close-button {
+    color: #fff;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #dc3545; /* 懸停時變紅 */
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 模態框動畫 */
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInModal {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
 /* 響應式設計 */
 @media (max-width: 1024px) {
     #gameContainer {
@@ -297,6 +429,36 @@ footer {
 
     #functions {
         max-height: none; /* 不限制高度 */
+    }
+
+    .instruction-button {
+        top: 10px;
+        right: 10px;
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5em;
+    }
+
+    .modal-content h3 {
+        font-size: 1.2em;
+    }
+
+    .modal-content p, .modal-content ul {
+        font-size: 1em;
+    }
+
+    .close-button {
+        font-size: 25px;
+        top: 10px;
+        right: 15px;
     }
 }
 
