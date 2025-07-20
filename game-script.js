@@ -173,7 +173,7 @@ window.addEventListener("load", () => {
     const gameLinksContainer = document.getElementById("game-links-container");
     const gameURLs = [
         "games/2048", "games/clicker_game_tw", "games/clicker_game",
-        "https://example.com/game4", "https://example.com/game5",
+        "games/cute/touch_girls", "https://example.com/game5",
         "https://example.com/game6", "https://example.com/game7",
         "https://example.com/game8", "https://example.com/game9",
         "https://example.com/game10"
@@ -182,7 +182,7 @@ window.addEventListener("load", () => {
     // Define game names (English only)
     const gameNames = [
         "2048", "Clicker Game TW", "Clicker Game",
-        "Game 4", "Game 5", "Game 6", "Game 7", "Game 8", "Game 9", "Game 10"
+        "Touch Girls", "Game 5", "Game 6", "Game 7", "Game 8", "Game 9", "Game 10"
     ];
 
     function updateGameLinks() {
