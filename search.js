@@ -203,13 +203,15 @@ function displayResults(page) {
     listItem.style.animationDelay = `${index * 0.1}s`;
 
     const highlightedTitle = highlightSearchTerm(result.title, searchInput.value);
+    // The URL text itself should not be a clickable link, but display the full URL
+    const urlDisplay = result.link;
     const highlightedDescription = highlightSearchTerm(result.description, searchInput.value);
 
     listItem.innerHTML = `
-      <h2 class="result-title">${highlightedTitle}</h2>
-      <a href="${result.link}" class="result-link" target="_blank" rel="noopener noreferrer">${result.link}</a>
+      <h2 class="result-title"><a href="${result.link}" target="_blank" rel="noopener noreferrer">${highlightedTitle}</a></h2>
+      <span class="result-link">${urlDisplay}</span> <!-- Changed to span for display only -->
       <p class="result-description">${highlightedDescription}</p>
-      <p>Source: ${result.source} - Date: ${result.date}</p> <!-- Changed text to English -->
+      <p>Source: ${result.source} - Date: ${result.date}</p>
     `;
     searchResultsContainer.appendChild(listItem);
   });

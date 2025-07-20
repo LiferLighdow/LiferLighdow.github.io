@@ -215,19 +215,33 @@ body {
   font-weight: 600;
 }
 
+/* Style for the clickable title link */
+.result-title a {
+  color: #f0f0f0; /* Keep title color consistent */
+  text-decoration: none; /* No underline by default */
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+  cursor: pointer; /* Indicate it's clickable */
+}
+
+.result-title a:hover {
+  color: #61dafb; /* Change color on hover */
+  text-decoration: underline; /* Underline on hover */
+}
+
 .result-link {
-  color: #61dafb; /* Bright blue link */
-  text-decoration: none;
+  color: #b0b0b0; /* Make URL text less prominent */
+  text-decoration: none; /* Ensure no underline */
   display: block;
   margin-bottom: 6px;
   font-size: 15px;
-  transition: color 0.2s ease;
+  /* Removed cursor: pointer; and transition as it's no longer a clickable link */
 }
 
-.result-link:hover {
-  color: #21a1f1; /* Darker on hover */
+/* Removed hover effect for .result-link as it's not clickable */
+/* .result-link:hover {
+  color: #21a1f1;
   text-decoration: underline;
-}
+} */
 
 .result-description {
   color: #b0b0b0; /* Lighter description text */
@@ -405,7 +419,7 @@ body {
 .pagination-button.active {
   background-color: #61dafb; /* Bright blue active button */
   cursor: default;
-  box-shadow: 0 44px 10px rgba(97, 218, 251, 0.4);
+  box-shadow: 0 4px 10px rgba(97, 218, 251, 0.4);
 }
 
 /* Custom alert box styles */
@@ -630,7 +644,7 @@ body {
 .calc-button.equals {
   background-color: #61dafb; /* Blue for equals */
   color: #1a1a2e;
-  grid-column: span 2; /* Make equals button span two columns */
+  /* We will let it span 1 column now for better balance, as it's not spanning 2 columns anymore */
 }
 
 .calc-button.equals:hover {
@@ -647,9 +661,6 @@ body {
 .calc-button.backspace:hover {
   background-color: rgba(255, 140, 0, 0.9);
 }
-
-/* Removed .calc-button.zero as '0' button will now span 1 column */
-
 
 /* Responsive styles for small screens */
 @media (max-width: 768px) {
