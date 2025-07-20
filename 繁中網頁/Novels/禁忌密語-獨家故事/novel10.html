@@ -27,6 +27,7 @@
             text-align: center;
             padding: 1em;
             box-sizing: border-box;
+            pointer-events: auto; /* 預設為 auto，以下 JS 會控制其行為 */
         }
 
         .access-denied-overlay p {
@@ -46,6 +47,16 @@
             0% { opacity: 1; text-shadow: 0 0 15px #ff0000; }
             50% { opacity: 0.8; text-shadow: 0 0 5px #ff0000; }
             100% { opacity: 1; text-shadow: 0 0 15px #ff0000; }
+        }
+
+        /* 確保這些內容區塊在 CSS 中預設是隱藏的 */
+        .hidden-content1, .hidden-content2, .hidden-content3 {
+            display: none;
+        }
+
+        /* 確保按鈕的預設顯示 (不影響外觀，僅確保可見性) */
+        .show-button, .hidden-button {
+            display: inline-block; /* 讓按鈕可見 */
         }
     </style>
 </head>
@@ -88,10 +99,10 @@
             <p>「啊啊啊啊啊！」我發出一聲淒厲而綿長的尖叫，身體劇烈地痙攣起來，如同觸電一般。一股股熱流如同火山爆發般，瘋狂地從我的花穴深處噴湧而出，將他溫熱的口腔完全浸濕。那份失控的快感，讓我眼前一片白茫茫，靈魂彷彿也隨之昇華。</p>
 
             <p>他依然埋首在我兩腿之間，享受著我噴湧而出的高潮。他的舌尖輕柔地舔舐著，將我所有的分泌物都悉數吞噬。那份溫柔而瘋狂的舉動，讓我的心頭湧起一股難以言喻的滿足與感動。</p>
-            <a href="#" id="button2" onclick="showContent('hidden-content2', '#button2'); return false;" class="hidden-button">解鎖更深的誘惑 (付費章節)</a>
+            <a href="#" id="button2" onclick="showContent('hidden-content2', 'button2'); return false;" class="hidden-button">解鎖更深的誘惑 (付費章節)</a>
         </div>
 
-        <a href="#" id="button1" onclick="showContent('hidden-content1', '#button1'); return false;" class="show-button">解鎖午間的潮汐 (付費章節)</a>
+        <a href="#" id="button1" onclick="showContent('hidden-content1', 'button1'); return false;" class="show-button">解鎖午間的潮汐 (付費章節)</a>
 
         <div class="hidden-content2">
             <p>良久，他才緩緩地抬起頭，唇邊帶著一抹紅色的印記。他深邃的眼眸看著我，那目光裡充滿了濃濃的愛意與佔有慾。他伸出手，輕輕地撫摸著我的臉頰，指尖輕柔地拭去我眼角的淚花。</p>
@@ -139,13 +150,11 @@
             <p>我軟軟地躺在他的懷裡，感受到他溫熱的體溫和依然強勁的心跳。身體雖然疲憊，但心靈卻感到一種前所未有的充實與幸福。這份禁忌的愛戀，在午間的客廳裡被他再次加深了印記。我知道，無論未來會怎樣，我都會義無反顧地，與他一同沈淪在這份禁忌的慾望深淵中……</p>
         </div>
 
-        <a href="novel9.html?access_granted=true" class="next-episode-button">上一集：空巢之慾</a>
-        <a href="novel11.html?access_granted=true" class="next-episode-button">下一集：即將到來</a>
-
+        <a href="novel9.html?access_granted=true" class="next-episode-button">上一集：空巢之慾：舌尖的狂歡</a>
         <p class="warning">警告：本故事包含成人內容，可能不適合所有讀者。請確認您已年滿18歲。</p>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js"></script> 
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -155,21 +164,22 @@
 
             if (accessGranted !== 'true') {
                 accessDeniedOverlay.style.display = 'flex';
-                document.body.style.pointerEvents = 'none'; // 禁用所有互動
-                return; // 阻止後續腳本執行
+                accessDeniedOverlay.style.pointerEvents = 'auto'; // 確保疊加層本身的互動性 (如果它有按鈕等)
+                document.body.style.overflow = 'hidden'; // 阻止背景滾動
+                return; // 阻止後續腳本執行，避免內容互動
             } else {
                 // 如果有 access_granted=true，移除該參數以防止直接複製連結後門
                 if (window.history.replaceState) {
                     const newUrl = window.location.origin + window.location.pathname;
                     window.history.replaceState({path: newUrl}, '', newUrl);
                 }
+                document.body.style.overflow = 'auto'; // 確保在有權限時，頁面可以正常滾動
             }
 
             // 更新所有 .next-episode-button 的 href，確保帶有 access_granted 參數
             const navButtons = document.querySelectorAll('.next-episode-button');
             navButtons.forEach(button => {
                 let originalHref = button.getAttribute('href');
-                // 檢查是否已經有參數，如果沒有才添加
                 if (originalHref && !originalHref.includes('?access_granted=true')) {
                     button.setAttribute('href', originalHref + '?access_granted=true');
                 }
@@ -189,14 +199,17 @@
             });
         });
 
-        // 以下為 showContent 函數，請確保它在外部的 script.js 中有定義
+        // 核心函數：顯示隱藏內容並隱藏按鈕
+        // 這個函數直接內嵌在這裡，以確保它總是被載入
         function showContent(contentClass, buttonId) {
             const content = document.querySelector(`.${contentClass}`);
             const button = document.getElementById(buttonId);
 
             if (content && button) {
-                content.style.display = 'block';
-                button.style.display = 'none'; // 隱藏按鈕
+                content.style.display = 'block'; // 顯示內容
+                button.style.display = 'none';   // 隱藏按鈕
+            } else {
+                console.error(`Error: Could not find content with class '${contentClass}' or button with ID '${buttonId}'.`);
             }
         }
     </script>

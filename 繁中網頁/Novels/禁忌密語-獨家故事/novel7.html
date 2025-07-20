@@ -27,6 +27,7 @@
             text-align: center;
             padding: 1em;
             box-sizing: border-box;
+            pointer-events: auto; /* 預設為 auto，以下 JS 會控制其行為 */
         }
 
         .access-denied-overlay p {
@@ -46,6 +47,16 @@
             0% { opacity: 1; text-shadow: 0 0 15px #ff0000; }
             50% { opacity: 0.8; text-shadow: 0 0 5px #ff0000; }
             100% { opacity: 1; text-shadow: 0 0 15px #ff0000; }
+        }
+
+        /* 確保這些內容區塊在 CSS 中預設是隱藏的 */
+        .hidden-content1, .hidden-content2, .hidden-content3 {
+            display: none;
+        }
+
+        /* 確保按鈕的預設顯示 (不影響外觀，僅確保可見性) */
+        .show-button, .hidden-button {
+            display: inline-block; /* 讓按鈕可見 */
         }
     </style>
 </head>
@@ -78,11 +89,7 @@
 
         <p>他輕輕地呻吟了一聲，眉頭微蹙，似乎在睡夢中被什麼所擾。我立即停下動作，屏住呼吸。他沒有醒來，只是輕輕地調整了一下睡姿，臀部無意識地往後頂了頂，讓我的手指更加深入地觸碰到他的慾望。</p>
 
-        <p>我不再猶豫。我輕輕地將手包裹住他那溫熱而飽脹的慾望，感受著它每一次的脈動。它此刻雖然還未完全勃發，但那份潛藏的力量已經足以讓我的心跳加速。我輕柔地，緩緩地，上下套弄著，帶起一陣陣濕滑的摩擦。</p>
-
-        <p>「嗯……」他從喉嚨深處發出低沉的悶哼，聲音帶著一絲困倦，和更多壓抑不住的慾望。他的身體輕微地顫抖了一下，那原本半勃的慾望，在我的愛撫下，開始以驚人的速度，迅速地膨脹、堅硬起來。</p>
-
-        <p>我能感覺到它在我掌心裡迅速地脹大，那份灼熱感透過我的手心傳遍全身。我加大了手上的力度和速度，輕柔而又富有節奏地上下套弄，同時用指尖輕輕地揉搓著他的龜頭，帶給他一陣陣酥麻。</p>
+        <p>我不再猶豫。我輕輕地將手包裹住他那溫熱而飽脹的慾望，感受著它每一次的脈動。它此刻雖然還未完全勃發，但那份潛藏的力量已經足以讓我的心跳加速。我加大了手上的力度和速度，輕柔而又富有節奏地上下套弄，同時用指尖輕輕地揉搓著他的龜頭，帶給他一陣陣酥麻。</p>
 
         <p>他開始發出粗重的喘息，身體也開始輕微地扭動起來。我能感覺到他體內的慾望正在被我一點點地喚醒，而他此刻卻依然沉浸在半夢半醒之間，那種無意識的反應，讓我的心臟感到一種莫名的滿足與興奮。</p>
 
@@ -107,10 +114,10 @@
 
             <p>他停頓了片刻，讓我適應這份突如其來的飽脹，然後開始緩慢而富有節奏地抽動起來。每一次的抽出都帶著濕滑的摩擦聲，每一次的深入都將我推向更深的快感深淵。我的身體隨著他的動作而輕輕搖擺，每一次的撞擊都讓我的靈魂為之顫抖。</p>
 
-            <a href="#" id="button2" onclick="showContent('hidden-content2', '#button2'); return false;" class="hidden-button">解鎖更深的誘惑 (付費章節)</a>
+            <a href="#" id="button2" onclick="showContent('hidden-content2', 'button2'); return false;" class="hidden-button">解鎖更深的誘惑 (付費章節)</a>
         </div>
 
-        <a href="#" id="button1" onclick="showContent('hidden-content1', '#button1'); return false;" class="show-button">解鎖晨曦中的甜蜜襲擊 (付費章節)</a>
+        <a href="#" id="button1" onclick="showContent('hidden-content1', 'button1'); return false;" class="show-button">解鎖晨曦中的甜蜜襲擊 (付費章節)</a>
 
         <div class="hidden-content2">
             <p>清晨的陽光漸漸變得明亮，但臥室裡依然充滿了曖昧的氣息。他開始加速，每一次的衝擊都變得更加猛烈，更加深沉。他那粗大的慾望在我體內肆意地攪動著，每一寸都精準地摩擦著我的敏感點，帶起一陣陣難以言喻的酥麻與快感。</p>
@@ -146,7 +153,7 @@
         <p class="warning">警告：本故事包含成人內容，可能不適合所有讀者。請確認您已年滿18歲。</p>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js"></script> 
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -156,21 +163,22 @@
 
             if (accessGranted !== 'true') {
                 accessDeniedOverlay.style.display = 'flex';
-                document.body.style.pointerEvents = 'none'; // 禁用所有互動
-                return; // 阻止後續腳本執行
+                accessDeniedOverlay.style.pointerEvents = 'auto'; // 確保疊加層本身的互動性 (如果它有按鈕等)
+                document.body.style.overflow = 'hidden'; // 阻止背景滾動
+                return; // 阻止後續腳本執行，避免內容互動
             } else {
                 // 如果有 access_granted=true，移除該參數以防止直接複製連結後門
                 if (window.history.replaceState) {
                     const newUrl = window.location.origin + window.location.pathname;
                     window.history.replaceState({path: newUrl}, '', newUrl);
                 }
+                document.body.style.overflow = 'auto'; // 確保在有權限時，頁面可以正常滾動
             }
 
             // 更新所有 .next-episode-button 的 href，確保帶有 access_granted 參數
             const navButtons = document.querySelectorAll('.next-episode-button');
             navButtons.forEach(button => {
                 let originalHref = button.getAttribute('href');
-                // 檢查是否已經有參數，如果沒有才添加
                 if (originalHref && !originalHref.includes('?access_granted=true')) {
                     button.setAttribute('href', originalHref + '?access_granted=true');
                 }
@@ -190,14 +198,17 @@
             });
         });
 
-        // 以下為 showContent 函數，請確保它在外部的 script.js 中有定義
+        // 核心函數：顯示隱藏內容並隱藏按鈕
+        // 這個函數直接內嵌在這裡，以確保它總是被載入
         function showContent(contentClass, buttonId) {
             const content = document.querySelector(`.${contentClass}`);
             const button = document.getElementById(buttonId);
 
             if (content && button) {
-                content.style.display = 'block';
-                button.style.display = 'none'; // 隱藏按鈕
+                content.style.display = 'block'; // 顯示內容
+                button.style.display = 'none';   // 隱藏按鈕
+            } else {
+                console.error(`Error: Could not find content with class '${contentClass}' or button with ID '${buttonId}'.`);
             }
         }
     </script>
