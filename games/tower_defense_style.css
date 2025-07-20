@@ -1,0 +1,190 @@
+/* 整體頁面樣式 */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* 讓內容從頂部開始，允許捲動 */
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #1a2a3a 0%, #0a1a2a 100%); /* 深藍色漸變背景 */
+    font-family: 'Inter', sans-serif; /* 使用 Inter 字體 */
+    color: #e0f2f7; /* 淺藍色文字 */
+    padding-top: 20px; /* 頂部留白 */
+    padding-bottom: 20px; /* 底部留白 */
+}
+
+/* 遊戲容器 */
+.game-container {
+    background-color: #2b3e50; /* 較深的藍色 */
+    border-radius: 18px; /* 圓角 */
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5), 0 0 30px rgba(52, 152, 219, 0.3); /* 陰影和藍色發光 */
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    max-width: 98vw; /* 最大寬度 */
+    width: 1290px; /* 固定寬度，比畫布略大 */
+    box-sizing: border-box; /* 包含內邊距和邊框 */
+    border: 2px solid #3498db; /* 藍色邊框 */
+}
+
+/* 遊戲標題 */
+h1 {
+    color: #f1c40f; /* 黃色標題 */
+    margin-top: 0;
+    font-size: 2.8em;
+    text-shadow: 0 0 15px rgba(241, 196, 15, 0.7), 0 0 5px rgba(241, 196, 15, 0.9); /* 發光效果 */
+    letter-spacing: 2px;
+}
+
+/* 遊戲資訊面板 */
+.game-info {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    font-size: 1.3em;
+    background-color: rgba(44, 62, 80, 0.7); /* 略透明的深藍色 */
+    padding: 12px 0;
+    border-radius: 10px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid #3498db; /* 藍色邊框 */
+}
+
+.game-info div {
+    padding: 0 18px;
+    text-align: center;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* 遊戲畫布 */
+canvas {
+    background-color: #556270; /* 較暗的灰色地圖 */
+    border: 6px solid #34495e; /* 深色邊框 */
+    border-radius: 12px; /* 圓角 */
+    display: block; /* 移除額外空間 */
+    width: 100%; /* 響應式寬度 */
+    height: auto; /* 高度自動調整 */
+    max-height: 750px; /* 最大高度 */
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6), 0 0 20px rgba(52, 152, 219, 0.2); /* 內陰影和藍色發光 */
+    cursor: crosshair; /* 放置塔的鼠標樣式 */
+}
+
+/* 按鈕容器 */
+.button-container {
+    display: flex;
+    flex-direction: column; /* 讓子容器垂直排列 */
+    gap: 15px; /* 子容器之間的間距 */
+    flex-wrap: wrap; /* 換行 */
+    justify-content: center;
+}
+
+/* 新增的子容器樣式 */
+.control-buttons, .tower-build-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%; /* 確保它們佔據父容器的全部寬度 */
+}
+
+/* 按鈕樣式 */
+button {
+    background: linear-gradient(145deg, #2ecc71, #27ae60); /* 綠色漸變 */
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1.3em;
+    border-radius: 10px; /* 圓角 */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), inset 0 2px 5px rgba(255, 255, 255, 0.2); /* 陰影和內陰影 */
+    min-width: 140px; /* 最小寬度 */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+button:hover {
+    background: linear-gradient(145deg, #27ae60, #2ecc71); /* 懸停時顏色微調 */
+    transform: translateY(-3px) scale(1.02); /* 輕微上移和放大效果 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.3), 0 0 15px rgba(46, 204, 113, 0.7); /* 更明顯的陰影和綠色發光 */
+}
+
+button:active {
+    background: linear-gradient(145deg, #2ecc71, #27ae60);
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 2px 5px rgba(255, 255, 255, 0.2);
+}
+
+button:disabled {
+    background: #7f8c8d; /* 禁用時變灰 */
+    cursor: not-allowed;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+/* 選中的塔按鈕樣式 */
+button.selected-tower {
+    background: linear-gradient(145deg, #e67e22, #f39c12); /* 橙色漸變 */
+    border: 2px solid #d35400;
+    transform: scale(1.05); /* 輕微放大 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.3), 0 0 20px rgba(243, 156, 18, 0.9); /* 橙色發光 */
+}
+
+/* 選中的速度按鈕樣式 */
+button.selected-speed {
+    background: linear-gradient(145deg, #3498db, #2980b9); /* 藍色漸變 */
+    border: 2px solid #2980b9;
+    transform: scale(1.05); /* 輕微放大 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.3), 0 0 20px rgba(52, 152, 219, 0.9); /* 藍色發光 */
+}
+
+/* 遊戲結束訊息 */
+#gameOverMessage, #gameWinMessage {
+    position: fixed; /* 使用 fixed 定位，使其不隨捲動而移動 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(44, 62, 80, 0.95); /* 更不透明的背景 */
+    color: #e74c3c; /* 紅色文字 */
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 3em;
+    font-weight: bold;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7), 0 0 40px rgba(231, 76, 60, 0.5); /* 陰影和紅色發光 */
+    display: none; /* 預設隱藏 */
+    z-index: 100; /* 確保在最上層 */
+    border: 3px solid #e74c3c;
+}
+
+#gameWinMessage {
+    color: #2ecc71; /* 綠色文字 */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7), 0 0 40px rgba(46, 204, 113, 0.5); /* 綠色發光 */
+    border: 3px solid #2ecc71;
+}
+
+/* 響應式設計 */
+@media (max-width: 1280px) {
+    .game-container {
+        width: 98vw;
+        padding: 15px;
+    }
+    h1 {
+        font-size: 2.2em;
+    }
+    .game-info {
+        font-size: 1.1em;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 1.1em;
+        min-width: 100px;
+    }
+    .control-buttons, .tower-build-buttons {
+        gap: 10px;
+    }
+    #gameOverMessage, #gameWinMessage {
+        font-size: 2.2em;
+        padding: 25px;
+    }
+}

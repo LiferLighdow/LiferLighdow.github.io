@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifer_Lighdow塔防</title>
+    <link rel="stylesheet" href="tower_defense_style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Lifer_Lighdow塔防</h1>
+        <div class="game-info">
+            <div>金錢: <span id="money">300</span></div>
+            <div>生命: <span id="lives">10</span></div>
+            <div>波次: <span id="wave">0</span> / <span id="totalWaves"></span></div>
+            <div>分數: <span id="score">0</span></div>
+        </div>
+        <canvas id="gameCanvas" width="1250" height="750"></canvas>
+        <div class="button-container">
+            <div class="control-buttons">
+                <button id="startButton" data-lang-key="startButton">開始遊戲</button>
+                <button id="pauseButton" data-lang-key="pauseButton">暫停</button>
+                <button id="resetButton" data-lang-key="resetButton">重置遊戲</button>
+                <button id="speed1xButton" class="speed-button selected-speed" data-speed="1" data-lang-key="speed1x">1x 速度</button>
+                <button id="speed2xButton" class="speed-button" data-speed="2" data-lang-key="speed2x">2x 速度</button>
+                <button id="speed4xButton" class="speed-button" data-speed="4" data-lang-key="speed4x">4x 速度</button>
+            </div>
+            <div class="tower-build-buttons">
+                <button id="buildBasicTowerButton" data-tower-type="basic" disabled data-lang-key="buildBasicTower">建造基礎塔 (<span class="cost">50</span>)</button>
+                <button id="buildSlowTowerButton" data-tower-type="slow" disabled data-lang-key="buildSlowTower">建造緩速塔 (<span class="cost">75</span>)</button>
+                <button id="buildHeavyTowerButton" data-tower-type="heavy" disabled data-lang-key="buildHeavyTower">建造重砲塔 (<span class="cost">100</span>)</button>
+                <button id="buildSplashTowerButton" data-tower-type="splash" disabled data-lang-key="buildSplashTower">建造範圍攻擊塔 (<span class="cost">120</span>)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameOverMessage">
+        <span class="message-text" data-lang-key="gameOver">遊戲結束！</span><br>
+        <span class="score-text" data-lang-key="yourScore">您的分數：</span><span id="finalScore">0</span>
+        <br>
+        <button id="restartGameOverButton" class="restart-button" data-lang-key="restart" style="margin-top: 20px;">重新開始</button>
+    </div>
+
+    <div id="gameWinMessage">
+        <span class="message-text" data-lang-key="gameWin">恭喜過關！</span><br>
+        <span class="score-text" data-lang-key="yourScore">您的分數：</span><span id="finalWinScore">0</span>
+        <br>
+        <button id="restartGameWinButton" class="restart-button" data-lang-key="restart" style="margin-top: 20px;">重新開始</button>
+    </div>
+
+    <script>
+        // Set the game language for script.js
+        let gameLanguage = 'zh-TW';
+    </script>
+    <script src="tower_defense_script.js"></script>
+</body>
+</html>
