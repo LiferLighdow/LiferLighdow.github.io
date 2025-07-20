@@ -39,7 +39,6 @@ a {
 }
 
 a:hover {
-    color: #FF6B6B; /* 懸停時顏色變亮 */
     text-decoration: underline;
 }
 
@@ -106,7 +105,9 @@ a[onclick*='showContent']:hover {
 /* 隱藏內容的通用樣式 */
 .hidden-content,
 .hidden-content1,
-.hidden-content2 {
+.hidden-content2,
+.hidden-content3, /* 新增 */
+.hidden-content4 { /* 新增 */
     display: none; /* 預設隱藏所有隱藏內容區塊 */
     padding-top: 20px; /* 顯示後與上方內容的間距 */
     border-top: 1px dashed rgba(255, 255, 255, 0.1); /* 虛線分隔，暗示內容的解鎖 */
