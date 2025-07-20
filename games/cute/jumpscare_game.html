@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>可愛女孩的幸運挑戰！</title> <!-- 標題已更改 -->
+  <style>
+    /* 全域樣式 */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom right, #e0f2f7, #c1e8ff); /* 漸層背景 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #333;
+      overflow: hidden; /* 防止滾動條 */
+      position: relative; /* 為愛心背景提供定位上下文 */
+    }
+
+    h1 {
+      color: #007bff; /* 藍色標題 */
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      color: #555;
+      text-align: center; /* 副標題置中 */
+    }
+
+    /* 載入畫面樣式 */
+    #loadingScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      transition: opacity 0.5s ease-out; /* 淡出動畫 */
+    }
+
+    #loadingText {
+      font-size: 1.8em;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    #progressBarContainer {
+      width: 80%;
+      max-width: 400px;
+      height: 25px;
+      background-color: #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    #progressBar {
+      width: 0%;
+      height: 100%;
+      background-color: #007bff;
+      border-radius: 12px;
+      transition: width 0.1s ease-out; /* 更快的進度條動畫 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+
+    /* 遊戲容器樣式 */
+    #gameContainer {
+      display: none; /* 預設隱藏，載入完成後才顯示 */
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 20px; /* 增加整體內邊距 */
+      box-sizing: border-box;
+    }
+
+    /* 按鈕樣式 */
+    #baitImage {
+      cursor: pointer;
+      max-width: 750px; /* 圖片更大 (原 500px * 1.5 = 750px) */
+      height: auto;
+      border-radius: 20px; /* 更圓潤 */
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* 更明顯的陰影 */
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      border: 5px solid #007bff; /* 邊框 */
+    }
+
+    #baitImage:hover {
+      transform: scale(1.05); /* 稍微縮小hover效果 */
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    #clickCounter {
+      font-size: 1.6em;
+      font-weight: bold;
+      margin-top: 25px;
+      color: #0056b3;
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 10px 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* jumpscare 樣式 */
+    #jumpscareContainer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.95); /* 更黑的背景 */
+      z-index: 1000;
+      animation: fadeInOut 5s forwards; /* 新增動畫 */
+    }
+
+    .jumpscareImage {
+      width: 100%; /* 圖片滿版 */
+      height: 100%; /* 圖片滿版 */
+      object-fit: cover; /* 保持圖片比例並覆蓋整個容器 */
+      animation: shake 0.3s infinite alternate; /* 新增抖動動畫 */
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(1deg); }
+      30% { transform: translate(3px, 2px) rotate(0deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: translate(-3px, 1px) rotate(0deg); }
+      70% { transform: translate(3px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(1deg); }
+      90% { transform: translate(1px, 2px) rotate(0deg); }
+      100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
+
+
+    /* 運氣排行榜樣式 */
+    #leaderboard {
+      margin-top: 40px;
+      border: 2px solid #007bff; /* 更明顯的邊框 */
+      border-radius: 15px;
+      padding: 25px;
+      width: 90%;
+      max-width: 650px;
+      background-color: #fff;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      display: none; /* 預設隱藏，Jumpscare 後才顯示 */
+    }
+
+    #leaderboard h2 {
+      color: #007bff;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+
+    #leaderboard ol {
+      list-style-type: none; /* 移除預設編號 */
+      padding: 0;
+    }
+
+    #leaderboard li {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      background-color: #f9f9f9;
+      padding: 8px 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 5px solid #007bff; /* 列表項左側裝飾 */
+    }
+    #leaderboard li:nth-child(even) {
+      background-color: #eefaff; /* 隔行變色 */
+    }
+    #leaderboard li span:first-child {
+      font-weight: bold;
+      color: #333;
+    }
+    #leaderboard li span:last-child {
+      color: #0056b3;
+    }
+
+
+    /* 分享按鈕 */
+    #shareButtons {
+      margin-top: 30px;
+    }
+
+    #shareButtons button {
+      background-color: #28a745; /* 綠色按鈕 */
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      margin: 0 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #shareButtons button:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+    }
+
+    /* 愛心動畫樣式 */
+    #heart-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none; /* 讓愛心不影響點擊事件 */
+      z-index: -1; /* 確保在所有內容的後方 */
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 2em; /* 愛心大小 */
+      color: #ff69b4; /* 粉紅色愛心 */
+      opacity: 0;
+      animation: floatUp 6s ease-out forwards;
+      text-shadow: 0 0 5px rgba(255, 105, 180, 0.5); /* 愛心陰影 */
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; }
+      20% { opacity: 0.8; } /* 稍微淡入 */
+      100% { transform: translateY(-100vh) translateX(var(--random-x)) scale(1.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 愛心背景動畫容器 -->
+  <div id="heart-background"></div>
+
+  <!-- 載入畫面 -->
+  <div id="loadingScreen">
+    <div id="loadingText">載入中，請稍候...</div>
+    <div id="progressBarContainer">
+      <div id="progressBar">0%</div>
+    </div>
+  </div>
+
+  <!-- 遊戲主體 -->
+  <div id="gameContainer">
+    <h1>點擊可愛女孩！</h1> <!-- 標題已更改 -->
+    <p>點擊下方的圖片來測試你的運氣！<br>（有可能抽到稀有可愛女孩）</p> <!-- 副標題已更改 -->
+    <img id="baitImage" src="" alt="點我" title="點我">
+    <p id="clickCounter">點擊次數: 0</p>
+
+    <!-- jumpscare 容器 -->
+    <div id="jumpscareContainer">
+      <img id="jumpscareImage" class="jumpscareImage" src="" alt="Jumpscare">
+    </div>
+
+    <audio id="jumpscareSound" src="scream.mp3" preload="auto"></audio>
+
+    <!-- 運氣排行榜 -->
+    <div id="leaderboard">
+      <h2>世界紀錄 - 最快被嚇到</h2>
+      <ol id="leaderboardList">
+        <!-- 排行榜項目將在這裡動態生成 -->
+      </ol>
+    </div>
+
+    <!-- 分享按鈕 -->
+    <div id="shareButtons">
+      <button id="shareButton">分享你的運氣！</button>
+    </div>
+  </div>
+
+  <script>
+    const baitImage = document.getElementById("baitImage");
+    const jumpscareContainer = document.getElementById("jumpscareContainer");
+    const jumpscareImage = document.getElementById("jumpscareImage");
+    const jumpscareSound = document.getElementById("jumpscareSound");
+    const clickCounterDisplay = document.getElementById("clickCounter");
+    const leaderboardList = document.getElementById("leaderboardList");
+    const shareButton = document.getElementById("shareButton");
+    const loadingScreen = document.getElementById("loadingScreen");
+    const progressBar = document.getElementById("progressBar");
+    const gameContainer = document.getElementById("gameContainer");
+    const leaderboard = document.getElementById("leaderboard"); // 獲取排行榜元素
+    const heartBackground = document.getElementById("heart-background"); // 愛心背景容器
+
+    let clickCount = 0;
+    let triggerCount = 0; // Jumpscare 觸發次數，將由亂數生成
+    let jumpscareTriggered = false;
+
+    // 圖片資源
+    const cuteImages = [
+      "cute_animal_1.jpg",
+      "cute_animal_2.jpg",
+      "cute_animal_3.jpg",
+      "cute_animal_4.jpg",
+      "cute_animal_5.jpg",
+      "cute_animal_6.jpg",
+      "cute_animal_7.jpg",
+      "cute_animal_8.jpg"
+    ];
+
+    const jumpscareImages = [
+      "scary_face_1.jpg",
+      "scary_face_2.jpg",
+      "scary_face_3.jpg",
+      "scary_face_4.jpg"
+    ];
+
+    // 預載入所有圖片，不包含 scream.mp3
+    const allImagesToPreload = [...cuteImages, ...jumpscareImages];
+
+    function getRandomElement(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    // 生成加權亂數 1~20 (1~10 機率高兩倍)
+    function generateWeightedRandomTriggerCount() {
+      // 創建一個包含數字的陣列，1-10 出現兩次，11-20 出現一次
+      const pool = [];
+      for (let i = 1; i <= 10; i++) {
+        pool.push(i);
+        pool.push(i); // 1-10 增加兩倍機率
+      }
+      for (let i = 11; i <= 20; i++) {
+        pool.push(i);
+      }
+      return getRandomElement(pool);
+    }
+
+    // 排行榜的本地儲存鍵
+    const LEADERBOARD_KEY = "jumpscareLeaderboard";
+
+    // 載入排行榜
+    function loadLeaderboard() {
+      const leaderboardData = localStorage.getItem(LEADERBOARD_KEY);
+      if (leaderboardData) {
+        return JSON.parse(leaderboardData);
+      } else {
+        return [
+          { name: "匿名玩家", score: 1 },
+          { name: "神秘人", score: 2 },
+          { name: "超級幸運星", score: 3 },
+          { name: "倒楣鬼", score: 4 },
+          { name: "衰神附體", score: 5 }
+        ];
+      }
+    }
+
+    // 儲存排行榜
+    function saveLeaderboard(leaderboard) {
+      localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard));
+    }
+
+    // 顯示排行榜
+    function displayLeaderboard() {
+      leaderboardList.innerHTML = ""; // 清空現有列表
+      leaderboardData.forEach((entry, index) => { // 使用 leaderboardData
+        const listItem = document.createElement("li");
+        // 使用 span 分開姓名和分數，方便 CSS 調整
+        listItem.innerHTML = `<span>${index + 1}. ${entry.name}</span> <span>- ${entry.score} 次</span>`;
+        leaderboardList.appendChild(listItem);
+      });
+    }
+
+    // 初始化排行榜
+    let leaderboardData = loadLeaderboard(); // 變數名改為 leaderboardData 以避免與 DOM 元素衝突
+    displayLeaderboard(); // 預先載入數據，但不會顯示 DOM 元素
+
+    // 資源預載入功能
+    let loadedCount = 0;
+    function preloadAssets() {
+      console.log("開始預載入所有圖片...");
+      return new Promise((resolve) => {
+        if (allImagesToPreload.length === 0) {
+          console.log("沒有圖片需要預載入。");
+          resolve();
+          return;
+        }
+
+        allImagesToPreload.forEach((src) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = () => {
+            loadedCount++;
+            const progress = Math.floor((loadedCount / allImagesToPreload.length) * 100);
+            progressBar.style.width = `${progress}%`;
+            progressBar.textContent = `${progress}%`;
+            console.log(`已載入圖片: ${src}, 進度: ${progress}%`);
+            if (loadedCount === allImagesToPreload.length) {
+              console.log("所有圖片載入完成！");
+              resolve();
+            }
+          };
+          img.onerror = (e) => {
+            loadedCount++;
+            const progress = Math.floor((loadedCount / allImagesToPreload.length) * 100);
+            progressBar.style.width = `${progress}%`;
+            progressBar.textContent = `${progress}%`;
+            console.error(`載入圖片失敗: ${src}`, e); // 錯誤訊息
+            if (loadedCount === allImagesToPreload.length) {
+              console.log("所有圖片載入嘗試完成 (可能包含錯誤)。");
+              resolve(); // 即使有錯誤也繼續，避免卡住
+            }
+          };
+        });
+      });
+    }
+
+    // 遊戲初始化
+    function initializeGame() {
+      triggerCount = generateWeightedRandomTriggerCount(); // 生成 Jumpscare 觸發次數
+      baitImage.src = getRandomElement(cuteImages); // 設定初始圖片
+      console.log("遊戲已初始化。Jumpscare 將在", triggerCount, "次點擊後觸發。"); // 方便測試
+    }
+
+    // 創建漂浮愛心
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.textContent = '💖'; // 或 '❤️'
+      const startX = Math.random() * 100; // 0% 到 100% 的起始 X 位置
+      const randomDuration = 4 + Math.random() * 4; // 4到8秒的動畫時間
+      const randomDelay = Math.random() * 2; // 0到2秒的動畫延遲
+      const randomOffsetX = (Math.random() - 0.5) * 50; // -25% 到 25% 的水平偏移
+
+      heart.style.left = `${startX}vw`;
+      heart.style.animationDuration = `${randomDuration}s`;
+      heart.style.animationDelay = `${randomDelay}s`;
+      heart.style.setProperty('--random-x', `${randomOffsetX}vw`); // 將隨機X偏移量傳遞給CSS變數
+
+      heartBackground.appendChild(heart);
+
+      // 動畫結束後移除愛心元素
+      heart.addEventListener('animationend', () => {
+        heart.remove();
+      });
+    }
+
+    // 每隔一段時間創建一個愛心
+    let heartInterval;
+    function startHeartAnimation() {
+      heartInterval = setInterval(createHeart, 300); // 每 300 毫秒生成一個愛心
+    }
+
+    function stopHeartAnimation() {
+      clearInterval(heartInterval);
+    }
+
+
+    // 等待所有圖片載入完成
+    preloadAssets().then(() => {
+      console.log("preloadAssets Promise 已解析。");
+      // 載入完成後，讓進度條快速填滿到 100%
+      progressBar.style.width = '100%';
+      progressBar.textContent = '100%';
+
+      // 稍微延遲後淡出載入畫面並顯示遊戲內容
+      setTimeout(() => {
+        loadingScreen.style.opacity = 0;
+        console.log("載入畫面開始淡出。");
+        setTimeout(() => {
+          loadingScreen.style.display = "none";
+          gameContainer.style.display = "flex"; // 顯示遊戲內容
+          initializeGame(); // 初始化遊戲（設定 Jumpscare 次數）
+          console.log("遊戲容器已顯示。");
+          startHeartAnimation(); // 開始愛心動畫
+
+          // 嘗試進入全螢幕模式
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().then(() => {
+              console.log("已進入全螢幕模式。");
+            }).catch((err) => {
+              console.warn("無法進入全螢幕模式:", err);
+              // 提示使用者可以手動開啟全螢幕
+              // alert("您的瀏覽器可能阻止了自動全螢幕。您可以嘗試手動開啟全螢幕 (通常是 F11)。");
+            });
+          } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
+            document.documentElement.webkitRequestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) { /* IE11 */
+            document.documentElement.msRequestFullscreen();
+          }
+          
+        }, 500); // 讓淡出動畫完成
+      }, 200); // 讓進度條停留在 100% 一小段時間
+    }).catch(error => {
+        console.error("預載入資源時發生未預期的錯誤:", error);
+        // 即使預載入失敗，也嘗試顯示遊戲，但可能會出現破圖或無音效
+        loadingScreen.style.display = "none";
+        gameContainer.style.display = "flex";
+        initializeGame();
+    });
+
+
+    baitImage.addEventListener("click", function() {
+      console.log("圖片被點擊。");
+      if (jumpscareTriggered) {
+        console.log("Jumpscare 已觸發，忽略點擊。");
+        return; // 如果 jumpscare 已經觸發，則不響應點擊
+      }
+
+      // 每次點擊都更換圖片
+      baitImage.src = getRandomElement(cuteImages);
+      clickCount++;
+      clickCounterDisplay.textContent = "點擊次數: " + clickCount;
+      console.log(`點擊次數: ${clickCount}, 觸發次數: ${triggerCount}`);
+
+      if (clickCount >= triggerCount && !jumpscareTriggered) {
+        jumpscareTriggered = true;
+        console.log("Jumpscare 條件達成！");
+        stopHeartAnimation(); // 停止愛心動畫
+
+        // 隨機選擇 jumpscare 圖片
+        jumpscareImage.src = getRandomElement(jumpscareImages);
+        console.log(`Jumpscare 圖片: ${jumpscareImage.src}`);
+
+        // 顯示 jumpscare 並播放音效 (同時)
+        jumpscareContainer.style.display = "flex";
+        jumpscareSound.currentTime = 0; // 確保每次都從頭播放
+        jumpscareSound.play().then(() => {
+            console.log("Jumpscare 音效播放成功。");
+        }).catch(error => {
+            console.error("Jumpscare 音效播放失敗:", error);
+            // 如果音效播放失敗，仍然繼續遊戲流程
+        });
+
+
+        // 5 秒後隱藏 jumpscare 並顯示輸入名字的提示框
+        setTimeout(function() {
+          jumpscareContainer.style.display = "none"; // 隱藏 jumpscare 容器
+          console.log("Jumpscare 已隱藏。");
+
+          // 提示玩家輸入名字
+          const playerName = prompt("我在運氣排行榜上點了 " + clickCount + " 次才被嚇！ 請輸入你的名字：", "匿名玩家");
+          if (playerName) {
+            console.log(`玩家 ${playerName} 輸入姓名，分數: ${clickCount}`);
+            leaderboardData.push({ name: playerName, score: clickCount }); // 使用 leaderboardData
+            leaderboardData.sort((a, b) => a.score - b.score); // 依分數排序 (越小越靠前)
+            leaderboardData = leaderboardData.slice(0, 5); // 只保留前 5 名
+            saveLeaderboard(leaderboardData);
+            displayLeaderboard();
+            leaderboard.style.display = 'block'; // 顯示排行榜
+            console.log("排行榜已更新並顯示。");
+          } else {
+            console.log("玩家未輸入姓名。");
+          }
+
+          // 重置點擊次數、jumpscareTriggered 標誌和重新生成 triggerCount
+          clickCount = 0;
+          clickCounterDisplay.textContent = "點擊次數: 0";
+          jumpscareTriggered = false;
+          initializeGame(); // 重新初始化遊戲以生成新的 triggerCount
+          startHeartAnimation(); // 重新開始愛心動畫
+          console.log("遊戲已重置。");
+
+        }, 5000); // 5000 毫秒 = 5 秒
+      }
+    });
+
+    // 分享功能
+    shareButton.addEventListener("click", function() {
+      console.log("分享按鈕被點擊。");
+      const shareText = `我在可愛女孩的幸運挑戰中點了 ${clickCount} 次才被嚇！快來看看你的運氣：https://your-game-url.com`; // 請替換為你的實際網頁連結
+      if (navigator.share) {
+        navigator.share({
+          title: "可愛女孩的幸運挑戰！", // 分享標題也更改
+          text: shareText,
+          url: "https://your-game-url.com" // 請替換為你的實際網頁連結
+        }).then(() => {
+          console.log("成功分享");
+        }).catch((error) => {
+          console.log("分享失敗", error);
+        });
+      } else {
+        // 如果不支援 Web Share API，顯示一個提示訊息
+        alert("你的瀏覽器不支援分享功能。請手動複製以下文字分享：\n" + shareText);
+        console.log("瀏覽器不支援 Web Share API。");
+      }
+    });
+  </script>
+</body>
+</html>
