@@ -1,15 +1,1 @@
-
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "composite": true,
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "noEmit": false,
-    "outDir": ".vercel/output"
-  },
-  "include": ["api/**/*.ts"]
-}
+{}
