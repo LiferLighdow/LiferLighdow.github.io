@@ -1,72 +1,96 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gemini AI Companion</title>
+  <title>Lifer_Lighdow AI Friend</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    :root {
+      --glow-color: hsl(260, 100%, 70%);
+    }
     body {
-      background-color: #0f172a; /* bg-slate-900 */
+      font-family: 'Poppins', sans-serif;
+      background: #000000;
+      overflow: hidden;
     }
-    .chat-bubble-ai::before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: -10px;
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 0 10px 10px 0;
-      border-color: transparent #334155 transparent transparent; /* border-slate-700 */
+    .background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%), 
+                        radial-gradient(at 97% 21%, hsla(250, 98%, 61%, 0.1) 0px, transparent 50%), 
+                        radial-gradient(at 52% 99%, hsla(355, 98%, 61%, 0.1) 0px, transparent 50%), 
+                        radial-gradient(at 10% 29%, hsla(256, 96%, 61%, 0.1) 0px, transparent 50%), 
+                        radial-gradient(at 97% 96%, hsla(38, 60%, 74%, 0.1) 0px, transparent 50%), 
+                        radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 0.1) 0px, transparent 50%), 
+                        radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 0.1) 0px, transparent 50%);
+      background-color: #0c0a18;
+      z-index: -1;
     }
-    .chat-bubble-user::before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      right: -10px;
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 0 0 10px 10px;
-      border-color: transparent transparent transparent #4f46e5; /* border-indigo-700 */
+    .panel {
+      background-color: rgba(22, 28, 49, 0.6);
+      backdrop-filter: blur(12px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1.5rem; /* 24px */
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
-    .hidden {
-        display: none;
+    .glow-btn {
+      position: relative;
+      transition: all 0.3s ease;
     }
+    .glow-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px 2px var(--glow-color);
+      background-color: var(--glow-color);
+    }
+    .chat-bubble-ai, .chat-bubble-user {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .chat-bubble-ai {
+      background-color: #374151; /* slate-700 */
+    }
+    .chat-bubble-user {
+      background-color: #4338ca; /* indigo-800 */
+    }
+    .hidden { display: none; }
     .spinner {
-        border-top-color: transparent;
-        border-right-color: transparent;
-        animation: spin 0.6s linear infinite;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      animation: spin 0.6s linear infinite;
     }
     @keyframes spin {
-        to { transform: rotate(360deg); }
+      to { transform: rotate(360deg); }
+    }
+    #mic-btn.listening span svg {
+      color: #ef4444; /* red-500 */
+      filter: drop-shadow(0 0 5px #ef4444);
     }
   </style>
-<script type="importmap">
-{
-  "imports": {
-    "@google/genai": "https://esm.sh/@google/genai@^1.10.0"
+  <script type="importmap">
+  {
+    "imports": {
+      "@google/genai": "https://esm.sh/@google/genai@^1.10.0"
+    }
   }
-}
-</script>
+  </script>
 </head>
-<body class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white antialiased font-sans">
-
+<body class="text-slate-100 antialiased">
+  <div class="background-container"></div>
   <div id="app" class="container mx-auto p-4 max-w-4xl">
     
     <!-- View: Language Selection -->
     <div id="language-view" class="flex flex-col items-center justify-center min-h-screen">
-      <div class="w-full max-w-md p-8 space-y-8 bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-2xl">
+      <div class="w-full max-w-md p-8 space-y-8 panel">
         <h1 class="text-3xl font-bold text-center text-white">Select Language / 選擇語言</h1>
         <div class="space-y-4">
-          <button id="lang-en-btn" class="w-full px-8 py-4 text-xl font-bold text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105">
-            English
-          </button>
-          <button id="lang-zh-TW-btn" class="w-full px-8 py-4 text-xl font-bold text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105">
-            繁體中文
-          </button>
+          <button id="lang-en-btn" class="w-full px-8 py-4 text-xl font-bold text-white bg-indigo-600 rounded-lg glow-btn">English</button>
+          <button id="lang-zh-TW-btn" class="w-full px-8 py-4 text-xl font-bold text-white bg-indigo-600 rounded-lg glow-btn">繁體中文</button>
         </div>
       </div>
     </div>
@@ -78,11 +102,11 @@
           <h1 id="home-title" class="text-5xl font-extrabold text-white tracking-tight"></h1>
           <p id="home-subtitle" class="text-xl text-slate-300"></p>
           <div class="pt-8 space-y-6">
-            <button id="create-new-btn" class="w-full px-8 py-6 text-2xl font-bold text-white rounded-xl shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-4 bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
+            <button id="create-new-btn" class="w-full px-8 py-6 text-2xl font-bold text-white rounded-xl shadow-xl flex items-center justify-center gap-4 bg-indigo-700 glow-btn">
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
               <span id="home-create-btn-text"></span>
             </button>
-            <label id="import-btn" class="w-full px-8 py-6 text-2xl font-bold text-white rounded-xl shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-4 bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 cursor-pointer">
+            <label id="import-btn" class="w-full px-8 py-6 text-2xl font-bold text-white rounded-xl shadow-xl flex items-center justify-center gap-4 bg-slate-700 hover:bg-slate-600 transition-colors cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
               <span id="home-import-btn-text"></span>
               <input type="file" id="import-file-input" class="hidden" accept=".json"/>
@@ -93,9 +117,9 @@
     </div>
 
     <!-- View: Creation Screen -->
-    <div id="creation-view" class="hidden p-4 sm:p-6 bg-slate-800/50 backdrop-blur-sm rounded-2xl shadow-2xl relative">
-        <button id="creation-back-btn" class="absolute top-4 left-4 text-slate-400 hover:text-white transition"></button>
-        <button id="randomize-all-btn" class="absolute top-4 right-4 flex items-center gap-2 px-3 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition">
+    <div id="creation-view" class="hidden p-4 sm:p-6 panel relative">
+        <button id="creation-back-btn" class="absolute top-6 left-6 text-slate-400 hover:text-white transition"></button>
+        <button id="randomize-all-btn" class="absolute top-6 right-6 flex items-center gap-2 px-3 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition">
              <span id="randomize-all-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2 18.84l-1 4 4-1 16.64-16.64a1.21 1.21 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/></svg></span>
              <span id="randomize-all-text"></span>
         </button>
@@ -112,37 +136,38 @@
                      </button>
                 </div>
             </div>
-            <div class="md:col-span-2 space-y-4" id="creation-form">
-                <!-- Fields will be inserted by JS -->
-            </div>
+            <div class="md:col-span-2 space-y-4" id="creation-form"></div>
         </div>
         <div class="mt-8 flex justify-center">
-            <button id="start-chatting-btn" class="px-12 py-3 text-lg font-bold text-white bg-green-600 rounded-lg shadow-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105">
-            </button>
+            <button id="start-chatting-btn" class="px-12 py-3 text-lg font-bold text-white bg-green-600 rounded-lg shadow-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105"></button>
         </div>
     </div>
 
     <!-- View: Chat Screen -->
-    <div id="chat-view" class="hidden h-[calc(100vh-2rem)] flex flex-col bg-slate-900/50 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden">
-      <header class="flex items-center justify-between p-4 bg-slate-800/70 border-b border-slate-700">
+    <div id="chat-view" class="hidden h-[calc(100vh-2rem)] flex flex-col panel overflow-hidden">
+      <header class="flex items-center justify-between p-4 bg-slate-900/50 border-b border-slate-700/50">
         <div class="flex items-center gap-4">
           <img id="chat-avatar" src="" class="w-12 h-12 rounded-full object-cover" />
           <h2 id="chat-name" class="text-xl font-bold"></h2>
         </div>
-        <div class="flex gap-2">
+        <div class="flex items-center gap-2">
+            <button id="tts-toggle-btn" class="p-2 text-slate-300 hover:text-white bg-slate-700 hover:bg-indigo-600 rounded-lg transition-colors"></button>
             <button id="export-chat-btn" class="px-3 py-2 text-sm bg-slate-700 hover:bg-slate-600 rounded-lg transition"></button>
             <button id="new-chat-btn" class="px-3 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 rounded-lg transition"></button>
         </div>
       </header>
       <main id="chat-history" class="flex-1 overflow-y-auto p-4 space-y-4">
-        <!-- Messages will be inserted by JS -->
       </main>
-      <footer class="p-4 bg-slate-800/70 border-t border-slate-700">
+      <footer class="p-4 bg-slate-900/50 border-t border-slate-700/50">
+        <div id="listening-indicator" class="hidden text-center text-sm text-indigo-300 mb-2"></div>
         <div class="flex items-center gap-2">
           <input id="chat-input" type="text" class="w-full bg-slate-700 border border-slate-600 rounded-lg py-2 px-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"/>
           <button id="paren-btn" class="p-2 text-slate-400 hover:text-white bg-slate-700 hover:bg-indigo-600 rounded-md transition-colors duration-200 disabled:opacity-50" title="Add action/thought ( )">()</button>
           <button id="magic-wand-btn" class="p-2 text-slate-400 hover:text-white bg-slate-700 hover:bg-indigo-600 rounded-md transition-colors duration-200 disabled:opacity-50">
              <span id="magic-wand-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2 18.84l-1 4 4-1 16.64-16.64a1.21 1.21 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/></svg></span>
+          </button>
+          <button id="mic-btn" class="p-2 text-slate-400 hover:text-white bg-slate-700 hover:bg-indigo-600 rounded-md transition-colors duration-200 disabled:opacity-50">
+             <span id="mic-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></span>
           </button>
           <button id="send-btn" class="px-5 py-2 font-semibold text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 disabled:bg-slate-500 disabled:cursor-not-allowed transition"></button>
         </div>
@@ -162,495 +187,58 @@ let profile = {};
 let history = [];
 let isLoading = false;
 let isSuggesting = false;
+let isTtsEnabled = true;
+let isListening = false;
+let speechRecognition;
 let abortController = new AbortController();
 
 // --- CONSTANTS ---
-const DEFAULT_AVATAR = "https://picsum.photos/seed/landscape/512/512";
-const GENDER_OPTIONS = [
-  { value: 'female', labelKey: 'female' },
-  { value: 'male', labelKey: 'male' },
-  { value: 'neutral', labelKey: 'neutral' },
-  { value: 'none', labelKey: 'none' },
-];
+const DEFAULT_AVATAR = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM0MzM4Y2EiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxZTE4NGEiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cGF0aCBkPSJNMCAwaDUxMnY1MTJIMHoiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=";
+const GENDER_OPTIONS = [ { value: 'female', labelKey: 'female' }, { value: 'male', labelKey: 'male' }, { value: 'neutral', labelKey: 'neutral' }, { value: 'none', labelKey: 'none' }, ];
 const UI_TEXT = {
-  'en': { appName: "Gemini AI Companion", selectLanguage: "Select Language", createOrImport: "Create a New Companion or Import", createNew: "Create New", importExisting: "Import Existing", uploadInstructions: "Click avatar to upload, or enter a prompt to generate one.", generateAvatar: "Generate", avatarPrompt: "e.g., a painting of a woman in a library", name: "Name", gender: "Gender", male: "Male", female: "Female", neutral: "Neutral", none: "None", relationship: "Relationship", backstory: "Backstory", interests: "Interests & Skills", openingLine: "Opening Line", randomizeAll: "Randomize All", startChatting: "Start Chatting", exportChat: "Export Chat", newChat: "New Chat", sendMessage: "Send Message", messagePlaceholder: "Type your message...", generating: "Generating...", back: "Back", loading: "Loading...", apiKeyPrompt: "Please enter your Google AI API Key:", apiKeyError: "API Key is required to use this application. Please reload and enter your key.", generatingSuggestion: "Suggest a reply" },
-  'zh-TW': { appName: "Gemini AI 伴侶", selectLanguage: "選擇語言", createOrImport: "創建新伴侶或匯入", createNew: "創建新的", importExisting: "匯入舊的", uploadInstructions: "點擊頭像上傳，或輸入提示詞生成", generateAvatar: "生成", avatarPrompt: "例如：圖書館裡的女人的畫像", name: "角色名稱", gender: "性別", male: "男", female: "女", neutral: "中性", none: "無", relationship: "兩人關係", backstory: "背景故事", interests: "興趣專長", openingLine: "開場白", randomizeAll: "全部隨機生成", startChatting: "開始聊天", exportChat: "匯出聊天", newChat: "新聊天", sendMessage: "發送訊息", messagePlaceholder: "輸入你的訊息...", generating: "生成中...", back: "返回", loading: "載入中...", apiKeyPrompt: "請輸入您的 Google AI API Key:", apiKeyError: "需要 API Key 才能使用此應用程式。請重新載入並輸入您的金鑰。", generatingSuggestion: "建議回覆" },
+  'en': { appName: "Lifer_Lighdow AI Friend", selectLanguage: "Select Language", createOrImport: "Create a New Companion or Import", createNew: "Create New", importExisting: "Import Existing", uploadInstructions: "Click avatar to upload, or enter a prompt to generate one.", generateAvatar: "Generate", avatarPrompt: "e.g., a painting of a woman in a library", name: "Name", gender: "Gender", male: "Male", female: "Female", neutral: "Neutral", none: "None", relationship: "Relationship", backstory: "Backstory", interests: "Interests & Skills", openingLine: "Opening Line", randomizeAll: "Randomize All", startChatting: "Start Chatting", exportChat: "Export Chat", newChat: "New Chat", sendMessage: "Send Message", messagePlaceholder: "Type your message...", generating: "Generating...", back: "Back", loading: "Loading...", apiKeyPrompt: "Please enter your Google AI API Key:", apiKeyError: "API Key is required to use this application. Please reload and enter your key.", generatingSuggestion: "Suggest a reply", aiVoice: "AI Voice", enableVoice: "Enable Voice", disableVoice: "Disable Voice", startListening: "Start Listening", stopListening: "Stop Listening", listening: "Listening..." },
+  'zh-TW': { appName: "Lifer_Lighdow AI伴侶", selectLanguage: "選擇語言", createOrImport: "創建新伴侶或匯入", createNew: "創建新的", importExisting: "匯入舊的", uploadInstructions: "點擊頭像上傳，或輸入提示詞生成", generateAvatar: "生成", avatarPrompt: "例如：圖書館裡的女人的畫像", name: "角色名稱", gender: "性別", male: "男", female: "女", neutral: "中性", none: "無", relationship: "兩人關係", backstory: "背景故事", interests: "興趣專長", openingLine: "開場白", randomizeAll: "全部隨機生成", startChatting: "開始聊天", exportChat: "匯出聊天", newChat: "新聊天", sendMessage: "發送訊息", messagePlaceholder: "輸入你的訊息...", generating: "生成中...", back: "返回", loading: "載入中...", apiKeyPrompt: "請輸入您的 Google AI API Key:", apiKeyError: "需要 API Key 才能使用此應用程式。請重新載入並輸入您的金鑰。", generatingSuggestion: "建議回覆", aiVoice: "AI 語音", enableVoice: "開啟語音", disableVoice: "關閉語音", startListening: "開始聆聽", stopListening: "停止聆聽", listening: "聆聽中..." },
 };
-const PROMPTS = {
-    'en': { name: (g) => `Generate a single, unique, and appealing ${g==='neutral'||g==='none'?'gender-neutral':g} name. Provide only the name.`, relationship: () => `Describe a close, personal relationship in 2-5 words. For example: 'Childhood best friends' or 'Mysterious Pen Pal'. Provide only the description.`, backstory: () => `Write a short, one-paragraph, romantic and slightly mysterious backstory for an AI companion. Keep it under 50 words. Provide only the backstory.`, interests: () => `List 3-4 diverse and interesting hobbies or skills for a person. Separate them with commas. For example: 'Stargazing, classical piano, baking sourdough bread'. Provide only the list.`, openingLine: () => `Write a warm and inviting opening sentence for a conversation. It should be friendly and a little intriguing. Provide only the sentence.` },
-    'zh-TW': { name: (g) => `生成一個獨特且吸引人的${g==='female'?'女性':g==='male'?'男性':'中性'}名字。只提供名字。`, relationship: () => `用2-5個詞描述一段親密的個人關係。例如：「青梅竹馬」或「神秘的筆友」。只提供描述。`, backstory: () => `為一位AI伴侶寫一段簡短、一段式、浪漫且帶有神秘色彩的背景故事。長度在50字以內。只提供背景故事。`, interests: () => `列出3-4個多樣且有趣的個人愛好或技能。用逗號分隔。例如：「觀星、古典鋼琴、烘焙酸種麵包」。只提供列表。`, openingLine: () => `寫一句溫暖且引人入勝的對話開場白。應該要友好且帶點趣味。只提供句子。` }
-};
+const PROMPTS = { 'en': { name: (g) => `Generate a single, unique, and appealing ${g==='neutral'||g==='none'?'gender-neutral':g} name. Provide only the name.`, relationship: () => `Describe a close, personal relationship in 2-5 words. For example: 'Childhood best friends' or 'Mysterious Pen Pal'. Provide only the description.`, backstory: () => `Write a short, one-paragraph, romantic and slightly mysterious backstory for an AI companion. Keep it under 50 words. Provide only the backstory.`, interests: () => `List 3-4 diverse and interesting hobbies or skills for a person. Separate them with commas. For example: 'Stargazing, classical piano, baking sourdough bread'. Provide only the list.`, openingLine: () => `Write a warm and inviting opening sentence for a conversation. It should be friendly and a little intriguing. Provide only the sentence.` }, 'zh-TW': { name: (g) => `生成一個獨特且吸引人的${g==='female'?'女性':g==='male'?'男性':'中性'}名字。只提供名字。`, relationship: () => `用2-5個詞描述一段親密的個人關係。例如：「青梅竹馬」或「神秘的筆友」。只提供描述。不要重複我的話`, backstory: () => `為一位AI伴侶寫一段簡短、一段式、浪漫且帶有神秘色彩的背景故事。長度在50字以內。只提供背景故事。`, interests: () => `列出3-4個多樣且有趣的個人愛好或技能。用逗號分隔。例如：「觀星、古典鋼琴、烘焙酸種麵包」。只提供列表。`, openingLine: () => `寫一句溫暖且引人入勝的對話開場白。應該要友好且帶點趣味。只提供句子。` } };
 
 // --- DOM ELEMENT GETTERS ---
 const getEl = (id) => document.getElementById(id);
-const views = {
-    language: getEl('language-view'),
-    home: getEl('home-view'),
-    creation: getEl('creation-view'),
-    chat: getEl('chat-view'),
-};
+const views = { language: getEl('language-view'), home: getEl('home-view'), creation: getEl('creation-view'), chat: getEl('chat-view'), };
 
-// --- API SERVICE FUNCTIONS ---
-async function generateCharacterDetail(field, lang, gender) {
-    if (!ai) return `${field} (mock)`;
-    try {
-        const prompt = PROMPTS[lang][field](gender);
-        const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: prompt, config: { thinkingConfig: { thinkingBudget: 0 } } });
-        return response.text.trim();
-    } catch (error) { console.error(`Error generating ${field}:`, error); return `Error generating ${field}.`; }
-}
-
-async function generateImage(prompt) {
-    if (!ai) return `https://picsum.photos/seed/${prompt.replace(/\s/g, '')}/512/512`;
-    try {
-        const response = await ai.models.generateImages({ model: 'imagen-3.0-generate-002', prompt: prompt, config: { numberOfImages: 1, outputMimeType: 'image/jpeg', aspectRatio: '1:1' } });
-        return `data:image/jpeg;base64,${response.generatedImages[0].image.imageBytes}`;
-    } catch (error) { console.error("Error generating image:", error); return `https://picsum.photos/seed/error/512/512`; }
-}
-
-async function getAiReplyStream(currentProfile, currentHistory) {
-    if (!ai) {
-        async function* mockStream() {
-            await new Promise(res => setTimeout(res, 500)); yield { text: "This is a " };
-            await new Promise(res => setTimeout(res, 500)); yield { text: "mocked streaming " };
-            await new Promise(res => setTimeout(res, 500)); yield { text: "response. (smiles)" };
-        }
-        return mockStream();
-    }
-    const systemInstruction = `You are roleplaying as ${currentProfile.name}. Your personality and memory are defined by this profile:\n- Gender: ${currentProfile.gender}\n- Relationship with user: ${currentProfile.relationship}\n- Your backstory: ${currentProfile.backstory}\n- Your interests and skills: ${currentProfile.interests}\nYou must stay in character at all times. Your responses should be engaging and consistent with your character profile. When you want to describe a physical action or an inner thought, enclose it in parentheses, like (smiles warmly) or (I wonder what they mean by that). The user might also use parentheses for their actions or thoughts. The conversation starts now. Your opening line was: "${currentProfile.openingLine}"`;
-    const chatHistory = currentHistory.map(msg => ({ role: msg.sender === 'ai' ? 'model' : 'user', parts: [{ text: msg.content }] }));
-    const userPrompt = chatHistory.pop();
-    const chat = ai.chats.create({ model: 'gemini-2.5-flash', config: { systemInstruction }, history: chatHistory });
-    return await chat.sendMessageStream({ message: userPrompt?.parts[0].text ?? "" });
-}
-
-async function suggestReply(currentHistory, lang) {
-    if (!ai) return "How about we talk about the stars?";
-    const historyText = currentHistory.map(msg => `${msg.sender === 'user' ? 'They said' : 'You said'}: ${msg.content}`).join('\n');
-    const prompt = lang === 'zh-TW'
-        ? `你是一個聊天中的實用助手。根據這段對話，為使用者建議一個有創意、引人入勝且符合情境的回覆。建議應從使用者的角度出發。只提供建議的文字。\n\n對話歷史：\n${historyText}\n\n建議的回覆：`
-        : `You are a helpful assistant suggesting replies in a chat. Based on this conversation, suggest a creative, engaging, and context-appropriate reply for the 'User' to send next. The suggestion should be from the user's perspective. Provide only the suggested text.\n\nConversation:\n${historyText}\n\nSuggested reply:`;
-    try {
-        const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: prompt });
-        return response.text.trim();
-    } catch (error) { console.error("Error suggesting reply:", error); return "Sorry, I couldn't think of a suggestion."; }
-}
+// --- API & BROWSER SERVICES ---
+async function generateCharacterDetail(field, lang, gender) { if (!ai) return `${field} (mock)`; try { const prompt = PROMPTS[lang][field](gender); const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: prompt, config: { thinkingConfig: { thinkingBudget: 0 } } }); return response.text.trim(); } catch (error) { console.error(`Error generating ${field}:`, error); return `Error generating ${field}.`; } }
+async function generateImage(prompt) { if (!ai) return `https://picsum.photos/seed/${prompt.replace(/\s/g, '')}/512/512`; try { const response = await ai.models.generateImages({ model: 'imagen-3.0-generate-002', prompt: prompt, config: { numberOfImages: 1, outputMimeType: 'image/jpeg', aspectRatio: '1:1' } }); return `data:image/jpeg;base64,${response.generatedImages[0].image.imageBytes}`; } catch (error) { console.error("Error generating image:", error); return `https://picsum.photos/seed/error/512/512`; } }
+async function getAiReplyStream(currentProfile, currentHistory) { if (!ai) { async function* mockStream() { await new Promise(res => setTimeout(res, 500)); yield { text: "This is a " }; await new Promise(res => setTimeout(res, 500)); yield { text: "mocked streaming " }; await new Promise(res => setTimeout(res, 500)); yield { text: "response. (smiles)" }; } return mockStream(); } const systemInstruction = `You are roleplaying as ${currentProfile.name}. Your personality and memory are defined by this profile:\n- Gender: ${currentProfile.gender}\n- Relationship with user: ${currentProfile.relationship}\n- Your backstory: ${currentProfile.backstory}\n- Your interests and skills: ${currentProfile.interests}\nYou must stay in character at all times. Your responses should be engaging and consistent with your character profile. When you want to describe a physical action or an inner thought, enclose it in parentheses, like (smiles warmly) or (I wonder what they mean by that). The user might also use parentheses for their actions or thoughts. The conversation starts now. Your opening line was: "${currentProfile.openingLine}"`; const chatHistory = currentHistory.map(msg => ({ role: msg.sender === 'ai' ? 'model' : 'user', parts: [{ text: msg.content }] })); const userPrompt = chatHistory.pop(); const chat = ai.chats.create({ model: 'gemini-2.5-flash', config: { systemInstruction }, history: chatHistory }); return await chat.sendMessageStream({ message: userPrompt?.parts[0].text ?? "" }); }
+async function suggestReply(currentHistory, lang) { if (!ai) return "How about we talk about the stars?"; const historyText = currentHistory.map(msg => `${msg.sender === 'user' ? 'They said' : 'You said'}: ${msg.content}`).join('\n'); const prompt = lang === 'zh-TW' ? `你是一個聊天中的實用助手。根據這段對話，為使用者建議一個有創意、引人入勝且符合情境的回覆。建議應從使用者的角度出發。只提供建議的文字。\n\n對話歷史：\n${historyText}\n\n建議的回覆：` : `You are a helpful assistant suggesting replies in a chat. Based on this conversation, suggest a creative, engaging, and context-appropriate reply for the 'User' to send next. The suggestion should be from the user's perspective. Provide only the suggested text.\n\nConversation:\n${historyText}\n\nSuggested reply:`; try { const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: prompt }); return response.text.trim(); } catch (error) { console.error("Error suggesting reply:", error); return "Sorry, I couldn't think of a suggestion."; } }
+function speak(text) { if (!isTtsEnabled || !window.speechSynthesis) return; const utterance = new SpeechSynthesisUtterance(text.replace(/(\(.*?\))/g, '')); utterance.lang = language === 'zh-TW' ? 'zh-TW' : 'en-US'; window.speechSynthesis.cancel(); window.speechSynthesis.speak(utterance); }
+function initSpeechRecognition() { const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SpeechRecognition) { getEl('mic-btn').classList.add('hidden'); return; } speechRecognition = new SpeechRecognition(); speechRecognition.continuous = false; speechRecognition.interimResults = true; speechRecognition.lang = language === 'zh-TW' ? 'zh-TW' : 'en-US'; speechRecognition.onstart = () => { isListening = true; updateChatControlsState(); }; speechRecognition.onend = () => { isListening = false; updateChatControlsState(); }; speechRecognition.onresult = (event) => { let interimTranscript = ''; let finalTranscript = ''; for (let i = event.resultIndex; i < event.results.length; ++i) { if (event.results[i].isFinal) { finalTranscript += event.results[i][0].transcript; } else { interimTranscript += event.results[i][0].transcript; } } getEl('chat-input').value = finalTranscript || interimTranscript; }; }
 
 // --- RENDER FUNCTIONS ---
-function renderView() {
-    Object.values(views).forEach(v => v.classList.add('hidden'));
-    if (views[currentView]) {
-        views[currentView].classList.remove('hidden');
-    }
-
-    const T = UI_TEXT[language];
-    switch (currentView) {
-        case 'home':
-            getEl('home-title').textContent = T.appName;
-            getEl('home-subtitle').textContent = T.createOrImport;
-            getEl('home-create-btn-text').textContent = T.createNew;
-            getEl('home-import-btn-text').textContent = T.importExisting;
-            break;
-        case 'creation':
-            renderCreationScreen();
-            break;
-        case 'chat':
-            renderChatScreen();
-            break;
-    }
-}
-
-function renderCreationScreen() {
-    const T = UI_TEXT[language];
-    getEl('creation-title').textContent = T.createNew;
-    getEl('creation-back-btn').textContent = `← ${T.back}`;
-    getEl('randomize-all-text').textContent = T.randomizeAll;
-    getEl('avatar-preview').src = profile.avatar || DEFAULT_AVATAR;
-    getEl('avatar-instructions').textContent = T.uploadInstructions;
-    getEl('avatar-prompt-input').placeholder = T.avatarPrompt;
-    getEl('generate-avatar-btn').title = T.generateAvatar;
-    getEl('start-chatting-btn').textContent = T.startChatting;
-
-    const form = getEl('creation-form');
-    form.innerHTML = ''; // Clear previous form
-
-    const fields = [
-        { name: 'name', label: T.name, type: 'input' },
-        { name: 'gender', label: T.gender, type: 'select' },
-        { name: 'relationship', label: T.relationship, type: 'input' },
-        { name: 'backstory', label: T.backstory, type: 'textarea' },
-        { name: 'interests', label: T.interests, type: 'input' },
-        { name: 'openingLine', label: T.openingLine, type: 'input' },
-    ];
-
-    fields.forEach(({ name, label, type }) => {
-        const div = document.createElement('div');
-        div.innerHTML = `
-            <label for="creation-${name}" class="block text-sm font-medium text-slate-300 mb-1">${label}</label>
-            <div class="flex items-center gap-2">
-                ${type === 'select' ?
-                    `<select id="creation-${name}" name="${name}" class="w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
-                        ${GENDER_OPTIONS.map(opt => `<option value="${opt.value}">${T[opt.labelKey]}</option>`).join('')}
-                    </select>` :
-                    (type === 'textarea' ?
-                        `<textarea id="creation-${name}" name="${name}" class="w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" rows="3"></textarea>` :
-                        `<input id="creation-${name}" name="${name}" type="text" class="w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />`)
-                }
-                <button name="generate-${name}" title="${T.generating} ${label}" class="p-2 text-slate-400 hover:text-white bg-slate-700 hover:bg-indigo-600 rounded-md transition-colors duration-200 disabled:opacity-50">
-                    <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2 18.84l-1 4 4-1 16.64-16.64a1.21 1.21 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/></svg></span>
-                    <span class="spinner hidden w-5 h-5 border-2 border-white rounded-full"></span>
-                </button>
-            </div>
-        `;
-        const inputEl = div.querySelector(`#creation-${name}`);
-        inputEl.value = profile[name] || '';
-        inputEl.addEventListener('input', e => { profile[e.target.name] = e.target.value; });
-        
-        if(name === 'gender') {
-           inputEl.value = profile.gender || 'female';
-        }
-
-        const genBtn = div.querySelector(`[name="generate-${name}"]`);
-        if (genBtn) {
-            genBtn.addEventListener('click', () => handleGenerateField(name));
-        }
-
-        form.appendChild(div);
-    });
-}
-
-function renderChatScreen() {
-    const T = UI_TEXT[language];
-    getEl('chat-avatar').src = profile.avatar;
-    getEl('chat-avatar').alt = profile.name;
-    getEl('chat-name').textContent = profile.name;
-    getEl('export-chat-btn').textContent = T.exportChat;
-    getEl('new-chat-btn').textContent = T.newChat;
-    getEl('chat-input').placeholder = T.messagePlaceholder;
-    getEl('send-btn').textContent = T.sendMessage;
-    getEl('magic-wand-btn').title = T.generatingSuggestion;
-
-    renderChatHistory();
-    updateChatControlsState();
-}
-
-function renderChatHistory() {
-    const chatContainer = getEl('chat-history');
-    chatContainer.innerHTML = '';
-    history.forEach(msg => {
-        chatContainer.appendChild(createMessageElement(msg));
-    });
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
-function createMessageElement(msg) {
-    const T = UI_TEXT[language];
-    const div = document.createElement('div');
-    const isUser = msg.sender === 'user';
-    div.className = `flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`;
-    
-    let contentHtml;
-    if (msg.thinking) {
-         contentHtml = `<div class="flex items-center justify-center p-2"><div class="spinner w-6 h-6 border-2 border-indigo-400 rounded-full"></div></div>`;
-    } else {
-        const parts = msg.content.split(/(\(.*?\))/g);
-        const parsedContent = parts.map(part => {
-            if (part.startsWith('(') && part.endsWith(')')) {
-                return `<em class="text-slate-400 italic not-italic">${escapeHtml(part)}</em>`;
-            }
-            return escapeHtml(part);
-        }).join('');
-        contentHtml = `<p class="whitespace-pre-wrap">${parsedContent}</p>`;
-    }
-    
-    div.innerHTML = `
-        ${!isUser ? `<img src="${profile.avatar}" alt="ai" class="w-8 h-8 rounded-full self-start"/>` : ''}
-        <div id="msg-${Date.now()}" class="relative max-w-lg px-4 py-2 rounded-xl ${isUser ? 'bg-indigo-700 text-white chat-bubble-user' : 'bg-slate-700 text-slate-200 chat-bubble-ai'}">
-           ${contentHtml}
-        </div>
-    `;
-    return div;
-}
-
-function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.appendChild(document.createTextNode(str));
-    return div.innerHTML;
-}
+function renderView() { Object.values(views).forEach(v => v.classList.add('hidden')); if (views[currentView]) { views[currentView].classList.remove('hidden'); } const T = UI_TEXT[language]; switch (currentView) { case 'home': getEl('home-title').textContent = T.appName; getEl('home-subtitle').textContent = T.createOrImport; getEl('home-create-btn-text').textContent = T.createNew; getEl('home-import-btn-text').textContent = T.importExisting; break; case 'creation': renderCreationScreen(); break; case 'chat': renderChatScreen(); break; } }
+function renderCreationScreen() { const T = UI_TEXT[language]; getEl('creation-title').textContent = T.createNew; getEl('creation-back-btn').textContent = `← ${T.back}`; getEl('randomize-all-text').textContent = T.randomizeAll; getEl('avatar-preview').src = profile.avatar || DEFAULT_AVATAR; getEl('avatar-instructions').textContent = T.uploadInstructions; getEl('avatar-prompt-input').placeholder = T.avatarPrompt; getEl('generate-avatar-btn').title = T.generateAvatar; getEl('start-chatting-btn').textContent = T.startChatting; const form = getEl('creation-form'); form.innerHTML = ''; const fields = [ { name: 'name', label: T.name, type: 'input' }, { name: 'gender', label: T.gender, type: 'select' }, { name: 'relationship', label: T.relationship, type: 'input' }, { name: 'backstory', label: T.backstory, type: 'textarea' }, { name: 'interests', label: T.interests, type: 'input' }, { name: 'openingLine', label: T.openingLine, type: 'input' }, ]; fields.forEach(({ name, label, type }) => { const div = document.createElement('div'); div.innerHTML = `<label for="creation-${name}" class="block text-sm font-medium text-slate-300 mb-1">${label}</label><div class="flex items-center gap-2">${type === 'select' ? `<select id="creation-${name}" name="${name}" class="w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">${GENDER_OPTIONS.map(opt => `<option value="${opt.value}">${T[opt.labelKey]}</option>`).join('')}</select>` : (type === 'textarea' ? `<textarea id="creation-${name}" name="${name}" class="w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" rows="3"></textarea>` : `<input id="creation-${name}" name="${name}" type="text" class="w-full bg-slate-700 border border-slate-600 rounded-md py-2 px-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" />`)}<button name="generate-${name}" title="${T.generating} ${label}" class="p-2 text-slate-400 hover:text-white bg-slate-700 hover:bg-indigo-600 rounded-md transition-colors duration-200 disabled:opacity-50"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2 18.84l-1 4 4-1 16.64-16.64a1.21 1.21 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/></svg></span><span class="spinner hidden w-5 h-5 border-2 border-white rounded-full"></span></button></div>`; const inputEl = div.querySelector(`#creation-${name}`); inputEl.value = profile[name] || ''; inputEl.addEventListener('input', e => { profile[e.target.name] = e.target.value; }); if(name === 'gender') { inputEl.value = profile.gender || 'female'; } const genBtn = div.querySelector(`[name="generate-${name}"]`); if (genBtn) { genBtn.addEventListener('click', () => handleGenerateField(name)); } form.appendChild(div); }); }
+function renderChatScreen() { const T = UI_TEXT[language]; getEl('chat-avatar').src = profile.avatar; getEl('chat-avatar').alt = profile.name; getEl('chat-name').textContent = profile.name; getEl('export-chat-btn').textContent = T.exportChat; getEl('new-chat-btn').textContent = T.newChat; getEl('chat-input').placeholder = T.messagePlaceholder; getEl('send-btn').textContent = T.sendMessage; getEl('magic-wand-btn').title = T.generatingSuggestion; getEl('mic-btn').title = T.startListening; renderChatHistory(); renderChatHeader(); updateChatControlsState(); }
+function renderChatHeader() { const T = UI_TEXT[language]; const ttsBtn = getEl('tts-toggle-btn'); ttsBtn.title = isTtsEnabled ? T.disableVoice : T.enableVoice; ttsBtn.innerHTML = isTtsEnabled ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>` : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" x2="17" y1="9" y2="15"/><line x1="17" x2="23" y1="9" y2="15"/></svg>`; }
+function renderChatHistory() { const chatContainer = getEl('chat-history'); chatContainer.innerHTML = ''; history.forEach(msg => { chatContainer.appendChild(createMessageElement(msg)); }); chatContainer.scrollTop = chatContainer.scrollHeight; }
+function createMessageElement(msg) { const T = UI_TEXT[language]; const div = document.createElement('div'); const isUser = msg.sender === 'user'; div.className = `flex items-end gap-3 ${isUser ? 'justify-end' : 'justify-start'}`; let contentHtml; if (msg.thinking) { contentHtml = `<div class="flex items-center justify-center p-2"><div class="spinner w-6 h-6 border-2 border-indigo-400 rounded-full"></div></div>`; } else { const parts = msg.content.split(/(\(.*?\))/g); const parsedContent = parts.map(part => { if (part.startsWith('(') && part.endsWith(')')) { return `<em class="text-slate-400 not-italic">${escapeHtml(part)}</em>`; } return escapeHtml(part); }).join(''); contentHtml = `<p class="whitespace-pre-wrap">${parsedContent}</p>`; } div.innerHTML = `${!isUser ? `<img src="${profile.avatar}" alt="ai" class="w-8 h-8 rounded-full self-start shadow-md"/>` : ''}<div class="relative max-w-lg px-4 py-2 rounded-xl shadow-md ${isUser ? 'bg-indigo-700 text-white chat-bubble-user' : 'bg-slate-700 text-slate-200 chat-bubble-ai'}">${contentHtml}</div>`; return div; }
+function escapeHtml(str) { const div = document.createElement('div'); div.appendChild(document.createTextNode(str)); return div.innerHTML; }
 
 // --- EVENT HANDLERS & LOGIC ---
-
-function showSpinner(button, show) {
-    const icon = button.querySelector('.icon');
-    const spinner = button.querySelector('.spinner');
-    if (show) {
-        icon.classList.add('hidden');
-        spinner.classList.remove('hidden');
-        button.disabled = true;
-    } else {
-        icon.classList.remove('hidden');
-        spinner.classList.add('hidden');
-        button.disabled = false;
-    }
-}
-
-async function handleGenerateField(field) {
-    const button = document.querySelector(`[name="generate-${field}"]`);
-    showSpinner(button, true);
-    const result = await generateCharacterDetail(field, language, profile.gender);
-    profile[field] = result;
-    getEl(`creation-${field}`).value = result;
-    showSpinner(button, false);
-}
-
-async function handleRandomizeAll() {
-    const button = getEl('randomize-all-btn');
-    const icon = getEl('randomize-all-icon');
-    const originalIcon = icon.innerHTML;
-    icon.innerHTML = `<span class="spinner w-4 h-4 border-2 border-white rounded-full"></span>`;
-    button.disabled = true;
-
-    const fields = ['name', 'relationship', 'backstory', 'interests', 'openingLine'];
-    const promises = fields.map(field => generateCharacterDetail(field, language, profile.gender));
-    const results = await Promise.all(promises);
-
-    fields.forEach((field, i) => {
-        profile[field] = results[i];
-        getEl(`creation-${field}`).value = results[i];
-    });
-
-    icon.innerHTML = originalIcon;
-    button.disabled = false;
-}
-
-async function handleGenerateAvatar() {
-    const prompt = getEl('avatar-prompt-input').value;
-    if (!prompt) return;
-    const button = getEl('generate-avatar-btn');
-    const icon = getEl('generate-avatar-icon');
-    const originalIcon = icon.innerHTML;
-    icon.innerHTML = `<span class="spinner w-5 h-5 border-2 border-white rounded-full"></span>`;
-    button.disabled = true;
-
-    const imageUrl = await generateImage(prompt);
-    profile.avatar = imageUrl;
-    getEl('avatar-preview').src = imageUrl;
-
-    icon.innerHTML = originalIcon;
-    button.disabled = false;
-}
-
-function handleStartNew() {
-    profile = { name: "", gender: 'female', relationship: "", backstory: "", interests: "", openingLine: "", avatar: DEFAULT_AVATAR };
-    history = [];
-    currentView = 'creation';
-    renderView();
-}
-
-function handleImport(e) {
-    const file = e.target.files?.[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            try {
-                const data = JSON.parse(event.target.result);
-                if (data.version === 1 && data.profile && data.history) {
-                    profile = data.profile;
-                    history = data.history;
-                    currentView = 'chat';
-                    renderView();
-                } else {
-                    alert('Invalid file format.');
-                }
-            } catch (error) {
-                console.error("Failed to parse import file:", error);
-                alert('Failed to read the file. Please ensure it is a valid JSON export.');
-            }
-        };
-        reader.readAsText(file);
-        e.target.value = null; // Reset file input
-    }
-}
-
-async function handleSend() {
-    const input = getEl('chat-input');
-    const userInput = input.value.trim();
-    if (!userInput || isLoading) return;
-
-    history.push({ sender: 'user', content: userInput });
-    renderChatHistory();
-    input.value = '';
-    isLoading = true;
-    updateChatControlsState();
-
-    const aiMessagePlaceholder = { sender: 'ai', content: '', thinking: true };
-    history.push(aiMessagePlaceholder);
-    const aiMessageElement = createMessageElement(aiMessagePlaceholder);
-    getEl('chat-history').appendChild(aiMessageElement);
-    const chatContainer = getEl('chat-history');
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-    
-    const messageContentElement = aiMessageElement.querySelector('.whitespace-pre-wrap, .flex');
-    
-    try {
-        const stream = await getAiReplyStream(profile, history.slice(0, -1)); // Don't send placeholder
-        let fullReply = '';
-        let firstChunk = true;
-
-        for await (const chunk of stream) {
-            const chunkText = chunk.text;
-            if (firstChunk) {
-                aiMessagePlaceholder.thinking = false;
-                firstChunk = false;
-                // Since the thinking bubble is replaced, we need to re-find the content element
-                 aiMessageElement.innerHTML = `
-                    <div class="relative max-w-lg px-4 py-2 rounded-xl bg-slate-700 text-slate-200 chat-bubble-ai">
-                       <p class="whitespace-pre-wrap"></p>
-                    </div>
-                `;
-                 // Re-add the avatar if it's an AI message
-                 if (! (history[history.length - 1].sender === 'user') ) {
-                     const img = document.createElement('img');
-                     img.src = profile.avatar;
-                     img.alt = 'ai';
-                     img.className = 'w-8 h-8 rounded-full self-start';
-                     aiMessageElement.insertBefore(img, aiMessageElement.firstChild);
-                 }
-            }
-            fullReply += chunkText;
-            aiMessagePlaceholder.content = fullReply;
-            
-            const contentP = aiMessageElement.querySelector('.whitespace-pre-wrap');
-            if (contentP) {
-                const parts = fullReply.split(/(\(.*?\))/g);
-                const parsedContent = parts.map(part => {
-                    if (part.startsWith('(') && part.endsWith(')')) {
-                        return `<em class="text-slate-400 italic not-italic">${escapeHtml(part)}</em>`;
-                    }
-                    return escapeHtml(part);
-                }).join('');
-                contentP.innerHTML = parsedContent;
-            }
-
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-    } catch (error) {
-        console.error("Error getting AI reply:", error);
-        aiMessagePlaceholder.content = 'Sorry, I encountered an error.';
-        const contentP = aiMessageElement.querySelector('.whitespace-pre-wrap');
-        if(contentP) contentP.textContent = aiMessagePlaceholder.content;
-    } finally {
-        isLoading = false;
-        updateChatControlsState();
-    }
-}
-
-function updateChatControlsState() {
-    const T = UI_TEXT[language];
-    const input = getEl('chat-input');
-    const sendBtn = getEl('send-btn');
-    const magicBtn = getEl('magic-wand-btn');
-    const parenBtn = getEl('paren-btn');
-
-    input.disabled = isLoading;
-    parenBtn.disabled = isLoading;
-    magicBtn.disabled = isLoading || isSuggesting;
-    sendBtn.disabled = isLoading || !input.value.trim();
-    
-    const magicIcon = getEl('magic-wand-icon');
-    if(isSuggesting) {
-       magicIcon.innerHTML = `<span class="spinner w-5 h-5 border-2 border-white rounded-full"></span>`;
-    } else {
-       magicIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2 18.84l-1 4 4-1 16.64-16.64a1.21 1.21 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/></svg>`;
-    }
-
-    sendBtn.textContent = isLoading ? T.generating : T.sendMessage;
-}
-
-
-function handleExport() {
-    const exportData = { version: 1, profile, history };
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${profile.name || 'AI-Companion'}_chat.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
+function showSpinner(button, show) { const icon = button.querySelector('.icon'); const spinner = button.querySelector('.spinner'); if (show) { icon.classList.add('hidden'); spinner.classList.remove('hidden'); button.disabled = true; } else { icon.classList.remove('hidden'); spinner.classList.add('hidden'); button.disabled = false; } }
+async function handleGenerateField(field) { const button = document.querySelector(`[name="generate-${field}"]`); showSpinner(button, true); const result = await generateCharacterDetail(field, language, profile.gender); profile[field] = result; getEl(`creation-${field}`).value = result; showSpinner(button, false); }
+async function handleRandomizeAll() { const button = getEl('randomize-all-btn'); const icon = getEl('randomize-all-icon'); const originalIcon = icon.innerHTML; icon.innerHTML = `<span class="spinner w-4 h-4 border-2 border-white rounded-full"></span>`; button.disabled = true; const fields = ['name', 'relationship', 'backstory', 'interests', 'openingLine']; const promises = fields.map(field => generateCharacterDetail(field, language, profile.gender)); const results = await Promise.all(promises); fields.forEach((field, i) => { profile[field] = results[i]; getEl(`creation-${field}`).value = results[i]; }); icon.innerHTML = originalIcon; button.disabled = false; }
+async function handleGenerateAvatar() { const prompt = getEl('avatar-prompt-input').value; if (!prompt) return; const button = getEl('generate-avatar-btn'); const icon = getEl('generate-avatar-icon'); const originalIcon = icon.innerHTML; icon.innerHTML = `<span class="spinner w-5 h-5 border-2 border-white rounded-full"></span>`; button.disabled = true; const imageUrl = await generateImage(prompt); profile.avatar = imageUrl; getEl('avatar-preview').src = imageUrl; icon.innerHTML = originalIcon; button.disabled = false; }
+function handleStartNew() { profile = { name: "", gender: 'female', relationship: "", backstory: "", interests: "", openingLine: "", avatar: DEFAULT_AVATAR }; history = []; currentView = 'creation'; renderView(); }
+function handleImport(e) { const file = e.target.files?.[0]; if (file) { const reader = new FileReader(); reader.onload = (event) => { try { const data = JSON.parse(event.target.result); if (data.version === 1 && data.profile && data.history) { profile = data.profile; history = data.history; currentView = 'chat'; renderView(); } else { alert('Invalid file format.'); } } catch (error) { console.error("Failed to parse import file:", error); alert('Failed to read the file. Please ensure it is a valid JSON export.'); } }; reader.readAsText(file); e.target.value = null; } }
+async function handleSend() { const input = getEl('chat-input'); const userInput = input.value.trim(); if (!userInput || isLoading) return; history.push({ sender: 'user', content: userInput }); renderChatHistory(); input.value = ''; isLoading = true; updateChatControlsState(); const aiMessagePlaceholder = { sender: 'ai', content: '', thinking: true }; history.push(aiMessagePlaceholder); const aiMessageElement = createMessageElement(aiMessagePlaceholder); getEl('chat-history').appendChild(aiMessageElement); const chatContainer = getEl('chat-history'); chatContainer.scrollTop = chatContainer.scrollHeight; const messageContentElement = aiMessageElement.querySelector('.whitespace-pre-wrap, .flex'); try { const stream = await getAiReplyStream(profile, history.slice(0, -1)); let fullReply = ''; let firstChunk = true; for await (const chunk of stream) { const chunkText = chunk.text; if (firstChunk) { aiMessagePlaceholder.thinking = false; firstChunk = false; aiMessageElement.innerHTML = `${! (history[history.length - 1].sender === 'user') ? `<img src="${profile.avatar}" alt="ai" class="w-8 h-8 rounded-full self-start shadow-md"/>` : ''}<div class="relative max-w-lg px-4 py-2 rounded-xl shadow-md bg-slate-700 text-slate-200 chat-bubble-ai"><p class="whitespace-pre-wrap"></p></div>`; } fullReply += chunkText; aiMessagePlaceholder.content = fullReply; const contentP = aiMessageElement.querySelector('.whitespace-pre-wrap'); if (contentP) { const parts = fullReply.split(/(\(.*?\))/g); const parsedContent = parts.map(part => { if (part.startsWith('(') && part.endsWith(')')) { return `<em class="text-slate-400 not-italic">${escapeHtml(part)}</em>`; } return escapeHtml(part); }).join(''); contentP.innerHTML = parsedContent; } chatContainer.scrollTop = chatContainer.scrollHeight; } speak(fullReply); } catch (error) { console.error("Error getting AI reply:", error); aiMessagePlaceholder.content = 'Sorry, I encountered an error.'; const contentP = aiMessageElement.querySelector('.whitespace-pre-wrap'); if(contentP) contentP.textContent = aiMessagePlaceholder.content; } finally { isLoading = false; updateChatControlsState(); } }
+function updateChatControlsState() { const T = UI_TEXT[language]; const input = getEl('chat-input'); const sendBtn = getEl('send-btn'); const magicBtn = getEl('magic-wand-btn'); const parenBtn = getEl('paren-btn'); const micBtn = getEl('mic-btn'); const listeningIndicator = getEl('listening-indicator'); input.disabled = isLoading; parenBtn.disabled = isLoading; magicBtn.disabled = isLoading || isSuggesting; sendBtn.disabled = isLoading || !input.value.trim(); micBtn.disabled = isLoading; if (isListening) { micBtn.classList.add('listening'); micBtn.title = T.stopListening; listeningIndicator.textContent = T.listening; listeningIndicator.classList.remove('hidden'); } else { micBtn.classList.remove('listening'); micBtn.title = T.startListening; listeningIndicator.classList.add('hidden'); } const magicIcon = getEl('magic-wand-icon'); if(isSuggesting) { magicIcon.innerHTML = `<span class="spinner w-5 h-5 border-2 border-white rounded-full"></span>`; } else { magicIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2 18.84l-1 4 4-1 16.64-16.64a1.21 1.21 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/></svg>`; } sendBtn.textContent = isLoading ? T.generating : T.sendMessage; }
+function handleExport() { const exportData = { version: 1, profile, history }; const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `${profile.name || 'AI-Companion'}_chat.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }
+function toggleTts() { isTtsEnabled = !isTtsEnabled; renderChatHeader(); }
+function toggleListening() { if (!speechRecognition) return; if (isListening) { speechRecognition.stop(); } else { speechRecognition.start(); } }
 
 // --- INITIALIZATION ---
-function init() {
-    // Language buttons
-    getEl('lang-en-btn').addEventListener('click', () => { language = 'en'; setupApiKeyAndStart(); });
-    getEl('lang-zh-TW-btn').addEventListener('click', () => { language = 'zh-TW'; setupApiKeyAndStart(); });
-    
-    // Home screen buttons
-    getEl('create-new-btn').addEventListener('click', handleStartNew);
-    getEl('import-file-input').addEventListener('change', handleImport);
-
-    // Creation screen buttons & inputs
-    getEl('creation-back-btn').addEventListener('click', () => { currentView = 'home'; renderView(); });
-    getEl('avatar-preview').addEventListener('click', () => getEl('avatar-file-input').click());
-    getEl('avatar-file-input').addEventListener('change', e => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                profile.avatar = event.target.result;
-                getEl('avatar-preview').src = profile.avatar;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-    getEl('generate-avatar-btn').addEventListener('click', handleGenerateAvatar);
-    getEl('randomize-all-btn').addEventListener('click', handleRandomizeAll);
-    getEl('start-chatting-btn').addEventListener('click', () => {
-        history = profile.openingLine ? [{ sender: 'ai', content: profile.openingLine }] : [];
-        currentView = 'chat';
-        renderView();
-    });
-
-    // Chat screen buttons
-    getEl('new-chat-btn').addEventListener('click', handleStartNew);
-    getEl('export-chat-btn').addEventListener('click', handleExport);
-    getEl('chat-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }});
-    getEl('chat-input').addEventListener('input', updateChatControlsState);
-    getEl('send-btn').addEventListener('click', handleSend);
-    getEl('paren-btn').addEventListener('click', () => {
-        const input = getEl('chat-input');
-        const start = input.selectionStart ?? input.value.length;
-        const text = '()';
-        input.value = input.value.substring(0, start) + text + input.value.substring(start);
-        input.focus();
-        input.setSelectionRange(start + 1, start + 1);
-    });
-    getEl('magic-wand-btn').addEventListener('click', async () => {
-        isSuggesting = true;
-        updateChatControlsState();
-        const suggestion = await suggestReply(history, language);
-        getEl('chat-input').value = suggestion;
-        isSuggesting = false;
-        updateChatControlsState();
-        getEl('chat-input').focus();
-    });
-
-    renderView();
-}
-
-function setupApiKeyAndStart() {
-    // Initialize AI on first setup call. The key is hardcoded.
-    if (!ai) {
-        ai = new GoogleGenAI({ apiKey });
-    }
-    currentView = 'home';
-    renderView();
-}
-
+function init() { getEl('lang-en-btn').addEventListener('click', () => { language = 'en'; setupApiKeyAndStart(); }); getEl('lang-zh-TW-btn').addEventListener('click', () => { language = 'zh-TW'; setupApiKeyAndStart(); }); getEl('create-new-btn').addEventListener('click', handleStartNew); getEl('import-file-input').addEventListener('change', handleImport); getEl('creation-back-btn').addEventListener('click', () => { currentView = 'home'; renderView(); }); getEl('avatar-preview').addEventListener('click', () => getEl('avatar-file-input').click()); getEl('avatar-file-input').addEventListener('change', e => { const file = e.target.files?.[0]; if (file) { const reader = new FileReader(); reader.onload = (event) => { profile.avatar = event.target.result; getEl('avatar-preview').src = profile.avatar; }; reader.readAsDataURL(file); } }); getEl('generate-avatar-btn').addEventListener('click', handleGenerateAvatar); getEl('randomize-all-btn').addEventListener('click', handleRandomizeAll); getEl('start-chatting-btn').addEventListener('click', () => { history = profile.openingLine ? [{ sender: 'ai', content: profile.openingLine }] : []; currentView = 'chat'; renderView(); }); getEl('new-chat-btn').addEventListener('click', handleStartNew); getEl('export-chat-btn').addEventListener('click', handleExport); getEl('tts-toggle-btn').addEventListener('click', toggleTts); getEl('chat-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }}); getEl('chat-input').addEventListener('input', updateChatControlsState); getEl('send-btn').addEventListener('click', handleSend); getEl('paren-btn').addEventListener('click', () => { const input = getEl('chat-input'); const start = input.selectionStart ?? input.value.length; const text = '()'; input.value = input.value.substring(0, start) + text + input.value.substring(start); input.focus(); input.setSelectionRange(start + 1, start + 1); }); getEl('magic-wand-btn').addEventListener('click', async () => { isSuggesting = true; updateChatControlsState(); const suggestion = await suggestReply(history, language); getEl('chat-input').value = suggestion; isSuggesting = false; updateChatControlsState(); getEl('chat-input').focus(); }); getEl('mic-btn').addEventListener('click', toggleListening); renderView(); }
+function setupApiKeyAndStart() { if (!ai) { ai = new GoogleGenAI({ apiKey }); } initSpeechRecognition(); currentView = 'home'; renderView(); }
 document.addEventListener('DOMContentLoaded', init);
-
 </script>
 </body>
 </html>
