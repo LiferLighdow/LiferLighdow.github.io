@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 恐怖遊戲</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* 隱藏滾動條 */
+            background-color: #000;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+        }
+        .controls-info {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            z-index: 100;
+        }
+        .controls-info p {
+            margin: 5px 0;
+        }
+        .message-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            display: none; /* 預設隱藏 */
+            z-index: 1000;
+            color: #e74c3c; /* 恐怖訊息的顏色 */
+        }
+        .ui-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .compass {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            position: relative; /* For absolute positioning of needle */
+        }
+        .compass-needle {
+            width: 6px; /* Thicker needle */
+            height: 35px; /* Longer needle */
+            background: linear-gradient(to top, red 50%, white 50%); /* Red top, white bottom */
+            position: absolute;
+            transform-origin: bottom center;
+            bottom: 50%; /* Center the pivot point */
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Subtle glow */
+        }
+        .compass::before {
+            content: 'N';
+            position: absolute;
+            top: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            color: red; /* North indicator color */
+        }
+        /* Crosshair Styles */
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999; /* Below message box, above game */
+        }
+        #crosshair::before, #crosshair::after {
+            content: '';
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        #crosshair::before { /* Vertical line */
+            width: 2px;
+            height: 100%;
+        }
+        #crosshair::after { /* Horizontal line */
+            width: 100%;
+            height: 2px;
+        }
+
+        /* Difficulty Selection Screen Styles */
+        #difficultySelectionScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            color: #fff;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        #difficultySelectionScreen h2 {
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            color: #e74c3c;
+            text-shadow: 0 0 20px #e74c3c;
+        }
+        #difficultySelectionScreen button {
+            background-color: #444;
+            color: #fff;
+            border: 2px solid #666;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        #difficultySelectionScreen button:hover {
+            background-color: #666;
+            border-color: #eee;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+        }
+        #difficultySelectionScreen button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container"></div>
+    <div class="controls-info">
+        <p>控制：</p>
+        <p>移動：W (前) A (左) S (後) D (右)</p>
+        <p>視角：滑鼠移動</p>
+        <p>手電筒：F</p>
+        <p>跳躍：空白鍵</p>
+        <p>加速：Shift</p>
+        <p>開門：E (靠近門時)</p>
+    </div>
+    <div id="messageBox" class="message-box"></div>
+    <div class="ui-panel">
+        <p>手電筒電量: <span id="flashlightPowerDisplay">100%</span></p>
+        <p>電池數量: <span id="batteryCountDisplay">0</span></p>
+        <p>鑰匙: <span id="keyStatusDisplay">未找到</span></p>
+        <p id="keyDistanceRow" style="display: none;">鑰匙距離: <span id="distanceToKeyDisplay">--- 公尺</span></p> <!-- New row for key distance -->
+        <p>體力: <span id="staminaDisplay">100%</span></p>
+        <p>離門距離: <span id="distanceToDoorDisplay">--- 公尺</span></p>
+    </div>
+    <div id="compass" class="compass">
+        <div class="compass-needle" id="compassNeedle"></div>
+    </div>
+    <div id="crosshair"></div> <!-- Crosshair element -->
+
+    <!-- Difficulty Selection Screen -->
+    <div id="difficultySelectionScreen">
+        <h2>選擇難度</h2>
+        <button id="difficultyEasy">簡單 (少量怪物)</button>
+        <button id="difficultyNormal">普通 (適量怪物)</button>
+        <button id="difficultyHard">困難 (大量怪物)</button>
+        <button id="difficultyInsane">瘋狂 (極大量怪物)</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <script>
+        // Declare global variables
+        let scene, camera, renderer;
+        let flashlight;
+        let monsters = []; // Store all monster instances
+        let key, door, battery;
+        let chargingStations = []; // Store all charging stations
+        let walls = []; // Store all wall objects for collision detection
+        let doorFrameParts = []; // Store door frame parts for later removal
+        let keys = {};
+        let isLocked = false; // Used to track if the mouse is locked
+        const baseMoveSpeed = 0.5; // Player base movement speed
+        const sprintSpeedMultiplier = 2.5; // Sprint multiplier
+        const slowedSpeedMultiplier = 0.5; // Speed multiplier when stamina is zero
+        let currentMoveSpeed; // Current movement speed
+        const lookSpeed = 0.002;
+        let messageBox;
+        let compassNeedle; // Compass needle element
+        let doorOriginalPosition = new THREE.Vector3(); // Store original door position for compass
+
+        // Raycasting for interaction
+        let raycaster = new THREE.Raycaster();
+        let mouse = new THREE.Vector2(); // For raycaster, always center of screen (0,0 normalized)
+
+        // Game state variables
+        let flashlightPower = 100;
+        let batteryCount = 0;
+        let hasKey = false;
+        let isFlashlightOn = true;
+        let gameState = 'difficultySelection'; // Initial game state
+        let gameOverRestartTimer = 5; // seconds
+        let gameOverIntervalId = null; // To clear the interval
+        let totalMonsters = 0; // Will be set by difficulty selection
+
+        // Stamina system variables
+        let stamina = 100;
+        const staminaDrainRate = 0.5; // Stamina consumption per frame
+        let staminaRegenRate = 0.2; // Stamina regeneration per frame (changed to let)
+        let isSprinting = false;
+        const flashlightRechargeRate = 0.1; // Flashlight recharge rate per frame when off
+
+        // Difficulty specific variables
+        let maxFlashlightPower;
+        let maxStamina;
+        let isEasyMode = false;
+        let isNormalMode = false; // New variable to track normal mode
+
+        // UI elements
+        let flashlightPowerDisplay, batteryCountDisplay, keyStatusDisplay, staminaDisplay, distanceToDoorDisplay;
+        let difficultySelectionScreen; // Reference to the difficulty selection screen
+        let gameContainer; // Reference to the game container div
+        let distanceToKeyDisplay; // Reference to the key distance display element
+        let keyDistanceRow; // Reference to the key distance row element
+
+        // Sounds
+        let ambientSound, jumpScareSound;
+
+        // Monster AI variables
+        // Monster size and speed adjustments
+        const monsterScaleFactor = 4.0; // 300% larger (quadruple original size)
+        let currentMonsterSpeedMultiplier; // Now a variable, set by difficulty
+        let monsterPatrolSpeed; // Now a variable, set by difficulty
+        let monsterChaseSpeed; // Now a variable, set by difficulty
+        const monsterChaseRange = 45; // Monster chase range (increased for larger world)
+        let monsterTargetPosition = new THREE.Vector3();
+        let monsterLastMoveTime = 0;
+        const monsterMoveInterval = 2000; // Time interval for monster to change patrol target (slightly faster changes)
+
+        // Jump variables
+        const playerHeight = 1.7; // Player standing height
+        const playerRadius = 0.5; // Player radius for simple collision volume
+        const jumpForce = 0.3;
+        const gravity = 0.015;
+        let velocityY = 0;
+        let isGrounded = true; // Whether the player is on the ground
+
+        // World size
+        const worldSize = 2000; // World side length, from -worldSize/2 to worldSize/2
+        const worldMargin = 50; // Margin from world edges for object placement
+
+        // Initialize game elements (moved from init to startGame)
+        function initializeGameElements() {
+            // Clear existing scene elements if re-initializing
+            if (scene) {
+                while(scene.children.length > 0){
+                    const obj = scene.children[0];
+                    scene.remove(obj);
+                    if (obj.geometry) obj.geometry.dispose();
+                    if (obj.material) {
+                        if (Array.isArray(obj.material)) {
+                            obj.material.forEach(m => m.dispose());
+                        } else {
+                            obj.material.dispose();
+                        }
+                    }
+                }
+            }
+            monsters = [];
+            walls = [];
+            chargingStations = [];
+            doorFrameParts = [];
+            key = null;
+            door = null;
+            battery = null;
+
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000); // Black background
+
+            // Create camera (perspective camera)
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2500); // Increased far clipping plane for larger world
+            camera.position.set(0, playerHeight, 0); // Player initial height
+            camera.rotation.order = 'YXZ'; // Ensure correct rotation order to avoid gimbal lock
+
+            // Create renderer if it doesn't exist, or clear its content if it does
+            if (!renderer) {
+                renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                gameContainer.appendChild(renderer.domElement);
+            } else {
+                // If renderer already exists, ensure its canvas is in the game-container
+                if (renderer.domElement.parentNode !== gameContainer) {
+                    gameContainer.innerHTML = ''; // Clear existing content
+                    gameContainer.appendChild(renderer.domElement);
+                }
+            }
+
+
+            // Create flashlight (spotlight)
+            flashlight = new THREE.SpotLight(0xffffff, 5, 150, Math.PI / 6, 0.5, 2); // Increased intensity and range
+            flashlight.position.set(0, 0, 0); // Position relative to camera
+            flashlight.target.position.set(0, 0, -1); // Flashlight points forward
+            camera.add(flashlight); // Add flashlight as child of camera
+            camera.add(flashlight.target); // Add flashlight target as child of camera
+            scene.add(camera); // Add camera to scene
+
+            // Add ambient light (very dark)
+            const ambientLight = new THREE.AmbientLight(0x000000); // Almost completely dark ambient light
+            scene.add(ambientLight);
+
+            // Add some point lights, simulating streetlights or faint indoor lights
+            // Increased range for point lights to be visible in larger world
+            addPointLight(worldSize / 4, 10, worldSize / 4, 1.5, 0xffaa00, 250); // Warm light
+            addPointLight(-worldSize / 4, 10, -worldSize / 4, 1.5, 0x00aaff, 250); // Cool light
+            addPointLight(worldSize / 8, 10, -worldSize / 8, 1.5, 0xffffff, 250); // White light
+            addPointLight(-worldSize / 8, 10, worldSize / 8, 1.5, 0xffaa00, 250); // Warm light
+            addPointLight(0, 10, 0, 1.5, 0xccffcc, 250); // Central light
+
+            // Create ground
+            const groundGeometry = new THREE.PlaneGeometry(worldSize, worldSize);
+            const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, side: THREE.DoubleSide });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = 0;
+            scene.add(ground);
+
+            // Wall height
+            const wallHeight = 10;
+            const wallDepth = 0.5;
+
+            // Create walls and internal structures (world expanded to 2000x2000)
+            // Outer walls
+            walls.push(addWall(0, wallHeight / 2, -worldSize / 2, worldSize, wallHeight, wallDepth));  // Back wall
+            walls.push(addWall(0, wallHeight / 2, worldSize / 2, worldSize, wallHeight, wallDepth));   // Front wall
+            walls.push(addWall(-worldSize / 2, wallHeight / 2, 0, wallDepth, wallHeight, worldSize)); // Left wall
+            walls.push(addWall(worldSize / 2, wallHeight / 2, 0, wallDepth, wallHeight, worldSize));  // Right wall
+
+            // Internal walls (creating a more complex maze structure)
+            // These wall positions are scaled and randomized to fit the new worldSize
+            const numInternalWalls = 50; // Increased number of internal walls
+            for (let i = 0; i < numInternalWalls; i++) {
+                const x = (Math.random() - 0.5) * (worldSize - 200);
+                const z = (Math.random() - 0.5) * (worldSize - 200);
+                const width = Math.random() * 100 + 50; // Random width
+                const depth = Math.random() > 0.5 ? wallDepth : width; // Either thin or thick wall
+                const height = wallHeight;
+                if (Math.random() > 0.5) { // Vertical wall
+                    walls.push(addWall(x, height / 2, z, wallDepth, height, width));
+                } else { // Horizontal wall
+                    walls.push(addWall(x, height / 2, z, width, height, wallDepth));
+                }
+            }
+
+
+            // Add more "street scene" elements: tall buildings and more boxes
+            const numBuildings = 100; // Increased number of buildings
+            for (let i = 0; i < numBuildings; i++) {
+                const x = (Math.random() - 0.5) * (worldSize - worldMargin * 2);
+                const z = (Math.random() - 0.5) * (worldSize - worldMargin * 2);
+                const width = Math.random() * 30 + 10;
+                const depth = Math.random() * 30 + 10;
+                const height = Math.random() * 150 + 50; // Taller buildings
+                const building = addBuilding(x, height / 2, z, width, height, depth, Math.random() * 0x888888 + 0x222222);
+                walls.push(building); // Add buildings to walls for collision
+            }
+
+            // Add more boxes
+            const numBoxes = 200; // Increased number of boxes
+            for (let i = 0; i < numBoxes; i++) {
+                const x = (Math.random() - 0.5) * (worldSize - worldMargin * 2);
+                const z = (Math.random() - 0.5) * (worldSize - worldMargin * 2);
+                const box = addBox(x, 0.75, z, 1.5, 1.5, 1.5, 0x663300);
+                walls.push(box); // Add boxes to walls for collision
+            }
+
+
+            // Create key (torus) - with emissive property for glowing
+            const keyGeometry = new THREE.TorusGeometry(0.3, 0.1, 16, 100);
+            const keyMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700, emissive: 0xffd700, emissiveIntensity: 0.5 }); // Gold, with glowing effect
+            key = new THREE.Mesh(keyGeometry, keyMaterial);
+            key.position.set(
+                (Math.random() - 0.5) * (worldSize - worldMargin * 2),
+                0.5,
+                (Math.random() - 0.5) * (worldSize - worldMargin * 2)
+            ); // Random position within world bounds
+            scene.add(key);
+
+            // Create door and its frame
+            const doorFrameMaterial = new THREE.MeshStandardMaterial({ color: 0x332211, roughness: 0.8, metalness: 0.1 }); // Darker wood/metal for frame
+            const doorThickness = wallDepth;
+            const doorHeight = wallHeight * 3; // Make door even taller
+            const doorWidth = 8; // Make door even wider
+
+            // Door itself - now transparent to act as an "air wall" visually
+            const doorGeometry = new THREE.BoxGeometry(doorThickness, doorHeight, doorWidth);
+            const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x8b4513, transparent: true, opacity: 0.1 }); // Semi-transparent for "air wall" effect
+            door = new THREE.Mesh(doorGeometry, doorMaterial);
+
+            // Place door on a random outer wall, near the center of that wall
+            const wallSide = Math.floor(Math.random() * 4); // 0: back, 1: front, 2: left, 3: right
+            const doorOffset = (Math.random() - 0.5) * (worldSize - 100); // Random offset along the wall, adjusted for larger world
+            let doorPosX, doorPosZ;
+
+            switch (wallSide) {
+                case 0: doorPosX = doorOffset; doorPosZ = -worldSize / 2 + doorThickness / 2; break; // Back wall
+                case 1: doorPosX = doorOffset; doorPosZ = worldSize / 2 - doorThickness / 2; break;  // Front wall
+                case 2: doorPosX = -worldSize / 2 + doorThickness / 2; doorPosZ = doorOffset; break; // Left wall
+                case 3: doorPosX = worldSize / 2 - doorThickness / 2; doorPosZ = doorOffset; break;  // Right wall
+            }
+            door.position.set(doorPosX, doorHeight / 2, doorPosZ);
+            scene.add(door);
+            walls.push(door); // Ensure the door itself is still a physical barrier
+            doorOriginalPosition.copy(door.position); // Store original position for compass
+
+            // Create door frame parts - these will be the visible "框框" (frame)
+            const frameThickness = 0.3; // Thicker frame
+            const frameHeight = doorHeight + frameThickness * 2; // Frame extends slightly above/below door
+            const frameWidth = doorWidth + frameThickness * 2; // Frame extends slightly left/right of door
+
+            // Left post
+            const leftPost = addWall(
+                door.position.x + (wallSide === 2 ? 0 : (wallSide === 3 ? 0 : (doorWidth / 2 + frameThickness / 2) * (wallSide === 0 || wallSide === 1 ? -1 : 0))),
+                door.position.y,
+                door.position.z + (wallSide === 0 || wallSide === 1 ? 0 : (doorWidth / 2 + frameThickness / 2) * (wallSide === 2 ? -1 : 1)),
+                wallSide === 0 || wallSide === 1 ? frameThickness : doorThickness, // Adjust width/depth based on wall orientation
+                frameHeight,
+                wallSide === 0 || wallSide === 1 ? doorThickness : frameThickness,
+                0x332211
+            );
+            if (wallSide === 0 || wallSide === 1) { // Horizontal wall (door is vertical)
+                leftPost.position.x = door.position.x - doorWidth / 2 - frameThickness / 2;
+                leftPost.position.z = door.position.z;
+                leftPost.geometry = new THREE.BoxGeometry(frameThickness, frameHeight, doorThickness);
+            } else { // Vertical wall (door is horizontal)
+                leftPost.position.x = door.position.x;
+                leftPost.position.z = door.position.z - doorWidth / 2 - frameThickness / 2;
+                leftPost.geometry = new THREE.BoxGeometry(doorThickness, frameHeight, frameThickness);
+            }
+            walls.push(leftPost);
+            doorFrameParts.push(leftPost); // Store for later removal
+
+            // Right post
+            const rightPost = addWall(
+                door.position.x + (wallSide === 2 ? 0 : (wallSide === 3 ? 0 : (doorWidth / 2 + frameThickness / 2) * (wallSide === 0 || wallSide === 1 ? 1 : 0))),
+                door.position.y,
+                door.position.z + (wallSide === 0 || wallSide === 1 ? 0 : (doorWidth / 2 + frameThickness / 2) * (wallSide === 2 ? 1 : -1)),
+                wallSide === 0 || wallSide === 1 ? frameThickness : doorThickness,
+                frameHeight,
+                wallSide === 0 || wallSide === 1 ? doorThickness : frameThickness,
+                0x332211
+            );
+            if (wallSide === 0 || wallSide === 1) {
+                rightPost.position.x = door.position.x + doorWidth / 2 + frameThickness / 2;
+                rightPost.position.z = door.position.z;
+                rightPost.geometry = new THREE.BoxGeometry(frameThickness, frameHeight, doorThickness);
+            } else {
+                rightPost.position.x = door.position.x;
+                rightPost.position.z = door.position.z + doorWidth / 2 + frameThickness / 2;
+                rightPost.geometry = new THREE.BoxGeometry(doorThickness, frameHeight, frameThickness);
+            }
+            walls.push(rightPost);
+            doorFrameParts.push(rightPost); // Store for later removal
+
+            // Top lintel
+            const topLintel = addWall(
+                door.position.x,
+                door.position.y + doorHeight / 2 + frameThickness / 2,
+                door.position.z,
+                wallSide === 0 || wallSide === 1 ? frameWidth : doorThickness, // Adjust width/depth based on wall orientation
+                frameThickness,
+                wallSide === 0 || wallSide === 1 ? doorThickness : frameWidth,
+                0x332211
+            );
+            walls.push(topLintel);
+            doorFrameParts.push(topLintel); // Store for later removal
+
+
+            // Create battery
+            const batteryGeometry = new THREE.CylinderGeometry(0.2, 0.2, 0.5, 32);
+            const batteryMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Green
+            battery = new THREE.Mesh(batteryGeometry, batteryMaterial);
+            battery.position.set(
+                (Math.random() - 0.5) * (worldSize - worldMargin * 2),
+                0.25,
+                (Math.random() - 0.5) * (worldSize - worldMargin * 2)
+            ); // Random position within world bounds
+            scene.add(battery);
+
+            // Create multiple charging stations
+            const numChargingStations = 20; // Increased number of charging stations
+            for (let i = 0; i < numChargingStations; i++) {
+                const x = (Math.random() - 0.5) * (worldSize - worldMargin * 2);
+                const z = (Math.random() - 0.5) * (worldSize - worldMargin * 2);
+                createChargingStation(x, 0.25, z);
+            }
+
+            // Spawn monsters
+            for (let i = 0; i < totalMonsters; i++) { // Use totalMonsters based on difficulty
+                createMonster();
+            }
+
+            // Spawn extra monsters near key and door
+            spawnMonstersNearObject(key, Math.ceil(totalMonsters * 0.1), 30); // 10% of total monsters near key
+            spawnMonstersNearObject(door, Math.ceil(totalMonsters * 0.1), 30); // 10% of total monsters near door
+        }
+
+        // Function to select difficulty and start the game
+        function selectDifficulty(level) {
+            switch (level) {
+                case 1: // Easy
+                    totalMonsters = 10;
+                    currentMonsterSpeedMultiplier = 0.2; // Even slower monsters for Easy
+                    maxFlashlightPower = 200; // More starting power
+                    flashlightPower = maxFlashlightPower; // Set initial to max
+                    maxStamina = 200; // More starting stamina
+                    stamina = maxStamina; // Set initial to max
+                    staminaRegenRate = 0.4; // Faster stamina regen
+                    isEasyMode = true;
+                    isNormalMode = false;
+                    break;
+                case 2: // Normal
+                    totalMonsters = 30;
+                    currentMonsterSpeedMultiplier = 8.0; // Normal speed
+                    maxFlashlightPower = 150; // New cap
+                    flashlightPower = maxFlashlightPower; // Set initial to max
+                    maxStamina = 150; // New cap
+                    stamina = maxStamina; // Set initial to max
+                    staminaRegenRate = 0.2; // Default stamina regen
+                    isEasyMode = false;
+                    isNormalMode = true;
+                    break;
+                case 3: // Hard
+                    totalMonsters = 70;
+                    currentMonsterSpeedMultiplier = 12.0; // Faster for Hard
+                    maxFlashlightPower = 100; // New cap
+                    flashlightPower = maxFlashlightPower; // Set initial to max
+                    maxStamina = 100; // New cap
+                    stamina = maxStamina; // Set initial to max
+                    staminaRegenRate = 0.15; // Slower stamina regen
+                    isEasyMode = false;
+                    isNormalMode = false;
+                    break;
+                case 4: // Insane
+                    totalMonsters = 150;
+                    currentMonsterSpeedMultiplier = 16.0; // Even faster for Insane
+                    maxFlashlightPower = 50; // Much less starting power
+                    flashlightPower = maxFlashlightPower;
+                    maxStamina = 50; // Much less starting stamina
+                    stamina = maxStamina;
+                    staminaRegenRate = 0.1; // Much slower stamina regen
+                    isEasyMode = false;
+                    isNormalMode = false;
+                    break;
+                default: // Default to Normal
+                    totalMonsters = 30;
+                    currentMonsterSpeedMultiplier = 8.0;
+                    maxFlashlightPower = 150;
+                    flashlightPower = maxFlashlightPower;
+                    maxStamina = 150;
+                    stamina = maxStamina;
+                    staminaRegenRate = 0.2;
+                    isEasyMode = false;
+                    isNormalMode = true;
+            }
+
+            // Recalculate patrol and chase speeds based on the new multiplier
+            monsterPatrolSpeed = (0.075 * currentMonsterSpeedMultiplier);
+            monsterChaseSpeed = (0.225 * currentMonsterSpeedMultiplier);
+
+            difficultySelectionScreen.style.display = 'none'; // Hide difficulty screen
+            document.querySelector('.controls-info').style.display = 'flex';
+            document.querySelector('.ui-panel').style.display = 'flex';
+            document.getElementById('compass').style.display = 'flex';
+            document.getElementById('crosshair').style.display = 'flex'; // Show crosshair
+            gameContainer.style.display = 'block'; // Show game container
+
+            // Initialize game elements with chosen difficulty
+            initializeGameElements(); // This now creates the world and monsters
+            animate(); // Start the game loop
+            gameState = 'paused'; // Set to paused, waiting for user click
+            showMessage("點擊遊戲畫面開始遊戲並鎖定滑鼠。", 0); // Initial message
+
+            // Attach the click listener to the renderer's DOM element (canvas)
+            renderer.domElement.addEventListener('click', onClick);
+            // Attach keyboard and mousemove listeners to the document
+            document.addEventListener('keydown', onKeyDown, false);
+            document.addEventListener('keyup', onKeyUp, false);
+            document.addEventListener('mousemove', onMouseMove, false);
+
+            // Set mouse position for raycaster to the center of the screen
+            mouse.x = 0;
+            mouse.y = 0;
+
+            // Update UI visibility for key distance based on isEasyMode or isNormalMode
+            if (isEasyMode || isNormalMode) {
+                keyDistanceRow.style.display = 'flex';
+            } else {
+                keyDistanceRow.style.display = 'none';
+            }
+        }
+
+        // Helper function: Add wall
+        function addWall(x, y, z, width, height, depth, color = 0x333333) {
+            const wallGeometry = new THREE.BoxGeometry(width, height, depth);
+            const wallMaterial = new THREE.MeshStandardMaterial({ color: color });
+            const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+            wall.position.set(x, y, z);
+            scene.add(wall);
+            return wall;
+        }
+
+        // Helper function: Add box
+        function addBox(x, y, z, width, height, depth, color = 0x663300) {
+            const boxGeometry = new THREE.BoxGeometry(width, height, depth);
+            const boxMaterial = new THREE.MeshStandardMaterial({ color: color });
+            const box = new THREE.Mesh(boxGeometry, boxMaterial);
+            box.position.set(x, y, z);
+            scene.add(box);
+            return box;
+        }
+
+        // Helper function: Add building (tall box)
+        function addBuilding(x, y, z, width, height, depth, color = 0x444444) {
+            const buildingGeometry = new THREE.BoxGeometry(width, height, depth);
+            const buildingMaterial = new THREE.MeshStandardMaterial({ color: color });
+            const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+            building.position.set(x, y, z);
+            scene.add(building);
+            return building;
+        }
+
+        // Helper function: Add point light
+        function addPointLight(x, y, z, intensity, color, distance = 100) {
+            const pointLight = new THREE.PointLight(color, intensity, distance); // Distance decay
+            pointLight.position.set(x, y, z);
+            scene.add(pointLight);
+        }
+
+        // Helper function: Create charging station
+        function createChargingStation(x, y, z) {
+            const chargerBaseGeometry = new THREE.BoxGeometry(1.5, 0.5, 1.5);
+            const chargerBaseMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 });
+            const chargerTopGeometry = new THREE.CylinderGeometry(0.7, 0.7, 0.3, 32);
+            const chargerTopMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 0.5 }); // Emissive effect
+
+            const chargerBase = new THREE.Mesh(chargerBaseGeometry, chargerBaseMaterial);
+            const chargerTop = new THREE.Mesh(chargerTopGeometry, chargerTopMaterial);
+            chargerTop.position.y = 0.4; // Place on top of base
+
+            const newChargingStation = new THREE.Group(); // Group base and top
+            newChargingStation.add(chargerBase);
+            newChargingStation.add(chargerTop);
+            newChargingStation.position.set(x, y, z);
+            scene.add(newChargingStation);
+            chargingStations.push(newChargingStation); // Add new charging station to list
+            return newChargingStation;
+        }
+
+        // Helper function: Create a monster instance
+        function createMonster() {
+            const monsterBodyGeometry = new THREE.OctahedronGeometry(0.7 * monsterScaleFactor); // Scaled size
+            const monsterBodyMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000, flatShading: true });
+            const newMonster = new THREE.Mesh(monsterBodyGeometry, monsterBodyMaterial);
+            newMonster.position.set(
+                (Math.random() - 0.5) * (worldSize - worldMargin * 2),
+                0.7,
+                (Math.random() - 0.5) * (worldSize - worldMargin * 2)
+            );
+            const monsterRadius = 0.7 * monsterScaleFactor; // Monster radius for collision volume (scaled)
+            newMonster.userData = { // Store monster-specific data
+                radius: monsterRadius,
+                state: 'patrolling',
+                targetPosition: new THREE.Vector3(),
+                lastMoveTime: performance.now()
+            };
+            scene.add(newMonster);
+
+            // Add monster eyes
+            const eyeGeometry = new THREE.SphereGeometry(0.15 * monsterScaleFactor, 16, 16); // Scaled eyes
+            const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); // White eyes
+            const pupilMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black pupils
+
+            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            leftEye.position.set(-0.3 * monsterScaleFactor, 0.3 * monsterScaleFactor, 0.6 * monsterScaleFactor); // Position relative to monster body (scaled)
+            newMonster.add(leftEye);
+
+            const leftPupil = new THREE.Mesh(eyeGeometry, pupilMaterial);
+            leftPupil.scale.set(0.5, 0.5, 0.5);
+            leftPupil.position.set(0, 0, 0.1 * monsterScaleFactor); // Position relative to eye (scaled)
+            leftEye.add(leftPupil);
+
+            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            rightEye.position.set(0.3 * monsterScaleFactor, 0.3 * monsterScaleFactor, 0.6 * monsterScaleFactor); // Position relative to monster body (scaled)
+            newMonster.add(rightEye);
+
+            const rightPupil = new THREE.Mesh(eyeGeometry, pupilMaterial);
+            rightPupil.scale.set(0.5, 0.5, 0.5);
+            rightPupil.position.set(0, 0, 0.1 * monsterScaleFactor); // Position relative to eye (scaled)
+            rightEye.add(rightPupil);
+
+            monsters.push(newMonster); // Add to the global monsters array
+            return newMonster;
+        }
+
+        // Helper function: Spawn monsters near a specific object
+        function spawnMonstersNearObject(object, count, spawnRadius) {
+            for (let i = 0; i < count; i++) {
+                const newMonster = createMonster(); // Create a new monster
+                // Position it randomly around the object within spawnRadius
+                newMonster.position.set(
+                    object.position.x + (Math.random() - 0.5) * spawnRadius * 2,
+                    0.7,
+                    object.position.z + (Math.random() - 0.5) * spawnRadius * 2
+                );
+                // Ensure the monster's initial target is also near this area
+                newMonster.userData.targetPosition.copy(newMonster.position);
+            }
+        }
+
+
+        // Initialize sounds
+        function initSounds() {
+            Tone.start(); // Start Tone.js context
+
+            // Ambient sound (e.g., low hum)
+            // ambientSound = new Tone.Player("./sounds/ambient_loop.mp3").toDestination(); // Replace with actual sound path
+            // ambientSound.loop = true;
+            // ambientSound.volume.value = -15; // Lower volume
+
+            // Jump scare sound
+            // jumpScareSound = new Tone.Player("./sounds/jumpscare.mp3").toDestination(); // Replace with actual sound path
+            // jumpScareSound.volume.value = -5; // Adjust volume
+
+            console.log("Sounds initialized. Note: External sound files cannot be loaded in the preview due to security restrictions.");
+            console.log("In your own environment, ensure 'sounds/ambient_loop.mp3' and 'sounds/jumpscare.mp3' files exist.");
+        }
+
+        // Play ambient sound (called after user interaction)
+        function playAmbientSound() {
+            // if (ambientSound && ambientSound.state !== 'started') {
+            //     ambientSound.start(); // Uncomment in actual deployment
+            //     console.log("Ambient sound playing (simulated)");
+            // }
+            console.log("Ambient sound playing (simulated)");
+        }
+
+        // Play jump scare sound
+        function playJumpScareSound() {
+            // if (jumpScareSound) {
+            //     jumpScareSound.start(); // Uncomment in actual deployment
+            //     console.log("Jump scare sound playing (simulated)");
+            // }
+            console.log("Jump scare sound playing (simulated)");
+        }
+
+
+        // Show message box
+        function showMessage(message, duration = 3000) {
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+            if (duration > 0) {
+                setTimeout(() => {
+                    messageBox.style.display = 'none';
+                }, duration);
+            }
+        }
+
+        // Lock mouse pointer
+        function lockPointer() {
+            console.log("lockPointer() called.");
+            renderer.domElement.requestPointerLock = renderer.domElement.requestPointerLock ||
+                                                     renderer.domElement.mozRequestPointerLock ||
+                                                     renderer.domElement.webkitRequestPointerLock;
+            if (renderer.domElement.requestPointerLock) {
+                renderer.domElement.requestPointerLock();
+            }
+        }
+
+        // Mouse lock state change event
+        document.addEventListener('pointerlockchange', pointerLockChange, false);
+        document.addEventListener('mozpointerlockchange', pointerLockChange, false);
+        document.addEventListener('webkitpointerlockchange', pointerLockChange, false);
+
+        function pointerLockChange() {
+            if (document.pointerLockElement === renderer.domElement ||
+                document.mozPointerLockElement === renderer.domElement ||
+                document.webkitPointerLockElement === renderer.domElement) {
+                isLocked = true;
+                console.log('Pointer locked. isLocked = true. Current gameState:', gameState);
+                if (gameState === 'paused') { // Only resume if it was paused
+                    gameState = 'playing';
+                    console.log('Game state changed to playing.');
+                    messageBox.style.display = 'none'; // Hide start/pause message
+                    playAmbientSound(); // Play ambient sound after mouse lock
+                }
+            } else {
+                isLocked = false;
+                console.log('Pointer unlocked. isLocked = false. Current gameState:', gameState);
+                // Only pause if the game is currently playing, not if it's already won/lost or in difficulty selection
+                if (gameState === 'playing') {
+                    gameState = 'paused';
+                    console.log('Game state changed to paused.');
+                    showMessage("遊戲已暫停，點擊遊戲畫面繼續。", 0); // Display permanently while paused
+                }
+            }
+        }
+
+        // Adjust renderer and camera on window resize
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Key down event
+        function onKeyDown(event) {
+            console.log("onKeyDown:", event.code, "isLocked:", isLocked, "gameState:", gameState);
+            // Allow Escape key to always be processed (for pausing/unpausing)
+            if (event.code === 'Escape') {
+                // Toggle pause state if game is playing or paused, but not during game over/won
+                if (gameState === 'playing') {
+                    document.exitPointerLock(); // This will trigger pointerLockChange to pause
+                } else if (gameState === 'paused' && !gameOverIntervalId) { // Only unpause if not in restart countdown
+                    lockPointer(); // This will trigger pointerLockChange to resume
+                }
+                return; // Handle Escape and return
+            }
+
+            // For all other keys (movement, flashlight, interaction), only process if mouse is locked (game is playing)
+            if (!isLocked || gameState !== 'playing') { // Ensure game is playing and mouse is locked for other inputs
+                console.log("Input blocked: Not locked or not playing.");
+                return;
+            }
+
+            keys[event.code] = true;
+            if (event.code === 'KeyF') { // Press F to toggle flashlight
+                isFlashlightOn = !isFlashlightOn;
+                flashlight.intensity = isFlashlightOn && flashlightPower > 0 ? 5 : 0;
+            }
+            if (event.code === 'Space' && isGrounded) { // Press Space to jump
+                velocityY = jumpForce;
+                isGrounded = false;
+            }
+            if (event.code === 'KeyE') { // Press E to interact with door
+                // Use raycaster to check if looking at the door
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObject(door);
+
+                if (intersects.length > 0 && intersects[0].object === door) {
+                    if (hasKey) {
+                        // Door open logic
+                        showMessage("門打開了！你逃脫了！", 0);
+                        // Remove door and its frame parts from scene and walls array
+                        scene.remove(door);
+                        // Remove door from walls array
+                        const doorIndexInWalls = walls.indexOf(door);
+                        if (doorIndexInWalls > -1) {
+                            walls.splice(doorIndexInWalls, 1);
+                        }
+                        door = null; // Clear reference to door object
+                        doorFrameParts.forEach(part => {
+                            scene.remove(part);
+                            const index = walls.indexOf(part);
+                            if (index > -1) {
+                                walls.splice(index, 1);
+                            }
+                        });
+                        doorFrameParts = []; // Clear the array
+                        gameState = 'won'; // Set game state to won
+                        // Start restart timer
+                        if (gameOverIntervalId === null) {
+                            gameOverRestartTimer = 5; // Reset timer
+                            gameOverIntervalId = setInterval(() => {
+                                gameOverRestartTimer--;
+                                if (gameOverRestartTimer <= 0) {
+                                    clearInterval(gameOverIntervalId);
+                                    location.reload();
+                                } else {
+                                    showMessage(`門打開了！你逃脫了！將在 ${gameOverRestartTimer} 秒後重新開始...`, 0);
+                                }
+                            }, 1000);
+                        }
+                    } else {
+                        showMessage("這扇門被鎖住了，你需要一把鑰匙。", 2000);
+                    }
+                } else {
+                    showMessage("你沒有對準門。", 1000); // Message if not looking at the door
+                }
+            }
+        }
+
+        // Key up event
+        function onKeyUp(event) {
+            console.log("onKeyUp:", event.code, "isLocked:", isLocked, "gameState:", gameState);
+            // Only process key up for movement/action keys if mouse is locked (game is playing)
+            if (!isLocked || gameState !== 'playing') {
+                return;
+            }
+            keys[event.code] = false;
+        }
+
+        // Mouse move event (for camera control)
+        function onMouseMove(event) {
+            // console.log("onMouseMove triggered. isLocked:", isLocked); // Too chatty, uncomment if needed
+            if (isLocked) {
+                const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+                const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+                // Rotate left/right (Y-axis)
+                camera.rotation.y -= movementX * lookSpeed;
+
+                // Rotate up/down (X-axis)
+                let newRotationX = camera.rotation.x - movementY * lookSpeed;
+                // Limit vertical view to prevent flipping
+                newRotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, newRotationX));
+                camera.rotation.x = newRotationX;
+            }
+        }
+
+        // Click event (for mouse lock)
+        function onClick() {
+            console.log("onClick triggered. Current isLocked:", isLocked, "gameState:", gameState);
+            if (!isLocked && gameState === 'paused') { // Only lock if not already locked and game is paused
+                lockPointer();
+            }
+        }
+
+        // Check if distance between two objects is less than threshold
+        function checkCollision(object1, object2, distanceThreshold) {
+            if (!object1 || !object2) return false;
+            return object1.position.distanceTo(object2.position) < distanceThreshold;
+        }
+
+        // Generic AABB collision detection and response
+        function checkObjectWallCollision(objectPosition, objectRadius, walls, oldObjectPosition) {
+            let collidedX = false;
+            let collidedZ = false;
+
+            // Check collision with world boundaries
+            if (objectPosition.x < -worldSize / 2 + objectRadius || objectPosition.x > worldSize / 2 - objectRadius) {
+                collidedX = true;
+            }
+            if (objectPosition.z < -worldSize / 2 + objectRadius || objectPosition.z > worldSize / 2 - objectRadius) {
+                collidedZ = true;
+            }
+
+            const objMinX = objectPosition.x - objectRadius;
+            const objMaxX = objectPosition.x + objectRadius;
+            const objMinZ = objectPosition.z - objectRadius;
+            const objMaxZ = objectPosition.z + objectRadius;
+
+            for (let i = 0; i < walls.length; i++) {
+                const wall = walls[i];
+                const wallBox = new THREE.Box3().setFromObject(wall);
+
+                // Check if potential object position overlaps with wall bounding box
+                if (objMaxX > wallBox.min.x && objMinX < wallBox.max.x &&
+                    objMaxZ > wallBox.min.z && objMinZ < wallBox.max.z) {
+
+                    const oldObjMinX = oldObjectPosition.x - objectRadius;
+                    const oldObjMaxX = oldObjectPosition.x + objectRadius;
+                    const oldObjMinZ = oldObjectPosition.z - objectRadius;
+                    const oldObjMaxZ = oldObjectPosition.z + objectRadius;
+
+                    // Try to determine if it's an X or Z axis collision
+                    // If old position didn't collide on X, but new position does, then X collision
+                    if (!(oldObjMaxX > wallBox.min.x && oldObjMinX < wallBox.max.x) &&
+                        (objMaxX > wallBox.min.x && objMinX < wallBox.max.x)) {
+                        collidedX = true;
+                    }
+                    if (!(oldObjMaxZ > wallBox.min.z && oldObjMinZ < wallBox.max.z) &&
+                        (objMaxZ > wallBox.min.z && objMinZ < wallBox.max.z)) {
+                        collidedZ = true;
+                    }
+                }
+            }
+            return { collidedX, collidedZ };
+        }
+
+
+        // Update game state
+        function update() {
+            // UI Updates (always update, regardless of game state)
+            flashlightPowerDisplay.textContent = `${Math.round(flashlightPower)}%`;
+            batteryCountDisplay.textContent = batteryCount;
+            keyStatusDisplay.textContent = hasKey ? '已找到' : '未找到';
+            staminaDisplay.textContent = `${Math.round(stamina)}%`; // Update stamina display
+
+            // Update distance to door display
+            if (doorOriginalPosition.lengthSq() > 0) { // Only show distance if door exists
+                const dist = camera.position.distanceTo(doorOriginalPosition);
+                distanceToDoorDisplay.textContent = `${dist.toFixed(1)} 公尺`;
+            } else {
+                distanceToDoorDisplay.textContent = `--- 公尺`;
+            }
+
+            // Update distance to key display (only in easy or normal mode and if key exists)
+            if ((isEasyMode || isNormalMode) && key) {
+                const distToKey = camera.position.distanceTo(key.position);
+                distanceToKeyDisplay.textContent = `${distToKey.toFixed(1)} 公尺`;
+                keyDistanceRow.style.display = 'flex'; // Ensure visible
+            } else {
+                distanceToKeyDisplay.textContent = `--- 公尺`; // Reset or hide
+                keyDistanceRow.style.display = 'none'; // Hide if not easy/normal mode or key is gone
+            }
+
+
+            // Handle game over or won state first to prevent further game logic
+            if (gameState === 'gameOver') {
+                if (gameOverIntervalId === null) { // Start timer only once
+                    showMessage(`你被抓到了！遊戲結束。將在 ${gameOverRestartTimer} 秒後重新開始...`, 0);
+                    gameOverIntervalId = setInterval(() => {
+                        gameOverRestartTimer--;
+                        if (gameOverRestartTimer <= 0) {
+                            clearInterval(gameOverIntervalId);
+                            location.reload();
+                        } else {
+                            showMessage(`你被抓到了！遊戲結束。將在 ${gameOverRestartTimer} 秒後重新開始...`, 0);
+                        }
+                    }, 1000);
+                }
+                return; // Prevent further game logic updates
+            } else if (gameState === 'won') {
+                // The restart timer for 'won' state is handled in onKeyDown when 'E' is pressed
+                return; // Prevent further game logic updates
+            } else if (gameState === 'paused' || gameState === 'difficultySelection') {
+                // If game is paused or in difficulty selection, stop here (after UI updates)
+                return;
+            }
+
+
+            // Player movement speed and stamina management
+            currentMoveSpeed = baseMoveSpeed;
+            if (stamina === 0 && !isSprinting) { // If stamina is zero and not actively trying to sprint
+                currentMoveSpeed *= slowedSpeedMultiplier;
+            } else if (keys['ShiftLeft'] && stamina > 0) {
+                isSprinting = true;
+                currentMoveSpeed *= sprintSpeedMultiplier;
+                stamina -= staminaDrainRate;
+                if (stamina < 0) stamina = 0;
+            } else {
+                isSprinting = false;
+            }
+
+            // Stamina regeneration
+            if (!isSprinting && stamina < maxStamina) { // Use maxStamina
+                stamina += staminaRegenRate;
+                if (stamina > maxStamina) stamina = maxStamina; // Use maxStamina
+            }
+
+            const oldPlayerPosition = camera.position.clone(); // Store old player position
+            const direction = new THREE.Vector3();
+            const forward = new THREE.Vector3();
+            const right = new THREE.Vector3();
+
+            camera.getWorldDirection(forward); // Get camera forward direction
+            forward.y = 0; // Limit movement to horizontal plane
+            forward.normalize();
+
+            right.crossVectors(camera.up, forward); // Get camera right direction
+            right.y = 0; // Limit movement to horizontal plane
+            right.normalize();
+
+            if (keys['KeyW']) {
+                direction.add(forward);
+            }
+            if (keys['KeyS']) {
+                direction.sub(forward);
+            }
+            if (keys['KeyA']) {
+                direction.sub(right);
+            }
+            if (keys['KeyD']) {
+                direction.add(right);
+            }
+
+            let potentialPlayerPosition = camera.position.clone();
+            if (direction.lengthSq() > 0) {
+                direction.normalize();
+                potentialPlayerPosition.addScaledVector(direction, currentMoveSpeed); // Use currentMoveSpeed
+            }
+
+            // Apply jump and gravity
+            if (!isGrounded) {
+                velocityY -= gravity;
+                potentialPlayerPosition.y += velocityY;
+
+                if (potentialPlayerPosition.y <= playerHeight) { // Hit ground
+                    potentialPlayerPosition.y = playerHeight;
+                    velocityY = 0;
+                    isGrounded = true;
+                }
+            }
+
+            // Player collision detection and response
+            const playerCollisionResult = checkObjectWallCollision(potentialPlayerPosition, playerRadius, walls, oldPlayerPosition);
+
+            if (!playerCollisionResult.collidedX) {
+                camera.position.x = potentialPlayerPosition.x;
+            }
+            if (!playerCollisionResult.collidedZ) {
+                camera.position.z = potentialPlayerPosition.z;
+            }
+            camera.position.y = potentialPlayerPosition.y; // Y-axis collision handled by jump logic
+
+
+            // Flashlight power consumption and update
+            if (isFlashlightOn) {
+                flashlightPower -= 0.05; // Power consumption per frame
+                if (flashlightPower <= 0) {
+                    flashlightPower = 0;
+                    isFlashlightOn = false;
+                    flashlight.intensity = 0;
+                    showMessage("手電筒沒電了！", 2000);
+                }
+                // Simulate flashlight flicker when low on power
+                if (flashlightPower < (maxFlashlightPower * 0.3) && flashlightPower > 0) { // Adjusted flicker threshold based on max power
+                    flashlight.intensity = Math.random() > 0.5 ? 5 : 0.8;
+                } else {
+                    flashlight.intensity = 5;
+                }
+            } else { // Auto-recharge when flashlight is off
+                flashlightPower += flashlightRechargeRate;
+                if (flashlightPower > maxFlashlightPower) flashlightPower = maxFlashlightPower; // Use maxFlashlightPower
+                flashlight.intensity = 0;
+            }
+
+            // Monster AI (iterate through all monsters)
+            monsters.forEach(monster => {
+                const distanceToMonster = camera.position.distanceTo(monster.position);
+                const monsterRadius = monster.userData.radius; // Get radius from userData
+
+                let monsterPotentialPosition = monster.position.clone();
+                let currentMonsterSpeed = monster.userData.state === 'chasing' ? monsterChaseSpeed : monsterPatrolSpeed;
+
+                if (distanceToMonster < monsterChaseRange) {
+                    monster.userData.state = 'chasing';
+                } else {
+                    monster.userData.state = 'patrolling';
+                }
+
+                // Monster movement direction
+                let targetForMonsterLook = new THREE.Vector3();
+                if (monster.userData.state === 'chasing') {
+                    const monsterDirection = new THREE.Vector3();
+                    monsterDirection.subVectors(camera.position, monster.position).normalize();
+                    monsterPotentialPosition.addScaledVector(monsterDirection, currentMonsterSpeed);
+                    targetForMonsterLook.copy(camera.position);
+                } else { // Patrolling
+                    if (performance.now() - monster.userData.lastMoveTime > monsterMoveInterval) {
+                        // Randomly select a new patrol target (limited within world bounds)
+                        monster.userData.targetPosition.set(
+                            (Math.random() - 0.5) * (worldSize - worldMargin * 2),
+                            0.7,
+                            (Math.random() - 0.5) * (worldSize - worldMargin * 2)
+                        );
+                        monster.userData.lastMoveTime = performance.now();
+                    }
+                    const patrolDirection = new THREE.Vector3();
+                    patrolDirection.subVectors(monster.userData.targetPosition, monster.position).normalize();
+                    monsterPotentialPosition.addScaledVector(patrolDirection, currentMonsterSpeed);
+                    targetForMonsterLook.copy(monster.userData.targetPosition);
+                }
+
+                // Monster collision detection and response
+                const monsterCollisionResult = checkObjectWallCollision(monsterPotentialPosition, monsterRadius, walls, monster.position.clone());
+
+                if (!monsterCollisionResult.collidedX) {
+                    monster.position.x = monsterPotentialPosition.x;
+                } else {
+                    // If X-axis collision, make monster bounce slightly or change patrol target
+                    if (monster.userData.state === 'patrolling') {
+                        monster.userData.targetPosition.x = (Math.random() - 0.5) * (worldSize - worldMargin * 2); // Random new target
+                    }
+                }
+                if (!monsterCollisionResult.collidedZ) {
+                    monster.position.z = monsterPotentialPosition.z;
+                } else {
+                    // If Z-axis collision, make monster bounce slightly or change patrol target
+                    if (monster.userData.state === 'patrolling') {
+                        monster.userData.targetPosition.z = (Math.random() - 0.5) * (worldSize - worldMargin * 2); // Random new target
+                    }
+                }
+
+                // Make monster face its target
+                monster.lookAt(targetForMonsterLook);
+                // Ensure monster stays upright
+                monster.rotation.x = 0;
+                monster.rotation.z = 0;
+
+                // Player collides with monster
+                if (checkCollision(camera, monster, 1.5 * monsterScaleFactor)) { // Increased collision range for larger monster
+                    showMessage("你被抓到了！遊戲結束。", 0); // Display permanently
+                    playJumpScareSound();
+                    gameState = 'gameOver'; // Set game state to game over
+                    // Start restart timer
+                    if (gameOverIntervalId === null) {
+                        gameOverRestartTimer = 5; // Reset timer
+                        gameOverIntervalId = setInterval(() => {
+                            gameOverRestartTimer--;
+                            if (gameOverRestartTimer <= 0) {
+                                clearInterval(gameOverIntervalId);
+                                location.reload();
+                            } else {
+                                showMessage(`你被抓到了！遊戲結束。將在 ${gameOverRestartTimer} 秒後重新開始...`, 0);
+                            }
+                        }, 1000);
+                    }
+                }
+            });
+
+
+            // Player picks up key
+            if (key && checkCollision(camera, key, 2.0)) { // Increased collision range
+                scene.remove(key);
+                key = null; // Remove reference to key object
+                hasKey = true;
+                showMessage("你找到了鑰匙！", 2000);
+            }
+
+            // Player picks up battery
+            if (battery && checkCollision(camera, battery, 1.5)) { // Increased collision range
+                scene.remove(battery);
+                battery = null; // Remove reference to battery object
+                batteryCount++;
+                flashlightPower = Math.min(maxFlashlightPower, flashlightPower + 50); // Increase power, capped by maxFlashlightPower
+                if (!isFlashlightOn && flashlightPower > 0) {
+                    isFlashlightOn = true;
+                    flashlight.intensity = 5; // Use new intensity
+                }
+                showMessage("你找到了電池！手電筒電量恢復。", 2000);
+            }
+
+            // Player uses charging station (iterate through all charging stations)
+            for (let i = 0; i < chargingStations.length; i++) {
+                const station = chargingStations[i];
+                if (checkCollision(camera, station, 2.5)) { // Increased interaction range
+                    if (flashlightPower < maxFlashlightPower) { // Use maxFlashlightPower
+                        flashlightPower = maxFlashlightPower; // Full charge
+                        showMessage("手電筒已充滿電！", 2000);
+                    } else {
+                        showMessage("手電筒電量已滿。", 2000);
+                    }
+                    break; // Can only charge at one station at a time
+                }
+            }
+
+            // Raycasting for door interaction message
+            if (door) { // Only check if door still exists
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObject(door);
+                if (intersects.length > 0 && intersects[0].object === door) {
+                    showMessage("按下 E 開門", 0); // Show message permanently while looking at door
+                } else if (messageBox.textContent === "按下 E 開門") {
+                    messageBox.style.display = 'none'; // Hide message if not looking at door
+                }
+            }
+
+
+            // Update compass needle rotation
+            if (doorOriginalPosition.lengthSq() > 0 && compassNeedle) {
+                const playerPos = camera.position;
+                const doorPos = doorOriginalPosition; // Use original door position for compass
+
+                // Vector from player to door (XZ plane only)
+                const vecToDoorX = doorPos.x - playerPos.x;
+                const vecToDoorZ = doorPos.z - playerPos.z;
+
+                // Player's forward direction (XZ plane only)
+                const playerForward = new THREE.Vector3();
+                camera.getWorldDirection(playerForward);
+                playerForward.y = 0; // Ignore vertical component
+                playerForward.normalize();
+
+                // Calculate angles using atan2(x, z) to get angle from positive Z axis (forward)
+                const angleToDoor = Math.atan2(vecToDoorX, vecToDoorZ);
+                const playerFacingAngle = Math.atan2(playerForward.x, playerForward.z);
+
+                // Calculate the difference. The compass needle should point towards the door relative to the player's facing.
+                let relativeAngle = angleToDoor - playerFacingAngle;
+
+                // Normalize angle to be between -PI and PI
+                if (relativeAngle > Math.PI) relativeAngle -= 2 * Math.PI;
+                if (relativeAngle < -Math.PI) relativeAngle += 2 * Math.PI;
+
+                // Convert radians to degrees for CSS rotation
+                const rotationDegrees = relativeAngle * (180 / Math.PI);
+
+                compassNeedle.style.transform = `translate(-50%, 50%) rotate(${rotationDegrees}deg)`;
+            }
+        }
+
+        // Game main loop
+        function animate() {
+            requestAnimationFrame(animate); // Request next animation frame
+
+            update(); // Update game state
+
+            renderer.render(scene, camera); // Render scene
+        }
+
+        // Start game after window loads
+        window.onload = function() {
+            // Initial setup for difficulty selection
+            initSounds(); // Initialize sounds early
+            // Get references to UI elements
+            difficultySelectionScreen = document.getElementById('difficultySelectionScreen');
+            flashlightPowerDisplay = document.getElementById('flashlightPowerDisplay');
+            batteryCountDisplay = document.getElementById('batteryCountDisplay');
+            keyStatusDisplay = document.getElementById('keyStatusDisplay');
+            staminaDisplay = document.getElementById('staminaDisplay');
+            distanceToDoorDisplay = document.getElementById('distanceToDoorDisplay');
+            compassNeedle = document.getElementById('compassNeedle');
+            messageBox = document.getElementById('messageBox');
+            gameContainer = document.getElementById('game-container'); // Get reference to game container
+            distanceToKeyDisplay = document.getElementById('distanceToKeyDisplay'); // Get reference to key distance display
+            keyDistanceRow = document.getElementById('keyDistanceRow'); // Get reference to key distance row
+
+            // Hide game UI initially
+            document.querySelector('.controls-info').style.display = 'none';
+            document.querySelector('.ui-panel').style.display = 'none';
+            document.getElementById('compass').style.display = 'none';
+            document.getElementById('crosshair').style.display = 'none'; // Hide crosshair initially
+            gameContainer.style.display = 'none'; // Hide game container initially
+
+            // Show difficulty selection screen
+            difficultySelectionScreen.style.display = 'flex';
+
+            // Add event listeners for difficulty buttons
+            document.getElementById('difficultyEasy').addEventListener('click', () => selectDifficulty(1));
+            document.getElementById('difficultyNormal').addEventListener('click', () => selectDifficulty(2));
+            document.getElementById('difficultyHard').addEventListener('click', () => selectDifficulty(3));
+            document.getElementById('difficultyInsane').addEventListener('click', () => selectDifficulty(4));
+        };
+    </script>
+</body>
+</html>
