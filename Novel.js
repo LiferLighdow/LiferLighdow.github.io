@@ -7,6 +7,7 @@ document.head.appendChild(script);
 script.onload = () => {
     console.log('novelList.js 載入完成');
     // 在這裡呼叫其他需要用到 novelList.js 程式碼的函式
+    updateNavigationLinks(); // 在 novelList.js 載入後更新導覽連結
 };
 
 const chapterContent = document.getElementById('chapter-content');
@@ -118,11 +119,44 @@ function toggleDarkMode() {
     }
 }
 
+/**
+ * 更新導覽列的連結。
+ * 此函數會找到 .bar-nav 內的所有 <a> 標籤，並根據預設的文字內容更新其 href 屬性。
+ */
+function updateNavigationLinks() {
+    const navLinks = document.querySelectorAll('.bar-nav ul li a');
+    navLinks.forEach(link => {
+        const linkText = link.textContent.trim(); // 取得連結文字並移除前後空白
+
+        switch (linkText) {
+            case '首頁':
+                link.href = '../../../'; // 更新為首頁的路徑
+                break;
+            case '關於':
+                link.href = '../../About'; // 更新為關於頁面的路徑
+                break;
+            case '服務':
+                link.href = '../../'; // 更新為服務頁面的路徑 (繁中網頁)
+                break;
+            case '聯絡':
+                link.href = '../../../Contact'; // 更新為聯絡頁面的路徑
+                break;
+            default:
+                // 如果有其他連結，可以選擇不處理或記錄警告
+                console.warn(`未知的導覽連結文字: ${linkText}`);
+                break;
+        }
+    });
+    console.log('導覽連結已更新。');
+}
+
+
 // Call updateAudioSource(), setPageTitle() and createDarkModeButton() on page load
 window.addEventListener('load', () => {
     updateAudioSource();
     setPageTitle(); // 設定網頁標題
     createDarkModeButton(); // 建立暗色模式按鈕
+    updateNavigationLinks(); // 確保在頁面載入後也更新導覽連結
 });
 
 // 側邊欄隱藏/顯示切換
