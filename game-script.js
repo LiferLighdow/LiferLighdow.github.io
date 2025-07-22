@@ -172,16 +172,16 @@ window.addEventListener("load", () => {
     // 動態生成遊戲鏈接
     const gameLinksContainer = document.getElementById("game-links-container");
     const gameURLs = [
-        "games/2048", "games/clicker_game_tw", "games/clicker_game",
-        "games/cute/touch_girls", "games/tower_defense","games/tower_defense_tw", "https://example.com/game7",
-        "https://example.com/game8", "https://example.com/game9",
+        "games/2048", "games/點擊遊戲", "games/clicker_game",
+        "games/cute/touch_girls", "games/tower_defense","games/塔防", "games/夜幕降臨",
+        "games/Nightfall", "https://example.com/game9",
         "https://example.com/game10"
     ];
 
     // Define game names (English only)
     const gameNames = [
-        "2048", "Clicker Game TW", "Clicker Game",
-        "Touch Girls", "Lifer_Lighdow Tower Defense", "Lifer_Lighdow塔防", "Game 7", "Game 8", "Game 9", "Game 10"
+        "2048", "點擊遊戲", "Clicker Game",
+        "Touch Girls", "Tower Defense", "塔防", "夜幕降臨", "Nightfall", "Game 9", "Game 10"
     ];
 
     function updateGameLinks() {
