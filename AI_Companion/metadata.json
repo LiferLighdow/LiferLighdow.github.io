@@ -1,0 +1,7 @@
+{
+  "name": "Lifer_Lighdow",
+  "description": "Create and chat with your own personalized AI companion, powered by Gemini. Define their personality, backstory, and appearance, and engage in lifelike conversations. You can export your chat history to save your memories and import them to continue your journey anytime.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
