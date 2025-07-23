@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖片轉文字藝術</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #2d3748; /* Darker gray background */
+            color: #e2e8f0; /* Light text color for dark background */
+        }
+        .container {
+            max-width: 960px;
+            background-color: #4a5568; /* Darker container background */
+            color: #e2e8f0; /* Light text color for dark background */
+        }
+        #asciiOutput {
+            font-family: 'monospace', 'Courier New', Courier, monospace; /* Monospace font */
+            white-space: pre; /* Preserve whitespace and newlines */
+            overflow-x: auto; /* Horizontal scroll */
+            background-color: #1a202c; /* Dark background */
+            color: #a0aec0; /* Light gray text */
+            line-height: 0.9; /* Adjusted line height for better readability with fixed settings */
+            font-size: 0.4rem; /* Adjusted font size for better readability with fixed settings */
+            letter-spacing: 0; /* Adjust letter spacing */
+            word-spacing: 0; /* Adjust word spacing */
+            text-align: left;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            min-height: 300px;
+            max-height: 600px;
+            resize: vertical; /* Allow vertical resizing */
+        }
+        /* Hide default file input style */
+        input[type="file"] {
+            display: none;
+        }
+        /* Custom file input button style */
+        .custom-file-upload {
+            border: 2px solid #63b3ed; /* Lighter blue border for dark theme */
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            background-color: #4299e1; /* Lighter blue background for dark theme */
+            color: white;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .custom-file-upload:hover {
+            background-color: #3182ce; /* Darker blue on hover */
+            border-color: #3182ce;
+        }
+        .error-message {
+            color: #fc8181; /* Lighter red error message for dark theme */
+        }
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        .setting-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .setting-item label {
+            min-width: 80px;
+            text-align: right;
+            color: #e2e8f0; /* Light text for labels */
+        }
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 8px;
+            background: #a0aec0; /* Light gray track for dark theme */
+            border-radius: 5px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #63b3ed; /* Lighter blue thumb for dark theme */
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #4299e1; /* Darker blue thumb on hover */
+        }
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #48bb78; /* Green background for success */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .message-box.show {
+            opacity: 1;
+        }
+        h1, h2 {
+            color: #e2e8f0; /* Light text for headings */
+        }
+        .text-gray-600 {
+            color: #cbd5e0; /* Lighter gray for values */
+        }
+        .border-gray-200 {
+            border-color: #718096; /* Darker border for settings group */
+        }
+        select {
+            background-color: #2d3748; /* Dark background for select */
+            color: #e2e8f0; /* Light text for select */
+            border-color: #718096; /* Darker border for select */
+        }
+        select:focus {
+            border-color: #63b3ed; /* Lighter blue focus for select */
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="container shadow-lg rounded-xl p-8 space-y-6 w-full">
+        <h1 class="text-4xl font-bold text-center mb-6">圖片轉文字藝術</h1>
+
+        <div class="flex flex-col items-center space-y-4">
+            <label for="imageUpload" class="custom-file-upload">
+                選擇圖片
+            </label>
+            <input type="file" id="imageUpload" accept="image/*" class="hidden">
+            <p id="fileName" class="text-gray-600"></p>
+            <p id="errorMessage" class="error-message text-sm"></p>
+        </div>
+
+        <!-- 文字藝術設定 -->
+        <div class="flex flex-col items-center space-y-4 w-full p-4 border rounded-lg">
+            <h2 class="text-2xl font-semibold">文字藝術設定</h2>
+            <div class="setting-group">
+                <div class="setting-item">
+                    <label for="asciiWidthInput">寬度 (字符數):</label>
+                    <input type="range" id="asciiWidthInput" min="50" max="800" value="400">
+                    <span id="asciiWidthValue" class="text-gray-600">400</span>
+                </div>
+                <div class="setting-item">
+                    <label for="fontSizeInput">字體大小:</label>
+                    <input type="range" id="fontSizeInput" min="0.1" max="1.0" step="0.05" value="0.4">
+                    <span id="fontSizeValue" class="text-gray-600">0.4rem</span>
+                </div>
+                <div class="setting-item">
+                    <label for="lineHeightInput">行高:</label>
+                    <input type="range" id="lineHeightInput" min="0.5" max="1.5" step="0.05" value="0.9">
+                    <span id="lineHeightValue" class="text-gray-600">0.9</span>
+                </div>
+                <div class="setting-item">
+                    <label for="asciiCharacterSet">字符集:</label>
+                    <select id="asciiCharacterSet" class="p-2 border rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        <option value="short">短 (粗)</option>
+                        <option value="medium">中等</option>
+                        <option value="long" selected>長 (細節多)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-4 mt-4 w-full">
+                <button id="copyButton" class="custom-file-upload bg-purple-500 hover:bg-purple-600 border-purple-500 hover:border-purple-600">
+                    複製文字藝術
+                </button>
+                <button id="downloadButton" class="custom-file-upload bg-green-500 hover:bg-green-600 border-green-500 hover:border-green-600">
+                    下載文字藝術為圖片
+                </button>
+                <button id="clearButton" class="custom-file-upload bg-red-500 hover:bg-red-600 border-red-500 hover:border-red-600">
+                    清除
+                </button>
+            </div>
+        </div>
+
+        <!-- Hidden Canvas for image processing -->
+        <canvas id="imageCanvas" class="hidden"></canvas>
+
+        <div class="flex flex-col items-center space-y-4">
+            <h2 class="text-2xl font-semibold">文字藝術輸出</h2>
+            <pre id="asciiOutput" class="w-full"></pre>
+        </div>
+    </div>
+
+    <!-- Message Box for copy notification -->
+    <div id="messageBox" class="message-box"></div>
+
+    <script>
+        // Get DOM elements
+        const imageUpload = document.getElementById('imageUpload');
+        const imageCanvas = document.getElementById('imageCanvas');
+        const ctx = imageCanvas.getContext('2d');
+        const asciiOutput = document.getElementById('asciiOutput');
+        const fileNameDisplay = document.getElementById('fileName');
+        const errorMessageDisplay = document.getElementById('errorMessage');
+
+        const asciiWidthInput = document.getElementById('asciiWidthInput');
+        const asciiWidthValueDisplay = document.getElementById('asciiWidthValue');
+        const fontSizeInput = document.getElementById('fontSizeInput');
+        const fontSizeValueDisplay = document.getElementById('fontSizeValue');
+        const lineHeightInput = document.getElementById('lineHeightInput');
+        const lineHeightValueDisplay = document.getElementById('lineHeightValue');
+        const asciiCharacterSet = document.getElementById('asciiCharacterSet');
+        const copyButton = document.getElementById('copyButton');
+        const downloadButton = document.getElementById('downloadButton');
+        const clearButton = document.getElementById('clearButton');
+        const messageBox = document.getElementById('messageBox');
+
+        // Global variable to store the loaded image
+        let loadedImage = null;
+
+        // Define different ASCII character sets, from SPARSE (lightest/empty) to DENSE (darkest/full)
+        // The order is crucial for correct positive image representation on a dark background.
+        const asciiCharacterSets = {
+            short: ' .:-=+*#%@', // Sparse to Dense (for dark background, brighter image parts use more dense chars)
+            medium: ' .\'"`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnumbowqLCJUYXZO0QLCJUYXzcvunxrjft', // Sparse to Dense
+            long: ' .\'"`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnumbowqLCJUYXZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,"^`\'. ' // Sparse to Dense (standard full set)
+        };
+        // Re-ordering the long character set to be truly sparse to dense
+        asciiCharacterSets.long = ' `\'".-_,;:!~+<=>iIliL?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#%&B@$'.split('').reverse().join('');
+
+
+        /**
+         * Displays a temporary message to the user.
+         * @param {string} message The message to display.
+         * @param {string} type The type of message (e.g., 'success', 'error').
+         */
+        function showMessage(message, type = 'success') {
+            messageBox.textContent = message;
+            messageBox.className = 'message-box show'; // Reset and show
+            if (type === 'error') {
+                messageBox.style.backgroundColor = '#ef4444'; // Red for error
+            } else {
+                messageBox.style.backgroundColor = '#4CAF50'; // Green for success
+            }
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000); // Hide after 3 seconds
+        }
+
+        /**
+         * Generates ASCII art based on current settings.
+         * Does nothing if no image is loaded.
+         */
+        function generateAsciiArt() {
+            if (!loadedImage) {
+                asciiOutput.textContent = '請先選擇圖片以生成文字藝術。';
+                return;
+            }
+
+            const img = loadedImage;
+
+            // Get user settings
+            const desiredAsciiWidth = parseInt(asciiWidthInput.value);
+            const selectedAsciiCharacters = asciiCharacterSets[asciiCharacterSet.value];
+
+            // Apply font size and line height to the output display area
+            asciiOutput.style.fontSize = `${fontSizeInput.value}rem`;
+            asciiOutput.style.lineHeight = lineHeightInput.value;
+
+            // Update display of setting values
+            asciiWidthValueDisplay.textContent = desiredAsciiWidth;
+            fontSizeValueDisplay.textContent = `${fontSizeInput.value}rem`;
+            lineHeightValueDisplay.textContent = lineHeightInput.value;
+
+            // Draw the image onto the Canvas using its original dimensions
+            imageCanvas.width = img.width;
+            imageCanvas.height = img.height;
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+
+            // Get raw pixel data
+            const imageData = ctx.getImageData(0, 0, img.width, img.height);
+            const data = imageData.data;
+
+            // Calculate actual character width and height for ASCII art based on desired width
+            // Monospace characters are usually taller than wide. A common aspect ratio is around 0.5 to 0.6.
+            // Using 0.55 for better visual balance.
+            const aspectRatioCorrection = 0.55; 
+            const asciiArtWidth = desiredAsciiWidth;
+            let asciiArtHeight = Math.round((img.height / img.width) * asciiArtWidth * aspectRatioCorrection);
+
+            // Ensure minimum dimensions to avoid errors
+            if (asciiArtWidth < 1) asciiArtWidth = 1;
+            if (asciiArtHeight < 1) asciiArtHeight = 1;
+
+            let asciiArt = '';
+            for (let y = 0; y < asciiArtHeight; y++) {
+                for (let x = 0; x < asciiArtWidth; x++) {
+                    // Calculate corresponding original image pixel position
+                    const pixelX = Math.floor(x * (img.width / asciiArtWidth));
+                    const pixelY = Math.floor(y * (img.height / asciiArtHeight));
+
+                    // Ensure pixel position is within image bounds
+                    const clampedPixelX = Math.min(Math.max(0, pixelX), img.width - 1);
+                    const clampedPixelY = Math.min(Math.max(0, pixelY), img.height - 1);
+
+                    const index = (clampedPixelY * img.width + clampedPixelX) * 4;
+                    const r = data[index];
+                    const g = data[index + 1];
+                    const b = data[index + 2];
+
+                    // Calculate grayscale value (brightness)
+                    // Use weighted average, as human eyes are most sensitive to green
+                    const brightness = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+
+                    // Map brightness to ASCII character set
+                    // Now, brightness 0 (dark) maps to sparse char, brightness 1 (light) maps to dense char.
+                    // This creates a "positive" image on a dark background.
+                    const charIndex = Math.floor(brightness * (selectedAsciiCharacters.length - 1));
+                    asciiArt += selectedAsciiCharacters[charIndex];
+                }
+                asciiArt += '\n'; // Newline after each row
+            }
+            asciiOutput.textContent = asciiArt;
+        }
+
+        /**
+         * Copies the generated ASCII art to the clipboard.
+         */
+        function copyAsciiToClipboard() {
+            const asciiText = asciiOutput.textContent;
+            if (!asciiText || asciiText.trim() === '請先選擇圖片以生成文字藝術。') {
+                showMessage('沒有文字藝術可以複製。請先上傳圖片。', 'error');
+                return;
+            }
+
+            // Create a temporary textarea element
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = asciiText;
+            document.body.appendChild(tempTextArea); // Append to body to make it selectable
+
+            // Select the text
+            tempTextArea.select();
+            tempTextArea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                // Copy the text
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showMessage('文字藝術已複製到剪貼簿！');
+                } else {
+                    showMessage('複製失敗，請手動複製。', 'error');
+                }
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                showMessage('複製失敗，請手動複製。', 'error');
+            } finally {
+                // Remove the temporary textarea
+                document.body.removeChild(tempTextArea);
+            }
+        }
+
+        /**
+         * Downloads the generated ASCII art as a PNG image.
+         */
+        function downloadAsciiAsImage() {
+            const asciiText = asciiOutput.textContent;
+            if (!asciiText || asciiText.trim() === '請先選擇圖片以生成文字藝術。') {
+                showMessage('沒有文字藝術可以轉換為圖片。請先上傳圖片。', 'error');
+                return;
+            }
+
+            // Create a new Canvas based on ASCII art content and current settings
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+
+            const lines = asciiText.split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) {
+                showMessage('沒有文字藝術可以轉換為圖片。請先上傳圖片。', 'error');
+                return;
+            }
+
+            // Get current font size and line height from inputs
+            const fontSizePx = parseFloat(fontSizeInput.value) * 16; // Assume 1rem = 16px
+            const lineHeight = parseFloat(lineHeightInput.value);
+
+            // Estimate character width for monospace font (usually ~0.6 times font height)
+            const charWidth = fontSizePx * 0.6;
+            const charHeight = fontSizePx * lineHeight;
+
+            // Calculate total width and height required for Canvas
+            const maxLineWidth = Math.max(...lines.map(line => line.length));
+            const totalWidth = maxLineWidth * charWidth;
+            const totalHeight = lines.length * charHeight;
+
+            tempCanvas.width = totalWidth;
+            tempCanvas.height = totalHeight;
+
+            // Set background color (same as asciiOutput)
+            tempCtx.fillStyle = '#1a202c';
+            tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+            // Set font and text color (same as asciiOutput)
+            tempCtx.font = `${fontSizePx}px monospace`;
+            tempCtx.fillStyle = '#a0aec0';
+            tempCtx.textBaseline = 'top'; // Set text baseline to top
+
+            // Draw ASCII art line by line
+            lines.forEach((line, index) => {
+                tempCtx.fillText(line, 0, index * charHeight);
+            });
+
+            // Convert Canvas content to image URL and trigger download
+            const imageURL = tempCanvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = imageURL;
+            link.download = 'ascii-art.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        /**
+         * Clears all output and loaded image.
+         */
+        function clearOutput() {
+            loadedImage = null; // Clear loaded image
+            imageUpload.value = ''; // Clear file input
+            fileNameDisplay.textContent = '';
+            errorMessageDisplay.textContent = '';
+            asciiOutput.textContent = '請先選擇圖片以生成文字藝術。';
+            // Reset settings to default values for better initial quality
+            asciiWidthInput.value = 400; // Increased default width for better quality
+            fontSizeInput.value = 0.4; // Adjusted default font size
+            lineHeightInput.value = 0.9; // Adjusted default line height
+            asciiCharacterSet.value = 'long'; // Default to long character set for better detail
+            // Update display of setting values
+            asciiWidthValueDisplay.textContent = 400;
+            fontSizeValueDisplay.textContent = '0.4rem';
+            lineHeightValueDisplay.textContent = '0.9';
+        }
+
+        // Event listeners
+        imageUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                clearOutput(); // If no file selected, clear all content
+                errorMessageDisplay.textContent = '請選擇一個圖片文件。';
+                return;
+            }
+
+            if (!file.type.startsWith('image/')) {
+                clearOutput();
+                errorMessageDisplay.textContent = '請選擇一個有效的圖片文件 (例如：PNG, JPG, GIF)。';
+                return;
+            }
+
+            fileNameDisplay.textContent = `已選擇文件: ${file.name}`;
+            errorMessageDisplay.textContent = ''; // Clear previous error message
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    loadedImage = img; // Store the loaded image
+                    generateAsciiArt(); // Generate ASCII art
+                };
+                img.onerror = () => {
+                    errorMessageDisplay.textContent = '無法載入圖片。請確保它是有效的圖片文件。';
+                    asciiOutput.textContent = '';
+                };
+                img.src = e.target.result;
+            };
+            reader.onerror = () => {
+                errorMessageDisplay.textContent = '讀取文件時發生錯誤。';
+                asciiOutput.textContent = '';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Listen for changes in settings inputs and regenerate ASCII art
+        asciiWidthInput.addEventListener('input', generateAsciiArt);
+        fontSizeInput.addEventListener('input', generateAsciiArt);
+        lineHeightInput.addEventListener('input', generateAsciiArt);
+        asciiCharacterSet.addEventListener('change', generateAsciiArt);
+
+        // Listen for download, copy, and clear buttons
+        copyButton.addEventListener('click', copyAsciiToClipboard);
+        downloadButton.addEventListener('click', downloadAsciiAsImage);
+        clearButton.addEventListener('click', clearOutput);
+
+        // Initialize with default ASCII art prompt
+        clearOutput();
+    </script>
+</body>
+</html>
