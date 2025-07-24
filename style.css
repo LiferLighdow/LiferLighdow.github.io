@@ -208,6 +208,7 @@ a:hover {
 .button3 { background: linear-gradient(45deg, #8e44ad, #9b59b6); }
 .button4 { background: linear-gradient(45deg, #27ae60, #2ecc71); }
 .button5 { background: linear-gradient(45deg, #34495e, #5a6a7c); } /* 搜尋按鈕 */
+.button6 { background: linear-gradient(45deg, #F9F900, #FFFFAA); }
 
 .button::before {
     content: '';
