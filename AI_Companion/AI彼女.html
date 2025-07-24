@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI彼女育成計畫</title>
+  <title>AI 戀愛育成遊戲</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
   <style>
     body {
@@ -18,7 +18,7 @@
       border-radius: 1rem;
       padding: 1.5rem;
       margin: 2rem auto;
-      max-width: 600px;
+      max-width: 700px;
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
@@ -29,7 +29,7 @@
       background-color: rgba(0, 0, 0, 0.2);
       border-radius: 0.5rem;
     }
-    input, button {
+    input, button, select {
       padding: 0.5rem;
       border-radius: 0.5rem;
       border: none;
@@ -46,22 +46,42 @@
     }
     .user { text-align: right; color: #ffd1dc; }
     .ai { text-align: left; color: #cde7ff; }
+    #achievementBox {
+      margin-top: 1rem;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
   </style>
 </head>
 <body>
   <div class="glass">
     <h1>AI 戀愛育成遊戲</h1>
-    <p>今天的好感度：<span id="affection">0</span> ❤</p>
+    <label>角色選擇：
+      <select id="characterSelect">
+        <option value="yuki">雪姬 Yuki（溫柔內向）</option>
+        <option value="kira">綺羅 Kira（傲嬌型）</option>
+        <option value="sora">空 Sora（元氣少女）</option>
+        <option value="reika">冷華 Reika（高冷厭世）</option>
+        <option value="kuro">黑音 Kuro（病嬌變態）</option>
+      </select>
+    </label>
+    <p>好感度：<span id="affection">0</span> ❤｜成長等級：<span id="level">1</span> ✨</p>
     <div id="chat"></div>
     <input type="text" id="userInput" placeholder="說些話..." />
     <button onclick="sendMessage()">發送</button>
+    <button onclick="saveGame()">💾 存檔</button>
+    <button onclick="loadGame()">📂 載入存檔</button>
+    <div id="achievementBox">
+      <h3>🏆 成就</h3>
+      <ul id="achievements"></ul>
+    </div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
   <script>
-    // ✅ Firebase 設定
     const firebaseConfig = {
       apiKey: "AIzaSyCyzF-2yREAHq9SbJYCSB5CFogJnheoMx8",
       authDomain: "ai-girl-3ac40.firebaseapp.com",
@@ -79,27 +99,68 @@
     const userId = 'player1';
     const chatBox = document.getElementById("chat");
     const affectionDisplay = document.getElementById("affection");
+    const levelDisplay = document.getElementById("level");
+    const charSelect = document.getElementById("characterSelect");
+    const achievementsList = document.getElementById("achievements");
 
     let affection = 0;
+    let level = 1;
+    let unlockedAchievements = [];
     let language = navigator.language.startsWith('zh-TW') ? '繁體中文' :
                    navigator.language.startsWith('zh') ? '簡體中文' :
                    navigator.language.startsWith('ja') ? '日本語' : 'English';
+
+    const checkAchievements = () => {
+      if (affection >= 50 && !unlockedAchievements.includes('戀愛啟航')) {
+        unlockedAchievements.push('戀愛啟航');
+        addAchievement('戀愛啟航');
+      }
+      if (affection >= 100 && !unlockedAchievements.includes('心靈連結')) {
+        unlockedAchievements.push('心靈連結');
+        addAchievement('心靈連結');
+      }
+      if (charSelect.value === 'kuro' && affection >= 30 && !unlockedAchievements.includes('黑暗中的微笑')) {
+        unlockedAchievements.push('黑暗中的微笑');
+        addAchievement('黑暗中的微笑');
+      }
+    };
+
+    const addAchievement = (title) => {
+      const li = document.createElement("li");
+      li.textContent = title;
+      achievementsList.appendChild(li);
+    };
 
     async function sendMessage() {
       const input = document.getElementById("userInput");
       const message = input.value.trim();
       if (!message) return;
+      const character = charSelect.value;
 
       displayMessage("你：" + message, "user");
       input.value = "";
 
-      // 加分邏輯
-      if (message.includes("喜歡") || message.includes("想你") || message.includes("かわいい")) {
+      if (message.includes("喜歡") || message.includes("想你") || message.includes("可愛") || message.includes("love")) {
         affection += 5;
+        if (affection % 20 === 0) level += 1;
       }
       affectionDisplay.textContent = affection;
+      levelDisplay.textContent = level;
+      checkAchievements();
 
-      // 發送到 GPT
+      const date = new Date();
+      const today = date.toISOString().split('T')[0];
+
+      // 每日事件
+      let dailyEvent = "";
+      const eventKey = `/events/${userId}/${today}/${character}`;
+      const eventRef = db.ref(eventKey);
+      const snapshot = await eventRef.once('value');
+      if (!snapshot.exists()) {
+        dailyEvent = `（今日限定事件：${character} 遇到了特別的狀況）`;
+        eventRef.set({ triggered: true });
+      }
+
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -109,7 +170,7 @@
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
           messages: [
-            { role: "system", content: `你是一位${language}戀愛對象，根據對方好感度 ${affection} 決定態度。越高越親密。請用${language}回應。` },
+            { role: "system", content: `你是戀愛育成遊戲的角色「${character}」，使用${language}與玩家對話。今日事件：${dailyEvent}。好感度：${affection}，等級：${level}。你根據好感度改變性格並可能觸發結局。` },
             { role: "user", content: message }
           ]
         })
@@ -119,10 +180,9 @@
       const reply = data.choices[0].message.content;
       displayMessage("AI：「" + reply + "」", "ai");
 
-      // 存到 Firebase
-      db.ref("/chatHistory/" + userId).push({ role: "user", content: message });
-      db.ref("/chatHistory/" + userId).push({ role: "ai", content: reply });
-      db.ref("/affection/" + userId).set(affection);
+      db.ref(`users/${userId}`).update({ affection, level, character, unlockedAchievements });
+      db.ref(`chatHistory/${userId}`).push({ role: "user", content: message });
+      db.ref(`chatHistory/${userId}`).push({ role: "ai", content: reply });
     }
 
     function displayMessage(msg, className) {
@@ -133,19 +193,37 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // 載入紀錄
+    function saveGame() {
+      db.ref(`saveData/${userId}`).set({ affection, level, character: charSelect.value, achievements: unlockedAchievements });
+      alert("遊戲已儲存！");
+    }
+
+    function loadGame() {
+      db.ref(`saveData/${userId}`).once("value", (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          affection = data.affection || 0;
+          level = data.level || 1;
+          unlockedAchievements = data.achievements || [];
+          charSelect.value = data.character || "yuki";
+          affectionDisplay.textContent = affection;
+          levelDisplay.textContent = level;
+          achievementsList.innerHTML = "";
+          unlockedAchievements.forEach(title => addAchievement(title));
+          alert("存檔載入成功！");
+        }
+      });
+    }
+
     window.onload = () => {
-      db.ref("/chatHistory/" + userId).once("value", (snapshot) => {
+      loadGame();
+      db.ref(`chatHistory/${userId}`).once("value", (snapshot) => {
         snapshot.forEach(child => {
           const { role, content } = child.val();
           displayMessage((role === "user" ? "你：" : "AI：「") + content + (role === "ai" ? "」" : ""), role);
         });
       });
-      db.ref("/affection/" + userId).once("value", (snapshot) => {
-        if (snapshot.exists()) affection = snapshot.val();
-        affectionDisplay.textContent = affection;
-      });
-    }
+    };
   </script>
 </body>
 </html>
