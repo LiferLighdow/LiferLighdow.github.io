@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專業富文本筆記本與文字分析</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 使用 Inter 字體 */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+        /* 深色模式樣式 */
+        body.dark {
+            background-color: #1a202c; /* Tailwind gray-900 */
+            color: #e2e8f0; /* Tailwind gray-200 */
+        }
+        body.dark .bg-white {
+            background-color: #2d3748; /* Tailwind gray-800 */
+            border-color: #4a5568; /* Tailwind gray-600 */
+        }
+        body.dark .text-gray-800 {
+            color: #e2e8f0;
+        }
+        body.dark .text-gray-600 {
+            color: #cbd5e0;
+        }
+        body.dark .editor-content, body.dark #htmlCodeEditor { /* 針對編輯器內容的深色模式樣式 */
+            background-color: #4a5568; /* Tailwind gray-600 */
+            border-color: #6a7384; /* Tailwind gray-500 */
+            color: #e2e8f0;
+        }
+        /* 深色模式下 HTML 編輯器 placeholder 顏色 */
+        body.dark #htmlCodeEditor::placeholder {
+            color: #cbd5e0;
+        }
+        body.dark .toolbar-btn {
+            background-color: #4a5568; /* gray-600 */
+            color: #e2e8f0; /* gray-200 */
+        }
+        body.dark .toolbar-btn:hover {
+            background-color: #6a7384; /* gray-500 */
+        }
+        body.dark select {
+            background-color: #4a5568;
+            color: #e2e8f0;
+            border-color: #6a7384;
+        }
+        body.dark input[type="color"] {
+            background-color: #4a5568;
+        }
+        body.dark .stat-box {
+            background-color: #4a5568; /* Tailwind gray-600 */
+            border-color: #6a7384; /* Tailwind gray-500 */
+            color: #e2e8f0;
+        }
+        body.dark .stat-label {
+            color: #cbd5e0;
+        }
+        body.dark .stat-value {
+            color: #e2e8f0;
+        }
+
+        /* 隱藏原生 input type="color" 的樣式，只保留顏色方塊 */
+        input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 28px; /* 調整大小以適應按鈕 */
+            height: 28px;
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+            border-radius: 4px; /* 圓角 */
+            overflow: hidden; /* 隱藏超出邊界的內容 */
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+        }
+        input[type="color"]::-moz-color-swatch-wrapper {
+            padding: 0;
+        }
+        input[type="color"]::-moz-color-swatch {
+            border: none;
+        }
+
+        /* 工具列按鈕基礎樣式 */
+        .toolbar-btn {
+            @apply p-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-200 ease-in-out text-gray-700 dark:text-gray-200;
+        }
+
+        /* 隱藏元素 */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Placeholder 樣式 (使用 ::before 偽元素) */
+        .editor-content.is-placeholder::before {
+            content: attr(data-placeholder); /* 從 data-placeholder 屬性獲取文字 */
+            color: #9ca3af; /* Tailwind gray-400 */
+            pointer-events: none; /* 讓點擊穿透到實際內容區域 */
+            position: absolute; /* 定位在編輯器內容上方 */
+            top: 1rem; /* 匹配編輯器的 padding-top */
+            left: 1rem; /* 匹配編輯器的 padding-left */
+            right: 1rem; /* 確保提示文字不會超出編輯器寬度 */
+            white-space: nowrap; /* 防止提示文字換行 */
+            overflow: hidden; /* 隱藏超出部分 */
+            text-overflow: ellipsis; /* 超出部分顯示省略號 */
+        }
+        /* 深色模式下 placeholder 顏色 */
+        body.dark .editor-content.is-placeholder::before {
+            color: #cbd5e0; /* Tailwind gray-300 for dark mode */
+        }
+
+        .stat-box {
+            @apply p-3 rounded-md border border-gray-300 bg-gray-50 flex flex-col items-center justify-center;
+        }
+        .stat-label {
+            @apply text-sm font-medium text-gray-600;
+        }
+        .stat-value {
+            @apply text-2xl font-bold text-gray-800;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <!-- 將 max-w-6xl 改為 max-w-full，並增加水平 padding 以達到幾乎滿版的效果 -->
+    <div class="w-full max-w-full bg-white p-6 md:p-8 lg:p-10 rounded-lg shadow-xl border border-gray-200 transition-colors duration-300">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4 text-center">專業富文本筆記本與文字分析</h1>
+        <p class="text-gray-600 mb-6 text-center">
+            在這裡記錄你的想法，並即時查看文字統計與可讀性分析。內容會自動儲存在你的瀏覽器中。
+        </p>
+
+        <!-- 工具列 -->
+        <div id="richTextToolbar" class="flex flex-wrap justify-center gap-1 p-3 bg-gray-50 dark:bg-gray-700 rounded-md shadow-inner mb-4 border border-gray-200 dark:border-gray-600">
+
+            <!-- 撤銷/重做 -->
+            <button onclick="executeCommand('undo')" class="toolbar-btn" title="撤銷 (Ctrl+Z)">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.25 11.25l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
+            <button onclick="executeCommand('redo')" class="toolbar-btn" title="重做 (Ctrl+Y)">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.75 11.25l3-3m0 0l-3-3m3 3h-7.5M3 12a9 9 0 1118 0 9 9 0 01-18 0z"></path></svg>
+            </button>
+
+            <div class="border-l border-gray-300 dark:border-gray-500 mx-2"></div>
+
+            <!-- 標題 -->
+            <select onchange="executeCommand('formatBlock', this.value); this.value=''" class="toolbar-btn px-2 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm text-sm">
+                <option value="">格式</option>
+                <option value="<p>">段落</option>
+                <option value="<h1>">標題 1</option>
+                <option value="<h2>">標題 2</option>
+                <option value="<h3>">標題 3</option>
+            </select>
+
+            <!-- 字體選擇 -->
+            <select onchange="executeCommand('fontName', this.value)" class="toolbar-btn px-2 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm text-sm">
+                <option value="Inter, sans-serif">字體</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Courier New, monospace">Courier New</option>
+                <option value="Lucida Console, monospace">Lucida Console</option>
+            </select>
+
+            <!-- 字體大小 -->
+            <select onchange="executeCommand('fontSize', this.value)" class="toolbar-btn px-2 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm text-sm">
+                <option value="">大小</option>
+                <option value="1">1 (8px)</option>
+                <option value="2">2 (10px)</option>
+                <option value="3">3 (12px)</option>
+                <option value="4">4 (14px)</option>
+                <option value="5">5 (18px)</option>
+                <option value="6">6 (24px)</option>
+                <option value="7">7 (36px)</option>
+            </select>
+
+            <div class="border-l border-gray-300 dark:border-gray-500 mx-2"></div>
+
+            <!-- 文字格式 -->
+            <button onclick="executeCommand('bold')" class="toolbar-btn" title="粗體 (Ctrl+B)">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h-2V7h2a2 2 0 012 2v2a2 2 0 01-2 2h-2v3h2a2 2 0 002-2v-2a2 2 0 00-2-2z"></path></svg>
+            </button>
+            <button onclick="executeCommand('italic')" class="toolbar-btn" title="斜體 (Ctrl+I)">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h-5l-2-7h5l2 7z"></path></svg>
+            </button>
+            <button onclick="executeCommand('underline')" class="toolbar-btn" title="底線 (Ctrl+U)">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16M4 18h16M4 6h16"></path></svg>
+            </button>
+            <button onclick="executeCommand('strikeThrough')" class="toolbar-btn" title="刪除線">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6M3 7h18M3 17h18"></path></svg>
+            </button>
+            <button onclick="executeCommand('subscript')" class="toolbar-btn" title="下標">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 18H5a2 2 0 01-2-2V8a2 2 0 012-2h5m4 0a2 2 0 012 2v8a2 2 0 01-2 2h-5m0-12v12"></path></svg>
+            </button>
+            <button onclick="executeCommand('superscript')" class="toolbar-btn" title="上標">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h5a2 2 0 012 2v8a2 2 0 01-2 2h-5m4 0a2 2 0 012-2V8a2 2 0 01-2-2h-5m0 12V6"></path></svg>
+            </button>
+            <button onclick="executeCommand('removeFormat')" class="toolbar-btn" title="清除格式">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h-2V7h2a2 2 0 012 2v2a2 2 0 01-2 2h-2v3h2a2 2 0 002-2v-2a2 2 0 00-2-2zM12 18h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2V7h2a2 2 0 012 2v2a2 2 0 01-2 2h-2v3h2a2 2 0 002-2v-2a2 2 0 00-2-2zM12 6V3M6 18h12"></path></svg>
+            </button>
+
+            <div class="border-l border-gray-300 dark:border-gray-500 mx-2"></div>
+
+            <!-- 顏色選擇 -->
+            <div class="flex items-center gap-1">
+                <label for="foreColor" class="sr-only">文字顏色</label>
+                <input type="color" id="foreColor" onchange="executeCommand('foreColor', this.value)" title="文字顏色">
+                <label for="backColor" class="sr-only">背景顏色</label>
+                <input type="color" id="backColor" onchange="executeCommand('backColor', this.value)" title="背景顏色">
+            </div>
+
+            <div class="border-l border-gray-300 dark:border-gray-500 mx-2"></div>
+
+            <!-- 對齊方式 -->
+            <button onclick="executeCommand('justifyLeft')" class="toolbar-btn" title="靠左對齊">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h10M4 14h16M4 18h10"></path></svg>
+            </button>
+            <button onclick="executeCommand('justifyCenter')" class="toolbar-btn" title="置中對齊">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+            </button>
+            <button onclick="executeCommand('justifyRight')" class="toolbar-btn" title="靠右對齊">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 10h10M4 14h16M10 18h10"></path></svg>
+            </button>
+            <button onclick="executeCommand('justifyFull')" class="toolbar-btn" title="左右對齊">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+            </button>
+
+            <div class="border-l border-gray-300 dark:border-gray-500 mx-2"></div>
+
+            <!-- 列表與縮排 -->
+            <button onclick="executeCommand('insertUnorderedList')" class="toolbar-btn" title="無序列表">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+            </button>
+            <button onclick="executeCommand('insertOrderedList')" class="toolbar-btn" title="有序列表">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6h18M3 10h18M3 14h18M3 18h18"></path></svg>
+            </button>
+            <button onclick="executeCommand('indent')" class="toolbar-btn" title="增加縮排">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h10M4 14h16M4 18h10"></path></svg>
+            </button>
+            <button onclick="executeCommand('outdent')" class="toolbar-btn" title="減少縮排">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 10h10M4 14h16M10 18h10"></path></svg>
+            </button>
+
+            <div class="border-l border-gray-300 dark:border-gray-500 mx-2"></div>
+
+            <!-- 插入功能 -->
+            <button onclick="insertLink()" class="toolbar-btn" title="插入連結">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-.758l3.682-3.682m-3.682 3.682L15.364 18m-6.818-6.818l3.682-3.682m-3.682 3.682L15.364 18"></path></svg>
+            </button>
+            <button onclick="insertImage()" class="toolbar-btn" title="插入圖片">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </button>
+            <button onclick="executeCommand('insertHorizontalRule')" class="toolbar-btn" title="插入水平線">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16"></path></svg>
+            </button>
+        </div>
+
+        <!-- 主要控制區塊 -->
+        <div class="flex flex-wrap justify-center gap-4 mb-6">
+            <!-- 深色模式切換 -->
+            <button
+                id="darkModeToggle"
+                class="px-4 py-2 bg-gray-700 text-white font-semibold rounded-md shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9 9 0 008.354-5.646z"></path></svg>
+                <span id="darkModeText">深色模式</span>
+            </button>
+
+            <!-- 模式切換按鈕 (新增) -->
+            <button
+                id="toggleModeBtn"
+                onclick="toggleMode()"
+                class="px-4 py-2 bg-gray-500 text-white font-semibold rounded-md shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                <span id="modeText">切換到 HTML 模式</span>
+            </button>
+
+            <!-- 複製按鈕 -->
+            <button
+                onclick="copyToClipboard()"
+                class="px-4 py-2 bg-green-500 text-white font-semibold rounded-md shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                複製
+            </button>
+
+            <!-- 下載為 HTML 檔案 -->
+            <button
+                onclick="downloadAsHtml()"
+                class="px-4 py-2 bg-indigo-500 text-white font-semibold rounded-md shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                下載為 HTML
+            </button>
+
+            <!-- 下載為文字檔按鈕 -->
+            <button
+                onclick="downloadAsTxt()"
+                class="px-4 py-2 bg-purple-500 text-white font-semibold rounded-md shadow-md hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                下載為 TXT
+            </button>
+
+            <!-- 預覽 HTML 內容按鈕 -->
+            <button
+                onclick="previewHtmlContent()"
+                class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                預覽 HTML
+            </button>
+
+            <!-- 列印按鈕 -->
+            <button
+                onclick="printContent()"
+                class="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-md shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z"></path></svg>
+                列印
+            </button>
+
+            <!-- 清空筆記按鈕 -->
+            <button
+                onclick="clearNotepad()"
+                class="px-4 py-2 bg-red-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                清空筆記
+            </button>
+        </div>
+
+        <!-- 編輯器內容區域容器 -->
+        <!-- 將 h-96 應用到父容器，讓子元素可以 h-full 填滿 -->
+        <div class="relative h-96">
+            <!-- 富文本編輯器 -->
+            <div
+                id="editorContent"
+                contenteditable="true"
+                class="editor-content w-full h-full p-4 text-lg text-gray-800 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y overflow-auto transition-colors duration-300"
+                aria-label="專業富文本筆記本輸入區"
+                oninput="handleEditorInput()"
+                data-placeholder="開始輸入你的文字..."
+            ></div>
+
+            <!-- HTML 程式碼編輯器 (預設隱藏) -->
+            <textarea
+                id="htmlCodeEditor"
+                class="hidden w-full h-full p-4 text-lg text-gray-800 bg-gray-50 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y overflow-auto transition-colors duration-300 font-mono"
+                placeholder="在這裡輸入你的 HTML 程式碼..."
+                aria-label="HTML 程式碼編輯區"
+                oninput="handleHtmlCodeInput()"
+            ></textarea>
+        </div>
+
+        <!-- 文字統計顯示區塊 -->
+        <div class="mt-6">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-3 text-center">文本統計</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <div class="stat-box">
+                    <span class="stat-value" id="wordCountDisplay">0</span>
+                    <span class="stat-label">字數</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="charCountDisplay">0</span>
+                    <span class="stat-label">字符數 (含空格)</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="charNoSpaceCountDisplay">0</span>
+                    <span class="stat-label">字符數 (不含空格)</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="sentenceCountDisplay">0</span>
+                    <span class="stat-label">句子數</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="paragraphCountDisplay">0</span>
+                    <span class="stat-label">段落數</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="avgWordLengthDisplay">0.00</span>
+                    <span class="stat-label">平均詞長</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="avgSentenceLengthDisplay">0.00</span>
+                    <span class="stat-label">平均句長</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 可讀性分析顯示區塊 -->
+        <div class="mt-6">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-3 text-center">可讀性分析 (英文文本)</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="stat-box">
+                    <span class="stat-value" id="fleschReadingEaseDisplay">0.00</span>
+                    <span class="stat-label">Flesch 閱讀易度</span>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">分數越高越易讀</p>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-value" id="fleschKincaidGradeLevelDisplay">0.00</span>
+                    <span class="stat-label">Flesch-Kincaid 年級水平</span>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">分數越低越易讀</p>
+                </div>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-4 text-center">
+                注意：可讀性分數主要針對英文文本設計，對其他語言的準確性可能有限。
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const editorContent = document.getElementById('editorContent');
+        const htmlCodeEditor = document.getElementById('htmlCodeEditor');
+        const richTextToolbar = document.getElementById('richTextToolbar');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeText = document.getElementById('darkModeText');
+        const toggleModeBtn = document.getElementById('toggleModeBtn');
+        const modeText = document.getElementById('modeText');
+        const KEY_PREFIX = 'pro_rich_text_analyzer_notebook_'; // Prefix for localStorage keys
+
+        let isHtmlMode = false; // 追蹤當前模式
+        const PLACEHOLDER_TEXT_HTML = '<br>'; // contenteditable div 在空時通常會包含 <br>
+        const PLACEHOLDER_TEXT_DISPLAY = '開始輸入你的文字...'; // 用於顯示的提示文字
+
+        // 文字分析相關的 DOM 元素
+        const wordCountDisplay = document.getElementById('wordCountDisplay');
+        const charCountDisplay = document.getElementById('charCountDisplay');
+        const charNoSpaceCountDisplay = document.getElementById('charNoSpaceCountDisplay');
+        const sentenceCountDisplay = document.getElementById('sentenceCountDisplay');
+        const paragraphCountDisplay = document.getElementById('paragraphCountDisplay');
+        const avgWordLengthDisplay = document.getElementById('avgWordLengthDisplay');
+        const avgSentenceLengthDisplay = document.getElementById('avgSentenceLengthDisplay');
+        const fleschReadingEaseDisplay = document.getElementById('fleschReadingEaseDisplay');
+        const fleschKincaidGradeLevelDisplay = document.getElementById('fleschKincaidGradeLevelDisplay');
+
+
+        // --- 初始化功能 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContent(); // 載入儲存的內容
+            updateCountsAndAnalysis(); // 更新字數統計和文本分析
+            loadDarkModePreference(); // 載入深色模式設定
+            updatePlaceholder(); // 初始化 placeholder
+        });
+
+        // --- 處理編輯器輸入事件 (富文本模式) ---
+        function handleEditorInput() {
+            if (!isHtmlMode) {
+                saveContent(); // 輸入時自動儲存
+                updateCountsAndAnalysis(); // 輸入時更新字數統計和文本分析
+                updatePlaceholder(); // 根據內容更新 placeholder 狀態
+            }
+        }
+
+        // --- 處理 HTML 程式碼輸入事件 (HTML 模式) ---
+        function handleHtmlCodeInput() {
+            if (isHtmlMode) {
+                saveContent(); // 輸入時自動儲存
+                updateCountsAndAnalysis(); // 輸入時更新字數統計和文本分析
+            }
+        }
+
+        // --- 儲存內容到瀏覽器本地儲存 ---
+        let saveTimer;
+        function saveContent() {
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => {
+                // 儲存時，如果編輯器只包含 placeholder 相關的空內容，則儲存空字串
+                const richTextContentToSave = (editorContent.innerHTML.trim() === '' || editorContent.innerHTML.trim() === PLACEHOLDER_TEXT_HTML) ? '' : editorContent.innerHTML;
+                localStorage.setItem(`${KEY_PREFIX}richTextContent`, richTextContentToSave);
+                localStorage.setItem(`${KEY_PREFIX}htmlCodeContent`, htmlCodeEditor.value);
+                showMessage('內容已自動儲存！', 'green');
+            }, 500); // 延遲 500ms 儲存，避免頻繁寫入
+        }
+
+        // --- 從瀏覽器本地儲存載入內容 ---
+        function loadContent() {
+            const savedRichText = localStorage.getItem(`${KEY_PREFIX}richTextContent`);
+            const savedHtmlCode = localStorage.getItem(`${KEY_PREFIX}htmlCodeContent`);
+
+            if (savedRichText) {
+                editorContent.innerHTML = savedRichText;
+            } else {
+                editorContent.innerHTML = ''; // 確保如果沒有儲存內容，編輯器是空的
+            }
+            if (savedHtmlCode) {
+                htmlCodeEditor.value = savedHtmlCode;
+            }
+            showMessage('已載入上次的筆記。', 'blue');
+        }
+
+        // --- 執行富文本命令 ---
+        function executeCommand(command, value = null) {
+            if (!isHtmlMode) {
+                editorContent.focus();
+                document.execCommand(command, false, value);
+                updateCountsAndAnalysis(); // 執行命令後更新字數統計和文本分析
+                updatePlaceholder(); // 執行命令後更新 placeholder 狀態
+            } else {
+                showMessage('請先切換到富文本模式以使用此功能。', 'orange');
+            }
+        }
+
+        // --- 清空筆記功能 ---
+        function clearNotepad() {
+            showConfirmation('確定要清空筆記嗎？此操作不可復原。', () => {
+                editorContent.innerHTML = ''; // 清空富文本編輯器
+                htmlCodeEditor.value = ''; // 清空 HTML 程式碼編輯器
+                localStorage.removeItem(`${KEY_PREFIX}richTextContent`); // 同時清除本地儲存
+                localStorage.removeItem(`${KEY_PREFIX}htmlCodeContent`);
+                updateCountsAndAnalysis(); // 清空後更新字數統計和文本分析
+                updatePlaceholder(); // 清空後重新顯示 placeholder
+                showMessage('筆記已清空！', 'red');
+            });
+        }
+
+        // --- 字數與字元數統計及可讀性分析功能 ---
+        function updateCountsAndAnalysis() {
+            let textToAnalyze;
+            if (isHtmlMode) {
+                // 在 HTML 模式下，直接使用 textarea 的值進行分析
+                textToAnalyze = htmlCodeEditor.value;
+            } else {
+                // 在富文本模式下，獲取純文本內容
+                // 確保不包含 placeholder 文字
+                textToAnalyze = editorContent.innerText;
+                if (editorContent.innerHTML.trim() === '' || editorContent.innerHTML.trim() === PLACEHOLDER_TEXT_HTML) {
+                    textToAnalyze = ''; // 如果是空編輯器（或只有 <br>），則視為空字串
+                }
+            }
+
+            // Word Count
+            const words = textToAnalyze.match(/\b\w+\b/g) || [];
+            const wordCount = words.length;
+            wordCountDisplay.textContent = wordCount;
+
+            // Character Count (with spaces)
+            const charCount = textToAnalyze.length;
+            charCountDisplay.textContent = charCount;
+
+            // Character Count (without spaces)
+            const charNoSpaceCount = textToAnalyze.replace(/\s/g, '').length;
+            charNoSpaceCountDisplay.textContent = charNoSpaceCount;
+
+            // Sentence Count (basic detection: ends with ., ?, ! followed by space or end of string)
+            const sentences = textToAnalyze.split(/[\.!?]+(?=\s|$)/).filter(s => s.trim().length > 0);
+            const sentenceCount = sentences.length;
+            sentenceCountDisplay.textContent = sentenceCount;
+
+            // Paragraph Count (split by two or more newlines)
+            const paragraphs = textToAnalyze.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+            const paragraphCount = paragraphs.length;
+            paragraphCountDisplay.textContent = paragraphCount;
+
+            // Average Word Length
+            const totalWordLength = words.reduce((sum, word) => sum + word.length, 0);
+            const avgWordLength = wordCount > 0 ? (totalWordLength / wordCount).toFixed(2) : '0.00';
+            avgWordLengthDisplay.textContent = avgWordLength;
+
+            // Average Sentence Length
+            const avgSentenceLength = sentenceCount > 0 ? (wordCount / sentenceCount).toFixed(2) : '0.00';
+            avgSentenceLengthDisplay.textContent = avgSentenceLength;
+
+            // Readability Scores (Flesch-Kincaid, primarily for English)
+            calculateReadability(textToAnalyze, wordCount, sentenceCount);
+        }
+
+        function countSyllables(word) {
+            // Very basic syllable counting for English words.
+            word = word.toLowerCase();
+            if (word.length <= 3) return 1;
+            word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
+            word = word.replace(/^y/, '');
+            const matches = word.match(/[aeiouy]{1,2}/g);
+            return matches ? matches.length : 0;
+        }
+
+        function calculateReadability(text, wordCount, sentenceCount) {
+            let totalSyllables = 0;
+            const words = text.match(/\b\w+\b/g) || [];
+
+            words.forEach(word => {
+                totalSyllables += countSyllables(word);
+            });
+
+            const ASL = sentenceCount > 0 ? (wordCount / sentenceCount) : 0;
+            const ASW = wordCount > 0 ? (totalSyllables / wordCount) : 0;
+
+            let fleschReadingEase = 0;
+            if (wordCount > 0 && sentenceCount > 0) {
+                fleschReadingEase = 206.835 - (1.015 * ASL) - (84.6 * ASW);
+            }
+            fleschReadingEaseDisplay.textContent = fleschReadingEase.toFixed(2);
+
+            let fleschKincaidGradeLevel = 0;
+            if (wordCount > 0 && sentenceCount > 0) {
+                fleschKincaidGradeLevel = (0.39 * ASL) + (11.8 * ASW) - 15.59;
+            }
+            fleschKincaidGradeLevelDisplay.textContent = fleschKincaidGradeLevel.toFixed(2);
+        }
+
+
+        // --- 複製內容到剪貼簿功能 ---
+        function copyToClipboard() {
+            let contentToCopy;
+            let activeEditor;
+
+            if (isHtmlMode) {
+                contentToCopy = htmlCodeEditor.value;
+                activeEditor = htmlCodeEditor;
+            } else {
+                // 在富文本模式下，如果編輯器是空的，則不複製
+                if (editorContent.innerHTML.trim() === '' || editorContent.innerHTML.trim() === PLACEHOLDER_TEXT_HTML) {
+                    showMessage('筆記內容為空，無法複製。', 'orange');
+                    return;
+                }
+                contentToCopy = editorContent.innerText;
+                activeEditor = editorContent;
+            }
+
+            if (contentToCopy.length === 0) { // 再次檢查是否為空
+                showMessage('筆記內容為空，無法複製。', 'orange');
+                return;
+            }
+
+            // 選擇內容並複製
+            if (isHtmlMode) {
+                activeEditor.select(); // 對於 textarea
+            } else { // 對於 contenteditable div
+                const range = document.createRange();
+                range.selectNodeContents(activeEditor);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showMessage('內容已複製到剪貼簿！', 'green');
+                } else {
+                    showMessage('複製失敗，請手動複製。', 'red');
+                }
+            } catch (err) {
+                showMessage('複製失敗，請手動複製。', 'red');
+                console.error('無法複製到剪貼簿:', err);
+            } finally {
+                if (!isHtmlMode) {
+                    window.getSelection().removeAllRanges(); // 清除富文本編輯器的選區
+                }
+            }
+        }
+
+        // --- 下載為 HTML 檔案功能 ---
+        function downloadAsHtml() {
+            const filename = '我的筆記.html';
+            let htmlContentToSave;
+            if (isHtmlMode) {
+                htmlContentToSave = htmlCodeEditor.value; // 如果在 HTML 模式，直接儲存其內容
+            } else {
+                // 如果富文本編輯器是空的，則儲存空字串
+                htmlContentToSave = (editorContent.innerHTML.trim() === '' || editorContent.innerHTML.trim() === PLACEHOLDER_TEXT_HTML) ? '' : editorContent.innerHTML;
+            }
+
+            const fullHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>我的筆記</title></head><body>${htmlContentToSave}</body></html>`;
+            const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url); // 釋放 URL 物件
+            showMessage('筆記已下載為 HTML 檔案！', 'green');
+        }
+
+        // --- 下載為文字檔功能 ---
+        function downloadAsTxt() {
+            const filename = '我的筆記.txt';
+            let textContentToSave;
+            if (isHtmlMode) {
+                textContentToSave = htmlCodeEditor.value; // HTML 模式下直接儲存程式碼
+            } else {
+                // 在富文本模式下，如果編輯器是空的，則儲存空字串
+                if (editorContent.innerHTML.trim() === '' || editorContent.innerHTML.trim() === PLACEHOLDER_TEXT_HTML) {
+                    textContentToSave = '';
+                } else {
+                    textContentToSave = editorContent.innerText; // 富文本模式下儲存純文字
+                }
+            }
+
+            const blob = new Blob([textContentToSave], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url); // 釋放 URL 物件
+            showMessage('筆記已下載為 TXT 檔案！', 'green');
+        }
+
+        // --- 預覽 HTML 內容功能 ---
+        function previewHtmlContent() {
+            let contentToPreview;
+            if (isHtmlMode) {
+                contentToPreview = htmlCodeEditor.value; // 預覽 HTML 程式碼編輯器中的內容
+            } else {
+                // 如果在富文本模式下，且編輯器是空的，則視為空
+                if (editorContent.innerHTML.trim() === '' || editorContent.innerHTML.trim() === PLACEHOLDER_TEXT_HTML) {
+                    contentToPreview = '';
+                } else {
+                    contentToPreview = editorContent.innerHTML; // 預覽富文本編輯器中的內容
+                }
+            }
+
+            if (contentToPreview.trim() === '') {
+                showMessage('編輯器內容為空，無法預覽。', 'orange');
+                return;
+            }
+
+            // 創建一個完整的 HTML 頁面，包含用戶輸入的內容
+            const fullHtml = `
+                <!DOCTYPE html>
+                <html lang="zh-TW">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>預覽</title>
+                    <style>
+                        /* 預覽頁面的基本樣式，確保可讀性 */
+                        body {
+                            font-family: 'Inter', sans-serif;
+                            margin: 20px;
+                            line-height: 1.6;
+                            color: #333;
+                            background-color: #f9f9f9;
+                        }
+                        /* 確保圖片等內容在預覽中能正常顯示和響應 */
+                        img {
+                            max-width: 100%;
+                            height: auto;
+                            display: block;
+                            margin: 10px 0;
+                        }
+                        a {
+                            color: #007bff;
+                            text-decoration: underline;
+                        }
+                        /* 簡單的富文本樣式，以確保預覽效果 */
+                        b, strong { font-weight: bold; }
+                        i, em { font-style: italic; }
+                        u { text-decoration: underline; }
+                        s, strike { text-decoration: line-through; }
+                        sup { vertical-align: super; font-size: smaller; }
+                        sub { vertical-align: sub; font-size: smaller; }
+                        h1 { font-size: 2em; margin-top: 0.67em; margin-bottom: 0.67em; }
+                        h2 { font-size: 1.5em; margin-top: 0.83em; margin-bottom: 0.83em; }
+                        h3 { font-size: 1.17em; margin-top: 1em; margin-bottom: 1em; }
+                        ul, ol { margin-left: 20px; }
+                        hr { border: 0; border-top: 1px solid #ccc; margin: 20px 0; }
+                    </style>
+                </head>
+                <body>
+                    ${contentToPreview}
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank'); // 在新分頁開啟
+            showMessage('正在新分頁預覽 HTML 內容...', 'blue');
+        }
+
+        // --- 列印功能 ---
+        function printContent() {
+            let contentToPrint;
+            if (isHtmlMode) {
+                contentToPrint = htmlCodeEditor.value;
+            } else {
+                // 如果在富文本模式下，且編輯器是空的，則視為空
+                if (editorContent.innerHTML.trim() === '' || editorContent.innerHTML.trim() === PLACEHOLDER_TEXT_HTML) {
+                    contentToPrint = '';
+                } else {
+                    contentToPrint = editorContent.innerHTML;
+                }
+            }
+
+            if (contentToPrint.trim() === '') {
+                showMessage('筆記內容為空，無法列印。', 'orange');
+                return;
+            }
+
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>列印筆記</title>');
+            // 複製當前頁面的基礎樣式，確保列印樣式一致
+            printWindow.document.write('<style>');
+            printWindow.document.write('body { font-family: \'Inter\', sans-serif; margin: 20px; }');
+            printWindow.document.write('</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(contentToPrint);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+            showMessage('正在列印筆記...', 'blue');
+        }
+
+        // --- 插入連結功能 ---
+        function insertLink() {
+            if (isHtmlMode) {
+                showMessage('請在富文本模式下使用此功能。', 'orange');
+                return;
+            }
+            showPrompt('請輸入連結的 URL:', 'http://', (url) => {
+                if (url && url !== 'http://') {
+                    showPrompt('請輸入連結文字:', '', (text) => {
+                        const linkText = text || url; // 如果沒有輸入文字，則使用 URL 作為文字
+                        editorContent.focus();
+                        const selection = window.getSelection();
+                        if (selection.toString().length > 0) {
+                            document.execCommand('createLink', false, url);
+                        } else {
+                            document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${linkText}</a>`);
+                        }
+                        showMessage('連結已插入。', 'green');
+                    });
+                } else if (url === '') {
+                    showMessage('連結 URL 不能為空。', 'orange');
+                }
+            });
+        }
+
+        // --- 插入圖片功能 ---
+        function insertImage() {
+            if (isHtmlMode) {
+                showMessage('請在富文本模式下使用此功能。', 'orange');
+                return;
+            }
+            showPrompt('請輸入圖片的 URL:', 'https://placehold.co/300x200', (imageUrl) => {
+                if (imageUrl && imageUrl !== 'https://placehold.co/300x200') {
+                    editorContent.focus();
+                    document.execCommand('insertImage', false, imageUrl);
+                    showMessage('圖片已插入。', 'green');
+                } else if (imageUrl === '') {
+                    showMessage('圖片 URL 不能為空。', 'orange');
+                }
+            });
+        }
+
+        // --- 深色模式切換功能 ---
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const isDarkMode = document.body.classList.contains('dark');
+            localStorage.setItem(`${KEY_PREFIX}darkMode`, isDarkMode ? 'enabled' : 'disabled');
+            darkModeText.textContent = isDarkMode ? '淺色模式' : '深色模式';
+            showMessage(isDarkMode ? '已切換到深色模式。' : '已切換到淺色模式。', 'blue');
+        }
+
+        function loadDarkModePreference() {
+            const preference = localStorage.getItem(`${KEY_PREFIX}darkMode`);
+            if (preference === 'enabled') {
+                document.body.classList.add('dark');
+                darkModeText.textContent = '淺色模式';
+            } else {
+                darkModeText.textContent = '深色模式';
+            }
+        }
+
+        // --- 模式切換功能 (富文本 <-> HTML 程式碼) ---
+        function toggleMode() {
+            isHtmlMode = !isHtmlMode;
+            if (isHtmlMode) {
+                // 從富文本切換到 HTML 模式
+                // 只有當編輯器內容不是 placeholder 時才將其轉換為 HTML
+                if (editorContent.innerHTML.trim() === '' || editorContent.innerHTML.trim() === PLACEHOLDER_TEXT_HTML) {
+                    htmlCodeEditor.value = '';
+                } else {
+                    htmlCodeEditor.value = editorContent.innerHTML;
+                }
+                editorContent.classList.add('hidden');
+                htmlCodeEditor.classList.remove('hidden');
+                richTextToolbar.classList.add('hidden'); // 隱藏富文本工具列
+                modeText.textContent = '切換到富文本模式';
+                htmlCodeEditor.focus(); // 聚焦 HTML 編輯器
+            } else {
+                // 從 HTML 切換到富文本模式
+                editorContent.innerHTML = htmlCodeEditor.value; // 將 HTML 程式碼渲染回富文本
+                htmlCodeEditor.classList.add('hidden');
+                editorContent.classList.remove('hidden');
+                richTextToolbar.classList.remove('hidden'); // 顯示富文本工具列
+                modeText.textContent = '切換到 HTML 模式';
+                editorContent.focus(); // 聚焦富文本編輯器
+            }
+            updateCountsAndAnalysis(); // 更新字數統計和文本分析
+            updatePlaceholder(); // 更新 placeholder
+            saveContent(); // 模式切換時也觸發儲存
+            showMessage(isHtmlMode ? '已切換到 HTML 程式碼模式。' : '已切換到富文本編輯模式。', 'blue');
+        }
+
+        // --- placeholder 處理 for contenteditable div ---
+        function updatePlaceholder() {
+            if (!isHtmlMode) { // 只在富文本模式下處理 placeholder
+                // 只有當內容真正為空時才顯示 placeholder (考慮 <br> 標籤)
+                const isEmpty = editorContent.innerHTML.trim() === '' || editorContent.innerHTML.trim() === PLACEHOLDER_TEXT_HTML;
+                if (isEmpty) {
+                    editorContent.classList.add('is-placeholder'); // 添加 placeholder 顏色
+                    // 確保內容是真正的空，以便游標可以從頭開始
+                    if (editorContent.innerHTML.trim() !== '') {
+                        editorContent.innerHTML = '';
+                    }
+                } else {
+                    editorContent.classList.remove('is-placeholder'); // 移除 placeholder 顏色
+                }
+            }
+        }
+
+
+        // --- 自定義訊息框 (取代 alert/confirm/prompt) ---
+        function showMessage(message, type = 'info') {
+            const messageBox = document.createElement('div');
+            messageBox.textContent = message;
+            let bgColorClass = '';
+            switch (type) {
+                case 'green': bgColorClass = 'bg-green-500'; break;
+                case 'red': bgColorClass = 'bg-red-500'; break;
+                case 'blue': bgColorClass = 'bg-blue-500'; break;
+                case 'orange': bgColorClass = 'bg-orange-500'; break;
+                default: bgColorClass = 'bg-gray-700'; break;
+            }
+            messageBox.className = `fixed bottom-4 right-4 ${bgColorClass} text-white px-4 py-2 rounded-md shadow-lg transition-opacity duration-500 ease-out opacity-0 z-50`;
+            document.body.appendChild(messageBox);
+
+            setTimeout(() => {
+                messageBox.classList.remove('opacity-0');
+                messageBox.classList.add('opacity-100');
+            }, 10);
+
+            setTimeout(() => {
+                messageBox.classList.remove('opacity-100');
+                messageBox.classList.add('opacity-0');
+                messageBox.addEventListener('transitionend', () => messageBox.remove());
+            }, 3000); // 3秒後消失
+        }
+
+        function showConfirmation(message, onConfirm) {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+
+            const modalContent = document.createElement('div');
+            modalContent.className = 'bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-sm w-full text-center transition-colors duration-300';
+            modalContent.innerHTML = `
+                <p class="text-gray-800 dark:text-gray-200 text-lg mb-6">${message}</p>
+                <div class="flex justify-center gap-4">
+                    <button id="confirmYes" class="px-6 py-2 bg-red-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 transition duration-300 ease-in-out">
+                        是
+                    </button>
+                    <button id="confirmNo" class="px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded-md shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 transition duration-300 ease-in-out dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-700">
+                        否
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(modalOverlay);
+            modalOverlay.appendChild(modalContent);
+
+            document.getElementById('confirmYes').addEventListener('click', () => {
+                onConfirm();
+                modalOverlay.remove();
+            });
+
+            document.getElementById('confirmNo').addEventListener('click', () => {
+                modalOverlay.remove();
+            });
+        }
+
+        function showPrompt(message, defaultValue, onConfirm) {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+
+            const modalContent = document.createElement('div');
+            modalContent.className = 'bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-sm w-full text-center transition-colors duration-300';
+            modalContent.innerHTML = `
+                <p class="text-gray-800 dark:text-gray-200 text-lg mb-4">${message}</p>
+                <input type="text" id="promptInput" value="${defaultValue}" class="w-full p-2 mb-6 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="flex justify-center gap-4">
+                    <button id="promptOk" class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ease-in-out">
+                        確定
+                    </button>
+                    <button id="promptCancel" class="px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded-md shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 transition duration-300 ease-in-out dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-700">
+                        取消
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(modalOverlay);
+            modalOverlay.appendChild(modalContent);
+
+            const promptInput = document.getElementById('promptInput');
+            promptInput.focus(); // 自動聚焦輸入框
+
+            document.getElementById('promptOk').addEventListener('click', () => {
+                onConfirm(promptInput.value);
+                modalOverlay.remove();
+            });
+
+            document.getElementById('promptCancel').addEventListener('click', () => {
+                onConfirm(null); // 返回 null 表示取消
+                modalOverlay.remove();
+            });
+
+            promptInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('promptOk').click();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

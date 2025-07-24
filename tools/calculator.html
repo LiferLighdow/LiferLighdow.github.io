@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專業單位轉換與科學計算機</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Use Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+        /* Dark mode styles */
+        body.dark {
+            background-color: #1a202c; /* Tailwind gray-900 */
+            color: #e2e8f0; /* Tailwind gray-200 */
+        }
+        body.dark .bg-white {
+            background-color: #2d3748; /* Tailwind gray-800 */
+            border-color: #4a5568; /* Tailwind gray-600 */
+        }
+        body.dark .text-gray-800 {
+            color: #e2e8f0;
+        }
+        body.dark .text-gray-600 {
+            color: #cbd5e0;
+        }
+        body.dark input, body.dark select, body.dark textarea {
+            background-color: #4a5568; /* Tailwind gray-600 */
+            border-color: #6a7384; /* Tailwind gray-500 */
+            color: #e2e8f0;
+        }
+        body.dark input::placeholder, body.dark textarea::placeholder {
+            color: #cbd5e0;
+        }
+        body.dark .tab-button {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+        body.dark .tab-button.active {
+            background-color: #3b82f6; /* blue-500 */
+            color: #ffffff;
+        }
+        body.dark .calculator-grid button {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+        body.dark .calculator-grid button:hover {
+            background-color: #6a7384;
+        }
+        body.dark .calculator-grid button.operator,
+        body.dark .calculator-grid button.function-btn {
+            background-color: #5a67d8; /* indigo-600 */
+            color: #ffffff;
+        }
+        body.dark .calculator-grid button.operator:hover,
+        body.dark .calculator-grid button.function-btn:hover {
+            background-color: #667eea; /* indigo-500 */
+        }
+        body.dark .calculator-grid button.equals {
+            background-color: #3b82f6; /* blue-500 */
+            color: #ffffff;
+        }
+        body.dark .calculator-grid button.equals:hover {
+            background-color: #2563eb; /* blue-600 */
+        }
+        body.dark .calculator-grid button.clear {
+            background-color: #ef4444; /* red-500 */
+            color: #ffffff;
+        }
+        body.dark .calculator-grid button.clear:hover {
+            background-color: #dc2626; /* red-600 */
+        }
+        body.dark .calculator-display {
+            background-color: #6a7384;
+            color: #e2e8f0;
+        }
+        body.dark .converter-result {
+            background-color: #4a5568;
+            color: #e2e8f0;
+            border-color: #6a7384;
+        }
+
+        /* Common button styles */
+        .btn-primary {
+            @apply px-4 py-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-opacity-75 transition duration-300 ease-in-out;
+        }
+        .tab-button {
+            @apply btn-primary bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
+        }
+        .tab-button.active {
+            @apply bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700;
+        }
+        .calculator-grid button {
+            @apply p-2 sm:p-3 md:p-4 rounded-md text-base sm:text-lg md:text-xl font-semibold bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
+        }
+        .calculator-grid button.operator {
+            @apply bg-orange-500 text-white hover:bg-orange-600;
+        }
+        .calculator-grid button.function-btn {
+            @apply bg-indigo-500 text-white hover:bg-indigo-600;
+        }
+        .calculator-grid button.equals {
+            @apply bg-blue-500 text-white hover:bg-blue-600;
+        }
+        .calculator-grid button.clear {
+            @apply bg-red-500 text-white hover:bg-red-600;
+        }
+        /* Adjust font size for smaller screens for calculator display */
+        @media (max-width: 640px) {
+            #calculatorDisplay {
+                font-size: 2.5rem; /* Smaller font for mobile */
+                padding: 0.75rem;
+            }
+            .calculator-grid button {
+                padding: 0.75rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-lg bg-white p-6 rounded-lg shadow-xl border border-gray-200 transition-colors duration-300">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4 text-center">專業單位轉換與科學計算機</h1>
+        <p class="text-gray-600 mb-6 text-center">
+            在不同工具之間切換，滿足你的計算和轉換需求。
+        </p>
+
+        <!-- Tab buttons -->
+        <div class="flex justify-center gap-4 mb-6">
+            <button id="converterTabBtn" class="tab-button active" onclick="showTab('converter')">單位轉換</button>
+            <button id="calculatorTabBtn" class="tab-button" onclick="showTab('calculator')">科學計算機</button>
+        </div>
+
+        <!-- Dark Mode Toggle -->
+        <div class="flex justify-end mb-4">
+            <button
+                id="darkModeToggle"
+                class="px-3 py-2 bg-gray-700 text-white text-sm rounded-md shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center"
+            >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9 9 0 008.354-5.646z"></path></svg>
+                <span id="darkModeText">深色模式</span>
+            </button>
+        </div>
+
+        <!-- Unit Converter Section -->
+        <div id="converterSection" class="tab-content">
+            <div class="mb-4">
+                <label for="converterValue" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">輸入數值:</label>
+                <input
+                    type="number"
+                    id="converterValue"
+                    class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                    placeholder="輸入數值"
+                    oninput="convertUnit()"
+                >
+            </div>
+
+            <div class="mb-4">
+                <label for="unitCategory" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">選擇類別:</label>
+                <select
+                    id="unitCategory"
+                    class="shadow border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                    onchange="populateUnits(); convertUnit()"
+                >
+                    <option value="length">長度</option>
+                    <option value="weight">重量</option>
+                    <option value="temperature">溫度</option>
+                    <option value="volume">體積</option>
+                    <option value="data">數據儲存</option>
+                    <option value="energy">能量</option>
+                    <option value="power">功率</option>
+                    <option value="pressure">壓力</option>
+                    <option value="frequency">頻率</option>
+                    <option value="speed">速度</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-4 mb-4">
+                <div class="flex-1">
+                    <label for="fromUnit" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">從:</label>
+                    <select
+                        id="fromUnit"
+                        class="shadow border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                        onchange="convertUnit()"
+                    ></select>
+                </div>
+                <div class="flex-1">
+                    <label for="toUnit" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">到:</label>
+                    <select
+                        id="toUnit"
+                        class="shadow border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                        onchange="convertUnit()"
+                    ></select>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="converterResult" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">結果:</label>
+                <div id="converterResult" class="converter-result shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 bg-gray-50 leading-tight focus:outline-none focus:shadow-outline min-h-[40px] flex items-center dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200">
+                    0
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculator Section -->
+        <div id="calculatorSection" class="tab-content hidden">
+            <input
+                type="text"
+                id="calculatorDisplay"
+                class="calculator-display shadow appearance-none border rounded-md w-full py-4 px-3 mb-4 text-4xl text-right font-mono bg-gray-200 text-gray-800 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-600 dark:text-gray-200"
+                value="0"
+                readonly
+            >
+            <div class="grid grid-cols-5 sm:grid-cols-6 gap-2 calculator-grid">
+                <!-- Row 1: Scientific Functions -->
+                <button class="function-btn" onclick="appendToDisplay('Math.sin(')">sin</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.cos(')">cos</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.tan(')">tan</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.log10(')">log</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.log(')">ln</button>
+                <button class="clear" onclick="clearDisplay()">AC</button>
+
+                <!-- Row 2: More Scientific Functions -->
+                <button class="function-btn" onclick="appendToDisplay('Math.asin(')">asin</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.acos(')">acos</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.atan(')">atan</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.pow(10,')">10^x</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.exp(')">e^x</button>
+                <button class="operator" onclick="appendToDisplay('/')">÷</button>
+
+                <!-- Row 3: Numbers and Operators -->
+                <button onclick="appendToDisplay('7')">7</button>
+                <button onclick="appendToDisplay('8')">8</button>
+                <button onclick="appendToDisplay('9')">9</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.sqrt(')">√</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.cbrt(')">∛</button>
+                <button class="operator" onclick="appendToDisplay('*')">×</button>
+
+                <!-- Row 4: Numbers and Operators -->
+                <button onclick="appendToDisplay('4')">4</button>
+                <button onclick="appendToDisplay('5')">5</button>
+                <button onclick="appendToDisplay('6')">6</button>
+                <button class="function-btn" onclick="appendToDisplay('**2')">x²</button>
+                <button class="function-btn" onclick="appendToDisplay('**3')">x³</button>
+                <button class="operator" onclick="appendToDisplay('-')">-</button>
+
+                <!-- Row 5: Numbers and Operators -->
+                <button onclick="appendToDisplay('1')">1</button>
+                <button onclick="appendToDisplay('2')">2</button>
+                <button onclick="appendToDisplay('3')">3</button>
+                <button class="function-btn" onclick="appendToDisplay('**')">x^y</button>
+                <button class="function-btn" onclick="toggleSign()">+/-</button>
+                <button class="operator" onclick="appendToDisplay('+')">+</button>
+
+                <!-- Row 6: Numbers and Operators -->
+                <button onclick="appendToDisplay('0')">0</button>
+                <button onclick="appendToDisplay('.')">.</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.PI')">π</button>
+                <button class="function-btn" onclick="appendToDisplay('Math.E')">e</button>
+                <button class="function-btn" onclick="appendToDisplay('%')">%</button>
+                <button class="equals" onclick="calculateResult()">=</button>
+
+                <!-- Memory Functions (Optional, can be added if space allows or in a separate row) -->
+                <button class="function-btn" onclick="memoryOperation('M+')">M+</button>
+                <button class="function-btn" onclick="memoryOperation('M-')">M-</button>
+                <button class="function-btn" onclick="memoryOperation('MR')">MR</button>
+                <button class="function-btn" onclick="memoryOperation('MC')">MC</button>
+                <button class="function-btn" onclick="appendToDisplay('(')">(</button>
+                <button class="function-btn" onclick="appendToDisplay(')')">)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const converterValueInput = document.getElementById('converterValue');
+        const unitCategorySelect = document.getElementById('unitCategory');
+        const fromUnitSelect = document.getElementById('fromUnit');
+        const toUnitSelect = document.getElementById('toUnit');
+        const converterResultDiv = document.getElementById('converterResult');
+        const calculatorDisplay = document.getElementById('calculatorDisplay');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeText = document.getElementById('darkModeText');
+
+        const KEY_PREFIX = 'unit_calc_pro_'; // Prefix for localStorage keys
+
+        // Unit conversion rates (relative to a base unit)
+        const unitConversions = {
+            length: {
+                meter: 1, kilometer: 1000, centimeter: 0.01, millimeter: 0.001,
+                mile: 1609.34, yard: 0.9144, foot: 0.3048, inch: 0.0254,
+                'nautical mile': 1852, angstrom: 1e-10 // New units
+            },
+            weight: {
+                kilogram: 1, gram: 0.001, milligram: 0.000001,
+                pound: 0.453592, ounce: 0.0283495, 'metric ton': 1000,
+                carat: 0.0002, stone: 6.35029 // New units
+            },
+            temperature: {
+                celsius: { toBase: (c) => c, fromBase: (c) => c, toFahrenheit: (c) => (c * 9/5) + 32, fromFahrenheit: (f) => (f - 32) * 5/9, toKelvin: (c) => c + 273.15, fromKelvin: (k) => k - 273.15, toRankine: (c) => (c + 273.15) * 9/5, fromRankine: (r) => (r - 491.67) * 5/9 },
+                fahrenheit: { toBase: (f) => (f - 32) * 5/9, fromBase: (c) => (c * 9/5) + 32 },
+                kelvin: { toBase: (k) => k - 273.15, fromBase: (c) => c + 273.15 },
+                rankine: { toBase: (r) => (r - 491.67) * 5/9, fromBase: (c) => (c + 273.15) * 9/5 } // New unit
+            },
+            volume: {
+                liter: 1, milliliter: 0.001, 'cubic meter': 1000, 'cubic centimeter': 0.001,
+                'US gallon': 3.78541, 'US quart': 0.946353, 'US pint': 0.473176, 'US fluid ounce': 0.0295735,
+                'cubic inch': 0.0163871, 'cubic foot': 28.3168, 'US barrel': 119.24 // New units
+            },
+            data: { // New category
+                bit: 1, byte: 8,
+                kilobit: 1000, megabit: 1e6, gigabit: 1e9, terabit: 1e12,
+                kilobyte: 8 * 1024, megabyte: 8 * 1024 * 1024, gigabyte: 8 * 1024 * 1024 * 1024, terabyte: 8 * 1024 * 1024 * 1024 * 1024, petabyte: 8 * 1024 * 1024 * 1024 * 1024 * 1024
+            },
+            energy: { // New category
+                joule: 1, kilojoule: 1000,
+                calorie: 4.184, 'large calorie': 4184, // small cal vs kcal
+                'kilowatt-hour': 3.6e6, electronvolt: 1.60218e-19
+            },
+            power: { // New category
+                watt: 1, kilowatt: 1000, megawatt: 1e6,
+                'horsepower (metric)': 735.499, 'horsepower (mechanical)': 745.7
+            },
+            pressure: { // New category
+                pascal: 1, kilopascal: 1000, megapascal: 1e6,
+                psi: 6894.76, bar: 100000, atmosphere: 101325, torr: 133.322
+            },
+            frequency: { // New category
+                hertz: 1, kilohertz: 1000, megahertz: 1e6, gigahertz: 1e9
+            },
+            speed: {
+                'meter/second': 1, 'kilometer/hour': 0.277778, 'miles/hour': 0.44704,
+                knot: 0.514444, mach: 343 // Mach at sea level, 20°C
+            }
+        };
+
+        // Display names for units
+        const unitDisplayNames = {
+            length: {
+                meter: '公尺 (m)', kilometer: '公里 (km)', centimeter: '公分 (cm)', millimeter: '公釐 (mm)',
+                mile: '英里 (mi)', yard: '碼 (yd)', foot: '英尺 (ft)', inch: '英吋 (in)',
+                'nautical mile': '海里 (nmi)', angstrom: '埃 (Å)'
+            },
+            weight: {
+                kilogram: '公斤 (kg)', gram: '公克 (g)', milligram: '毫克 (mg)',
+                pound: '磅 (lb)', ounce: '盎司 (oz)', 'metric ton': '公噸',
+                carat: '克拉 (ct)', stone: '英石 (st)'
+            },
+            temperature: {
+                celsius: '攝氏 (°C)', fahrenheit: '華氏 (°F)', kelvin: '克耳文 (K)', rankine: '蘭金 (°R)'
+            },
+            volume: {
+                liter: '公升 (L)', milliliter: '毫升 (mL)', 'cubic meter': '立方公尺 (m³)', 'cubic centimeter': '立方公分 (cm³)',
+                'US gallon': '美制加侖', 'US quart': '美制夸脫', 'US pint': '美制品脫', 'US fluid ounce': '美制液盎司',
+                'cubic inch': '立方英吋', 'cubic foot': '立方英尺', 'US barrel': '美制桶'
+            },
+            data: {
+                bit: '位元 (bit)', byte: '位元組 (Byte)',
+                kilobit: '千位元 (kb)', megabit: '百萬位元 (Mb)', gigabit: '十億位元 (Gb)', terabit: '兆位元 (Tb)',
+                kilobyte: '千位元組 (KB)', megabyte: '百萬位元組 (MB)', gigabyte: '十億位元組 (GB)', terabyte: '兆位元組 (TB)', petabyte: '拍位元組 (PB)'
+            },
+            energy: {
+                joule: '焦耳 (J)', kilojoule: '千焦耳 (kJ)',
+                calorie: '卡路里 (cal)', 'large calorie': '大卡 (Cal/kcal)',
+                'kilowatt-hour': '千瓦時 (kWh)', electronvolt: '電子伏特 (eV)'
+            },
+            power: {
+                watt: '瓦特 (W)', kilowatt: '千瓦 (kW)', megawatt: '百萬瓦 (MW)',
+                'horsepower (metric)': '公制馬力', 'horsepower (mechanical)': '機械馬力'
+            },
+            pressure: {
+                pascal: '帕斯卡 (Pa)', kilopascal: '千帕 (kPa)', megapascal: '百萬帕 (MPa)',
+                psi: '磅/平方英吋 (psi)', bar: '巴 (bar)', atmosphere: '大氣壓 (atm)', torr: '托 (Torr)'
+            },
+            frequency: {
+                hertz: '赫茲 (Hz)', kilohertz: '千赫茲 (kHz)', megahertz: '兆赫茲 (MHz)', gigahertz: '吉赫茲 (GHz)'
+            },
+            speed: {
+                'meter/second': '公尺/秒 (m/s)', 'kilometer/hour': '公里/小時 (km/h)', 'miles/hour': '英里/小時 (mph)',
+                knot: '節 (kn)', mach: '馬赫'
+            }
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDarkModePreference();
+            loadLastTab(); // Load the last active tab
+            populateUnits(); // Populate units for the initial category
+            convertUnit(); // Perform initial conversion
+            // Add keyboard support for calculator
+            document.addEventListener('keydown', handleCalculatorKeyboard);
+        });
+
+        // --- Tab Switching Logic ---
+        function showTab(tabId) {
+            const tabs = ['converter', 'calculator'];
+            tabs.forEach(tab => {
+                const section = document.getElementById(`${tab}Section`);
+                const button = document.getElementById(`${tab}TabBtn`);
+                if (tab === tabId) {
+                    section.classList.remove('hidden');
+                    button.classList.add('active');
+                    localStorage.setItem(`${KEY_PREFIX}lastTab`, tabId); // Save last active tab
+                    if (tabId === 'calculator') {
+                        calculatorDisplay.focus(); // Focus calculator display when active
+                    }
+                } else {
+                    section.classList.add('hidden');
+                    button.classList.remove('active');
+                }
+            });
+        }
+
+        function loadLastTab() {
+            const lastTab = localStorage.getItem(`${KEY_PREFIX}lastTab`) || 'converter';
+            showTab(lastTab);
+        }
+
+        // --- Unit Converter Functions ---
+        function populateUnits() {
+            const category = unitCategorySelect.value;
+            const units = unitConversions[category];
+
+            fromUnitSelect.innerHTML = '';
+            toUnitSelect.innerHTML = '';
+
+            for (const unitKey in units) {
+                const displayName = unitDisplayNames[category][unitKey];
+                const optionFrom = document.createElement('option');
+                optionFrom.value = unitKey;
+                optionFrom.textContent = displayName;
+                fromUnitSelect.appendChild(optionFrom);
+
+                const optionTo = document.createElement('option');
+                optionTo.value = unitKey;
+                optionTo.textContent = displayName;
+                toUnitSelect.appendChild(optionTo);
+            }
+
+            // Set default selected units (e.g., first unit in list)
+            fromUnitSelect.value = Object.keys(units)[0];
+            toUnitSelect.value = Object.keys(units)[0];
+        }
+
+        function convertUnit() {
+            const value = parseFloat(converterValueInput.value);
+            if (isNaN(value)) {
+                converterResultDiv.textContent = '請輸入有效數值';
+                return;
+            }
+
+            const category = unitCategorySelect.value;
+            const fromUnit = fromUnitSelect.value;
+            const toUnit = toUnitSelect.value;
+
+            if (category === 'temperature') {
+                // Temperature conversion is special as it's not linear
+                const fromUnitObj = unitConversions.temperature[fromUnit];
+
+                // Convert input to Celsius (base for internal calculations)
+                let celsiusValue;
+                if (fromUnit === 'celsius') celsiusValue = value;
+                else if (fromUnit === 'fahrenheit') celsiusValue = fromUnitObj.toBase(value);
+                else if (fromUnit === 'kelvin') celsiusValue = fromUnitObj.toBase(value);
+                else if (fromUnit === 'rankine') celsiusValue = fromUnitObj.toBase(value);
+
+
+                // Convert from Celsius (base) to target unit
+                let convertedValue;
+                if (toUnit === 'celsius') convertedValue = celsiusValue;
+                else if (toUnit === 'fahrenheit') convertedValue = unitConversions.temperature.celsius.toFahrenheit(celsiusValue);
+                else if (toUnit === 'kelvin') convertedValue = unitConversions.temperature.celsius.toKelvin(celsiusValue);
+                else if (toUnit === 'rankine') convertedValue = unitConversions.temperature.celsius.toRankine(celsiusValue);
+                else convertedValue = '錯誤'; // Should not happen
+
+                converterResultDiv.textContent = convertedValue.toFixed(6); // Format to 6 decimal places for precision
+            } else {
+                // Linear conversions for other categories
+                const fromRate = unitConversions[category][fromUnit];
+                const toRate = unitConversions[category][toUnit];
+
+                if (fromRate === undefined || toRate === undefined) {
+                    converterResultDiv.textContent = '無效的單位';
+                    return;
+                }
+
+                const result = (value * fromRate) / toRate;
+                converterResultDiv.textContent = result.toFixed(6); // Format to 6 decimal places
+            }
+        }
+
+        // --- Scientific Calculator Functions ---
+        let currentExpression = '0';
+        let memory = 0; // Calculator memory
+
+        function appendToDisplay(char) {
+            // Check if the display currently shows an error message
+            if (calculatorDisplay.value.startsWith('錯誤')) { // Modified to check for any error message
+                calculatorDisplay.value = '0'; // Reset to '0'
+                currentExpression = '0'; // Reset expression
+            }
+
+            if (calculatorDisplay.value === '0' && char !== '.' && !isOperator(char) && char !== '(' && char !== 'Math.PI' && char !== 'Math.E' && !char.startsWith('Math.')) { // Added Math. check
+                calculatorDisplay.value = char;
+            } else {
+                // Prevent multiple leading zeros
+                if (calculatorDisplay.value === '0' && char === '0') return;
+                // Prevent multiple decimals in a number
+                if (char === '.' && (calculatorDisplay.value.endsWith('.') || isNaN(calculatorDisplay.value.slice(-1)))) return;
+                // Prevent operators right after another operator (except for +/-)
+                const lastChar = calculatorDisplay.value.slice(-1);
+                if (isOperator(char) && isOperator(lastChar) && char !== '-' && char !== '+') {
+                    // Replace last operator if new one is pressed
+                    calculatorDisplay.value = calculatorDisplay.value.slice(0, -1) + char;
+                } else if (char === '(' && (/\d|\./.test(lastChar) || lastChar === ')')) {
+                    // Automatically insert multiplication if a number or ')' is followed by '('
+                    calculatorDisplay.value += '*' + char;
+                } else if (char === 'Math.PI' || char === 'Math.E') {
+                    // If a number or ')' is before PI/E, insert multiplication
+                    if (/\d|\./.test(lastChar) || lastChar === ')') {
+                         calculatorDisplay.value += '*' + char;
+                    } else {
+                        calculatorDisplay.value += char;
+                    }
+                } else if (char.startsWith('Math.') && /\d|\./.test(lastChar)) { // For functions like Math.sqrt(
+                    // If a number is before a function, insert multiplication
+                    calculatorDisplay.value += '*' + char;
+                } else if (char === '**2' || char === '**3') {
+                    // Handle x^2, x^3 by appending to the last number
+                    if (/\d|\./.test(lastChar) || lastChar === ')') {
+                        calculatorDisplay.value += char;
+                    } else {
+                        showMessage('請先輸入一個數字', 'orange');
+                    }
+                } else if (char === '**') {
+                     if (/\d|\./.test(lastChar) || lastChar === ')') {
+                        calculatorDisplay.value += char;
+                    } else {
+                        showMessage('請先輸入一個數字', 'orange');
+                    }
+                }
+                else {
+                    calculatorDisplay.value += char;
+                }
+            }
+            currentExpression = calculatorDisplay.value;
+        }
+
+        function isOperator(char) {
+            return ['+', '-', '*', '/', '%', '**'].includes(char);
+        }
+
+        function clearDisplay() {
+            calculatorDisplay.value = '0';
+            currentExpression = '0';
+        }
+
+        function calculateResult() {
+            try {
+                let expression = currentExpression
+                    .replace(/×/g, '*')
+                    .replace(/÷/g, '/');
+
+                // Handle factorial (n!)
+                expression = expression.replace(/(\d+)!/g, (match, num) => {
+                    return factorial(parseInt(num));
+                });
+
+                // Auto-close unclosed parentheses for functions like Math.sin(, Math.sqrt(
+                let openParens = (expression.match(/\(/g) || []).length;
+                let closeParens = (expression.match(/\)/g) || []).length;
+                for (let i = 0; i < openParens - closeParens; i++) {
+                    expression += ')';
+                }
+
+                // Basic validation for eval: only allow numbers, operators, Math properties/methods, and spaces
+                // This regex is more permissive but still tries to prevent arbitrary JS code.
+                // For a truly secure calculator with user input, a dedicated math expression parser is recommended.
+                if (!/^[0-9+\-*/%.() ]+$|^(Math\.(sin|cos|tan|asin|acos|atan|log10|log|exp|sqrt|cbrt|PI|E)|[+\-*/%.() ]|\*\*)+$/.test(expression)) {
+                    showMessage('錯誤: 無效輸入或不支援的函數', 'red');
+                    calculatorDisplay.value = '錯誤: 無效輸入';
+                    currentExpression = '0';
+                    return;
+                }
+
+
+                const result = eval(expression);
+
+                if (isNaN(result) || !isFinite(result)) {
+                    calculatorDisplay.value = '錯誤: 無法計算';
+                    currentExpression = '0';
+                } else {
+                    calculatorDisplay.value = result;
+                    currentExpression = result.toString(); // Store result for chaining operations
+                }
+            } catch (error) {
+                console.error("Calculator error:", error);
+                calculatorDisplay.value = '錯誤';
+                currentExpression = '0';
+            }
+        }
+
+        function toggleSign() {
+            // Check if the display currently shows an error message
+            if (calculatorDisplay.value.startsWith('錯誤')) {
+                calculatorDisplay.value = '-0'; // Start with -0
+                currentExpression = '-0';
+                return;
+            }
+
+            // Find the last number or parenthesized expression
+            const match = currentExpression.match(/(\d+\.?\d*|\(.*\))([+\-*/%]?)$/);
+            if (match) {
+                const lastPart = match[1];
+                const operator = match[2];
+                if (lastPart.startsWith('(') && lastPart.endsWith(')')) {
+                    // If it's a parenthesized expression, toggle sign inside
+                    const inner = lastPart.slice(1, -1);
+                    currentExpression = currentExpression.slice(0, -lastPart.length) + `(-(${inner}))`;
+                } else {
+                    // Toggle sign of the number
+                    currentExpression = currentExpression.slice(0, -lastPart.length) + `(-${lastPart})`;
+                }
+            } else if (currentExpression === '0') {
+                currentExpression = '-0';
+            } else {
+                // If no clear number, try to prepend '-'
+                currentExpression = '-' + currentExpression;
+            }
+            calculatorDisplay.value = currentExpression;
+        }
+
+        // Factorial function
+        function factorial(n) {
+            if (n < 0) return NaN;
+            if (n === 0 || n === 1) return 1;
+            if (n > 170) { // Factorial of 171 is too large for standard JS numbers
+                showMessage('數字過大，無法計算階乘', 'orange');
+                return Infinity;
+            }
+            let res = 1;
+            for (let i = 2; i <= n; i++) {
+                res *= i;
+            }
+            return res;
+        }
+
+        // Memory functions
+        function memoryOperation(op) {
+            try {
+                const currentValue = parseFloat(calculatorDisplay.value);
+                if (isNaN(currentValue)) {
+                    showMessage('無效數值', 'orange');
+                    return;
+                }
+
+                switch (op) {
+                    case 'M+':
+                        memory += currentValue;
+                        showMessage(`記憶體: ${memory.toFixed(2)} (M+)`, 'blue');
+                        break;
+                    case 'M-':
+                        memory -= currentValue;
+                        showMessage(`記憶體: ${memory.toFixed(2)} (M-)`, 'blue');
+                        break;
+                    case 'MR':
+                        calculatorDisplay.value = memory.toString();
+                        currentExpression = memory.toString();
+                        showMessage(`從記憶體讀取: ${memory.toFixed(2)}`, 'blue');
+                        break;
+                    case 'MC':
+                        memory = 0;
+                        showMessage('記憶體已清除', 'blue');
+                        break;
+                }
+            } catch (error) {
+                showMessage('記憶體操作錯誤', 'red');
+                console.error("Memory operation error:", error);
+            }
+        }
+
+        // Keyboard support for calculator
+        function handleCalculatorKeyboard(event) {
+            if (document.getElementById('calculatorSection').classList.contains('hidden')) {
+                return; // Only handle if calculator is active
+            }
+
+            const key = event.key;
+            const display = calculatorDisplay.value;
+
+            // Numbers and basic operators
+            if (/[0-9]/.test(key)) {
+                appendToDisplay(key);
+            } else if (key === '.') {
+                appendToDisplay('.');
+            } else if (key === '+') {
+                appendToDisplay('+');
+            } else if (key === '-') {
+                appendToDisplay('-');
+            } else if (key === '*') {
+                appendToDisplay('*');
+            } else if (key === '/') {
+                appendToDisplay('/');
+            } else if (key === 'Enter' || key === '=') {
+                calculateResult();
+            } else if (key === 'Backspace') {
+                if (display.length > 1 && !display.startsWith('錯誤')) { // Don't backspace error message
+                    calculatorDisplay.value = display.slice(0, -1);
+                    currentExpression = calculatorDisplay.value;
+                } else {
+                    clearDisplay(); // Clear if error or single char
+                }
+            } else if (key === '(') {
+                appendToDisplay('(');
+            } else if (key === ')') {
+                appendToDisplay(')');
+            } else if (key === '%') {
+                appendToDisplay('%');
+            }
+            // Prevent default behavior for handled keys to avoid issues (e.g., spacebar scrolling)
+            if (/[0-9+\-*/.=()]/.test(key) || key === 'Enter' || key === 'Backspace' || key === '%') {
+                event.preventDefault();
+            }
+        }
+
+
+        // --- Dark Mode Functionality ---
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const isDarkMode = document.body.classList.contains('dark');
+            localStorage.setItem(`${KEY_PREFIX}darkMode`, isDarkMode ? 'enabled' : 'disabled');
+            darkModeText.textContent = isDarkMode ? '淺色模式' : '深色模式';
+            showMessage(isDarkMode ? '已切換到深色模式。' : '已切換到淺色模式。', 'blue');
+        }
+
+        function loadDarkModePreference() {
+            const preference = localStorage.getItem(`${KEY_PREFIX}darkMode`);
+            if (preference === 'enabled') {
+                document.body.classList.add('dark');
+                darkModeText.textContent = '淺色模式';
+            } else {
+                darkModeText.textContent = '深色模式';
+            }
+        }
+
+        // --- Custom Message Box (replacing alert/confirm/prompt) ---
+        function showMessage(message, type = 'info') {
+            const messageBox = document.createElement('div');
+            messageBox.textContent = message;
+            let bgColorClass = '';
+            switch (type) {
+                case 'green': bgColorClass = 'bg-green-500'; break;
+                case 'red': bgColorClass = 'bg-red-500'; break;
+                case 'blue': bgColorClass = 'bg-blue-500'; break;
+                case 'orange': bgColorClass = 'bg-orange-500'; break;
+                default: bgColorClass = 'bg-gray-700'; break;
+            }
+            messageBox.className = `fixed bottom-4 right-4 ${bgColorClass} text-white px-4 py-2 rounded-md shadow-lg transition-opacity duration-500 ease-out opacity-0 z-50`;
+            document.body.appendChild(messageBox);
+
+            setTimeout(() => {
+                messageBox.classList.remove('opacity-0');
+                messageBox.classList.add('opacity-100');
+            }, 10);
+
+            setTimeout(() => {
+                messageBox.classList.remove('opacity-100');
+                messageBox.classList.add('opacity-0');
+                messageBox.addEventListener('transitionend', () => messageBox.remove());
+            }, 3000); // 3 seconds before fading out
+        }
+    </script>
+</body>
+</html>
