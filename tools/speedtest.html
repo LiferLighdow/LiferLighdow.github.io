@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>網路速度測試器</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 自訂字體 */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* 隱藏滾動條 */
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-400 to-purple-600 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center transform transition-all duration-300 hover:scale-105">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-6">網路速度測試</h1>
+
+        <div class="space-y-4 mb-8">
+            <div class="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-inner">
+                <span class="text-xl font-semibold text-gray-700">下載速度:</span>
+                <span id="downloadSpeed" class="text-2xl font-bold text-green-600">-- Mbps</span>
+            </div>
+            <div class="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-inner">
+                <span class="text-xl font-semibold text-gray-700">上傳速度:</span>
+                <span id="uploadSpeed" class="text-2xl font-bold text-blue-600">-- Mbps</span>
+            </div>
+            <div class="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-inner">
+                <span class="text-xl font-semibold text-gray-700">延遲 (Ping):</span>
+                <span id="ping" class="text-2xl font-bold text-red-600">-- ms</span>
+            </div>
+        </div>
+
+        <button id="startButton" class="bg-gradient-to-r from-green-500 to-teal-600 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-300">
+            開始測試
+        </button>
+
+        <div id="loadingIndicator" class="mt-6 hidden">
+            <div class="flex items-center justify-center space-x-2">
+                <div class="w-4 h-4 bg-blue-500 rounded-full animate-bounce"></div>
+                <div class="w-4 h-4 bg-green-500 rounded-full animate-bounce delay-150"></div>
+                <div class="w-4 h-4 bg-red-500 rounded-full animate-bounce delay-300"></div>
+                <span class="text-gray-700 text-lg ml-2">測試中...</span>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            發生錯誤，請重試。
+        </div>
+    </div>
+
+    <script>
+        // 獲取 DOM 元素
+        const startButton = document.getElementById('startButton');
+        const downloadSpeedElement = document.getElementById('downloadSpeed');
+        const uploadSpeedElement = document.getElementById('uploadSpeed');
+        const pingElement = document.getElementById('ping');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // 測試設定
+        const PING_URL = 'https://www.google.com/favicon.ico'; // 用於 Ping 測試的小型、可快取檔案
+        const DOWNLOAD_SIZE_MB = 10; // 下載測試檔案大小 (MB)
+        const UPLOAD_SIZE_MB = 5;    // 上傳測試檔案大小 (MB)
+        const PING_COUNT = 5;        // Ping 測試次數
+
+        /**
+         * 顯示錯誤訊息
+         * @param {string} message - 要顯示的錯誤訊息
+         */
+        function displayError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+
+        /**
+         * 隱藏錯誤訊息
+         */
+        function hideError() {
+            errorMessage.classList.add('hidden');
+        }
+
+        /**
+         * 生成指定大小的隨機資料 Blob
+         * @param {number} sizeMB - Blob 的大小 (MB)
+         * @returns {Blob} - 隨機資料 Blob
+         */
+        function generateRandomBlob(sizeMB) {
+            const sizeBytes = sizeMB * 1024 * 1024;
+            const data = new Uint8Array(sizeBytes);
+            for (let i = 0; i < sizeBytes; i++) {
+                data[i] = Math.floor(Math.random() * 256);
+            }
+            return new Blob([data], { type: 'application/octet-stream' });
+        }
+
+        /**
+         * 執行下載速度測試
+         * @returns {Promise<number>} - 下載速度 (Mbps)
+         */
+        async function testDownloadSpeed() {
+            const blob = generateRandomBlob(DOWNLOAD_SIZE_MB);
+            const url = URL.createObjectURL(blob); // 創建一個本地 URL 來模擬下載
+
+            const startTime = performance.now();
+            try {
+                const response = await fetch(url + '?cachebuster=' + Date.now()); // 添加 cachebuster 防止快取
+                if (!response.ok) {
+                    throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
+                }
+                const data = await response.blob();
+                const endTime = performance.now();
+                URL.revokeObjectURL(url); // 釋放 URL 物件
+
+                const durationSeconds = (endTime - startTime) / 1000;
+                const dataSizeBits = data.size * 8; // 轉換為位元
+                const speedMbps = (dataSizeBits / durationSeconds) / (1024 * 1024);
+                return speedMbps;
+            } catch (error) {
+                console.error("下載測試失敗:", error);
+                displayError("下載測試失敗。");
+                throw error;
+            }
+        }
+
+        /**
+         * 執行上傳速度測試
+         * @returns {Promise<number>} - 上傳速度 (Mbps)
+         */
+        async function testUploadSpeed() {
+            const blob = generateRandomBlob(UPLOAD_SIZE_MB);
+            const startTime = performance.now();
+            try {
+                // 模擬上傳到一個不存在的 URL，主要測量客戶端處理和網路延遲
+                const response = await fetch('https://httpbin.org/post', { // 使用 httpbin.org/post 模擬一個接收 POST 請求的服務
+                    method: 'POST',
+                    body: blob,
+                    headers: {
+                        'Content-Type': 'application/octet-stream'
+                    }
+                });
+
+                // 即使 httpbin.org/post 會返回 200 OK，我們主要關心的是發送資料所需的時間
+                if (!response.ok) {
+                     // 如果 httpbin.org/post 遇到問題，可能會返回非 200 狀態
+                    console.warn(`上傳模擬請求返回非 OK 狀態: ${response.status}`);
+                }
+                await response.text(); // 讀取響應以確保整個請求完成
+
+                const endTime = performance.now();
+                const durationSeconds = (endTime - startTime) / 1000;
+                const dataSizeBits = blob.size * 8; // 轉換為位元
+                const speedMbps = (dataSizeBits / durationSeconds) / (1024 * 1024);
+                return speedMbps;
+            } catch (error) {
+                console.error("上傳測試失敗:", error);
+                displayError("上傳測試失敗。");
+                throw error;
+            }
+        }
+
+        /**
+         * 執行 Ping 測試
+         * @returns {Promise<number>} - 平均延遲 (ms)
+         */
+        async function testPing() {
+            let totalLatency = 0;
+            let successfulPings = 0;
+
+            for (let i = 0; i < PING_COUNT; i++) {
+                const startTime = performance.now();
+                try {
+                    // 添加 cachebuster 確保每次都是新的請求
+                    const response = await fetch(PING_URL + '?cachebuster=' + Date.now());
+                    if (!response.ok) {
+                        throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
+                    }
+                    const endTime = performance.now();
+                    totalLatency += (endTime - startTime);
+                    successfulPings++;
+                } catch (error) {
+                    console.warn(`Ping 測試 #${i + 1} 失敗:`, error);
+                    // 不拋出錯誤，允許其他 Ping 繼續
+                }
+                // 稍微延遲一下，避免對伺服器造成過大壓力
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            if (successfulPings === 0) {
+                displayError("Ping 測試失敗。");
+                throw new Error("所有 Ping 測試均失敗。");
+            }
+
+            return totalLatency / successfulPings;
+        }
+
+        /**
+         * 執行所有測試並更新 UI
+         */
+        async function runSpeedTest() {
+            startButton.disabled = true;
+            loadingIndicator.classList.remove('hidden');
+            hideError();
+
+            downloadSpeedElement.textContent = '-- Mbps';
+            uploadSpeedElement.textContent = '-- Mbps';
+            pingElement.textContent = '-- ms';
+
+            try {
+                // 執行下載測試
+                const downloadSpeed = await testDownloadSpeed();
+                downloadSpeedElement.textContent = `${downloadSpeed.toFixed(2)} Mbps`;
+
+                // 執行上傳測試
+                const uploadSpeed = await testUploadSpeed();
+                uploadSpeedElement.textContent = `${uploadSpeed.toFixed(2)} Mbps`;
+
+                // 執行 Ping 測試
+                const pingLatency = await testPing();
+                pingElement.textContent = `${pingLatency.toFixed(0)} ms`;
+
+            } catch (error) {
+                console.error("速度測試過程中發生錯誤:", error);
+                // 錯誤訊息已在各個測試函數中處理
+            } finally {
+                loadingIndicator.classList.add('hidden');
+                startButton.disabled = false;
+            }
+        }
+
+        // 為按鈕添加事件監聽器
+        startButton.addEventListener('click', runSpeedTest);
+
+        // 確保視窗載入完成後執行
+        window.onload = function() {
+            // 可以選擇在載入時自動執行測試，或者只等待使用者點擊按鈕
+            // runSpeedTest();
+        };
+    </script>
+</body>
+</html>
