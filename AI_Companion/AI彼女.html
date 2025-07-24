@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="auto">
+<head>
+  <meta charset="UTF-8">
+  <title>AI彼女育成計畫</title>
+  <style>
+    body {
+      font-family: "Noto Sans JP", "Microsoft JhengHei", sans-serif;
+      background: url('https://images.unsplash.com/photo-1604761864780-937ac57a20db?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      backdrop-filter: blur(10px);
+    }
+    #main {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    button {
+      margin: 10px 10px 0 0;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ff80ab;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff4081;
+    }
+    #chatbox {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+      color: #fff;
+    }
+    .user, .ai {
+      padding: 6px 10px;
+      margin: 6px 0;
+      border-radius: 8px;
+    }
+    .user {
+      background-color: rgba(128, 222, 234, 0.6);
+      text-align: right;
+    }
+    .ai {
+      background-color: rgba(255, 171, 145, 0.6);
+      text-align: left;
+    }
+  </style>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body>
+  <div id="main">
+    <h1>AI彼女育成計畫</h1>
+    <div id="character-select"></div>
+    <div id="affection"></div>
+    <div id="growth"></div>
+    <div id="event"></div>
+    <div id="chatbox"></div>
+    <div id="choices"></div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+  apiKey: "AIzaSyCyzF-2yREAHq9SbJYCSB5CFogJnheoMx8",
+  authDomain: "ai-girl-3ac40.firebaseapp.com",
+  projectId: "ai-girl-3ac40",
+  storageBucket: "ai-girl-3ac40.firebasestorage.app",
+  messagingSenderId: "247418297855",
+  appId: "1:247418297855:web:a1c7415107ea9416e65bca",
+  measurementId: "G-PLF2STJ9VR"
+};
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const uid = `user_${Math.random().toString(36).substring(2)}`;
+    const userRef = db.ref('users/' + uid);
+
+    let affection = 0;
+    let growth = 1;
+    let messages = [];
+    let currentCharacter = null;
+    let userLang = navigator.language.startsWith("ja") ? "ja" :
+                   navigator.language.startsWith("zh-TW") ? "zh-tw" :
+                   navigator.language.startsWith("zh") ? "zh" : "en";
+
+    const characterProfiles = {
+      miku: {
+        name: { ja: "ミク", en: "Miku", zh: "小米", "zh-tw": "小米" },
+        prompt: {
+          ja: "あなたは元気で明るいAI彼女ミクです。元気いっぱいな返事をしてね！",
+          en: "You are Miku, a cheerful and energetic AI girlfriend. Respond playfully.",
+          zh: "你是小米，一位充滿朝氣的AI女友，請用活潑的語氣回應。",
+          "zh-tw": "你是小米，一位充滿朝氣的AI女友，請用活潑的語氣回應。"
+        },
+        events: [
+          { threshold: 20, text: { ja: "ミクが笑顔になった！", en: "Miku smiles brightly!", zh: "小米露出了笑容！", "zh-tw": "小米露出了笑容！" } },
+          { threshold: 40, text: { ja: "ミクが手を握った！", en: "Miku takes your hand!", zh: "小米牽起了你的手！", "zh-tw": "小米牽起了你的手！" } }
+        ]
+      }
+    };
+
+    function t(map) {
+      return map[userLang] || map.en;
+    }
+
+    function saveState() {
+      userRef.set({ affection, growth, messages, character: currentCharacter });
+    }
+
+    function loadState() {
+      userRef.once('value').then(snapshot => {
+        const data = snapshot.val();
+        if (data) {
+          affection = data.affection;
+          growth = data.growth;
+          messages = data.messages || [];
+          currentCharacter = data.character;
+          updateDisplay();
+        }
+      });
+    }
+
+    function selectCharacter(name) {
+      currentCharacter = name;
+      updateDisplay();
+      saveState();
+    }
+
+    function updateDisplay() {
+      document.getElementById("character-select").style.display = "none";
+      document.getElementById("affection").innerText = `${t({ja:"好感度", zh:"好感度", "zh-tw":"好感度", en:"Affection"})}：${affection}`;
+      document.getElementById("growth").innerText = `${t({ja:"成長Lv.", zh:"等級", "zh-tw":"等級", en:"Level"})}${growth}`;
+      document.getElementById("choices").innerHTML = `<button onclick='openChat()'>${t({ja:"話しかける", zh:"聊天", "zh-tw":"聊天", en:"Talk"})}</button>`;
+      updateEvent();
+      renderChat();
+    }
+
+    function updateEvent() {
+      const e = characterProfiles[currentCharacter].events.find(e => e.threshold <= affection && !e.triggered);
+      if (e) {
+        e.triggered = true;
+        document.getElementById("event").innerText = t(e.text);
+      }
+    }
+
+    async function openChat() {
+      const input = prompt(t({ja:"何を話す？", zh:"你想說什麼？", "zh-tw":"你想說什麼？", en:"What do you say?"}));
+      if (!input) return;
+
+      messages.push({ role: "user", content: input });
+      renderChat();
+
+      const prompt = characterProfiles[currentCharacter].prompt[userLang] || characterProfiles[currentCharacter].prompt.en;
+
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `sk- 15FfBO3fASijneuw7d7cF5B0F60247F6835c65C7Ea10Db78`
+        },
+        body: JSON.stringify({
+          model: "gpt-4",
+          messages: [
+            { role: "system", content: prompt },
+            ...messages
+          ]
+        })
+      });
+      const data = await response.json();
+      const reply = data.choices?.[0]?.message?.content || t({ja:"（彼女は黙っている）", zh:"（她沉默了）", "zh-tw":"（她沉默了）", en:"(She is quiet...)"});
+
+      messages.push({ role: "assistant", content: reply });
+      affection += 5;
+      if (affection >= growth * 40) growth++;
+
+      updateDisplay();
+      saveState();
+    }
+
+    function renderChat() {
+      const box = document.getElementById("chatbox");
+      box.innerHTML = messages.map(m => `<div class='${m.role === "user" ? "user" : "ai"}'>${m.content}</div>`).join("");
+      box.scrollTop = box.scrollHeight;
+    }
+
+    window.onload = () => {
+      loadState();
+      let html = `${t({ja:"AI彼女を選択：", zh:"選擇AI女友：", "zh-tw":"選擇AI女友：", en:"Choose your AI girl:"})}<br/>`;
+      for (let k in characterProfiles) {
+        html += `<button onclick='selectCharacter("${k}")'>${characterProfiles[k].name[userLang]}</button>`;
+      }
+      document.getElementById("character-select").innerHTML = html;
+    }
+  </script>
+</body>
+</html>
