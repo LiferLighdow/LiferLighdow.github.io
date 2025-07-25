@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>小說閱讀</title> <!-- 預設標題，將由JS更新 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" xintegrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- 修正 Novel.css 的路徑：從 novel_reader.html (繁中網頁/Novels/) 需要回溯兩層到 my_project_root/ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+Marker+Gothic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../Novel.css"> 
+</head>
+<body>
+
+<!-- Top Bar Navigation -->
+<div class="bar-nav">
+    <ul>
+        <!-- 導覽連結的路徑也需要修正，從 novel_reader.html (繁中網頁/Novels/) 出發 -->
+        <li><a href="../../../index.html">首頁</a></li>
+        <li><a href="../../../About.html">關於</a></li>
+        <li><a href="../../Index/繁中網頁.html">服務</a></li>
+        <li><a href="../../../Contact.html">聯絡</a></li>
+    </ul>
+</div>
+
+<div id="container">
+    <button id="sidebar-toggle-button"><i class="fas fa-bars"></i></button>
+    <div id="sidebar">
+        <h2>小說列表</h2>
+        <div class="collapsible">
+            <button class="toggle-button">點擊展開</button>
+            <div id="novel-list-container"></div> <!-- 放置小說列表的容器 -->
+        </div>
+    </div>
+    <div id="content">
+        <h1 class="chapter-title" id="chapter-title"></h1>
+
+        <!-- 音訊播放器和字體控制項 (使用 Flexbox 佈局) -->
+        <div id="audio-controls-container">
+            <div id="audio-player">
+                <audio controls>
+                    <source src="" type="audio/mpeg"> <!-- 音訊來源將由JS動態設定 -->
+                    您的瀏覽器不支援音訊播放。
+                </audio>
+            </div>
+
+            <div id="font-controls">
+                <button id="decrease-font">A-</button>
+                <button id="increase-font">A+</button>
+                <span id="font-size-value">1.0rem</span> <!-- 顯示字體大小 -->
+            </div>
+        </div>
+
+        <!-- 小說內容將被動態載入到此處 -->
+        <div id="chapter-content">
+            <p>載入中...</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2025 Lifer_Lighdow. All rights reserved.</p>
+</footer>
+
+<!-- 修正 Novel.js 的路徑：從 novel_reader.html (繁中網頁/Novels/) 需要回溯兩層到 my_project_root/ -->
+<script src="../../Novel.js"></script>
+<!-- novel_list.js 將由 Novel.js 動態載入，因此此處不再直接引用 -->
+
+</body>
+</html>
