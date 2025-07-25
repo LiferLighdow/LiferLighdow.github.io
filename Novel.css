@@ -7,22 +7,13 @@
 
 /* 基礎樣式 */
 body {
-    font-family: 'MyCustomFont', sans-serif; /* 使用自定義字體，並提供通用字體回退 */
+    font-family: 'LXGW Marker Gothic', sans-serif; /* 使用自定義字體，並提供通用字體回退 */
     line-height: 1.8; /* 增加行高，提升閱讀舒適度 */
     margin: 0;
     background-color: #eef2f7; /* 淺藍灰色背景，更柔和 */
     color: #333; /* 深灰色文字，提高對比度 */
     scroll-behavior: smooth; /* 平滑滾動效果 */
     transition: background-color 0.3s ease, color 0.3s ease; /* 為暗色模式切換添加過渡 */
-}
-
-/* 定義自定義字體 */
-@font-face {
-    font-family: 'MyCustomFont';
-    src: url('fonts/myfont.woff2') format('woff2'), url('fonts/myfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap; /* 確保字體載入時的顯示行為 */
 }
 
 /* 主容器樣式 */
