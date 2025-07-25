@@ -6,21 +6,21 @@ const novelListData = [
             // 將 href 指向 novel_reader，並傳遞 series 和 chapter 參數（無副檔名）
             // 假設這個 novel_list.js 位於 my_project_root/繁中網頁/Novels/主線/
             // 而 novel_reader 位於 my_project_root/繁中網頁/Novels/
-            // 所以相對路徑是 ../novel_reader
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel1_content', title: '1.明與暗的獨白' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel2_content', title: '2.幻色的誓言' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel3_content', title: '3.留言牆之誤' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel4_content', title: '4.雨中狹路相逢' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel5_content', title: '5.裂縫中的教室' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel6_content', title: '6.真相的輪廓' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel7_content', title: '7.裂痕的兩端' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel8_content', title: '8.相遇的距離' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel9_content', title: '9.雨中之間' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel10_content', title: '10.消失的光' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel11_content', title: '11.聲音的距離' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel12_content', title: '12.空氣中的聲音' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel13_content', title: '13.再見與遲疑' },
-            { href: '../novel_reader?series=錯位的愛恨&chapter=novel14_content', title: '14.跨越光線' },
+            // 所以相對路徑是 novel_reader
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel1_content', title: '1.明與暗的獨白' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel2_content', title: '2.幻色的誓言' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel3_content', title: '3.留言牆之誤' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel4_content', title: '4.雨中狹路相逢' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel5_content', title: '5.裂縫中的教室' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel6_content', title: '6.真相的輪廓' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel7_content', title: '7.裂痕的兩端' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel8_content', title: '8.相遇的距離' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel9_content', title: '9.雨中之間' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel10_content', title: '10.消失的光' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel11_content', title: '11.聲音的距離' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel12_content', title: '12.空氣中的聲音' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel13_content', title: '13.再見與遲疑' },
+            { href: 'novel_reader?series=錯位的愛恨&chapter=novel14_content', title: '14.跨越光線' },
         ]
     },
 ];
