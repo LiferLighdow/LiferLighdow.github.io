@@ -19,6 +19,23 @@ const novelListData = [
             { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel13_content', title: '13.初嚐人間煙火' },
             { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel14_content', title: '14.夢魘的託夢' },
         ]
+	 },
+	 
+    {
+		  title: '《背下父親的尋》', // 這個將作為 series 參數的值
+        chapters: [
+            // 將 href 指向 novel_reader，並傳遞 series 和 chapter 參數（無副檔名）
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel15_content', title: '15.嵐的逆鱗' },
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel16_content', title: '16.恐懼的解藥' },
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel17_content', title: '17.夢魘的低語' },
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel18_content', title: '18.天使與夢魘的對弈' },
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel19_content', title: '19.歸零' },
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel20_content', title: '20.改變的開始' },
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel21_content', title: '21.兩年的救贖' },
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel22_content', title: '22.無聲的變化' },
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel23_content', title: '23.命運的羅網' },
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel24_content', title: '24.時空的行者' },
+        ]
     },
 ];
 
