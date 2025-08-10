@@ -1,40 +1,22 @@
 // 小說列表資料
 const novelListData = [
     {
-        title: '《背上鬼女兒的戀》', // 這個將作為 series 參數的值
+        title: '《背上鬼女兒的戀》',
         chapters: [
-            // 將 href 指向 novel_reader，並傳遞 series 和 chapter 參數（無副檔名）
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel1_content', title: '1.命運的捉弄' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel2_content', title: '2.月光下的幽影' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel3_content', title: '3.屋簷下的兩個世界' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel4_content', title: '4.兩個人的甜蜜時光' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel5_content', title: '5.尋找前世的答案' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel6_content', title: '6.血脈的羈絆與佔有的慾望' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel7_content', title: '7.前世鏡花水月' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel8_content', title: '8.天使的降臨與宿命的重逢' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel9_content', title: '9.跨越輪迴的親情與愛戀' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel10_content', title: '10.陽光下的新起點' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel11_content', title: '11.渴望的溫度' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel12_content', title: '12.天使的試煉（私戀）' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel13_content', title: '13.初嚐人間煙火' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel14_content', title: '14.夢魘的託夢' },
-        ]
-	 },
-	 
-    {
-		  title: '《背下父親的尋》', // 這個將作為 series 參數的值
-        chapters: [
-            // 將 href 指向 novel_reader，並傳遞 series 和 chapter 參數（無副檔名）
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel15_content', title: '15.嵐的逆鱗' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel16_content', title: '16.恐懼的解藥' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel17_content', title: '17.夢魘的低語' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel18_content', title: '18.天使與夢魘的對弈' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel19_content', title: '19.歸零' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel20_content', title: '20.改變的開始' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel21_content', title: '21.兩年的救贖' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel22_content', title: '22.無聲的變化' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel23_content', title: '23.命運的羅網' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel24_content', title: '24.時空的行者' },
+            { href: 'novel1.html', title: '1.命運的捉弄' },
+            { href: 'novel2.html', title: '2.月光下的幽影' },
+            { href: 'novel3.html', title: '3.屋簷下的兩個世界' },
+            { href: 'novel4.html', title: '4.兩個人的甜蜜時光' },
+            { href: 'novel5.html', title: '5.尋找前世的答案' },
+            { href: 'novel6.html', title: '6.血脈的羈絆與佔有的慾望' },
+            { href: 'novel7.html', title: '7.前世鏡花水月' },
+            { href: 'novel8.html', title: '8.天使的降臨與宿命的重逢' },
+            { href: 'novel9.html', title: '9.跨越輪迴的親情與愛戀' },
+				{ href: 'novel10.html', title: '10.陽光下的新起點' },
+            { href: 'novel11.html', title: '11.渴望的溫度' },
+            { href: 'novel12.html', title: '12.天使的試煉（私戀）' },
+            { href: 'novel13.html', title: '13.初嚐人間煙火' },
+            { href: 'novel14.html', title: '14.夢魘的託夢' },
         ]
     },
 ];
@@ -56,20 +38,13 @@ function insertNovelList() {
         // 在插入列表後，高亮顯示目前讀取的篇章
         const chapterLinks = novelListContainer.querySelectorAll('#chapter-list a');
         chapterLinks.forEach(link => {
-            // 由於 URL 現在沒有副檔名，需要調整判斷邏輯
-            const currentChapterParam = getUrlParameter('chapter'); // 獲取當前 URL 的 chapter 參數
-            const linkUrl = new URL(link.href);
-            const linkChapterParam = linkUrl.searchParams.get('chapter'); // 獲取連結的 chapter 參數
-
-            if (linkChapterParam === currentChapterParam) {
+            if (link.href === window.location.href) {
                 link.classList.add('active');
                 // 更新標題
                 const currentTitle = document.querySelector('h1.chapter-title');
                 if (currentTitle) {
                     currentTitle.textContent = link.dataset.title; // 更新網頁標題
                 }
-            } else {
-                link.classList.remove('active');
             }
         });
     } else {
@@ -77,15 +52,7 @@ function insertNovelList() {
     }
 }
 
-// 這裡的 window.addEventListener('load') 不再需要，因為 Novel.js 會在載入 novel_list.js 後統一處理
-// window.addEventListener('load', () => {
-//     insertNovelList();
-// });
-
-// Helper function to get URL parameters (從 Novel.js 複製過來，確保 novel_list.js 也能使用)
-function getUrlParameter(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    const results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-}
+// 在網頁載入完成後呼叫 insertNovelList()
+window.addEventListener('load', () => {
+    insertNovelList(); // 插入小說列表
+});
