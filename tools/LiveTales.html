@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互動式小說閱讀器</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 LXGW Marker Gothic (霞鹜文楷) 字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+Marker+Gothic&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for theming */
+        :root {
+            /* Default to light theme colors */
+            --bg-gradient-start: #f7f7f7;
+            --bg-gradient-end: #e0e0e0;
+            --book-bg: #ffffff;
+            --book-shadow-color: rgba(0, 0, 0, 0.1);
+            --book-border-color: rgba(0, 0, 0, 0.05);
+            --text-color: #333333;
+            --button-default-bg: #f0f0f0;
+            --button-default-text: #333;
+            --button-default-hover-bg: #e0e0e0;
+            --button-next-prev-bg: #dddddd;
+            --button-next-prev-text: #222;
+            --button-next-prev-hover-bg: #cccccc;
+            --button-generate-bg: #a0a0a0; /* More prominent for generate */
+            --button-generate-text: white;
+            --button-generate-hover-bg: #909090;
+            --button-disabled-bg: #e0e0e0;
+            --button-disabled-text: #b0b0b0;
+            --loading-bg: rgba(255, 255, 255, 0.95);
+            --spinner-color: #777777; /* Neutral grey for spinner */
+            --error-color: #d9534f;
+            --modal-bg: rgba(255, 255, 255, 0.98);
+            --modal-title-color: #2c3e50;
+            --modal-button-bg: #f5f5f5;
+            --modal-button-text: #444;
+            --modal-button-border: #ccc;
+            --modal-button-hover-bg: #eeeeee;
+        }
+
+        /* Dark theme colors */
+        body.dark-theme {
+            --bg-gradient-start: #1a1a1a;
+            --bg-gradient-end: #2a2a2a;
+            --book-bg: #0d0d0d;
+            --book-shadow-color: rgba(255, 255, 255, 0.05);
+            --book-border-color: rgba(255, 255, 255, 0.1);
+            --text-color: #eeeeee;
+            --button-default-bg: #333;
+            --button-default-text: #eee;
+            --button-default-hover-bg: #444;
+            --button-next-prev-bg: #222;
+            --button-next-prev-text: #eee;
+            --button-next-prev-hover-bg: #333;
+            --button-generate-bg: #555; /* More prominent for generate */
+            --button-generate-text: white;
+            --button-generate-hover-bg: #666;
+            --button-disabled-bg: #303030;
+            --button-disabled-text: #606060;
+            --loading-bg: rgba(0, 0, 0, 0.95);
+            --spinner-color: #aaaaaa; /* Neutral grey for spinner */
+            --error-color: #f7931e; /* Brighter for dark theme */
+            --modal-bg: rgba(0, 0, 0, 0.98);
+            --modal-title-color: #eeeeee;
+            --modal-button-bg: #2a2a2a;
+            --modal-button-text: #ddd;
+            --modal-button-border: #555;
+            --modal-button-hover-bg: #3a3a3a;
+        }
+
+        body {
+            font-family: 'LXGW Marker Gothic', sans-serif;
+            background: linear-gradient(to bottom right, var(--bg-gradient-start), var(--bg-gradient-end));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-y: auto; /* 網頁可捲動 */
+        }
+
+        .book-container {
+            width: 90%;
+            max-width: 850px;
+            min-height: 550px;
+            background-color: var(--book-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px var(--book-shadow-color);
+            display: flex;
+            flex-direction: column;
+            padding: 32px;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--book-border-color);
+            transform: scale(0.98);
+            animation: fadeInScale 0.8s ease-out forwards;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .book-page {
+            flex-grow: 1;
+            font-size: 1.15em; /* Default font size */
+            line-height: 1.9;
+            color: var(--text-color);
+            overflow-y: auto;
+            padding-right: 20px;
+            margin-bottom: 24px;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            transform-origin: center center;
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hide scrollbar but keep functionality */
+        .book-page::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .book-page::-webkit-scrollbar-track {
+            background: var(--book-bg);
+            border-radius: 5px;
+        }
+
+        .book-page::-webkit-scrollbar-thumb {
+            background: var(--book-border-color); /* Use book border color for thumb */
+            border-radius: 5px;
+        }
+
+        .book-page::-webkit-scrollbar-thumb:hover {
+            background: var(--book-border-color);
+            opacity: 0.8;
+        }
+
+        /* Page turn animations remain the same */
+        .turn-out-next {
+            transform: perspective(2500px) rotateY(-90deg);
+            transform-origin: right center;
+        }
+        .turn-in-next {
+            transform: perspective(2500px) rotateY(0deg);
+            transform-origin: right center;
+        }
+        .turn-out-prev {
+            transform: perspective(2500px) rotateY(90deg);
+            transform-origin: left center;
+        }
+        .turn-in-prev {
+            transform: perspective(2500px) rotateY(0deg);
+            transform-origin: left center;
+        }
+
+        .control-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .control-group.bottom-margin {
+            margin-bottom: 10px; /* Space between control rows */
+        }
+
+
+        .app-button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px var(--book-shadow-color);
+            color: var(--button-default-text);
+            background-color: var(--button-default-bg);
+        }
+
+        .app-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px var(--book-shadow-color);
+            background-color: var(--button-default-hover-bg);
+        }
+
+        .app-button:active:not(:disabled) {
+            transform: translateY(0px);
+            box-shadow: 0 2px 4px var(--book-shadow-color);
+        }
+
+        .app-button:disabled {
+            background-color: var(--button-disabled-bg);
+            color: var(--button-disabled-text);
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.8;
+        }
+
+        /* Specific button styles */
+        .app-button.next-prev {
+            background-color: var(--button-next-prev-bg);
+            color: var(--button-next-prev-text);
+        }
+        .app-button.next-prev:hover:not(:disabled) {
+            background-color: var(--button-next-prev-hover-bg);
+        }
+
+        .app-button.generate {
+            background-color: var(--button-generate-bg);
+            color: var(--button-generate-text);
+        }
+        .app-button.generate:hover:not(:disabled) {
+            background-color: var(--button-generate-hover-bg);
+        }
+
+        .app-button.utility {
+            background-color: var(--button-default-bg);
+            color: var(--button-default-text);
+        }
+        .app-button.utility:hover:not(:disabled) {
+            background-color: var(--button-default-hover-bg);
+        }
+
+        .loading-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--loading-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3em;
+            color: var(--text-color);
+            border-radius: 16px;
+            z-index: 20;
+            text-align: center;
+        }
+
+        .loading-indicator.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top-color: var(--spinner-color);
+            animation: spin 1s linear infinite;
+            position: relative;
+            margin-bottom: 15px;
+        }
+        /* Aesthetic improvements for spinner */
+        .spinner::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border-radius: 50%;
+            border: 3px solid rgba(0, 0, 0, 0.05);
+            border-top-color: var(--spinner-color);
+            animation: spin 1.5s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-display {
+            color: var(--error-color);
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        /* Modal overlay base styles */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            pointer-events: none;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .modal-overlay h2 {
+            font-size: 2.2em;
+            color: var(--modal-title-color);
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .modal-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .modal-button {
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 2px solid var(--modal-button-border);
+            background-color: var(--modal-button-bg);
+            color: var(--modal-button-text);
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px var(--book-shadow-color);
+        }
+
+        .modal-button:hover {
+            background-color: var(--modal-button-hover-bg);
+            color: var(--text-color); /* Text color from main theme */
+            box-shadow: 0 6px 12px var(--book-shadow-color);
+            transform: translateY(-2px);
+        }
+
+        /* Higher z-index for language selection modal */
+        #languageSelectionModal {
+            z-index: 40;
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            .book-container {
+                width: 95%;
+                padding: 20px;
+                min-height: 80vh;
+                max-height: 90vh;
+            }
+            .book-page {
+                font-size: 1.05em;
+                line-height: 1.8;
+                padding-right: 15px;
+                margin-bottom: 20px;
+            }
+            .app-button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+            .control-group {
+                gap: 12px;
+                margin-top: 15px;
+            }
+            .modal-overlay h2 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+            .modal-button {
+                padding: 12px 25px;
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .book-container {
+                padding: 15px;
+                min-height: 85vh;
+            }
+            .book-page {
+                font-size: 0.95em;
+                line-height: 1.7;
+            }
+            .app-button {
+                width: calc(50% - 6px);
+            }
+            .modal-overlay h2 {
+                font-size: 1.5em;
+            }
+            .modal-options {
+                gap: 10px;
+            }
+            .modal-button {
+                padding: 10px 20px;
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="book-container">
+        <div id="bookPage" class="book-page">
+            <!-- 小說內容將在這裡加載 -->
+        </div>
+        <div class="control-group bottom-margin">
+            <button id="prevBtn" class="app-button next-prev">上一頁</button>
+            <button id="nextBtn" class="app-button next-prev">下一頁</button>
+            <button id="generateBtn" class="app-button generate">生成下一頁</button>
+        </div>
+        <div class="control-group">
+            <button id="undoBtn" class="app-button utility">回到上一步</button>
+            <button id="selectStyleBtn" class="app-button utility">選擇風格</button>
+            <button id="fontSizeDownBtn" class="app-button utility">A-</button>
+            <button id="fontSizeUpBtn" class="app-button utility">A+</button>
+        </div>
+        <div id="loadingIndicator" class="loading-indicator hidden">
+            <div class="spinner"></div>
+            <p>正在努力生成小說內容...</p>
+        </div>
+        <div id="errorDisplay" class="error-display"></div>
+
+        <!-- 語言選擇彈窗 -->
+        <div id="languageSelectionModal" class="modal-overlay active">
+            <h2 id="languageSelectTitle">請選擇語言</h2>
+            <div class="modal-options">
+                <button class="modal-button" data-lang="zh-Hant">繁體中文</button>
+                <button class="modal-button" data-lang="zh-Hans">简体中文</button>
+                <button class="modal-button" data-lang="en">English</button>
+                <button class="modal-button" data-lang="ja">日本語</button>
+            </div>
+        </div>
+
+        <!-- 樣式選擇彈窗 -->
+        <div id="styleSelectionModal" class="modal-overlay">
+            <h2 id="styleSelectTitle">請選擇您喜歡的小說風格</h2>
+            <div class="modal-options">
+                <!-- data-style 現在是英文 key，方便程式碼查找對應語言文字 -->
+                <button class="modal-button" data-style="fantasy">奇幻</button>
+                <button class="modal-button" data-style="scifi">科幻</button>
+                <button class="modal-button" data-style="mystery">推理</button>
+                <button class="modal-button" data-style="romance">浪漫</button>
+                <button class="modal-button" data-style="historical">歷史</button>
+                <button class="modal-button" data-style="thriller">驚悚</button>
+            </div>
+             <div class="control-group">
+                <button id="backToLanguageBtn" class="app-button utility">回到語言選擇</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // 小說頁面儲存陣列
+        let novelPages = [];
+        // 當前頁面索引
+        let currentPageIndex = -1;
+        // 動畫進行中標誌，防止重複點擊
+        let isAnimating = false;
+        // 已選擇的小說風格
+        let selectedNovelStyle = '';
+        // 已選擇的語言
+        let selectedLanguage = ''; // 預設為空，等待用戶選擇
+        // 當前字體大小 (以 em 為單位)
+        let currentFontSize = 1.15; // 與 CSS .book-page 初始值一致
+        const FONT_SIZE_STEP = 0.1;
+        const MIN_FONT_SIZE = 0.9;
+        const MAX_FONT_SIZE = 1.8;
+
+        // DOM 元素引用
+        let bookPage;
+        let prevBtn, nextBtn, generateBtn, undoBtn, selectStyleBtn, fontSizeUpBtn, fontSizeDownBtn;
+        let loadingIndicator, errorDisplay;
+        let languageSelectionModal, styleSelectionModal, backToLanguageBtn;
+        let languageSelectTitle, styleSelectTitle;
+
+        // Firebase 相關變數，由 Canvas 環境提供
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // 引入 Firebase 模組
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // 初始化 Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // 介面文字的多語言字典
+        const uiStrings = {
+            'zh-Hant': {
+                selectLanguageTitle: "請選擇語言",
+                selectStyleTitle: "請選擇您喜歡的小說風格",
+                prevButton: "上一頁",
+                nextButton: "下一頁",
+                generateButton: "生成下一頁",
+                undoButton: "回到上一步",
+                selectStyleButton: "選擇風格",
+                backToLanguageButton: "回到語言選擇",
+                loadingText: "正在努力生成小說內容...",
+                noContentText: "沒有內容可顯示。請選擇小說風格並生成第一頁。",
+                errorApiStructure: "無法生成內容。請檢查您的網路或稍後再試。",
+                errorGeneratingContent: "生成內容時發生錯誤：",
+                fantasy: "奇幻",
+                scifi: "科幻",
+                mystery: "推理",
+                romance: "浪漫",
+                historical: "歷史",
+                thriller: "驚悚",
+                japanese: "日文 (日本語)",
+                english: "英文 (English)",
+                traditionalChinese: "繁體中文",
+                simplifiedChinese: "簡體中文"
+            },
+            'en': {
+                selectLanguageTitle: "Please Select Language",
+                selectStyleTitle: "Please Choose Your Preferred Novel Style",
+                prevButton: "Previous Page",
+                nextButton: "Next Page",
+                generateButton: "Generate Next Page",
+                undoButton: "Undo",
+                selectStyleButton: "Select Style",
+                backToLanguageButton: "Back to Language Select",
+                loadingText: "Generating novel content...",
+                noContentText: "No content to display. Please select a novel style and generate the first page.",
+                errorApiStructure: "Could not generate content. Please check your network or try again later.",
+                errorGeneratingContent: "Error generating content:",
+                fantasy: "Fantasy",
+                scifi: "Science Fiction",
+                mystery: "Mystery",
+                romance: "Romance",
+                historical: "Historical",
+                thriller: "Thriller",
+                japanese: "Japanese",
+                english: "English",
+                traditionalChinese: "Traditional Chinese",
+                simplifiedChinese: "Simplified Chinese"
+            },
+            'ja': {
+                selectLanguageTitle: "言語を選択してください",
+                selectStyleTitle: "お好みの小説のスタイルを選択してください",
+                prevButton: "前のページ",
+                nextButton: "次のページ",
+                generateButton: "次のページを生成",
+                undoButton: "元に戻す",
+                selectStyleButton: "スタイルを選択",
+                backToLanguageButton: "言語選択に戻る",
+                loadingText: "小説コンテンツを生成中...",
+                noContentText: "表示するコンテンツがありません。小説のスタイルを選択し、最初のページを生成してください。",
+                errorApiStructure: "コンテンツを生成できませんでした。ネットワークを確認するか、後でもう一度お試しください。",
+                errorGeneratingContent: "コンテンツ生成中にエラーが発生しました：",
+                fantasy: "ファンタジー",
+                scifi: "サイエンスフィクション",
+                mystery: "ミステリー",
+                romance: "ロマンス",
+                historical: "歴史",
+                thriller: "スリラー",
+                japanese: "日本語",
+                english: "英語",
+                traditionalChinese: "繁体字中国語",
+                simplifiedChinese: "簡体字中国語"
+            },
+            'zh-Hans': {
+                selectLanguageTitle: "请选择语言",
+                selectStyleTitle: "请选择您喜欢的小说风格",
+                prevButton: "上一页",
+                nextButton: "下一页",
+                generateButton: "生成下一页",
+                undoButton: "回到上一步",
+                selectStyleButton: "选择风格",
+                backToLanguageButton: "回到语言选择",
+                loadingText: "正在努力生成小说内容...",
+                noContentText: "没有内容可显示。请选择小说风格并生成第一页。",
+                errorApiStructure: "无法生成内容。请检查您的网络或稍后重试。",
+                errorGeneratingContent: "生成内容时发生错误：",
+                fantasy: "奇幻",
+                scifi: "科幻",
+                mystery: "推理",
+                romance: "浪漫",
+                historical: "历史",
+                thriller: "惊悚",
+                japanese: "日文 (日本語)",
+                english: "英文 (English)",
+                traditionalChinese: "繁体中文",
+                simplifiedChinese: "简体中文"
+            }
+        };
+        let currentUiStrings = uiStrings['zh-Hant']; // 預設為繁體中文，在選擇語言後會更新
+
+        /**
+         * 根據選定的語言更新所有介面文字
+         */
+        function updateUiText() {
+            languageSelectTitle.textContent = currentUiStrings.selectLanguageTitle;
+            styleSelectTitle.textContent = currentUiStrings.selectStyleTitle;
+            prevBtn.textContent = currentUiStrings.prevButton;
+            nextBtn.textContent = currentUiStrings.nextButton;
+            generateBtn.textContent = currentUiStrings.generateButton;
+            undoBtn.textContent = currentUiStrings.undoButton;
+            selectStyleBtn.textContent = currentUiStrings.selectStyleButton;
+            backToLanguageBtn.textContent = currentUiStrings.backToLanguageButton;
+
+
+            // 更新風格選擇按鈕的文字
+            document.querySelectorAll('#styleSelectionModal .modal-button').forEach(button => {
+                const styleKey = button.dataset.style;
+                if (currentUiStrings[styleKey]) {
+                    button.textContent = currentUiStrings[styleKey];
+                } else {
+                    button.textContent = button.dataset.style;
+                }
+            });
+
+            // 更新語言選擇按鈕的文字
+            document.querySelectorAll('#languageSelectionModal .modal-button').forEach(button => {
+                const langKey = button.dataset.lang;
+                if (currentUiStrings[langKey]) {
+                    button.textContent = currentUiStrings[langKey];
+                }
+            });
+
+            // 更新加載提示和無內容提示
+            document.querySelector('#loadingIndicator p').textContent = currentUiStrings.loadingText;
+        }
+
+        // 使用工具函數實現指數退避，用於 API 呼叫重試
+        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        if (response.status === 429 && i < retries - 1) {
+                            await new Promise(res => setTimeout(res, delay));
+                            delay *= 2;
+                            continue;
+                        }
+                        throw new Error(`HTTP 錯誤！狀態碼: ${response.status}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    if (i < retries - 1) {
+                        await new Promise(res => setTimeout(res, delay));
+                        delay *= 2;
+                    } else {
+                        throw error;
+                    }
+                }
+            }
+        }
+
+        /**
+         * 呼叫 Gemini API 生成下一頁小說內容
+         */
+        async function generateNextPageContent() {
+            loadingIndicator.classList.remove('hidden');
+            errorDisplay.textContent = '';
+            setButtonsDisabled(true);
+
+            const previousPageContent = currentPageIndex >= 0 ? novelPages[currentPageIndex] : "";
+            const stylePrompt = selectedNovelStyle ? `風格為 ${selectedNovelStyle}。` : '';
+            const languagePrompt = selectedLanguage ? `請以 ${selectedLanguage} 撰寫。` : '請以繁體中文撰寫。';
+
+            // 修改生成內容的字數範圍為 300-500 字
+            const prompt = previousPageContent ?
+                `請根據以下小說內容，繼續創作下一頁的內容，保持故事情節連貫和風格一致。${stylePrompt}${languagePrompt}內容約300-500字，語氣連貫：\n\n${previousPageContent}\n\n` :
+                `請創作一篇全新的小說開頭，約300-500字，${languagePrompt}內容關於一個${stylePrompt}的引人入勝的故事。`;
+
+            try {
+                const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiKey = "AIzaSyBF5FG4RWhThih-yNwZGEIPaSJxytMTNPY";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const result = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const newContent = result.candidates[0].content.parts[0].text;
+                    novelPages.push(newContent);
+                    currentPageIndex = novelPages.length - 1;
+                    animatePageTurn('next', () => {
+                        renderPage();
+                    });
+                } else {
+                    errorDisplay.textContent = currentUiStrings.errorApiStructure;
+                    console.error('API 回應結構異常:', result);
+                }
+            } catch (error) {
+                errorDisplay.textContent = `${currentUiStrings.errorGeneratingContent} ${error.message}`;
+                console.error('生成內容錯誤:', error);
+            } finally {
+                loadingIndicator.classList.add('hidden');
+                setButtonsDisabled(false);
+            }
+        }
+
+        /**
+         * 渲染當前頁面的內容到 bookPage 元素
+         */
+        function renderPage() {
+            if (currentPageIndex >= 0 && currentPageIndex < novelPages.length) {
+                bookPage.innerHTML = `<p>${novelPages[currentPageIndex].replace(/\n/g, '<br>')}</p>`;
+            } else {
+                bookPage.innerHTML = `<p class="text-center text-gray-500">${currentUiStrings.noContentText}</p>`;
+            }
+            bookPage.scrollTop = 0;
+            updateNavigationButtons();
+            updateFontSizeDisplay(); // 確保字體大小應用
+        }
+
+        /**
+         * 更新導航按鈕的啟用/禁用狀態
+         */
+        function updateNavigationButtons() {
+            prevBtn.disabled = isAnimating || currentPageIndex <= 0;
+            nextBtn.disabled = isAnimating || currentPageIndex >= novelPages.length - 1;
+            generateBtn.disabled = isAnimating || !selectedNovelStyle;
+            undoBtn.disabled = isAnimating || novelPages.length <= 1; // 只有超過1頁時才能撤銷
+            selectStyleBtn.disabled = isAnimating; // 選擇風格按鈕在動畫進行時禁用
+            fontSizeUpBtn.disabled = isAnimating || currentFontSize >= MAX_FONT_SIZE;
+            fontSizeDownBtn.disabled = isAnimating || currentFontSize <= MIN_FONT_SIZE;
+            backToLanguageBtn.disabled = isAnimating; // 回到語言選擇按鈕在動畫進行時禁用
+        }
+
+        /**
+         * 統一設定所有操作按鈕的啟用/禁用狀態
+         * @param {boolean} disabled - true 為禁用，false 為啟用
+         */
+        function setButtonsDisabled(disabled) {
+            prevBtn.disabled = disabled;
+            nextBtn.disabled = disabled;
+            generateBtn.disabled = disabled;
+            undoBtn.disabled = disabled;
+            selectStyleBtn.disabled = disabled;
+            fontSizeUpBtn.disabled = disabled;
+            fontSizeDownBtn.disabled = disabled;
+            backToLanguageBtn.disabled = disabled;
+        }
+
+        /**
+         * 控制翻頁動畫效果
+         * @param {string} direction - 'next' 表示向下一頁翻，'prev' 表示向上一頁翻
+         * @param {function} callback - 在翻頁動畫中間點執行的回調函數（用於更新內容）
+         */
+        function animatePageTurn(direction, callback) {
+            if (isAnimating) return;
+            isAnimating = true;
+            setButtonsDisabled(true);
+
+            const turnOutClass = direction === 'next' ? 'turn-out-next' : 'turn-out-prev';
+            const turnInClass = direction === 'next' ? 'turn-in-next' : 'turn-in-prev';
+
+            bookPage.classList.add(turnOutClass);
+
+            const onTurnOutEnd = () => {
+                bookPage.removeEventListener('transitionend', onTurnOutEnd);
+                callback();
+                bookPage.classList.remove(turnOutClass);
+                bookPage.classList.add(turnInClass);
+
+                const onTurnInEnd = () => {
+                    bookPage.removeEventListener('transitionend', onTurnInEnd);
+                    bookPage.classList.remove(turnInClass);
+                    isAnimating = false;
+                    updateNavigationButtons();
+                };
+                bookPage.addEventListener('transitionend', onTurnInEnd, { once: true });
+            };
+
+            bookPage.addEventListener('transitionend', onTurnOutEnd, { once: true });
+        }
+
+        /**
+         * 導航到下一頁
+         */
+        function nextPage() {
+            if (currentPageIndex < novelPages.length - 1) {
+                animatePageTurn('next', () => {
+                    currentPageIndex++;
+                    renderPage();
+                });
+            }
+        }
+
+        /**
+         * 導航到上一頁
+         */
+        function prevPage() {
+            if (currentPageIndex > 0) {
+                animatePageTurn('prev', () => {
+                    currentPageIndex--;
+                    renderPage();
+                });
+            }
+        }
+
+        /**
+         * 回到上一步 (撤銷最後一次生成)
+         */
+        function undoLastAction() {
+            if (novelPages.length > 1) {
+                novelPages.pop();
+                currentPageIndex = novelPages.length - 1;
+                animatePageTurn('prev', () => {
+                    renderPage();
+                });
+            } else if (novelPages.length === 1) {
+                novelPages = [];
+                currentPageIndex = -1;
+                renderPage();
+                updateNavigationButtons();
+            }
+        }
+
+        /**
+         * 處理小說風格選擇
+         * @param {Event} event - 點擊事件
+         */
+        function handleStyleSelection(event) {
+            selectedNovelStyle = event.target.dataset.style;
+            if (selectedNovelStyle) {
+                styleSelectionModal.classList.remove('active');
+                // 重設故事進度，開始新故事
+                novelPages = [];
+                currentPageIndex = -1;
+                renderPage(); // 顯示無內容提示
+                generateNextPageContent();
+            }
+        }
+
+        /**
+         * 處理語言選擇
+         * @param {Event} event - 點擊事件
+         */
+        function handleLanguageSelection(event) {
+            selectedLanguage = event.target.dataset.lang;
+            if (selectedLanguage) {
+                currentUiStrings = uiStrings[selectedLanguage];
+                updateUiText();
+                languageSelectionModal.classList.remove('active');
+                styleSelectionModal.classList.add('active');
+                // 重設故事進度，開始新故事
+                novelPages = [];
+                currentPageIndex = -1;
+                renderPage(); // 顯示無內容提示
+            }
+        }
+
+        /**
+         * 調整字體大小
+         * @param {number} delta - 增加或減少的步長 (正數增加，負數減少)
+         */
+        function adjustFontSize(delta) {
+            const newSize = parseFloat((currentFontSize + delta).toFixed(2));
+            if (newSize >= MIN_FONT_SIZE && newSize <= MAX_FONT_SIZE) {
+                currentFontSize = newSize;
+                updateFontSizeDisplay();
+                updateNavigationButtons();
+            }
+        }
+
+        /**
+         * 應用當前字體大小到 bookPage 元素
+         */
+        function updateFontSizeDisplay() {
+            bookPage.style.fontSize = currentFontSize + 'em';
+        }
+
+        /**
+         * 根據當前時間設定主題 (白天/夜晚)
+         */
+        function setThemeBasedOnTime() {
+            const hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) { // 18:00 (6 PM) to 06:00 (6 AM) is dark
+                document.body.classList.add('dark-theme');
+                document.body.classList.remove('light-theme');
+            } else { // 06:00 (6 AM) to 18:00 (6 PM) is light
+                document.body.classList.add('light-theme');
+                document.body.classList.remove('dark-theme');
+            }
+        }
+
+        // 頁面加載完成後執行初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 獲取 DOM 元素
+            bookPage = document.getElementById('bookPage');
+            prevBtn = document.getElementById('prevBtn');
+            nextBtn = document.getElementById('nextBtn');
+            generateBtn = document.getElementById('generateBtn');
+            undoBtn = document.getElementById('undoBtn');
+            selectStyleBtn = document.getElementById('selectStyleBtn'); // New button
+            fontSizeUpBtn = document.getElementById('fontSizeUpBtn');
+            fontSizeDownBtn = document.getElementById('fontSizeDownBtn');
+            loadingIndicator = document.getElementById('loadingIndicator');
+            errorDisplay = document.getElementById('errorDisplay');
+            languageSelectionModal = document.getElementById('languageSelectionModal');
+            styleSelectionModal = document.getElementById('styleSelectionModal');
+            backToLanguageBtn = document.getElementById('backToLanguageBtn'); // New button
+            languageSelectTitle = document.getElementById('languageSelectTitle');
+            styleSelectTitle = document.getElementById('styleSelectTitle');
+
+            // 添加事件監聽器
+            prevBtn.addEventListener('click', prevPage);
+            nextBtn.addEventListener('click', nextPage);
+            generateBtn.addEventListener('click', generateNextPageContent);
+            undoBtn.addEventListener('click', undoLastAction);
+            selectStyleBtn.addEventListener('click', () => { // Event for new select style button
+                styleSelectionModal.classList.add('active'); // Show style selection modal
+                // Ensure story resets if user goes back to pick a new style
+                novelPages = [];
+                currentPageIndex = -1;
+                renderPage(); // Display no content text
+            });
+            backToLanguageBtn.addEventListener('click', () => { // Event for new back to language button
+                languageSelectionModal.classList.add('active'); // Show language selection modal
+                styleSelectionModal.classList.remove('active'); // Hide style selection modal
+                // Reset story and selected language/style when going back
+                selectedLanguage = '';
+                selectedNovelStyle = '';
+                novelPages = [];
+                currentPageIndex = -1;
+                renderPage(); // Display no content text
+            });
+            fontSizeUpBtn.addEventListener('click', () => adjustFontSize(FONT_SIZE_STEP));
+            fontSizeDownBtn.addEventListener('click', () => adjustFontSize(-FONT_SIZE_STEP));
+
+            // 為所有風格選擇按鈕添加事件監聽器
+            document.querySelectorAll('#styleSelectionModal .modal-button').forEach(button => {
+                button.addEventListener('click', handleStyleSelection);
+            });
+
+            // 為所有語言選擇按鈕添加事件監聽器
+            document.querySelectorAll('#languageSelectionModal .modal-button').forEach(button => {
+                button.addEventListener('click', handleLanguageSelection);
+            });
+
+            // 初始化認證（如果存在初始令牌）
+            if (initialAuthToken) {
+                signInWithCustomToken(auth, initialAuthToken)
+                    .then(() => {
+                        console.log("Firebase 認證成功 (自定義令牌)");
+                    })
+                    .catch((error) => {
+                        console.error("Firebase 認證失敗 (自定義令牌):", error);
+                        signInAnonymously(auth)
+                            .then(() => console.log("Firebase 匿名認證成功"))
+                            .catch(anonError => console.error("Firebase 匿名認證失敗:", anonError));
+                    });
+            } else {
+                signInAnonymously(auth)
+                    .then(() => {
+                        console.log("Firebase 匿名認證成功");
+                    })
+                    .catch((error) => {
+                        console.error("Firebase 匿名認證失敗:", error);
+                    });
+            }
+
+            // 初始時設定主題
+            setThemeBasedOnTime();
+            setInterval(setThemeBasedOnTime, 3600000); // 3600000 ms = 1 hour
+
+            // 初始時禁用按鈕，直到風格選擇完成並生成內容
+            setButtonsDisabled(true);
+            renderPage();
+
+            // 初始時只顯示語言選擇彈窗
+            languageSelectionModal.classList.add('active');
+            styleSelectionModal.classList.remove('active');
+            updateUiText();
+            updateFontSizeDisplay();
+        });
+    </script>
+</body>
+</html>
