@@ -189,19 +189,19 @@ function updateNavigationLinks() {
         switch (linkText) {
             case '首頁':
                 // 從 novel_reader.html (繁中網頁/Novels/) 到 my_project_root/index.html
-                link.href = '../../../index.html'; 
+                link.href = '../../'; 
                 break;
             case '關於':
                 // 從 novel_reader.html (繁中網頁/Novels/) 到 my_project_root/About.html
-                link.href = '../../../About.html'; 
+                link.href = '../About'; 
                 break;
             case '服務':
                 // 從 novel_reader.html (繁中網頁/Novels/) 到 my_project_root/Index/繁中網頁.html
-                link.href = '../../Index/繁中網頁.html'; 
+                link.href = '../'; 
                 break;
             case '聯絡':
                 // 從 novel_reader.html (繁中網頁/Novels/) 到 my_project_root/Contact.html
-                link.href = '../../../Contact.html'; 
+                link.href = '../../Contact'; 
                 break;
             default:
                 // 如果有其他連結，可以選擇不處理或記錄警告
