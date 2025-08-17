@@ -3,29 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	 <link href="https://fonts.googleapis.com/css2?family=LXGW+Marker+Gothic&display=swap" rel="stylesheet">
-    <title>Lifer_Lighdow</title>
+	 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Electrolize&family=Rajdhani:wght@400;700&family=LXGW+Marker+Gothic&display=swap" rel="stylesheet">
+    <title>Lifer_Lighdow // Cyberpunk Archives</title>
     <style>
+        /* Define Cyberpunk theme color variables */
+        :root {
+            --cyber-dark-bg: #0A0A0E;
+            --cyber-mid-bg: #1C1C24;
+            --cyber-light-text: #00F0FF; /* Electric blue/cyan */
+            --cyber-accent-1: #FF00FF; /* Magenta */
+            --cyber-accent-2: #00FF00; /* Neon green */
+            --cyber-glow-color: #00E6E6; /* Bright cyan for main glow */
+            --cyber-shadow-color-main: rgba(0, 240, 255, 0.6); /* Main glow shadow */
+            --cyber-shadow-color-secondary: rgba(255, 0, 255, 0.4); /* Secondary glow shadow */
+            --erotic-mode-color: #FF69B4; /* Hot pink for erotic mode */
+        }
+
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: 'LXGW Marker Gothic', monospace;
+            background-color: var(--cyber-dark-bg);
+            color: var(--cyber-light-text);
+            /* Use LXGW Marker Gothic for Chinese, then other futuristic fonts */
+            font-family: 'LXGW Marker Gothic', 'Orbitron', 'Electrolize', 'Rajdhani', monospace, sans-serif;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            /* Add subtle noise or circuit board texture to background */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect width="100%" height="100%" fill="%230A0A0E"/><g fill="%2300F0FF" opacity="0.05"><circle cx="0" cy="0" r="1"/><circle cx="10" cy="10" r="1"/><circle cx="20" cy="0" r="1"/><circle cx="0" cy="20" r="1"/><circle cx="20" cy="20" r="1"/></g><path d="M0 0h10v10H0zM10 10h10v10H10z" fill="%2300F0FF" opacity="0.03"/></svg>');
+            background-size: 20px 20px; /* Adjust size for subtle effect */
         }
 
         header {
-            background: linear-gradient(to right, #212121, #181818);
+            background: linear-gradient(135deg, var(--cyber-mid-bg) 0%, #0D0D10 100%);
             padding: 20px;
             text-align: center;
             position: relative;
+            border-bottom: 2px solid var(--cyber-accent-1); /* Accent line at the bottom */
+            box-shadow: 0 0 25px var(--cyber-shadow-color-main); /* Glow below header */
         }
 
         header h1 {
-            color: #00bcd4;
-            text-shadow: 0 0 10px #00bcd4;
+            color: var(--cyber-light-text);
+            text-shadow: 0 0 15px var(--cyber-glow-color), 0 0 25px var(--cyber-glow-color); /* Stronger neon glow */
             margin-bottom: 10px;
+            animation: neonFlicker 1.5s infinite alternate; /* Header flicker animation */
+        }
+
+        @keyframes neonFlicker {
+            0%, 100% {
+                text-shadow: 0 0 10px var(--cyber-glow-color), 0 0 20px var(--cyber-glow-color), 0 0 30px var(--cyber-glow-color);
+            }
+            50% {
+                text-shadow: 0 0 5px var(--cyber-glow-color), 0 0 10px var(--cyber-glow-color), 0 0 15px var(--cyber-glow-color);
+            }
         }
 
         nav ul {
@@ -34,31 +63,59 @@
             margin: 0;
             display: flex;
             justify-content: center;
+            flex-wrap: wrap; /* Allow navigation items to wrap */
         }
 
         nav li {
-            margin: 0 20px;
+            margin: 0 10px; /* Adjusted margin for more items */
         }
 
         nav a {
-            color: #80deea;
+            color: var(--cyber-light-text);
             text-decoration: none;
-            transition: color 0.3s ease;
+            position: relative; /* For animated underline */
+            padding-bottom: 5px;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            font-weight: bold;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--cyber-accent-1);
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
         }
 
         nav a:hover {
-            color: #00bcd4;
+            color: var(--cyber-accent-1);
+            text-shadow: 0 0 8px var(--cyber-accent-1);
+        }
+
+        nav a:hover::after {
+            width: 100%; /* Underline expands on hover */
         }
 
         section {
             padding: 40px 20px;
             position: relative;
+            background-color: var(--cyber-mid-bg); /* Background for each section */
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4); /* Section shadow */
+            border: 1px solid rgba(0, 240, 255, 0.1); /* Section border */
         }
 
         section h2 {
-            color: #00bcd4;
-            text-shadow: 0 0 5px #00bcd4;
+            color: var(--cyber-light-text);
+            text-shadow: 0 0 10px var(--cyber-glow-color);
             margin-bottom: 20px;
+            border-bottom: 1px dashed var(--cyber-glow-color); /* Title underline */
+            padding-bottom: 10px;
         }
 
         .intro-content {
@@ -66,52 +123,70 @@
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
+            gap: 20px; /* New spacing */
         }
 
         .intro-content img {
             width: 200px;
+            height: 200px; /* Fixed height to ensure circular shape */
+            object-fit: cover; /* Ensure image covers the area */
             border-radius: 50%;
             margin-right: 20px;
-            box-shadow: 0 0 20px #00bcd4;
+            box-shadow: 0 0 25px var(--cyber-shadow-color-main), 0 0 40px var(--cyber-shadow-color-main) inset; /* Stronger inner/outer glow */
+            border: 2px solid var(--cyber-glow-color);
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
         }
 
-        /* 模態視窗樣式 */
+        .intro-content img:hover {
+            transform: scale(1.05) rotate(2deg); /* Hover effect */
+            box-shadow: 0 0 35px var(--cyber-shadow-color-main), 0 0 60px var(--cyber-shadow-color-main) inset;
+        }
+        
+        /* Modal window styles */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1;
+            z-index: 1000; /* Ensure on top */
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.95); /* Deeper, more opaque background */
+            backdrop-filter: blur(5px); /* Blurred background */
             animation: fadeIn 0.3s ease-in-out;
         }
 
         .modal-content {
             margin: auto;
             display: block;
-            max-width: 80%;
-            max-height: 80%;
+            max-width: 90%; /* Slightly larger */
+            max-height: 90%; /* Slightly larger */
+            border: 2px solid var(--cyber-glow-color); /* Border */
+            box-shadow: 0 0 30px var(--cyber-shadow-color-main); /* Glow effect */
+            object-fit: contain; /* Ensure image is fully visible */
+            cursor: pointer; /* Indicate it's clickable for hidden feature */
         }
 
         .modal-close {
             position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
+            top: 20px; /* Adjust position */
+            right: 40px; /* Adjust position */
+            color: var(--cyber-accent-1); /* Close button color */
+            font-size: 50px; /* Larger */
             font-weight: bold;
             transition: 0.3s;
             cursor: pointer;
+            text-shadow: 0 0 10px var(--cyber-accent-1); /* Glow */
         }
 
         .modal-close:hover,
         .modal-close:focus {
-            color: #bbb;
+            color: var(--cyber-light-text);
             text-decoration: none;
             cursor: pointer;
+            text-shadow: 0 0 15px var(--cyber-light-text);
         }
 
 		  .modal-caption {
@@ -119,169 +194,339 @@
             display: block;
             width: 80%;
             text-align: center;
-            color: #ccc;
+            color: var(--cyber-light-text);
             padding: 10px 0;
+            font-size: 1.1em;
+            text-shadow: 0 0 5px var(--cyber-glow-color);
         }
 		  
-        /* 動畫效果 */
-        @keyframes neonGlow {
-            0%, 100% {
-                text-shadow: 0 0 10px #00bcd4;
-            }
-            50% {
-                text-shadow: 0 0 20px #00bcd4;
-            }
-        }
-
-        header h1 {
-            animation: neonGlow 2s infinite alternate;
-        }
-
-		  @keyframes fadeIn {
+        /* Animation effects */
+        @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
-	 .bar-nav {
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.3);
-        padding: 1em 0;
-        text-align: center;
-        position: relative;
-        z-index: 1;
-    }
-
-    .bar-nav ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-    }
-
-    .bar-nav li {
-        margin: 0 10px;
-    }
-
-    .bar-nav a {
-        color: white;
-        text-decoration: none;
-        padding: 0.5em 1em;
-        margin: 0 1em;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-    }
-
-    .bar-nav a:hover {
-        color: #00bcd4;
-		  background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    /* 橫向卷軸容器 */
-    .novel-scroll-container {
-        display: flex;
-        overflow-x: auto; /* 啟用橫向卷軸 */
-        padding-bottom: 20px; /* 避免卷軸遮擋內容 */
-        scroll-snap-type: x mandatory; /* 啟用吸附效果 */
-        -webkit-overflow-scrolling: touch; /* iOS 流暢滾動 */
-    }
-
-    .novel-scroll-container::-webkit-scrollbar {
-        height: 10px;
-    }
-
-    .novel-scroll-container::-webkit-scrollbar-thumb {
-        background-color: #00bcd4;
-        border-radius: 5px;
-    }
-
-    .novel-scroll-container::-webkit-scrollbar-track {
-        background-color: #333;
-    }
-
-    /* 小說卡片樣式 */
-    .novel {
-        flex: 0 0 auto; /* 防止flex item縮小 */
-        width: 300px; /* 小說卡片固定寬度 */
-        background-color: #1e1e1e;
-        padding: 20px;
-        margin-right: 20px; /* 卡片間距 */
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
-        scroll-snap-align: start; /* 讓卡片吸附到起始位置 */
-        display: flex; /* 使用 flexbox 讓內容垂直排列 */
-        flex-direction: column;
-    }
-
-    .novel:last-child {
-        margin-right: 0; /* 最後一個卡片沒有右邊距 */
-    }
-
-    .novel h3 {
-        color: #00bcd4;
-        margin-bottom: 10px;
-    }
-
-    .novel img {
-        width: 100%; /* 圖片填滿卡片寬度 */
-        height: 100%; /* 固定圖片高度 */
-        object-fit: cover; /* 圖片裁剪以適應 */
-        margin-bottom: 10px;
-        border-radius: 9px;
-        box-shadow: 0 0 10px #00bcd4;
-        cursor: pointer; /* 讓圖片可點擊 */
-    }
-
-    /* 調整小說簡介樣式，使其自動撐開高度 */
-    .novel p {
-        font-size: 1em;
-        line-height: 1.5;
-        margin-bottom: 15px;
-        flex-grow: 1; /* 讓段落自動佔據剩餘空間 */
-        max-height: 200px; /* 設定最大高度 */
-        overflow-y: auto; /* 超出部分顯示滾動條 */
-        padding-right: 5px; /* 避免文字緊貼滾動條 */
-    }
-
-    /* 自定義滾動條樣式 for novel p */
-    .novel p::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .novel p::-webkit-scrollbar-thumb {
-        background-color: #00bcd4;
-        border-radius: 4px;
-    }
-
-    .novel p::-webkit-scrollbar-track {
-        background-color: #333;
-    }
-
-    .novel a {
-        color: #00bcd4;
-		  font-size: 1.2em;
-        text-decoration: none;
-        transition: color 0.3s ease;
-        display: inline-block;
-        margin-top: auto; /* 將連結推到底部 */
-    }
-
-    .novel a:hover {
-        color: #80deea;
-    }
-
-    /* RWD 調整 */
-    @media (max-width: 768px) {
-        .novel {
-            width: 250px; /* 手機板卡片寬度調整 */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
-    }
 
-	 footer {
-            background-color: #181818;
+
+	    .bar-nav {
+            width: 100%;
+            background-color: rgba(10, 10, 14, 0.8); /* Deeper and semi-transparent */
+            padding: 1em 0;
+            text-align: center;
+            position: sticky; /* Sticky navigation */
+            top: 0;
+            z-index: 500; /* Ensure it's above content */
+            border-bottom: 1px solid var(--cyber-accent-2); /* Bottom border */
+            box-shadow: 0 2px 15px rgba(0, 255, 0, 0.2); /* Green shadow */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+        }
+
+        .bar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow navigation items to wrap */
+        }
+
+        .bar-nav li {
+            margin: 5px 15px; /* Adjust spacing */
+        }
+
+        .bar-nav a {
+            color: var(--cyber-light-text);
+            text-decoration: none;
+            padding: 0.6em 1.2em;
+            margin: 0 0.5em;
+            border-radius: 3px; /* Slightly squarer */
+            transition: background-color 0.3s ease, color 0.3s ease, text-shadow 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid transparent; /* Default transparent border */
+            text-transform: uppercase; /* Uppercase text */
+            font-weight: bold;
+        }
+
+        .bar-nav a:hover {
+            color: var(--cyber-accent-2); /* Hover to green */
+            background-color: rgba(0, 255, 0, 0.1); /* Green translucent background */
+            border-color: var(--cyber-accent-2); /* Green border on hover */
+            text-shadow: 0 0 10px var(--cyber-accent-2);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+        }
+        
+        /* Horizontal scroll container */
+        .novel-scroll-container {
+            display: flex;
+            overflow-x: auto; /* Enable horizontal scroll */
+            padding-bottom: 20px; /* Prevent scrollbar from obscuring content */
+            scroll-snap-type: x mandatory; /* Enable snap effect */
+            -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+            gap: 20px; /* Card spacing */
+        }
+
+        /* Custom scrollbar styles */
+        .novel-scroll-container::-webkit-scrollbar {
+            height: 12px; /* Scrollbar height */
+            background-color: var(--cyber-dark-bg);
+        }
+
+        .novel-scroll-container::-webkit-scrollbar-thumb {
+            background-color: var(--cyber-glow-color);
+            border-radius: 6px;
+            border: 2px solid var(--cyber-mid-bg); /* Thumb border */
+        }
+
+        .novel-scroll-container::-webkit-scrollbar-thumb:hover {
+            background-color: var(--cyber-accent-1); /* Hover color */
+        }
+
+        .novel-scroll-container::-webkit-scrollbar-track {
+            background-color: var(--cyber-mid-bg);
+            border-radius: 6px;
+        }
+
+        /* Novel card styles */
+        .novel {
+            flex: 0 0 auto; /* Prevent flex item from shrinking */
+            width: 320px; /* Fixed width for novel cards, slightly larger */
+            background-color: var(--cyber-mid-bg);
+            padding: 20px;
+            margin-right: 0; /* Use gap instead of margin-right */
+            border-radius: 8px;
+            box-shadow: 0 0 15px var(--cyber-shadow-color-main), 0 0 30px var(--cyber-shadow-color-secondary) inset; /* Dual-color inner/outer glow */
+            scroll-snap-align: start; /* Snap card to start position */
+            display: flex; /* Use flexbox for vertical content arrangement */
+            flex-direction: column;
+            border: 1px solid var(--cyber-glow-color); /* Border */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .novel:hover {
+            transform: translateY(-5px) scale(1.01); /* Slight lift and scale on hover */
+            box-shadow: 0 5px 25px var(--cyber-shadow-color-main), 0 0 40px var(--cyber-shadow-color-secondary) inset;
+        }
+
+        .novel h3 {
+            color: var(--cyber-accent-1); /* Title color */
+            margin-bottom: 10px;
+            text-shadow: 0 0 8px var(--cyber-accent-1);
+            border-bottom: 1px dotted var(--cyber-accent-1);
+            padding-bottom: 5px;
+        }
+
+        .novel img {
+            width: 100%; /* Image fills card width */
+            height: 250px; /* Fixed image height */
+            object-fit: cover; /* Image cropping to fit */
+            margin-bottom: 15px;
+            border-radius: 5px; /* Slightly squarer */
+            box-shadow: 0 0 15px var(--cyber-shadow-color-main);
+            border: 2px solid var(--cyber-glow-color);
+            cursor: pointer; /* Make image clickable */
+            transition: box-shadow 0.3s ease;
+        }
+
+        .novel img:hover {
+            box-shadow: 0 0 25px var(--cyber-shadow-color-main), 0 0 40px var(--cyber-shadow-color-main);
+        }
+
+        /* Adjust novel description style to auto-expand height */
+        .novel p {
+            font-size: 0.95em; /* Slightly smaller font */
+            line-height: 1.6;
+            margin-bottom: 15px;
+            flex-grow: 1; /* Paragraph takes remaining space */
+            max-height: 250px; /* Set max height */
+            overflow-y: auto; /* Show scrollbar if content overflows */
+            padding-right: 5px; /* Prevent text from sticking to scrollbar */
+            color: #E0E0E0; /* Slightly softer text color for description */
+            text-shadow: 0 0 2px rgba(0, 240, 255, 0.2);
+        }
+
+        /* Custom scrollbar styles for novel p (embedded text scrollbar) */
+        .novel p::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .novel p::-webkit-scrollbar-thumb {
+            background-color: var(--cyber-accent-2); /* Green scrollbar */
+            border-radius: 4px;
+        }
+
+        .novel p::-webkit-scrollbar-track {
+            background-color: var(--cyber-dark-bg);
+        }
+
+        .novel a {
+            color: var(--cyber-glow-color); /* Link color */
+		    font-size: 1.1em;
+            text-decoration: none;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            display: inline-block;
+            margin-top: auto; /* Push link to the bottom */
+            padding: 8px 15px;
+            border: 1px solid var(--cyber-glow-color);
+            border-radius: 5px;
+            background-color: rgba(0, 240, 255, 0.05); /* Translucent background */
+            text-align: center;
+        }
+
+        .novel a:hover {
+            color: var(--cyber-accent-1); /* Hover to magenta */
+            background-color: rgba(255, 0, 255, 0.1); /* Translucent background */
+            border-color: var(--cyber-accent-1);
+            text-shadow: 0 0 10px var(--cyber-accent-1);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .novel {
+                width: 280px; /* Adjust card width for mobile */
+            }
+            header h1 {
+                font-size: 1.8em;
+            }
+            section h2 {
+                font-size: 1.5em;
+            }
+            .intro-content img {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            .bar-nav ul {
+                flex-wrap: wrap;
+            }
+            .bar-nav li {
+                margin: 5px 10px;
+            }
+        }
+
+        footer {
+            background-color: var(--cyber-mid-bg);
             padding: 20px;
             text-align: center;
-            color: #80deea;
+            color: var(--cyber-light-text);
+            border-top: 2px solid var(--cyber-accent-1); /* Top accent line */
+            box-shadow: 0 0 25px var(--cyber-shadow-color-main);
+            margin-top: 20px;
+            display: flex; /* Use flexbox for alignment */
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
+        footer p {
+            margin: 0 10px; /* Adjust spacing between footer elements */
+        }
+
+        /* Style for erotic mode active state */
+        body.erotic-mode .novel a {
+            color: var(--erotic-mode-color);
+            border-color: var(--erotic-mode-color);
+            background-color: rgba(255, 105, 180, 0.05);
+            text-shadow: 0 0 8px var(--erotic-mode-color);
+        }
+        body.erotic-mode .novel a:hover {
+            color: var(--cyber-accent-1);
+            background-color: rgba(255, 0, 255, 0.15);
+            border-color: var(--cyber-accent-1);
+            text-shadow: 0 0 12px var(--cyber-accent-1);
+        }
+        body.erotic-mode footer p {
+            color: var(--erotic-mode-color);
+            text-shadow: 0 0 10px var(--erotic-mode-color);
+        }
+        /* No specific button in footer to style for erotic-mode anymore */
+
+        /* Confirmation Modal Styles */
+        .confirmation-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2000; /* Sit on top (higher than other modals) */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.8); /* Black w/ opacity */
+            backdrop-filter: blur(8px); /* Blur effect */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .confirmation-modal-content {
+            background-color: var(--cyber-mid-bg);
+            margin: auto;
+            padding: 30px;
+            border: 2px solid var(--erotic-mode-color);
+            border-radius: 10px;
+            box-shadow: 0 0 30px var(--erotic-mode-color);
+            width: 80%; /* Could be responsive */
+            max-width: 400px;
+            text-align: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .confirmation-modal-content p {
+            font-size: 1.2em;
+            color: var(--cyber-light-text);
+            margin-bottom: 25px;
+            text-shadow: 0 0 5px var(--erotic-mode-color);
+        }
+
+        .confirmation-modal-content .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .confirmation-modal-content button {
+            background-color: var(--cyber-accent-1);
+            color: white;
+            padding: 10px 20px;
+            border: 2px solid var(--erotic-mode-color);
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+
+        .confirmation-modal-content button:hover {
+            background-color: var(--erotic-mode-color);
+            box-shadow: 0 0 20px var(--erotic-mode-color);
+            color: black;
+        }
+
+        /* Floating Notification Styles */
+        #eroticNotification {
+            display: none; /* Hidden by default */
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--erotic-mode-color);
+            color: black;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px var(--erotic-mode-color);
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            z-index: 2001; /* Higher than modal */
+            opacity: 0; /* Start invisible for animation */
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #eroticNotification.show {
+            animation: fadeIn 0.5s forwards;
+        }
+        #eroticNotification.hide {
+            animation: fadeOut 0.5s forwards;
         }
 
     </style>
@@ -305,8 +550,9 @@
         <nav>
             <ul>
                 <li><a href="#intro">自我介紹</a></li>
-                <li><a href="#large-novels">大作品</a></li>
-                <li><a href="#small-novels">小作品</a></li>
+                <li><a href="#main-novels">主線作品</a></li>
+                <li><a href="#side-novels">副線作品</a></li>
+                <li><a href="#other-novels">其他作品</a></li>
                 <li><a href="#contact">聯絡我</a></li>
             </ul>
         </nav>
@@ -315,52 +561,62 @@
     <section id="intro">
         <h2>自我介紹</h2>
         <div class="intro-content">
+            <!-- Profile image, now the trigger for hidden mode -->
             <img src="images/profile.webp" alt="Lifer_Lighdow" onclick="openModal('images/profile.webp','Lifer_Lighdow：人生如音律起伏，因果交織，奏響和諧之曲')">
             <p>人生如音律起伏，因果交織，奏響和諧之曲</p>
         </div>
     </section>
 
-    <section id="large-novels">
-        <h2>大作品</h2>
+    <!-- Mainline Works Section -->
+    <section id="main-novels">
+        <h2>主線作品</h2>
         <div class="novel-scroll-container">
-            <!-- 大作品區塊 -->
+            <!-- Mainline Works Novels -->
             <div class="novel">
                 <h3>《影夜》</h3>
                 <img src="images/novel_cover_1.webp" alt="《影夜》" onclick="openModal('images/novel_cover_1.webp','《影夜》')">
                 <p>凡影是一個被命運選中的靈魂，他的旅程跨越了生死與時間的界限。<br><br>從迷茫的孤獨者到在黑暗中尋求光明的抗爭者，他的故事充滿了神秘和矛盾。他的一生經歷了多次輪迴，每一世都承載著未解的宿命與沉重的選擇。他的腳步帶他穿梭於不同的時空，面對無數挑戰與未知的危險。<br><br>在過去的某個時間，他遇見了能夠改變世界的存在，這段羈絆為他帶來了短暫的溫暖，也引領他看到超越現實的可能性。但凡影並未因此擺脫命運的束縛，而是被迫一次次踏上對抗黑暗的征途。無論是與未知的力量交鋒，還是深陷無法抗拒的輪迴，他始終背負著未完成的使命，試圖在不斷重複的悲劇中尋找出口。<br><br>這是一段關於命運、愛與救贖的故事。凡影在每一次抉擇中成長，從迷失自我到肩負責任，在光與影的交錯中，他漸漸領悟出屬於自己的答案。然而，這段旅程究竟會通向何處，無人知曉，只剩下那些星光下的回憶，映照著他堅定的身影。</p>
-                <a href="Novels/novel_reader?series=影夜&chapter=novel1_content">閱讀小說</a>
+                <a href="Novels/novel_reader?series=影夜&chapter=novel1_content" data-normal-href="Novels/novel_reader?series=影夜&chapter=novel1_content" data-erotic-href="Novels/novel_reader?series=影夜X&chapter=novel1_content">閱讀小說</a>
             </div>
-				<!-- 將《夢》移動到大作品區塊 -->
             <div class="novel">
                 <h3>《夢》</h3>
                 <img src="images/novel_cover_2.webp" alt="《夢》" onclick="openModal('images/novel_cover_2.webp','《夢》')">
                 <p>在靜謐的校園中，水野陽翔是一名孤僻的少年，生活在孤獨與欺凌的陰影中。他每天像機器般重複著日子，心中卻藏著不為人知的裂痕。然而，當低語與詭異的夢境開始侵襲他的生活時，一切漸漸脫離了原有的軌道。<br><br>某個無盡的夜晚，陽翔在夢中遇見了一個神秘的存在——夢魘。她是冷峻卻溫柔的引路人，帶著無法解釋的力量，穿梭於陽翔的夢境與現實之間。她似乎知道所有的答案，但卻始終隱藏關於自己真實身份的秘密。隨著夢境愈加清晰，陽翔的生活也開始充滿謎團：他究竟是誰？那些低語在呼喚著什麼？而夢魘的出現，是救贖，還是毀滅的序曲？<br><br>隨著輪迴的真相逐步展開，陽翔被迫直面自己的過去與命運。他與夢魘之間不可思議的羈絆，成為掙脫黑暗的唯一希望。當夢境與現實交融，他將發現一切的答案，或陷入永恆的輪迴之中……<br><br>踏入這場靈魂與夢境交織的奇幻旅程，感受命運羈絆的震撼與人性深處的掙扎。</p>
-                <a href="Novels/novel_reader?series=夢&chapter=novel1_content">閱讀小說</a>
+                <a href="Novels/novel_reader?series=夢&chapter=novel1_content" data-normal-href="Novels/novel_reader?series=夢&chapter=novel1_content" data-erotic-href="Novels/novel_reader?series=夢X&chapter=novel1_content">閱讀小說</a>
             </div>
             <div class="novel">
                 <h3>《夏曉》</h3>
                 <img src="images/novel_cover_3.webp" alt="《夏曉》" onclick="openModal('images/novel_cover_3.webp','《夏曉》')">
                 <p>這是一場跨越時間與存在的科幻史詩。<br><br>故事從少年曉士的平凡人生被一場神秘手術徹底顛覆開始，他獲得異能，成為與時間維度相連的「凡影」。當他與出身顯赫卻心靈孤寂的夏提寧相遇，彼此成為照亮生命的光。<br><br>然而，一份被操縱的執念引發的晶片失控危機，讓他們與亦敵亦友的劫紋，以及神秘的幕後組織「序控者」正面衝突。隨著戰鬥升級，團隊逐漸集結，每位成員都在各自的領域中成長，從個人命運的抗爭，走向集體力量的凝聚。<br><br>面對宇宙級的威脅，影滅必須攜手曉士。這是一場關於犧牲、愛與存在本質的搏鬥，也是一首關於如何在破碎中尋找真實、在黑暗中破曉重生的宏大交響曲。當「和聲」響徹宇宙，世界的秩序能否回歸？而那些被「丟棄」的存在，又將何去何從？</p>
-                <a href="Novels/novel_reader?series=夏曉&chapter=novel1_content">閱讀小說</a>
+                <a href="Novels/novel_reader?series=夏曉&chapter=novel1_content" data-normal-href="Novels/novel_reader?series=夏曉&chapter=novel1_content" data-erotic-href="Novels/novel_reader?series=夏曉X&chapter=novel1_content">閱讀小說</a>
             </div>
         </div>
     </section>
 
-    <section id="small-novels">
-        <h2>小作品</h2>
+    <!-- Side Stories Section -->
+    <section id="side-novels">
+        <h2>副線作品</h2>
         <div class="novel-scroll-container">
-            <!-- 新增的小作品 -->
+            <!-- Side Stories Novels -->
             <div class="novel">
                 <h3>《背上鬼女兒的戀》</h3>
-                <img src="images/small_novel_cover_1.webp" alt="《背上鬼女兒的戀》" onerror="this.onerror=null;this.src='https://placehold.co/250x200/00bcd4/ffffff?text=Novel+Cover';" onclick="openModal('images/small_novel_cover_1.webp','《背上鬼女兒的戀》')">
+                <img src="images/small_novel_cover_1.webp" alt="《背上鬼女兒的戀》" onerror="this.onerror=null;this.src='https://placehold.co/320x250/0A0A0E/00F0FF?text=DATA+FILE+CORRUPT';" onclick="openModal('images/small_novel_cover_1.webp','《背上鬼女兒的戀》')">
                 <p>他是慎，一位年輕天才，在命運最光明的交叉口遇上了無法解釋的連番不幸。當他發現背後藏著一位少女靈魂時，這場奇異的「人鬼戀」揭開了命運輪迴的扭曲真相。<br><br>她是嵐，一位不記得自己過去、卻對慎有著莫名依戀的少女幽靈。愛情在恐懼與依賴中悄然滋長，直到命運揭示出他們早已深藏千年的牽連——前世，他是她的父親。<br><br>愛情與親情糾纏，生死與輪迴交錯，<br>當天使甯降臨，揭開三界因果，<br>這場愛情，將走向救贖，還是墮落？<br><br>他們相愛，卻不該相愛。<br>他們分不開，卻永遠不能在一起。<br><br>這不是一場單純的戀愛故事，而是一場跨越三界與三世的自我救贖與身分對抗之旅。<br><br>「當愛與血脈交纏，我們該遵循命運，還是逆流而上，走進彼此的劫？」</p>
-                <a href="Novels/novel_reader?series=背上鬼女兒的戀&chapter=novel1_content">閱讀小說</a>
+                <a href="Novels/novel_reader?series=背上鬼女兒的戀&chapter=novel1_content" data-normal-href="Novels/novel_reader?series=背上鬼女兒的戀&chapter=novel1_content" data-erotic-href="Novels/novel_reader?series=背上鬼女兒的戀X&chapter=novel1_content">閱讀小說</a>
             </div>
-				<div class="novel">
+        </div>
+    </section>
+
+    <!-- Other Works Section -->
+    <section id="other-novels">
+        <h2>其他作品</h2>
+        <div class="novel-scroll-container">
+            <!-- Other Works Novels -->
+            <div class="novel">
                 <h3>《錯位的愛恨》</h3>
-                <img src="images/small_novel_cover_2.webp" alt="《錯位的愛恨》" onerror="this.onerror=null;this.src='https://placehold.co/250x200/00bcd4/ffffff?text=Novel+Cover';" onclick="openModal('images/small_novel_cover_2.webp','《錯位的愛恨》')">
+                <img src="images/small_novel_cover_2.webp" alt="《錯位的愛恨》" onerror="this.onerror=null;this.src='https://placehold.co/320x250/0A0A0E/00F0FF?text=DATA+FILE+CORRUPT';" onclick="openModal('images/small_novel_cover_2.webp','《錯位的愛恨》')">
 					 <p>在一個看似平凡的校園裡，高中生星翼與茜嫺各自擁有不為人知的「超能力」——<br><br>星翼能看見人們背後喜悅的「光芒」，這讓他深信自己被所有人喜愛，並努力成為一個完美的「光的傳遞者」。然而，他卻因此活在自我欺騙的假象中，忽略了真實的孤獨。<br><br>而茜嫺則能看見人們背後惡意的「陰影」，這讓她對世界充滿悲觀與防備，將自己封閉在黑暗中，堅信不被需要才是常態，並以畫筆揭露她所見的「真相」。<br><br>這兩份截然不同的感知，讓他們對彼此產生了巨大的誤會：星翼將茜嫺的冷淡解讀為暗戀的暗示，而茜嫺則將星翼的善意視為惡意的嘲諷。他們在留言牆上隔空交鋒，在雨中同處一室卻無聲錯過，命運似乎總讓他們近在咫尺，卻又遙不可及。<br><br>然而，當他們長久以來所依賴的感知濾鏡開始動搖，世界不再如他們所見時，星翼與茜嫺被迫面對前所未有的挑戰。他們能否在迷霧中找到真實的自我，並真正「看見」彼此？<br><br>《錯位的愛恨》講述了一個關於認知偏差與自我認同的故事。當光與暗的幻象受到衝擊，他們能否跨越心中的遲疑，用最真實的聲音，邁出那一步，找到彼此，並重新定義愛與被愛？</p>
-                <a href="Novels/novel_reader?series=錯位的愛恨&chapter=novel1_content">閱讀小說</a>
+                <a href="Novels/novel_reader?series=錯位的愛恨&chapter=novel1_content" data-normal-href="Novels/novel_reader?series=錯位的愛恨&chapter=novel1_content" data-erotic-href="Novels/novel_reader?series=錯位的愛恨X&chapter=novel1_content">閱讀小說</a>
             </div>
         </div>
     </section>
@@ -368,31 +624,243 @@
     <section id="contact">
         <h2>聯絡我</h2>
         <p>
-            透過此電子郵件：<a href="mailto:liferlighdow1012@gmail.com">liferlighdow1012@gmail.com</a>連絡我們
+            透過此電子郵件：<span style="color: var(--cyber-accent-2); text-shadow: 0 0 5px var(--cyber-accent-2);">liferlighdow1012@gmail.com</span>連絡我們
         </p>
 		  
     </section>
 
     <footer>
         <p>© 2025 Lifer_Lighdow. All rights reserved.</p>
+        <p id="eroticModeStatus" style="font-size: 0.8em; margin-top: 10px; color: var(--erotic-mode-color); text-shadow: 0 0 5px var(--erotic-mode-color); display: none;">官能模式已啟用 - 請注意內容</p>
     </footer>
 
+    <!-- Image Modal -->
 	 <div id="myModal" class="modal">
         <span class="modal-close" onclick="closeModal()">&times;</span>
         <img class="modal-content" id="modalImg">
         <div id="modalCaption" class="modal-caption"></div>
     </div>
 
+    <!-- Confirmation Modal for Erotic Mode -->
+    <div id="confirmEroticModeModal" class="confirmation-modal" style="display: none;">
+        <div class="confirmation-modal-content">
+            <p>您確定要進入官能小說模式嗎？此模式可能包含不適合所有讀者的內容。</p>
+            <div class="button-group">
+                <button id="confirmEroticYes">是，進入</button>
+                <button id="confirmEroticNo">否，取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Notification -->
+    <div id="eroticNotification">
+        已進入官能模式
+    </div>
+
     <script>
+        // Global variables
+        let novelLinks;
+        let eroticModeStatus;
+        let confirmModal;
+        let confirmYesBtn;
+        let confirmNoBtn;
+        let isEroticMode = false;
+
+        // Global state for erotic mode activation
+        let eroticActivationClicks = 0;
+        let eroticActivationTimeoutId = null; // Store timeout ID
+        let lastEroticClickTime = 0;
+        const REQUIRED_CLICKS = 20; // Number of clicks required to activate
+        const CLICK_WINDOW_MS = 10000; // 10 seconds for the click window
+        const CLICK_INTERVAL_TOLERANCE_MS = 700; // Max time between consecutive clicks (0.7 seconds)
+
+        // Modal functions for images
         function openModal(imgSrc, altText) {
             document.getElementById('modalImg').src = imgSrc;
             document.getElementById('modalCaption').innerHTML = altText;
             document.getElementById('myModal').style.display = 'block';
+
+            // If the opened image is the profile picture, attach the listener for erotic mode activation
+            if (imgSrc.includes('images/profile.webp')) {
+                document.getElementById('modalImg').addEventListener('click', handleEroticActivationClick);
+                // Reset activation state when profile image modal is opened
+                eroticActivationClicks = 0;
+                if (eroticActivationTimeoutId) {
+                    clearTimeout(eroticActivationTimeoutId);
+                    eroticActivationTimeoutId = null;
+                }
+                lastEroticClickTime = 0;
+            } else {
+                // If another image is opened, ensure listener is removed and state reset
+                document.getElementById('modalImg').removeEventListener('click', handleEroticActivationClick);
+                eroticActivationClicks = 0;
+                if (eroticActivationTimeoutId) {
+                    clearTimeout(eroticActivationTimeoutId);
+                    eroticActivationTimeoutId = null;
+                }
+                lastEroticClickTime = 0;
+            }
         }
 
         function closeModal() {
             document.getElementById('myModal').style.display = 'none';
+            // Always detach listener and reset state when modal closes
+            document.getElementById('modalImg').removeEventListener('click', handleEroticActivationClick);
+            eroticActivationClicks = 0;
+            if (eroticActivationTimeoutId) {
+                clearTimeout(eroticActivationTimeoutId);
+                eroticActivationTimeoutId = null;
+            }
+            lastEroticClickTime = 0;
         }
+
+        // Floating Notification function
+        function showNotification(message) {
+            const notification = document.getElementById('eroticNotification');
+            notification.textContent = message;
+            notification.classList.remove('hide');
+            notification.classList.add('show');
+            notification.style.display = 'block';
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 500); // Match fadeOut animation duration
+            }, 3000); // Notification visible for 3 seconds
+        }
+
+        // Function to handle clicks on the modal image for erotic mode activation
+        function handleEroticActivationClick() {
+            // Check if the currently displayed image is the profile picture
+            // This check is important if the modal can display other images
+            if (document.getElementById('modalImg').src.includes('images/profile.webp')) {
+                const currentTime = Date.now();
+
+                // If it's the first click or clicks are too far apart, start a new sequence
+                if (eroticActivationClicks === 0 || (currentTime - lastEroticClickTime > CLICK_INTERVAL_TOLERANCE_MS)) {
+                    eroticActivationClicks = 1;
+                    // Clear any previous timeout and set a new one for the click window
+                    if (eroticActivationTimeoutId) {
+                        clearTimeout(eroticActivationTimeoutId);
+                    }
+                    eroticActivationTimeoutId = setTimeout(() => {
+                        // If the window closes and clicks are not met, reset
+                        eroticActivationClicks = 0;
+                        eroticActivationTimeoutId = null;
+                    }, CLICK_WINDOW_MS);
+                } else {
+                    // Continue the sequence
+                    eroticActivationClicks++;
+                }
+
+                lastEroticClickTime = currentTime;
+
+                // Check if threshold is met within the window
+                if (eroticActivationClicks >= REQUIRED_CLICKS) {
+                    if (eroticActivationTimeoutId) {
+                        clearTimeout(eroticActivationTimeoutId);
+                        eroticActivationTimeoutId = null;
+                    }
+                    eroticActivationClicks = 0; // Reset for next time, even if activation is pending
+                    // Trigger the confirmation modal
+                    confirmModal.style.display = 'flex';
+                    // Temporarily disable click listener on modalImg to prevent re-triggering while modal is open
+                    document.getElementById('modalImg').removeEventListener('click', handleEroticActivationClick);
+                }
+            } else {
+                // If another image is displayed in the modal, reset erotic activation state
+                eroticActivationClicks = 0;
+                if (eroticActivationTimeoutId) {
+                    clearTimeout(eroticActivationTimeoutId);
+                    eroticActivationTimeoutId = null;
+                }
+                lastEroticClickTime = 0;
+            }
+        }
+
+        // Erotic Mode Toggle Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            novelLinks = document.querySelectorAll('.novel a');
+            eroticModeStatus = document.getElementById('eroticModeStatus');
+            confirmModal = document.getElementById('confirmEroticModeModal');
+            confirmYesBtn = document.getElementById('confirmEroticYes');
+            confirmNoBtn = document.getElementById('confirmEroticNo');
+
+            // Load mode from localStorage if available
+            if (localStorage.getItem('isEroticMode') === 'true') {
+                isEroticMode = true;
+                applyEroticMode(false); // Don't show notification on initial load
+            }
+
+            confirmYesBtn.addEventListener('click', function() {
+                isEroticMode = true;
+                localStorage.setItem('isEroticMode', isEroticMode); // Save mode to localStorage
+                applyEroticMode(true); // Show notification for toggling on
+                confirmModal.style.display = 'none'; // Hide the confirmation modal
+                // Re-attach the click listener only if the modal is still open and profile image is showing
+                if (document.getElementById('myModal').style.display === 'block' &&
+                    document.getElementById('modalImg').src.includes('images/profile.webp')) {
+                    document.getElementById('modalImg').addEventListener('click', handleEroticActivationClick);
+                }
+            });
+
+            confirmNoBtn.addEventListener('click', function() {
+                confirmModal.style.display = 'none'; // Hide the confirmation modal
+                // Re-attach the click listener if the modal is still open and profile image is showing
+                if (document.getElementById('myModal').style.display === 'block' &&
+                    document.getElementById('modalImg').src.includes('images/profile.webp')) {
+                    document.getElementById('modalImg').addEventListener('click', handleEroticActivationClick);
+                }
+                // Also reset the activation attempt if user cancels
+                eroticActivationClicks = 0;
+                if (eroticActivationTimeoutId) {
+                    clearTimeout(eroticActivationTimeoutId);
+                    eroticActivationTimeoutId = null;
+                }
+                lastEroticClickTime = 0;
+            });
+
+            function applyEroticMode(showNotificationOnToggle = false) {
+                if (isEroticMode) {
+                    document.body.classList.add('erotic-mode');
+                    eroticModeStatus.style.display = 'block'; // Show status text
+                    novelLinks.forEach(link => {
+                        const eroticHref = link.getAttribute('data-erotic-href');
+                        if (eroticHref) {
+                            link.href = eroticHref;
+                        }
+                    });
+                    if (showNotificationOnToggle) {
+                        showNotification('已進入官能模式');
+                    }
+                } else {
+                    document.body.classList.remove('erotic-mode');
+                    eroticModeStatus.style.display = 'none'; // Hide status text
+                    novelLinks.forEach(link => {
+                        const normalHref = link.getAttribute('data-normal-href');
+                        if (normalHref) {
+                            link.href = normalHref;
+                        }
+                    });
+                    if (showNotificationOnToggle) {
+                        showNotification('已退出官能模式');
+                    }
+                }
+            }
+
+            // Function to handle exiting erotic mode by re-clicking the image (hidden feature)
+            // This is a new way to toggle OFF the mode
+            document.getElementById('eroticModeStatus').addEventListener('click', function() {
+                if (isEroticMode) { // Only allow toggling off if currently in erotic mode
+                    isEroticMode = false;
+                    localStorage.setItem('isEroticMode', isEroticMode);
+                    applyEroticMode(true); // Show notification for toggling off
+                }
+            });
+
+        });
     </script>
 </body>
 </html>
