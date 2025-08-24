@@ -45,7 +45,7 @@ const novelListData = [
             { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel28_content', title: '28.命運之橋' },
             { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel29_content', title: '29.甯的所在' },
             { href: 'novel_reader?series=背上鬼女兒的戀&chapter=novel30_content', title: '30.回歸與守望' },
-            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=extra_content', title: '幕後番外：回歸之夜' },
+            { href: 'novel_reader?series=背上鬼女兒的戀&chapter=extra1_content', title: '幕後番外：回歸之夜' },
         ]
     },
 ];
