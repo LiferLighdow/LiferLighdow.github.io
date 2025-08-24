@@ -529,6 +529,79 @@
             animation: fadeOut 0.5s forwards;
         }
 
+		  /* Styles for the new app intro section */
+#app-intro {
+    background: linear-gradient(45deg, #1C1C24 0%, #0D0D10 100%);
+    border: 2px solid var(--cyber-accent-2); /* Neon green border */
+    box-shadow: 0 0 30px var(--cyber-shadow-color-secondary); /* Magenta glow */
+    text-align: center;
+    padding: 50px 30px;
+}
+
+#app-intro h2 {
+    color: var(--cyber-accent-2); /* Neon green title */
+    text-shadow: 0 0 15px var(--cyber-accent-2);
+    border-bottom: 2px solid var(--cyber-accent-2);
+    margin-bottom: 30px;
+}
+
+#app-intro .app-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+#app-intro .app-content img {
+    max-width: 150px;
+    height: auto;
+    border-radius: 15px;
+    border: 2px solid var(--cyber-glow-color);
+    box-shadow: 0 0 20px var(--cyber-glow-color);
+    transition: transform 0.3s ease-in-out;
+}
+
+#app-intro .app-content img:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+#app-intro .app-content p {
+    font-size: 1.1em;
+    line-height: 1.8;
+    color: #e0e0e0;
+    max-width: 800px;
+    margin: 0 auto;
+    text-shadow: 0 0 3px rgba(0, 240, 255, 0.3);
+}
+
+#app-intro .app-content a.download-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 25px;
+    background-color: var(--cyber-accent-1);
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 2px solid var(--cyber-accent-1);
+    box-shadow: 0 0 15px var(--cyber-accent-1);
+    transition: all 0.3s ease;
+}
+
+#app-intro .app-content a.download-link:hover {
+    background-color: var(--erotic-mode-color);
+    color: white;
+    box-shadow: 0 0 25px var(--erotic-mode-color);
+    border-color: var(--erotic-mode-color);
+}
+
+/* Responsive adjustments for app-intro */
+@media (max-width: 768px) {
+    #app-intro .app-content {
+        flex-direction: column;
+    }
+}
     </style>
     <link rel="icon" href="../images/logo.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="../images/logo.ico" type="image/x-icon" />
@@ -549,6 +622,7 @@
         <h1>Lifer_Lighdow原創小說分享區（點擊圖片即可放大）</h1>
         <nav>
             <ul>
+				    <li><a href="#app-intro">應用程式介紹</a></li>
                 <li><a href="#intro">自我介紹</a></li>
                 <li><a href="#main-novels">主線作品</a></li>
                 <li><a href="#side-novels">副線作品</a></li>
@@ -557,7 +631,21 @@
             </ul>
         </nav>
     </header>
-
+	 
+	 <!-- New Section: Application Introduction -->
+    <section id="app-intro">
+        <h2>我的小說應用程式：虛空迴響文獻籍 - 專屬閱讀，隨時暢享</h2>
+        <div class="app-content">
+            <img src="images/app.webp" alt="小說應用程式圖示">
+            <p>
+                歡迎來到您的個人化數位閱讀空間！我的專屬小說應用程式「**虛空迴響文獻籍**」旨在為所有 Android 手機使用者提供一個簡潔、流暢且專為閱讀 **Lifer_Lighdow 原創小說** 而最佳化的體驗。我們了解您希望在行動裝置上輕鬆、舒適地沉浸在我的故事世界中。<br><br>
+                「虛空迴響文獻籍」提供了一個直觀的介面，讓您可以輕鬆瀏覽和閱讀我的所有作品。應用程式針對手機閱讀進行了最佳化，確保文字排版舒適、載入速度快，並提供客製化的閱讀設定，讓您可以專注於故事情節本身。<br><br>
+                告別複雜的操作和外界干擾，專為我的讀者打造。立即下載「虛空迴響文獻籍」，讓您的 Android 手機成為您專屬的 Lifer_Lighdow 行動圖書館，隨時隨地享受純粹的閱讀樂趣！
+            </p>
+            <a href="Lifer_Lighdow_Novel.apk" target="_blank" class="download-link">>> 取得 虛空迴響文獻籍 應用程式</a>
+        </div>
+    </section>
+	 
     <section id="intro">
         <h2>自我介紹</h2>
         <div class="intro-content">
