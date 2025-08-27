@@ -43,7 +43,7 @@ const musicData = {
         { title: '戦火の中の永遠（Male ver.）', src: 'music/pop/senka_no_naka_no_eien_male.mp3', cover: 'music/cover/senka_no_naka_no_eien_male.jpg' },
         { title: '無垠之心Infiniteこころ의경계', src: 'music/pop/mugin_no_kokoro.mp3', cover: 'music/cover/mugin_no_kokoro.jpg' },
         { title: '捨てられた子供（Female ver.）', src: 'music/pop/suterareta_kodomo_female.mp3', cover: 'music/cover/suterareta_kodomo_female.jpg' },
-		  { title: '捨てられた子供（Male ver.）', src: 'music/pop/suterareta_kodomo_male.mp3', cover: 'music/cover/suterareta_kodomo_male.jpg' }
+		{ title: '捨てられた子供（Male ver.）', src: 'music/pop/suterareta_kodomo_male.mp3', cover: 'music/cover/suterareta_kodomo_male.jpg' }
     ],
     rock: [
         { title: '卒業おめでとう', src: 'music/rock/sotsugyou_omedetou.mp3', cover: 'music/cover/sotsugyou_omedetou.jpg' },
@@ -71,7 +71,14 @@ const musicData = {
         { title: 'Eternal Moment', src: 'music/vocaloid/eternal_moment.mp3', cover: 'music/cover/eternal_moment.jpg' },
         { title: '01011001__ɅƧȼℏřØπ', src: 'music/vocaloid/ascron.mp3', cover: 'music/cover/ascron.gif' },
         { title: '和平の交響曲', src: 'music/vocaloid/wahei_no_koukyoukyoku.mp3', cover: 'music/cover/wahei_no_koukyoukyoku.jpg' },
-        { title: '儚い幻', src: 'music/vocaloid/hakanai_maboroshi.mp3', cover: 'music/cover/hakanai_maboroshi.jpg' }
+        { title: '儚い幻', src: 'music/vocaloid/hakanai_maboroshi.mp3', cover: 'music/cover/hakanai_maboroshi.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. 初音ミク）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_miku.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_miku.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. 鏡音リン）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_rin.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_rin.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. 鏡音レン）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_len.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_len.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. 巡音ルカ）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_luka.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_luka.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. IA）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_ia.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_ia.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. VOCALOIDS）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_vocaloids.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_vocaloids.jpg' }
     ],
     piano: [
         { title: '心の祈り', src: 'music/piano/kokoro_no_inori.mp3', cover: 'music/cover/kokoro_no_inori.jpg' },
