@@ -1,0 +1,96 @@
+// music-data.js
+const musicData = {
+    pop: [
+        { title: '世界幻想曲', src: 'music/pop/sekai_gensoukyoku.mp3', cover: 'music/cover/sekai_gensoukyoku.jpg' },
+        { title: '空の幻想', src: 'music/pop/sora_no_gensou.mp3', cover: 'music/cover/sora_no_gensou.jpg' },
+        { title: 'Too Late Wishes', src: 'music/pop/too_late_wishes.mp3', cover: 'music/cover/too_late_wishes.jpg' },
+        { title: '悲劇の光', src: 'music/pop/higeki_no_hikari.mp3', cover: 'music/cover/higeki_no_hikari.jpg' },
+        { title: '祈りの灯火（Female ver.）', src: 'music/pop/inori_no_tomoshibi_female.mp3', cover: 'music/cover/inori_no_tomoshibi_female.jpg' },
+        { title: '祈りの灯火（Male ver.）', src: 'music/pop/inori_no_tomoshibi_male.mp3', cover: 'music/cover/inori_no_tomoshibi_male.jpg' },
+        { title: 'Infinite_Labyrinth（Female ver.）', src: 'music/pop/infinite_labyrinth_female.mp3', cover: 'music/cover/infinite_labyrinth_female.jpg' },
+        { title: 'Infinite_Labyrinth（Male ver.）', src: 'music/pop/infinite_labyrinth_male.mp3', cover: 'music/cover/infinite_labyrinth.jpg' },
+        { title: '永遠の光（Male ver.）', src: 'music/pop/eien_no_hikari_male.mp3', cover: 'music/cover/eien_no_hikari_male.jpg' },
+        { title: '永遠の光（Female ver.）', src: 'music/pop/eien_no_hikari_female.mp3', cover: 'music/cover/eien_no_hikari_female.jpg' },
+        { title: 'あなたの影', src: 'music/pop/anata_no_kage.mp3', cover: 'music/cover/anata_no_kage.jpg' },
+        { title: '戦火の中の永遠（Female ver.）', src: 'music/pop/senka_no_naka_no_eien_female.mp3', cover: 'music/cover/senka_no_naka_no_eien_female.jpg' },
+        { title: '戦火の中の永遠（Male ver.）', src: 'music/pop/senka_no_naka_no_eien_male.mp3', cover: 'music/cover/senka_no_naka_no_eien_male.jpg' },
+        { title: '無垠之心Infiniteこころ의경계', src: 'music/pop/mugin_no_kokoro.mp3', cover: 'music/cover/mugin_no_kokoro.jpg' },
+        { title: '捨てられた子供（Female ver.）', src: 'music/pop/suterareta_kodomo_female.mp3', cover: 'music/cover/suterareta_kodomo_female.jpg' },
+		{ title: '捨てられた子供（Male ver.）', src: 'music/pop/suterareta_kodomo_male.mp3', cover: 'music/cover/suterareta_kodomo_male.jpg' }
+    ],
+    rock: [
+        { title: '卒業おめでとう', src: 'music/rock/sotsugyou_omedetou.mp3', cover: 'music/cover/sotsugyou_omedetou.jpg' },
+        { title: '時空を超えて', src: 'music/rock/jikuu_wo_koete.mp3', cover: 'music/cover/jikuu_wo_koete.jpg' },
+        { title: '夢の風に乗って', src: 'music/rock/yume_no_kaze_ni_notte.mp3', cover: 'music/cover/yume_no_kaze_ni_notte.jpg' },
+        { title: 'The Kings Revival', src: 'music/rock/the_kings_revival.mp3', cover: 'music/cover/the_kings_revival.jpg' },
+        { title: '偽りの者たち', src: 'music/rock/itsuwari_no_monotachi.mp3', cover: 'music/cover/itsuwari_no_monotachi.jpg' }
+    ],
+    electronic: [
+        { title: '冊丹し日ヨ几回   日丹亡片', src: 'music/electronic/malbeno_back.mp3', cover: 'music/cover/malbeno_back.jpg' },
+        { title: 'まごまごハッピー', src: 'music/electronic/magomago_happy.mp3', cover: 'music/cover/magomago_happy.jpg' },
+        { title: 'ぐるぐるダンス', src: 'music/electronic/guruguru_dance.mp3', cover: 'music/cover/guruguru_dance.jpg' },
+        { title: 'にんぎょうのうた', src: 'music/electronic/ningyou_no_uta.mp3', cover: 'music/cover/ningyou_no_uta.jpg' },
+        { title: 'Sugary Affection', src: 'music/electronic/sugary_affection.mp3', cover: 'music/cover/sugary_affection.jpg' },
+        { title: 'Slumbering Sea', src: 'music/electronic/slumbering_sea.mp3', cover: 'music/cover/slumbering_sea.jpg' },
+        { title: 'EtCr_musix', src: 'music/electronic/etcr_musix.mp3', cover: 'music/cover/etcr_musix.jpg' },
+        { title: 'Doomsday Conqueror', src: 'music/electronic/doomsday_conqueror.mp3', cover: 'music/cover/doomsday_conqueror.jpg' },
+    ],
+    vocaloid: [
+        { title: '人生何のために', src: 'music/vocaloid/jinsei_nan_no_tame_ni.mp3', cover: 'music/cover/jinsei_nan_no_tame_ni.jpg' },
+        { title: '永遠の旅路', src: 'music/vocaloid/eien_no_tabiji.mp3', cover: 'music/cover/eien_no_tabiji.jpg' },
+        { title: '夢に縛られたあなた', src: 'music/vocaloid/yume_ni_shibarareta_anata.mp3', cover: 'music/cover/yume_ni_shibarareta_anata.jpg' },
+        { title: '❤꒐ ꒒ꄲ꒦ꏂ ꌦꄲ꒤❤', src: 'music/vocaloid/i_love_you.mp3', cover: 'music/cover/i_love_you.jpg' },
+        { title: '罪悪感', src: 'music/vocaloid/zaiakukan.mp3', cover: 'music/cover/zaiakukan.jpg' },
+        { title: 'Eternal Moment', src: 'music/vocaloid/eternal_moment.mp3', cover: 'music/cover/eternal_moment.jpg' },
+        { title: '01011001__ɅƧȼℏřØπ', src: 'music/vocaloid/ascron.mp3', cover: 'music/cover/ascron.gif' },
+        { title: '和平の交響曲', src: 'music/vocaloid/wahei_no_koukyoukyoku.mp3', cover: 'music/cover/wahei_no_koukyoukyoku.jpg' },
+        { title: '儚い幻', src: 'music/vocaloid/hakanai_maboroshi.mp3', cover: 'music/cover/hakanai_maboroshi.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. 初音ミク）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_miku.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_miku.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. 鏡音リン）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_rin.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_rin.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. 鏡音レン）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_len.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_len.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. 巡音ルカ）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_luka.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_luka.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. IA）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_ia.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_ia.jpg' },
+		{ title: '生きているこの時、死んだあの日を想う（feat. VOCALOIDS）', src: 'music/vocaloid/ikiteiru_kono_toki,shinda_ano_hi_o_omou_vocaloids.mp3', cover: 'music/cover/ikiteiru_kono_toki,shinda_ano_hi_o_omou_vocaloids.jpg' }
+    ],
+    piano: [
+        { title: '心の祈り', src: 'music/piano/kokoro_no_inori.mp3', cover: 'music/cover/kokoro_no_inori.jpg' },
+        { title: '静かな時間', src: 'music/piano/shizukana_jikan.mp3', cover: 'music/cover/shizukana_jikan.jpg' },
+        { title: '時間の流れ', src: 'music/piano/jikan_no_nagare.mp3', cover: 'music/cover/jikan_no_nagare.jpg' },
+        { title: '生命の息吹', src: 'music/piano/seimei_no_ibuki.mp3', cover: 'music/cover/seimei_no_ibuki.jpg' },
+        { title: '小さな星', src: 'music/piano/chiisana_hoshi.mp3', cover: 'music/cover/chiisana_hoshi.jpg' },
+        { title: '月夜の微光', src: 'music/piano/tsukiyo_no_bikou.mp3', cover: 'music/cover/tsukiyo_no_bikou.jpg' },
+        { title: '思い出の並木道', src: 'music/piano/omoideno_namikimichi.mp3', cover: 'music/cover/omoideno_namikimichi.jpg' },
+        { title: '星空の囁き', src: 'music/piano/hoshizora_no_sasayaki.mp3', cover: 'music/cover/hoshizora_no_sasayaki.jpg' },
+        { title: '砂漠の星屑', src: 'music/piano/sabaku_no_hoshikuzu.mp3', cover: 'music/cover/sabaku_no_hoshikuzu.jpg' },
+        { title: '月影に浮かぶ城', src: 'music/piano/tsukikage_ni_ukabu_shiro.mp3', cover: 'music/cover/tsukikage_ni_ukabu_shiro.jpg' },
+        { title: '風に踊る花たち', src: 'music/piano/kaze_ni_odoru_hanatachi.mp3', cover: 'music/cover/kaze_ni_odoru_hanatachi.jpg' },
+        { title: '悠久の山河に響く音', src: 'music/piano/yuukyuu_no_sanga_ni_hibiku_oto.mp3', cover: 'music/cover/yuukyuu_no_sanga_ni_hibiku_oto.jpg' },
+        { title: '静かなる願い', src: 'music/piano/shizukanaru_negai.mp3', cover: 'music/cover/shizukanaru_negai.jpg' },
+        { title: '思い', src: 'music/piano/omoi.mp3', cover: 'music/cover/omoi.jpg' }
+    ],
+    game: [
+        { title: 'NIGHT ZONE', src: 'music/game/night_zone.mp3', cover: 'music/cover/night_zone.jpg' },
+        { title: 'Stardust Symphony', src: 'music/game/stardust_symphony.mp3', cover: 'music/cover/stardust_symphony.jpg' },
+        { title: '命日回忌', src: 'music/game/meijitu_kaiki.mp3', cover: 'music/cover/meijitu_kaiki.jpg' }
+    ],
+    original: [
+        { title: 'MALBENO5.4', src: 'music/original/malbeno5.4.mp3', cover: 'music/cover/malbeno5.4.jpg' },
+        { title: 'MALBENO5.4-R.I.P', src: 'music/original/malbeno5.4-r.i.p.mp3', cover: 'music/cover/malbeno5.4-r.i.p.jpg' },
+        { title: 'Dlesaws', src: 'music/original/dlesaws.mp3', cover: 'music/cover/dlesaws.png' },
+        { title: 'Ⱨ₳ⱤĐ₵ØⱤɆ', src: 'music/original/hardcore.mp3', cover: 'music/cover/hardcore.jpg' },
+        { title: '🌌Feline from the Multiverse 🌌', src: 'music/original/feline.mp3', cover: 'music/cover/feline.jpg' },
+        { title: 'βρΜ≠ℋ', src: 'music/original/bpm.mp3', cover: 'music/cover/bpm.jpg' },
+        { title: 'Ɽ͜͝Ʉ͠Ƨ͟Ⱨ͡₵̵Ø͟Ɽ͜Ɇ̸', src: 'music/original/rushcore.mp3', cover: 'music/cover/rushcore.jpg' },
+        { title: '上波', src: 'music/original/uenami.mp3', cover: 'music/cover/uenami.jpg' },
+        { title: '疾嵐波', src: 'music/original/shiranami.mp3', cover: 'music/cover/shiranami.jpg' },
+        { title: '柔らかい波', src: 'music/original/yurakai_nami.mp3', cover: 'music/cover/yurakai_nami.jpg' },
+		  { title: '千夜の影', src: 'music/original/senya_no_kage.mp3', cover: 'music/cover/senya_no_kage.jpg' },
+    ],
+	     
+    nightcore: [
+        { title: '祈りの灯火（Nightcore ver.）', src: 'music/nightcore/inori_no_tomoshibi_nightcore.mp3', cover: 'music/cover/inori_no_tomoshibi_nightcore.jpg' },
+        { title: '夢に縛られたあなた（Nightcore ver.）', src: 'music/nightcore/yume_ni_shibarareta_anata_nightcore.mp3', cover: 'music/cover/yume_ni_shibarareta_anata_nightcore.jpg' },
+		  { title: '捨てられた子供（Nightcore ver.）', src: 'music/nightcore/suterareta_kodomo_nightcore.mp3', cover: 'music/cover/suterareta_kodomo_nightcore.jpg' },
+    ]
+};
