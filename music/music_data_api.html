@@ -85,7 +85,7 @@
             return values.join(',');
         };
 
-        // --- 核心邏輯：檢查參數並輸出 CSV 或提示訊息 ---
+        // --- 核心邏輯：檢查參數並輸出 CSV 或提示訊息 (純文字) ---
         const getParam = window.getQueryParam('get');
         let outputContent = '';
 
@@ -119,36 +119,21 @@
                 outputContent = '錯誤：無法載入音樂資料。請檢查 music-data.js 檔案路徑。';
             }
             
-            // 直接將 CSV 內容寫入文件，並關閉，確保純 CSV 輸出
+            // 直接將 CSV 內容寫入文件，並關閉，確保純文字輸出
             document.write(outputContent);
             document.close();
         } else {
-            // 如果沒有 'get' 參數，則顯示 API 端點提示訊息
+            // 如果沒有 'get' 參數，則輸出純文字的 API 端點提示訊息
             outputContent = "此頁面為音樂資料 API 端點，請使用 URL 參數 (例如 ?get=titles) 獲取資料。";
             
-            document.write(`
-                <!DOCTYPE html>
-                <html lang="zh-Hant">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>音樂資料 API 端點</title>
-                    <style>
-                        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #f0f0f0; color: #333; text-align: center; }
-                        div { padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-                        code { background-color: #e0e0e0; padding: 2px 4px; border-radius: 4px; }
-                    </style>
-                </head>
-                <body>
-                    <div>${outputContent}</div>
-                </body>
-                </html>
-            `);
+            // 直接將提示訊息寫入文件，並關閉，確保純文字輸出
+            document.write(outputContent);
             document.close();
         }
     </script>
 </head>
 <body>
-    <!-- 實際內容會由上方 JavaScript 產生，這個 body 標籤通常會被覆蓋或替代 -->
+    <!-- 這個 body 標籤會被上方 JavaScript 的 document.write() 完全覆寫或替換，
+         因此它實際上不會被瀏覽器解析或呈現任何內容。 -->
 </body>
 </html>
