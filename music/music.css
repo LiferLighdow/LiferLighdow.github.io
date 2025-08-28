@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'MyCustomFont', sans-serif;
+    font-family: 'LXGW Marker Gothic', sans-serif;
     background-color: #121212;
     color: #fff;
     margin: 0;
@@ -15,16 +15,6 @@ body {
     display: flex;
     flex-direction: column;
     /* 使用 Flexbox 垂直排列 */
-}
-
-
-/* 定義自定義字體 */
-@font-face {
-    font-family: 'MyCustomFont';
-    src: url('fonts/myfont.woff2') format('woff2'), url('fonts/myfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
 }
 
 .container {
