@@ -3,296 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>音樂資料 API 與 CSV 匯出</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" xintegrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .hidden-content {
-            display: none; /* 用於隱藏非 CSV 輸出模式下的內容 */
-        }
-        /* Style for the pre tag when displaying CSV directly */
-        pre.csv-output {
-            white-space: pre-wrap; /* Wrap long lines */
-            word-break: break-all; /* Break words to prevent overflow */
-            font-family: 'Consolas', 'Monaco', monospace;
-            background-color: #f8f8f8;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-            margin: 20px auto;
-            max-width: 800px;
-            overflow-x: auto; /* Allow horizontal scrolling for very long lines */
-        }
-    </style>
-</head>
-<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
-
-    <!-- 用於直接輸出 CSV 的容器 -->
-    <pre id="csvOutput" class="csv-output hidden"></pre>
-
-    <div id="mainContent" class="player-container bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">音樂資料 API 與 CSV 匯出工具</h1>
-        <p class="text-gray-600 mb-8 text-center">
-            此工具將從 <code class="bg-gray-200 px-1 rounded">music-data.js</code> 載入音樂資料，並提供多種匯出方式。
-            您可以透過 URL 參數 (例如 <code class="bg-gray-200 px-1 rounded">?get=titles</code>) 直接獲取 CSV 內容，或點擊下方按鈕下載。
-            <br>
-            **更新：** CSV 輸出現在為單一列，所有選項以逗號分隔。
-        </p>
-
-        <div class="flex flex-col md:flex-row justify-center gap-4 mb-8">
-            <button id="downloadTitlesCsvBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
-                <i class="fas fa-file-csv mr-2"></i> 下載標題 CSV
-            </button>
-            <button id="downloadCoversCsvBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75">
-                <i class="fas fa-image mr-2"></i> 下載縮圖網址 CSV
-            </button>
-            <button id="downloadSrcsCsvBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus->ring-green-500 focus:ring-opacity-75">
-                <i class="fas fa-music mr-2"></i> 下載音樂網址 CSV
-            </button>
-            <button id="downloadCategoriesCsvBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-75">
-                <i class="fas fa-tags mr-2"></i> 下載音樂類別 CSV
-            </button>
-        </div>
-
-        <div id="loadingMessage" class="text-center text-gray-500 my-4 hidden">
-            <i class="fas fa-spinner fa-spin mr-2"></i> 正在載入音樂資料...
-        </div>
-
-        <div id="errorMessage" class="text-center text-red-600 my-4 hidden">
-            <i class="fas fa-exclamation-triangle mr-2"></i> 無法載入音樂資料。請檢查網路連線或 <code class="bg-gray-200 px-1 rounded">music-data.js</code> 檔案路徑。
-        </div>
-
-        <div id="musicListContainer" class="mt-8">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-4">預覽所有音樂資料</h2>
-            <div id="musicList" class="space-y-4">
-                <!-- 音樂列表將在此處動態生成 -->
-            </div>
-        </div>
-    </div>
-
+    <title>音樂資料 API 端點</title>
     <!-- 外部 JavaScript 檔案，應包含 musicData 物件 -->
     <script src="https://liferlighdow.github.io/music/music-data.js"></script> 
+    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const mainContent = document.getElementById('mainContent');
-            const csvOutputPre = document.getElementById('csvOutput');
-            const downloadTitlesCsvBtn = document.getElementById('downloadTitlesCsvBtn');
-            const downloadCoversCsvBtn = document.getElementById('downloadCoversCsvBtn');
-            const downloadSrcsCsvBtn = document.getElementById('downloadSrcsCsvBtn');
-            const downloadCategoriesCsvBtn = document.getElementById('downloadCategoriesCsvBtn');
-            const musicListDiv = document.getElementById('musicList');
-            const loadingMessage = document.getElementById('loadingMessage');
-            const errorMessage = document.getElementById('errorMessage');
+        // 輔助函式：從 URL 獲取查詢參數
+        window.getQueryParam = function(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        };
 
-            let allMusicData = []; // 用於儲存所有扁平化的音樂資料
-
-            // 輔助函式：從 URL 獲取查詢參數
-            function getQueryParam(name) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(name);
+        // 輔助函式：將字串處理為 CSV 安全格式
+        window.escapeCsv = function(value) {
+            if (value === null || value === undefined) {
+                return '';
             }
-
-            // 輔助函式：將字串處理為 CSV 安全格式
-            function escapeCsv(value) {
-                if (value === null || value === undefined) {
-                    return '';
-                }
-                let stringValue = String(value);
-                // 檢查是否包含逗號、雙引號、換行符，如果包含則用雙引號包起來
-                if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n') || stringValue.includes('\r')) {
-                    // 將字串中的雙引號替換成兩個雙引號，然後用雙引號包起來
-                    return `"${stringValue.replace(/"/g, '""')}"`;
-                }
-                return stringValue;
+            let stringValue = String(value);
+            if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n') || stringValue.includes('\r')) {
+                return `"${stringValue.replace(/"/g, '""')}"`;
             }
+            return stringValue;
+        };
 
-            // 將所有類別的音樂資料扁平化
-            function flattenMusicData(musicDataObject) {
-                const flatData = [];
-                for (const category in musicDataObject) {
-                    if (musicDataObject.hasOwnProperty(category)) {
-                        musicDataObject[category].forEach(song => {
-                            flatData.push({
-                                category: category,
-                                title: song.title,
-                                src: song.src,
-                                cover: song.cover
-                            });
+        // 將所有類別的音樂資料扁平化
+        window.flattenMusicData = function(musicDataObject) {
+            const flatData = [];
+            for (const category in musicDataObject) {
+                if (musicDataObject.hasOwnProperty(category)) {
+                    musicDataObject[category].forEach(song => {
+                        flatData.push({
+                            category: category,
+                            title: song.title,
+                            src: song.src,
+                            cover: song.cover
                         });
+                    });
+                }
+            }
+            return flatData;
+        };
+
+        // 轉換為標題 CSV (單一列)
+        window.convertToTitlesCsv = function(data) {
+            const values = [];
+            data.forEach(item => {
+                values.push(window.escapeCsv(item.title));
+            });
+            return values.join(',');
+        };
+
+        // 轉換為封面網址 CSV (單一列，只留檔案名)
+        window.convertToCoversCsv = function(data) {
+            const values = [];
+            data.forEach(item => {
+                const filename = item.cover.split('/').pop();
+                values.push(window.escapeCsv(filename));
+            });
+            return values.join(',');
+        };
+
+        // 轉換為音樂網址 CSV (單一列，只留檔案名)
+        window.convertToSrcsCsv = function(data) {
+            const values = [];
+            data.forEach(item => {
+                const filename = item.src.split('/').pop();
+                values.push(window.escapeCsv(filename));
+            });
+            return values.join(',');
+        };
+
+        // 轉換為音樂類別 CSV (單一列)
+        window.convertToCategoriesCsv = function(data) {
+            const categories = new Set();
+            data.forEach(item => categories.add(item.category));
+            
+            const values = [];
+            Array.from(categories).sort().forEach(category => {
+                values.push(window.escapeCsv(category));
+            });
+            return values.join(',');
+        };
+
+        // --- 核心邏輯：檢查參數並輸出 CSV 或提示訊息 ---
+        const getParam = window.getQueryParam('get');
+        let outputContent = '';
+
+        if (getParam) {
+            // 如果偵測到 'get' 參數，處理 CSV 輸出
+            if (typeof musicData !== 'undefined' && musicData !== null) {
+                try {
+                    const allMusicData = window.flattenMusicData(musicData);
+
+                    switch (getParam) {
+                        case 'titles':
+                            outputContent = window.convertToTitlesCsv(allMusicData);
+                            break;
+                        case 'covers':
+                            outputContent = window.convertToCoversCsv(allMusicData);
+                            break;
+                        case 'srcs':
+                            outputContent = window.convertToSrcsCsv(allMusicData);
+                            break;
+                        case 'categories':
+                            outputContent = window.convertToCategoriesCsv(allMusicData);
+                            break;
+                        default:
+                            outputContent = '錯誤：無效的 CSV 類型參數。請使用 titles, covers, srcs, 或 categories。';
                     }
+                } catch (e) {
+                    outputContent = `處理資料時發生錯誤：${e.message}`;
+                    console.error("CSV 輸出模式錯誤:", e);
                 }
-                return flatData;
+            } else {
+                outputContent = '錯誤：無法載入音樂資料。請檢查 music-data.js 檔案路徑。';
             }
-
-            // 轉換為標題 CSV (單一列)
-            function convertToTitlesCsv(data) {
-                const values = []; // 儲存所有標題
-                data.forEach(item => {
-                    values.push(escapeCsv(item.title));
-                });
-                return values.join(','); // 以逗號連接成單一列
-            }
-
-            // 轉換為封面網址 CSV (單一列，只留檔案名)
-            function convertToCoversCsv(data) {
-                const values = []; // 儲存所有封面檔案名
-                data.forEach(item => {
-                    const filename = item.cover.split('/').pop();
-                    values.push(escapeCsv(filename));
-                });
-                return values.join(','); // 以逗號連接成單一列
-            }
-
-            // 轉換為音樂網址 CSV (單一列，只留檔案名)
-            function convertToSrcsCsv(data) {
-                const values = []; // 儲存所有音樂檔案名
-                data.forEach(item => {
-                    const filename = item.src.split('/').pop();
-                    values.push(escapeCsv(filename));
-                });
-                return values.join(','); // 以逗號連接成單一列
-            }
-
-            // 轉換為音樂類別 CSV (單一列)
-            function convertToCategoriesCsv(data) {
-                const categories = new Set(); // 使用 Set 來確保類別的唯一性
-                data.forEach(item => categories.add(item.category));
-                
-                const values = [];
-                // 將 Set 轉換為陣列並排序，以便輸出順序一致
-                Array.from(categories).sort().forEach(category => {
-                    values.push(escapeCsv(category));
-                });
-                return values.join(','); // 以逗號連接成單一列
-            }
-
-            // 處理音樂資料並更新預覽列表
-            function displayMusicPreview(data) {
-                musicListDiv.innerHTML = ''; // 清空現有的音樂列表
-                for (const category in data) {
-                    if (data.hasOwnProperty(category)) {
-                        const songs = data[category];
-
-                        const categoryHeader = document.createElement('h3');
-                        categoryHeader.className = 'text-xl font-medium text-gray-800 mt-6 mb-2 capitalize';
-                        categoryHeader.textContent = `${category} 類別`;
-                        musicListDiv.appendChild(categoryHeader);
-
-                        const ul = document.createElement('ul');
-                        ul.className = 'list-disc list-inside space-y-1 text-left text-gray-700';
-                        
-                        songs.forEach(song => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `<strong>${song.title}</strong><br>
-                                            <span class="text-sm text-gray-500">音樂來源: </span><code class="text-xs break-all">${song.src}</code><br>
-                                            <span class="text-sm text-gray-500">封面來源: </span><code class="text-xs break-all">${song.cover}</code>`;
-                            ul.appendChild(li);
-                        });
-                        musicListDiv.appendChild(ul);
-                    }
-                }
-            }
-
-            // 處理資料載入
-            // 首先顯示載入訊息
-            loadingMessage.classList.remove('hidden');
-
-            // 使用 setTimeout 模擬異步載入，確保 musicData 變數有時間被載入
-            setTimeout(() => {
-                if (typeof musicData !== 'undefined' && musicData !== null) {
-                    allMusicData = flattenMusicData(musicData);
-                    loadingMessage.classList.add('hidden'); // 隱藏載入訊息
-
-                    const getParam = getQueryParam('get');
-
-                    if (getParam) {
-                        // 如果有 'get' 參數，則直接輸出 CSV 內容
-                        mainContent.classList.add('hidden-content'); // 隱藏主介面
-                        csvOutputPre.classList.remove('hidden'); // 顯示 CSV 輸出容器
-
-                        let csvContent = '';
-                        switch (getParam) {
-                            case 'titles':
-                                csvContent = convertToTitlesCsv(allMusicData);
-                                break;
-                            case 'covers':
-                                csvContent = convertToCoversCsv(allMusicData);
-                                break;
-                            case 'srcs':
-                                csvContent = convertToSrcsCsv(allMusicData);
-                                break;
-                            case 'categories':
-                                csvContent = convertToCategoriesCsv(allMusicData);
-                                break;
-                            default:
-                                csvContent = '錯誤：無效的 CSV 類型參數。請使用 titles, covers, srcs, 或 categories。';
-                                csvOutputPre.style.color = 'red';
-                        }
-                        csvOutputPre.textContent = csvContent;
-
-                    } else {
-                        // 如果沒有 'get' 參數，則顯示完整的互動介面
-                        displayMusicPreview(musicData);
-
-                        // 設定下載按鈕事件
-                        downloadTitlesCsvBtn.addEventListener('click', () => {
-                            const csvContent = convertToTitlesCsv(allMusicData);
-                            downloadCsv(csvContent, 'music_titles.csv');
-                        });
-
-                        downloadCoversCsvBtn.addEventListener('click', () => {
-                            const csvContent = convertToCoversCsv(allMusicData);
-                            downloadCsv(csvContent, 'music_covers.csv');
-                        });
-
-                        downloadSrcsCsvBtn.addEventListener('click', () => {
-                            const csvContent = convertToSrcsCsv(allMusicData);
-                            downloadCsv(csvContent, 'music_srcs.csv');
-                        });
-
-                        downloadCategoriesCsvBtn.addEventListener('click', () => {
-                            const csvContent = convertToCategoriesCsv(allMusicData);
-                            downloadCsv(csvContent, 'music_categories.csv');
-                        });
-                    }
-
-                } else {
-                    loadingMessage.classList.add('hidden'); // 隱藏載入訊息
-                    errorMessage.classList.remove('hidden'); // 顯示錯誤訊息
-                    // 禁用所有下載按鈕
-                    downloadTitlesCsvBtn.disabled = true;
-                    downloadCoversCsvBtn.disabled = true;
-                    downloadSrcsCsvBtn.disabled = true;
-                    downloadCategoriesCsvBtn.disabled = true;
-                    downloadTitlesCsvBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    downloadCoversCsvBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    downloadSrcsCsvBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    downloadCategoriesCsvBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                }
-            }, 100); // 給予一些時間讓外部腳本載入
-
-            // 下載 CSV 檔案的輔助函式
-            function downloadCsv(content, filename) {
-                const blob = new Blob([content], { type: 'text/csv;charset=utf-8;\uFEFF' }); // 添加 BOM 支援中文
-                const link = document.createElement('a');
-                if (link.download !== undefined) {
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute('href', url);
-                    link.setAttribute('download', filename);
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                } else {
-                    alert('您的瀏覽器不支援自動下載。請手動複製以下內容：\n\n' + content);
-                }
-            }
-        });
+            
+            // 直接將 CSV 內容寫入文件，並關閉，確保純 CSV 輸出
+            document.write(outputContent);
+            document.close();
+        } else {
+            // 如果沒有 'get' 參數，則顯示 API 端點提示訊息
+            outputContent = "此頁面為音樂資料 API 端點，請使用 URL 參數 (例如 ?get=titles) 獲取資料。";
+            
+            document.write(`
+                <!DOCTYPE html>
+                <html lang="zh-Hant">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>音樂資料 API 端點</title>
+                    <style>
+                        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #f0f0f0; color: #333; text-align: center; }
+                        div { padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+                        code { background-color: #e0e0e0; padding: 2px 4px; border-radius: 4px; }
+                    </style>
+                </head>
+                <body>
+                    <div>${outputContent}</div>
+                </body>
+                </html>
+            `);
+            document.close();
+        }
     </script>
+</head>
+<body>
+    <!-- 實際內容會由上方 JavaScript 產生，這個 body 標籤通常會被覆蓋或替代 -->
 </body>
 </html>
