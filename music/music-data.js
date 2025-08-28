@@ -77,7 +77,7 @@ const musicData = {
     original: [
         { title: 'MALBENO5.4', src: 'original/malbeno5.4.mp3', cover: 'cover/malbeno5.4.jpg' },
         { title: 'MALBENO5.4-R.I.P', src: 'original/malbeno5.4-r.i.p.mp3', cover: 'cover/malbeno5.4-r.i.p.jpg' },
-        { title: 'Dlesaws', src: 'original/dlesaws.mp3', cover: 'cover/dlesaws.png' },
+        { title: 'Dlesaws', src: 'original/dlesaws.mp3', cover: 'cover/dlesaws.jpg' },
         { title: 'Ⱨ₳ⱤĐ₵ØⱤɆ', src: 'original/hardcore.mp3', cover: 'cover/hardcore.jpg' },
         { title: '🌌Feline from the Multiverse 🌌', src: 'original/feline.mp3', cover: 'cover/feline.jpg' },
         { title: 'βρΜ≠ℋ', src: 'original/bpm.mp3', cover: 'cover/bpm.jpg' },
