@@ -41,7 +41,7 @@
             此工具將從 <code class="bg-gray-200 px-1 rounded">music-data.js</code> 載入音樂資料，並提供多種匯出方式。
             您可以透過 URL 參數 (例如 <code class="bg-gray-200 px-1 rounded">?get=titles</code>) 直接獲取 CSV 內容，或點擊下方按鈕下載。
             <br>
-            **更新：** CSV 輸出現在不含標題列，且縮圖網址只顯示檔案名稱。
+            **更新：** CSV 輸出現在為單一列，所有選項以逗號分隔。
         </p>
 
         <div class="flex flex-col md:flex-row justify-center gap-4 mb-8">
@@ -76,7 +76,7 @@
     </div>
 
     <!-- 外部 JavaScript 檔案，應包含 musicData 物件 -->
-    <script src="music-data.js"></script> 
+    <script src="https://liferlighdow.github.io/music/music-data.js"></script> 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const mainContent = document.getElementById('mainContent');
@@ -129,48 +129,46 @@
                 return flatData;
             }
 
-            // 轉換為標題 CSV (無標題列)
+            // 轉換為標題 CSV (單一列)
             function convertToTitlesCsv(data) {
-                const rows = [];
+                const values = []; // 儲存所有標題
                 data.forEach(item => {
-                    rows.push(escapeCsv(item.title));
+                    values.push(escapeCsv(item.title));
                 });
-                return rows.join('\n');
+                return values.join(','); // 以逗號連接成單一列
             }
 
-            // 轉換為封面網址 CSV (無標題列，只留檔案名)
+            // 轉換為封面網址 CSV (單一列，只留檔案名)
             function convertToCoversCsv(data) {
-                const rows = [];
+                const values = []; // 儲存所有封面檔案名
                 data.forEach(item => {
-                    // 只提取封面網址中的檔案名稱 (XXX.jpg)
                     const filename = item.cover.split('/').pop();
-                    rows.push(escapeCsv(filename));
+                    values.push(escapeCsv(filename));
                 });
-                return rows.join('\n');
+                return values.join(','); // 以逗號連接成單一列
             }
 
-            // 轉換為音樂網址 CSV (無標題列，只留檔案名)
+            // 轉換為音樂網址 CSV (單一列，只留檔案名)
             function convertToSrcsCsv(data) {
-                const rows = [];
+                const values = []; // 儲存所有音樂檔案名
                 data.forEach(item => {
-                    // 只提取音樂網址中的檔案名稱 (XXX.mp3)
                     const filename = item.src.split('/').pop();
-                    rows.push(escapeCsv(filename));
+                    values.push(escapeCsv(filename));
                 });
-                return rows.join('\n');
+                return values.join(','); // 以逗號連接成單一列
             }
 
-            // 轉換為音樂類別 CSV (無標題列)
+            // 轉換為音樂類別 CSV (單一列)
             function convertToCategoriesCsv(data) {
                 const categories = new Set(); // 使用 Set 來確保類別的唯一性
                 data.forEach(item => categories.add(item.category));
                 
-                const rows = [];
+                const values = [];
                 // 將 Set 轉換為陣列並排序，以便輸出順序一致
                 Array.from(categories).sort().forEach(category => {
-                    rows.push(escapeCsv(category));
+                    values.push(escapeCsv(category));
                 });
-                return rows.join('\n');
+                return values.join(','); // 以逗號連接成單一列
             }
 
             // 處理音樂資料並更新預覽列表
