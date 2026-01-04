@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>無限荒野：彈力競技模式</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #080808;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: white;
+            touch-action: none;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: none;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .stat-box {
+            background: rgba(30, 30, 30, 0.85);
+            padding: 12px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 10px;
+            border-left: 4px solid #00f2ff;
+            pointer-events: auto;
+        }
+
+        #pause-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 5px;
+            transition: all 0.2s;
+        }
+
+        #leaderboard {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            background: rgba(20, 20, 20, 0.85);
+            padding: 15px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        #leaderboard h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #00f2ff;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .leader-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(10, 10, 10, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            display: none;
+            border: 2px solid #00f2ff;
+            z-index: 100;
+        }
+
+        .main-btn {
+            background: #00f2ff;
+            border: none;
+            color: black;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .hint {
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <div class="stat-box">
+            <div style="font-size: 11px; color: #aaa;">當前長度</div>
+            <div id="score-val" style="font-size: 28px; font-weight: bold; color: #00f2ff;">15</div>
+            <button id="pause-btn" onclick="togglePause()">暫停 (P)</button>
+        </div>
+        <div class="stat-box" style="border-left-color: #ff3e3e;">
+            <div style="font-size: 11px; color: #aaa;">截斷次數</div>
+            <div id="kill-val" style="font-size: 28px; font-weight: bold; color: #ff3e3e;">0</div>
+        </div>
+    </div>
+
+    <div id="leaderboard">
+        <h3>RANKING</h3>
+        <div id="leader-list"></div>
+    </div>
+
+    <div id="overlay">
+        <h1 id="overlay-title" style="margin-top: 0;">戰死沙場</h1>
+        <p id="overlay-stats"></p>
+        <button id="overlay-btn" class="main-btn" onclick="overlayAction()">重新出擊</button>
+    </div>
+
+    <div class="hint">
+        <b>彈力競技：</b> 頭撞頭會被彈遠！只能從後方截斷對手。
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        const WORLD_SIZE = 5000;
+        const FIXED_RADIUS = 12; 
+        const INITIAL_LENGTH = 15;
+        const MAX_BOTS = 30;
+        const FOOD_COUNT = 1000;
+        const GAME_SPEED = 4.5;
+        const BOUNCE_FORCE = 15; // 彈開的力道
+
+        let width, height;
+        let player;
+        let bots = [];
+        let foods = [];
+        let camera = { x: 0, y: 0 };
+        let isGameOver = false;
+        let isPaused = false;
+        let mousePos = { x: 0, y: 0 };
+
+        class Snake {
+            constructor(x, y, color, name, isBot = false) {
+                this.name = name;
+                this.isBot = isBot;
+                this.color = color;
+                this.score = INITIAL_LENGTH; 
+                this.segments = [];
+                for (let i = 0; i < INITIAL_LENGTH; i++) {
+                    this.segments.push({ x: x, y: y });
+                }
+                this.angle = Math.random() * Math.PI * 2;
+                this.radius = FIXED_RADIUS; 
+                this.kills = 0;
+                this.turnSpeed = 0.15;
+                this.targetAngle = this.angle;
+                this.bounceX = 0; // 外部衝擊力 X
+                this.bounceY = 0; // 外部衝擊力 Y
+            }
+
+            update() {
+                // 處理轉向
+                let angleDiff = this.targetAngle - this.angle;
+                while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+                this.angle += angleDiff * this.turnSpeed;
+
+                const head = this.segments[0];
+                
+                // 計算基礎移動
+                let nextX = head.x + Math.cos(this.angle) * GAME_SPEED + this.bounceX;
+                let nextY = head.y + Math.sin(this.angle) * GAME_SPEED + this.bounceY;
+
+                // 阻力：彈開後力道逐漸消失
+                this.bounceX *= 0.8;
+                this.bounceY *= 0.8;
+
+                // 邊界判定
+                if (nextX < 0 || nextX > WORLD_SIZE) nextX = head.x;
+                if (nextY < 0 || nextY > WORLD_SIZE) nextY = head.y;
+
+                // 核心碰撞偵測
+                const result = this.checkCollisions(nextX, nextY);
+                if (result === "DEAD") return;
+
+                // 更新身體座標
+                this.segments.unshift({ x: nextX, y: nextY });
+                
+                while (this.segments.length > Math.floor(this.score)) {
+                    this.segments.pop();
+                }
+
+                if (this.isBot) this.updateBot();
+            }
+
+            checkCollisions(nx, ny) {
+                // 1. 吃食物
+                for (let i = foods.length - 1; i >= 0; i--) {
+                    const f = foods[i];
+                    if (Math.pow(nx - f.x, 2) + Math.pow(ny - f.y, 2) < (this.radius + 6) ** 2) {
+                        this.score += f.val;
+                        foods.splice(i, 1);
+                        if (foods.length < FOOD_COUNT) spawnFood(1);
+                    }
+                }
+
+                // 2. 截斷與彈開
+                const snakes = [player, ...bots];
+                for (let target of snakes) {
+                    if (target === this) {
+                        // 撞自己身體判定
+                        for(let j=25; j < this.segments.length; j++) {
+                            const seg = this.segments[j];
+                            if (Math.pow(nx-seg.x, 2) + Math.pow(ny-seg.y, 2) < (this.radius * 1.1) ** 2) {
+                                handleDeath(this, null);
+                                return "DEAD";
+                            }
+                        }
+                        continue;
+                    }
+
+                    for (let i = 0; i < target.segments.length; i++) {
+                        const seg = target.segments[i];
+                        const distSq = Math.pow(nx - seg.x, 2) + Math.pow(ny - seg.y, 2);
+                        const hitDist = this.radius * 1.8;
+
+                        if (distSq < hitDist * hitDist) {
+                            if (i === 0) {
+                                // 頭撞頭：彈性碰撞
+                                const angleToOther = Math.atan2(target.segments[0].y - ny, target.segments[0].x - nx);
+                                // 將雙方往反方向推
+                                this.bounceX = -Math.cos(angleToOther) * BOUNCE_FORCE;
+                                this.bounceY = -Math.sin(angleToOther) * BOUNCE_FORCE;
+                                target.bounceX = Math.cos(angleToOther) * BOUNCE_FORCE;
+                                target.bounceY = Math.sin(angleToOther) * BOUNCE_FORCE;
+                                return "MOVE";
+                            } else {
+                                // 撞身體：截斷
+                                const broken = target.segments.splice(i);
+                                broken.forEach((s, idx) => {
+                                    if (idx % 3 === 0) {
+                                        foods.push({ x: s.x, y: s.y, val: 2.5, color: target.color, r: 4 });
+                                    }
+                                });
+                                target.score = Math.max(5, target.segments.length);
+                                this.kills++;
+                                if (target.score < 6) handleDeath(target, this);
+                                return "MOVE";
+                            }
+                        }
+                    }
+                }
+                return "MOVE";
+            }
+
+            updateBot() {
+                const head = this.segments[0];
+                if (Math.random() < 0.05) {
+                    let closest = null;
+                    let minD = 800 * 800;
+                    foods.slice(0, 30).forEach(f => {
+                        const d = Math.pow(f.x-head.x, 2) + Math.pow(f.y-head.y, 2);
+                        if (d < minD) { minD = d; closest = f; }
+                    });
+                    if (closest) {
+                        this.targetAngle = Math.atan2(closest.y - head.y, closest.x - head.x);
+                    }
+                }
+                if (Math.random() < 0.02) this.targetAngle += (Math.random() - 0.5);
+            }
+
+            draw(ctx, camera) {
+                if (this.segments.length < 2) return;
+                ctx.save();
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = this.radius * 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                
+                ctx.beginPath();
+                ctx.moveTo(this.segments[0].x - camera.x, this.segments[0].y - camera.y);
+                // 優化繪圖路徑以減輕 CPU 負擔
+                const step = this.segments.length > 100 ? 2 : 1;
+                for (let i = 1; i < this.segments.length; i += step) {
+                    ctx.lineTo(this.segments[i].x - camera.x, this.segments[i].y - camera.y);
+                }
+                ctx.stroke();
+
+                const head = this.segments[0];
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(head.x - camera.x, head.y - camera.y, this.radius, 0, Math.PI*2);
+                ctx.fill();
+
+                // 眼睛
+                ctx.fillStyle = "white";
+                ctx.beginPath();
+                ctx.arc(head.x - camera.x + Math.cos(this.angle+0.5)*8, head.y - camera.y + Math.sin(this.angle+0.5)*8, 4, 0, Math.PI*2);
+                ctx.arc(head.x - camera.x + Math.cos(this.angle-0.5)*8, head.y - camera.y + Math.sin(this.angle-0.5)*8, 4, 0, Math.PI*2);
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        function spawnFood(n) {
+            for (let i = 0; i < n; i++) {
+                foods.push({
+                    x: Math.random() * WORLD_SIZE,
+                    y: Math.random() * WORLD_SIZE,
+                    val: 1.2,
+                    color: `hsl(${Math.random()*360}, 80%, 60%)`,
+                    r: 3
+                });
+            }
+        }
+
+        function handleDeath(dead, killer) {
+            if (dead === player) {
+                isGameOver = true;
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('overlay-stats').innerText = `最終長度：${Math.floor(player.score)} | 截斷對手：${player.kills} 次`;
+            } else {
+                bots = bots.filter(b => b !== dead);
+                setTimeout(() => { if (bots.length < MAX_BOTS) spawnBot(); }, 2000);
+            }
+        }
+
+        function spawnBot() {
+            const x = Math.random() * WORLD_SIZE;
+            const y = Math.random() * WORLD_SIZE;
+            const color = `hsl(${Math.random()*360}, 70%, 50%)`;
+            bots.push(new Snake(x, y, color, "BOT", true));
+        }
+
+        function init() {
+            resize();
+            player = new Snake(WORLD_SIZE/2, WORLD_SIZE/2, "#00f2ff", "PLAYER");
+            for (let i = 0; i < MAX_BOTS; i++) spawnBot();
+            spawnFood(FOOD_COUNT);
+
+            window.addEventListener('mousemove', e => {
+                mousePos.x = e.clientX; mousePos.y = e.clientY;
+                if (!isPaused) player.targetAngle = Math.atan2(mousePos.y - height/2, mousePos.x - width/2);
+            });
+
+            window.addEventListener('keydown', e => { if (e.key.toLowerCase() === 'p') togglePause(); });
+            requestAnimationFrame(loop);
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            document.getElementById('overlay').style.display = isPaused ? 'block' : 'none';
+            document.getElementById('overlay-title').innerText = isPaused ? "暫停中" : "戰死沙場";
+            document.getElementById('overlay-btn').innerText = isPaused ? "繼續" : "重新出擊";
+        }
+
+        function overlayAction() {
+            if (isGameOver) location.reload();
+            else if (isPaused) togglePause();
+        }
+
+        function loop() {
+            if (!isGameOver && !isPaused) {
+                player.update();
+                bots.forEach(b => b.update());
+                camera.x = player.segments[0].x - width/2;
+                camera.y = player.segments[0].y - height/2;
+
+                ctx.fillStyle = "#080808";
+                ctx.fillRect(0,0,width,height);
+
+                // 背景格線
+                ctx.strokeStyle = "#111";
+                const gridOffset = 100;
+                for(let x = -camera.x % gridOffset; x < width; x += gridOffset) {
+                    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,height); ctx.stroke();
+                }
+                for(let y = -camera.y % gridOffset; y < height; y += gridOffset) {
+                    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(width,y); ctx.stroke();
+                }
+
+                // 畫食物
+                foods.forEach(f => {
+                    ctx.fillStyle = f.color;
+                    ctx.beginPath(); ctx.arc(f.x - camera.x, f.y - camera.y, f.r, 0, Math.PI*2); ctx.fill();
+                });
+
+                // 畫蛇
+                bots.forEach(b => b.draw(ctx, camera));
+                player.draw(ctx, camera);
+
+                // 更新 UI
+                document.getElementById('score-val').innerText = Math.floor(player.score);
+                document.getElementById('kill-val').innerText = player.kills;
+
+                // 排行榜
+                const leaders = [player, ...bots].sort((a,b) => b.score - a.score).slice(0, 5);
+                const list = document.getElementById('leader-list');
+                list.innerHTML = '';
+                leaders.forEach((s, i) => {
+                    list.innerHTML += `<div class="leader-item" style="color:${s===player?'#00f2ff':'#888'}">
+                        <span>#${i+1} ${s === player ? 'YOU' : 'BOT'}</span>
+                        <span>${Math.floor(s.score)}</span>
+                    </div>`;
+                });
+            }
+            requestAnimationFrame(loop);
+        }
+
+        function resize() { 
+            width = window.innerWidth; 
+            height = window.innerHeight; 
+            canvas.width = width; 
+            canvas.height = height; 
+        }
+        window.addEventListener('resize', resize);
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zen Gravity - 極簡引力</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --accent: #00f2ff;
+            --danger: #ff0055;
+            --core: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #ui {
+            position: absolute;
+            top: 40px;
+            width: 100%;
+            text-align: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #score {
+            font-size: 3rem;
+            font-weight: 200;
+            letter-spacing: 5px;
+            opacity: 0.6;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #overlay {
+            position: absolute;
+            background: rgba(0,0,0,0.85);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-weight: 200;
+            letter-spacing: 10px;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:active {
+            background: white;
+            color: black;
+        }
+
+        #hint {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            opacity: 0.5;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="ui">
+    <div id="score">0</div>
+</div>
+
+<div id="overlay">
+    <h1>引力</h1>
+    <p style="margin-bottom: 40px; opacity: 0.7;">點擊螢幕產生引力脈衝</p>
+    <button class="btn" id="startBtn">開始探索</button>
+    <div id="hint">建議使用耳機以獲得最佳體驗</div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const startBtn = document.getElementById('startBtn');
+    const overlay = document.getElementById('overlay');
+
+    let width, height;
+    let ball, obstacles, particles, cores;
+    let score = 0;
+    let gameActive = false;
+    let pulse = { x: 0, y: 0, r: 0, active: false };
+
+    function init() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        
+        ball = {
+            x: width / 2,
+            y: height / 2,
+            vx: 0,
+            vy: 0,
+            r: 8,
+            trail: []
+        };
+        
+        obstacles = [];
+        particles = [];
+        cores = [];
+        score = 0;
+        scoreEl.innerText = score;
+    }
+
+    function createObstacle() {
+        const size = 30 + Math.random() * 50;
+        const side = Math.random() > 0.5 ? -size : width + size;
+        obstacles.push({
+            x: side,
+            y: Math.random() * height,
+            size: size,
+            vx: (side < 0 ? 1 : -1) * (1 + Math.random() * 2),
+            rotation: 0,
+            rv: (Math.random() - 0.5) * 0.05
+        });
+    }
+
+    function createCore() {
+        cores.push({
+            x: 50 + Math.random() * (width - 100),
+            y: 50 + Math.random() * (height - 100),
+            r: 5,
+            life: 1.0
+        });
+    }
+
+    function spawn() {
+        if (!gameActive) return;
+        if (Math.random() < 0.03) createObstacle();
+        if (cores.length < 2 && Math.random() < 0.01) createCore();
+        requestAnimationFrame(spawn);
+    }
+
+    window.addEventListener('mousedown', (e) => triggerPulse(e.clientX, e.clientY));
+    window.addEventListener('touchstart', (e) => {
+        triggerPulse(e.touches[0].clientX, e.touches[0].clientY);
+    });
+
+    function triggerPulse(x, y) {
+        if (!gameActive) return;
+        pulse.x = x;
+        pulse.y = y;
+        pulse.r = 0;
+        pulse.active = true;
+
+        // 計算對球的引力
+        const dx = x - ball.x;
+        const dy = y - ball.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const force = Math.min(15, 500 / dist);
+        
+        ball.vx += (dx / dist) * force;
+        ball.vy += (dy / dist) * force;
+    }
+
+    function update() {
+        if (!gameActive) return;
+
+        // 球物理
+        ball.vx *= 0.985; // 空氣阻力
+        ball.vy *= 0.985;
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+
+        // 邊界檢查
+        if (ball.x < 0 || ball.x > width || ball.y < 0 || ball.y > height) {
+            gameOver();
+        }
+
+        // 拖尾
+        ball.trail.unshift({x: ball.x, y: ball.y});
+        if (ball.trail.length > 20) ball.trail.pop();
+
+        // 脈衝動畫
+        if (pulse.active) {
+            pulse.r += 10;
+            if (pulse.r > 150) pulse.active = false;
+        }
+
+        // 核心收集
+        for (let i = cores.length - 1; i >= 0; i--) {
+            const c = cores[i];
+            const dist = Math.sqrt((ball.x - c.x)**2 + (ball.y - c.y)**2);
+            if (dist < ball.r + c.r + 10) {
+                cores.splice(i, 1);
+                score += 10;
+                scoreEl.innerText = score;
+                createExplosion(c.x, c.y, 'var(--accent)');
+            }
+        }
+
+        // 障礙物與碰撞
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            const o = obstacles[i];
+            o.x += o.vx;
+            o.rotation += o.rv;
+
+            const dist = Math.sqrt((ball.x - o.x)**2 + (ball.y - o.y)**2);
+            if (dist < ball.r + o.size/2) {
+                gameOver();
+            }
+
+            if (o.x < -100 || o.x > width + 100) obstacles.splice(i, 1);
+        }
+
+        // 粒子
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.02;
+            if (p.life <= 0) particles.splice(i, 1);
+        }
+    }
+
+    function createExplosion(x, y, color) {
+        for (let i = 0; i < 10; i++) {
+            particles.push({
+                x, y,
+                vx: (Math.random() - 0.5) * 8,
+                vy: (Math.random() - 0.5) * 8,
+                life: 1.0,
+                color
+            });
+        }
+    }
+
+    function draw() {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, width, height);
+
+        // 繪製脈衝
+        if (pulse.active) {
+            ctx.beginPath();
+            ctx.arc(pulse.x, pulse.y, pulse.r, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(0, 242, 255, ${1 - pulse.r / 150})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // 繪製拖尾
+        ctx.beginPath();
+        ball.trail.forEach((p, i) => {
+            const size = ball.r * (1 - i / 20);
+            if (i === 0) ctx.moveTo(p.x, p.y);
+            else ctx.lineTo(p.x, p.y);
+        });
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = ball.r;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // 繪製球
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = 'white';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // 繪製核心
+        cores.forEach(c => {
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, c.r + Math.sin(Date.now()*0.01)*2, 0, Math.PI * 2);
+            ctx.fillStyle = varColor('--accent');
+            ctx.fill();
+        });
+
+        // 繪製障礙物
+        obstacles.forEach(o => {
+            ctx.save();
+            ctx.translate(o.x, o.y);
+            ctx.rotate(o.rotation);
+            ctx.strokeStyle = varColor('--danger');
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-o.size/2, -o.size/2, o.size, o.size);
+            ctx.restore();
+        });
+
+        // 繪製粒子
+        particles.forEach(p => {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, 2, 2);
+        });
+        ctx.globalAlpha = 1;
+
+        if (gameActive) {
+            update();
+            requestAnimationFrame(draw);
+        }
+    }
+
+    function varColor(name) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    function gameOver() {
+        gameActive = false;
+        overlay.style.display = 'flex';
+        document.querySelector('h1').innerText = '消逝';
+        document.querySelector('p').innerText = `探索得分: ${score}`;
+        startBtn.innerText = '重返引力';
+    }
+
+    startBtn.addEventListener('click', () => {
+        init();
+        gameActive = true;
+        overlay.style.display = 'none';
+        draw();
+        spawn();
+    });
+
+    init();
+    // 初始背景繪製
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, width, height);
+</script>
+</body>
+</html>
