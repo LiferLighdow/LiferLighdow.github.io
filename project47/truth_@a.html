@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>項目 47 - 真相資料庫</title>
+    <style>
+        /* 基本樣式 */
+        body {
+            font-family: 'Inter', monospace;
+            background-color: #0d0d0d; /* 更深的背景色 */
+            color: #00ff00; /* 綠色字體，科技感 */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* 防止滾動 */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* 靜電/掃描線效果 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 0, 0.05),
+                rgba(0, 255, 0, 0.05) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* 頂部標題 */
+        header {
+            background-color: #1a1a1a;
+            padding: 1.5em;
+            text-align: center;
+            border-bottom: 2px solid #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px #00ff00, 0 0 20px rgba(0, 255, 0, 0.7);
+            animation: text-flicker 1s infinite alternate; /* 輕微閃爍 */
+        }
+
+        @keyframes text-flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+
+        /* 主內容區塊 */
+        main {
+            flex-grow: 1;
+            padding: 2em;
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 搜尋介面 */
+        .search-container {
+            background-color: #1a1a1a;
+            border: 1px solid #00cc00;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .search-container input[type="text"] {
+            width: calc(100% - 120px); /* 留出按鈕空間 */
+            padding: 0.8em;
+            background-color: #0a0a0a;
+            border: 1px solid #009900;
+            color: #00ff00;
+            font-family: monospace;
+            font-size: 1em;
+            border-radius: 4px;
+            outline: none;
+            box-shadow: inset 0 0 5px rgba(0, 255, 0, 0.2);
+            transition: border-color 0.3s ease;
+        }
+
+        .search-container input[type="text"]:focus {
+            border-color: #00ff00;
+        }
+
+        .search-container button {
+            width: 100px;
+            padding: 0.8em;
+            background-color: #006600;
+            border: 1px solid #00ff00;
+            color: #fff;
+            font-family: monospace;
+            font-size: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .search-container button:hover {
+            background-color: #009900;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+        }
+
+        /* 搜尋結果區塊 */
+        .results-container {
+            background-color: #1a1a1a;
+            border: 1px dashed #00cc00; /* 虛線邊框 */
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            min-height: 200px;
+            overflow-y: auto; /* 允許滾動 */
+            max-height: 400px; /* 最大高度 */
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .results-container p {
+            margin-bottom: 0.5em;
+        }
+
+        .results-container a {
+            color: #00ffff; /* 青色連結 */
+            text-decoration: none;
+            transition: text-shadow 0.3s ease;
+            display: block; /* 讓每個連結佔一行 */
+            margin-bottom: 0.3em;
+        }
+
+        .results-container a:hover {
+            text-shadow: 0 0 5px #00ffff, 0 0 10px rgba(0, 255, 255, 0.7);
+        }
+
+        /* 存取被拒絕疊加層 */
+        .access-denied-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95); /* 近乎全黑 */
+            color: #ff0000; /* 紅色警告 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255, 0, 0, 0.7);
+            z-index: 10001; /* 確保在最上層 */
+            animation: glitch-overlay 0.8s infinite alternate; /* 故障動畫 */
+            text-align: center;
+            padding: 1em;
+            box-sizing: border-box;
+        }
+
+        .access-denied-overlay p {
+            margin: 0.5em 0;
+            animation: text-flicker-red 0.5s infinite alternate;
+        }
+
+        @keyframes glitch-overlay {
+            0% { transform: translate(0, 0); opacity: 1; }
+            25% { transform: translate(5px, -5px); opacity: 0.9; }
+            50% { transform: translate(-5px, 5px); opacity: 1; }
+            75% { transform: translate(2px, 2px); opacity: 0.95; }
+            100% { transform: translate(-2px, -2px); opacity: 1; }
+        }
+
+        @keyframes text-flicker-red {
+            0% { opacity: 1; text-shadow: 0 0 15px #ff0000; }
+            50% { opacity: 0.8; text-shadow: 0 0 5px #ff0000; }
+            100% { opacity: 1; text-shadow: 0 0 15px #ff0000; }
+        }
+
+        /* 頁腳 */
+        footer {
+            background-color: #1a1a1a;
+            padding: 1em;
+            text-align: center;
+            font-size: 0.8em;
+            border-top: 1px solid #00ff00;
+            color: #00cc00;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 存取被拒絕疊加層 -->
+    <div id="accessDeniedOverlay" class="access-denied-overlay" style="display: none;">
+        <p>存取被拒絕</p>
+        <p>未經授權的連線嘗試</p>
+        <p>系統已鎖定</p>
+    </div>
+
+    <header>
+        <h1>項目 47 - 真相資料庫</h1>
+    </header>
+
+    <main>
+        <div class="search-container">
+            <p>輸入查詢以存取機密數據：</p>
+            <input type="text" id="searchInput" placeholder="搜尋關鍵字...">
+            <button id="searchButton">搜尋</button>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <p>資料庫狀態：待命。等待查詢...</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>數據完整性：已受損 | 安全協議：已繞過</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const accessDeniedOverlay = document.getElementById('accessDeniedOverlay');
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const resultsContainer = document.getElementById('resultsContainer');
+
+            // --- 阻止直接輸入網址進入 (核心功能) ---
+            // 檢查 URL 中是否有 'access_granted=true' 參數
+            const urlParams = new URLSearchParams(window.location.search);
+            const accessGranted = urlParams.get('access_granted');
+
+            if (accessGranted !== 'true') {
+                accessDeniedOverlay.style.display = 'flex';
+                // 阻止所有其他互動
+                document.body.style.pointerEvents = 'none';
+            } else {
+                // 如果有 access_granted=true，移除該參數以防止直接複製連結後門
+                // 僅在非 Canvas 預覽環境下執行，因為 Canvas 預覽可能會重置 URL
+                if (window.history.replaceState) {
+                    const newUrl = window.location.origin + window.location.pathname;
+                    window.history.replaceState({path: newUrl}, '', newUrl);
+                }
+            }
+
+            // --- 阻止查看原始碼的嘗試 (非絕對安全，僅為阻礙) ---
+            document.addEventListener('contextmenu', event => event.preventDefault()); // 禁用右鍵
+            document.addEventListener('keydown', event => {
+                // 禁用 F12
+                if (event.keyCode == 123) {
+                    event.preventDefault();
+                }
+                // 禁用 Ctrl+Shift+I (開發者工具)
+                if (event.ctrlKey && event.shiftKey && event.keyCode == 'I'.charCodeAt(0)) {
+                    event.preventDefault();
+                }
+                // 禁用 Ctrl+Shift+J (開發者工具)
+                if (event.ctrlKey && event.shiftKey && event.keyCode == 'J'.charCodeAt(0)) {
+                    event.preventDefault();
+                }
+                // 禁用 Ctrl+U (查看原始碼)
+                if (event.ctrlKey && event.keyCode == 'U'.charCodeAt(0)) {
+                    event.preventDefault();
+                }
+
+                // 禁用 Ctrl 或 Alt 鍵的常見瀏覽器行為
+                if (event.ctrlKey || event.altKey) {
+                    // 阻止 Ctrl/Alt + 箭頭鍵 (瀏覽器歷史)
+                    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                        event.preventDefault();
+                    }
+                    // 阻止 Ctrl/Alt + S (儲存頁面)
+                    if (event.key === 's' || event.key === 'S') {
+                        event.preventDefault();
+                    }
+                    // 阻止 Ctrl/Alt + P (列印)
+                    if (event.key === 'p' || event.key === 'P') {
+                        event.preventDefault();
+                    }
+                    // 阻止 Ctrl/Alt + N (新視窗)
+                    if (event.key === 'n' || event.key === 'N') {
+                        event.preventDefault();
+                    }
+                    // 阻止 Ctrl/Alt + T (新分頁)
+                    if (event.key === 't' || event.key === 'T') {
+                        event.preventDefault();
+                    }
+                    // 阻止 Ctrl/Alt + W (關閉分頁/視窗)
+                    if (event.key === 'w' || event.key === 'W') {
+                        event.preventDefault();
+                    }
+                    // 阻止 Ctrl/Alt + A (全選)
+                    if (event.key === 'a' || event.key === 'A') {
+                        event.preventDefault();
+                    }
+                    // 阻止 Alt + D (焦點到網址列)
+                    if (event.altKey && (event.key === 'd' || event.key === 'D')) {
+                        event.preventDefault();
+                    }
+                }
+            });
+            // --------------------------------------------------
+
+            // --- 秘密超連結數據庫 ---
+            const secretDatabase = {
+                "實驗日誌": { description: "查看所有實驗日誌副本 (已損壞)", url: "javascript:void(0);" },
+                "受試者 A": { description: "存取受試者 A 的完整檔案 (警告：精神影響)", url: "javascript:void(0);" },
+                "受試者 B": { description: "存取受試者 B 的完整檔案 (警告：攻擊性數據)", url: "javascript:void(0);" },
+                "異常現象報告": { description: "下載異常現象的秘密報告 (高風險)", url: "javascript:void(0);" },
+                "起源": { description: "追溯項目 47 的真正起源 (極度機密)", url: "javascript:void(0);" },
+                "監測": { description: "進入實時監測數據流 (不穩定)", url: "javascript:void(0);" },
+                "真相": { description: "揭露最終真相 (不可逆轉)", url: "javascript:void(0);" },
+                "他們": { description: "關於『他們』的未經審查數據 (危險)", url: "javascript:void(0);" },
+                "逃脫": { description: "潛在逃脫路線分析 (已失效)", url: "javascript:void(0);" },
+                "代碼": { description: "核心系統後門代碼 (已加密)", url: "javascript:void(0);" },
+                "警告": { description: "所有未分類警告訊息 (不斷增加)", url: "javascript:void(0);" },
+                "協議": { description: "項目 47 協議的原始版本 (已修改)", url: "javascript:void(0);" },
+                "幻覺": { description: "受試者幻覺的模式分析 (未完成)", url: "javascript:void(0);" },
+                "聲音": { description: "異常聲音頻率記錄 (未分類)", url: "javascript:void(0);" },
+                "存在": { description: "關於『存在』的哲學性研究 (已禁止)", url: "javascript:void(0);" },
+                "未來": { description: "預言性數據流 (高度不確定)", url: "javascript:void(0);" },
+                // 新增秘密遊戲庫和秘密書庫的連結
+                "秘密遊戲庫": { description: "存取機密遊戲模擬數據庫", url: "secret_games.html?access_granted=true" },
+                "秘密書庫": { description: "存取受限制的電子書庫和文件", url: "secret_books.html?access_granted=true" }
+            };
+
+            // --- 搜尋功能 ---
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            function performSearch() {
+                const query = searchInput.value.trim().toLowerCase();
+                resultsContainer.innerHTML = ''; // 清空舊結果
+
+                if (query === "") {
+                    resultsContainer.innerHTML = '<p style="color: #ffcc00;">[系統訊息] 請輸入查詢關鍵字。</p>';
+                    return;
+                }
+
+                let foundResults = false;
+                for (const keyword in secretDatabase) {
+                    if (keyword.toLowerCase().includes(query)) {
+                        const data = secretDatabase[keyword]; // 獲取整個數據對象
+                        const linkElement = document.createElement('a');
+                        linkElement.href = data.url; // 使用數據中的 URL
+                        linkElement.textContent = `[檔案] ${keyword}: ${data.description}`;
+                        
+                        // 對於非跳轉連結，保留點擊事件的模擬效果
+                        if (data.url === "javascript:void(0);") {
+                            linkElement.addEventListener('click', () => {
+                                resultsContainer.innerHTML = `<p style="color: #00ffff;">[數據載入中] 正在存取 ${keyword} 的數據...</p>`;
+                                setTimeout(() => {
+                                    resultsContainer.innerHTML = `<p style="color: #00ffff;">[數據] ${keyword}：</p><p>${data.description}</p><p style="color: #ff6600;">[警告] 數據可能不完整或已損壞。</p>`;
+                                    // 隨機觸發一些視覺或聽覺干擾
+                                    if (Math.random() < 0.3) {
+                                        document.body.style.backgroundColor = '#220000'; // 短暫變紅
+                                        setTimeout(() => { document.body.style.backgroundColor = '#0d0d0d'; }, 200);
+                                    }
+                                }, 1500);
+                            });
+                        }
+                        
+                        resultsContainer.appendChild(linkElement);
+                        foundResults = true;
+                    }
+                }
+
+                if (!foundResults) {
+                    resultsContainer.innerHTML = `<p style="color: #ff6600;">[錯誤] 未找到符合『${query}』的數據。權限不足或數據已清除。</p>`;
+                }
+                searchInput.value = ''; // 清空搜尋欄
+            }
+        });
+    </script>
+</body>
+</html>

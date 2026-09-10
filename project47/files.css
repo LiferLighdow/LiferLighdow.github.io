@@ -1,0 +1,312 @@
+ /* 基本樣式 */
+        body {
+            font-family: 'Inter', monospace; /* 使用 Inter 字體 */
+            background-color: hsl(220, 10%, 13%); /* 初始深色背景 */
+            color: #ddd;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.5s ease; /* 背景顏色過渡 */
+            overflow-x: hidden; /* 防止水平滾動 */
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE/Edge */
+            user-select: none; /* Standard */
+            cursor: default; /* 確保滑鼠是預設箭頭，不消失 */
+        }
+
+        /* 掃描線/靜電疊加效果 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.8));
+            z-index: -1;
+            pointer-events: none;
+            background-image: linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px); /* 掃描線 */
+            background-size: 100% 2px;
+            animation: scanlines 5s linear infinite; /* 掃描線動畫 */
+        }
+
+        @keyframes scanlines {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+
+        /* 頁首樣式 */
+        header {
+            background-color: #333;
+            padding: 1em;
+            text-align: center;
+        }
+
+        /* 導覽列樣式 */
+        nav {
+            background-color: #444;
+            padding: 0.5em;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+        }
+
+        nav li {
+            display: inline;
+            margin: 0 1em;
+        }
+
+        nav a {
+            color: #eee;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #f00; /* 懸停時變紅 */
+        }
+
+        /* 主要內容區域 */
+        main {
+            padding: 2em;
+        }
+
+        section {
+            margin-bottom: 2em;
+            border: 1px solid #555;
+            padding: 1em;
+            border-radius: 8px; /* 圓角 */
+        }
+
+        /* 文字區域樣式 */
+        textarea, input[type="password"] {
+            width: 100%;
+            height: 200px;
+            background-color: #111;
+            color: #aaa;
+            border: none;
+            font-family: monospace;
+            resize: none;
+            opacity: 0.7;
+            padding: 1em;
+            box-sizing: border-box; /* 包含內邊距 */
+            border-radius: 4px;
+        }
+
+        input[type="password"] {
+            height: auto;
+            padding: 0.8em;
+            margin-top: 0.5em;
+        }
+
+        /* 主題區塊樣式 */
+        .subject {
+            text-align: center;
+            margin-bottom: 1.5em;
+        }
+
+        .subject img {
+            max-width: 200px;
+            border: 1px solid #555;
+            transition: opacity 0.3s ease, transform 0.3s ease; /* 平滑過渡效果 */
+            border-radius: 8px;
+            -webkit-user-drag: none; /* Safari */
+            user-drag: none; /* Standard */
+        }
+
+        /* 頁腳樣式 */
+        footer {
+            background-color: #333;
+            padding: 1em;
+            text-align: center;
+            font-size: 0.8em;
+            border-radius: 8px;
+        }
+
+        /* 故障效果 (文字) */
+        .glitch {
+            position: relative;
+            overflow: hidden;
+            display: inline-block; /* 確保故障效果在文字上正確顯示 */
+        }
+
+        .glitch span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            animation: glitch-animation 2s infinite;
+            clip: rect(0, auto, 100%, auto);
+        }
+
+        .glitch span:nth-child(2) {
+            left: 2px;
+            text-shadow: -1px 0 red;
+            clip: rect(0, auto, 100%, auto);
+            animation: glitch-animation 2s infinite reverse;
+        }
+
+        @keyframes glitch-animation {
+            0% { clip: rect(20%, auto, 100%, auto); }
+            10% { clip: rect(0, auto, 80%, auto); }
+            20% { clip: rect(10%, auto, 30%, auto); }
+            30% { clip: rect(50%, auto, 70%, auto); }
+            40% { clip: rect(40%, auto, 60%, auto); }
+            50% { clip: rect(70%, auto, 90%, auto); }
+            60% { clip: rect(20%, auto, 40%, auto); }
+            70% { clip: rect(0, auto, 20%, auto); }
+            80% { clip: rect(60%, auto, 100%, auto); }
+            90% { clip: rect(40%, auto, 80%, auto); }
+            100% { clip: rect(10%, auto, 60%, auto); }
+        }
+
+        /* 故障效果 (圖片) */
+        .subject img.glitch {
+            animation: glitch-img 1s steps(2, end) infinite;
+        }
+
+        @keyframes glitch-img {
+          0% { transform: translate(2px, -2px) scale(1.01); opacity: 0.9; }
+          25% { transform: translate(-2px, 1px) scale(0.99); opacity: 0.8; }
+          50% { transform: translate(1px, 2px) scale(1.02); opacity: 0.95; }
+          75% { transform: translate(-1px, -1px) scale(0.98); opacity: 0.85; }
+          100% { transform: translate(0, 0) scale(1); opacity: 1; }
+        }
+
+        /* 模糊效果 */
+        .blurred {
+          filter: blur(5px);
+          transition: filter 0.5s ease-in-out; /* 平滑過渡 */
+        }
+
+        /* 恢復 hover 時的清晰化 */
+        .blurred:hover {
+          filter: none;
+        }
+
+        /* 自訂警告模態框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none; /* 預設隱藏 */
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            border: 2px solid #ff0000; /* 紅色邊框表示警告 */
+            padding: 2em;
+            text-align: center;
+            color: #eee;
+            font-family: monospace;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            animation: modal-glitch 0.5s infinite alternate; /* 模態框的輕微故障效果 */
+            border-radius: 8px;
+        }
+
+        .modal-content button {
+            background-color: #440000;
+            color: #ffaaaa;
+            border: 1px solid #ff0000;
+            padding: 0.5em 1em;
+            cursor: pointer;
+            margin-top: 1em;
+            font-family: monospace;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .modal-content button:hover {
+            background-color: #ff0000;
+            color: #fff;
+        }
+
+        @keyframes modal-glitch {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(1px, -1px); }
+            50% { transform: translate(-1px, 1px); }
+            75% { transform: translate(1px, 1px); }
+            100% { transform: translate(-1px, -1px); }
+        }
+
+        /* 按鈕樣式 */
+        button {
+            background-color: #333;
+            color: #eee;
+            border: 1px solid #555;
+            padding: 0.8em 1.5em;
+            cursor: pointer;
+            font-family: monospace;
+            margin-top: 1em;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #555;
+            border-color: #eee;
+        }
+
+        /* 隱藏的恐怖訊息疊加層 */
+        .overlay-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff0000;
+            font-size: 2em;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px rgba(255, 0, 0, 0.5);
+            z-index: 9998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+            text-align: center;
+            width: 80%;
+        }
+
+        /* 心電圖 Canvas 樣式 */
+        #ecgCanvas {
+            width: 100%;
+            height: 200px; /* 固定高度 */
+            background-color: #0a0a0a;
+            border: 1px solid #555;
+            display: block;
+            margin-top: 1em;
+            border-radius: 4px;
+        }
+
+        /* 浮動式大紅字警告 */
+        .intrusive-warning {
+            position: fixed;
+            color: #ff0000; /* 大紅色 */
+            font-size: 3em; /* 超大字體 */
+            font-weight: bold;
+            text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255, 0, 0, 0.7); /* 強烈發光 */
+            z-index: 9999; /* 確保在最上層 */
+            pointer-events: none; /* 不影響滑鼠事件 */
+            opacity: 0; /* 預設隱藏 */
+            transition: opacity 0.3s ease-in-out; /* 淡入淡出效果 */
+            white-space: nowrap; /* 不換行 */
+            animation: glitch-text-flash 0.5s steps(2, end) infinite alternate; /* 輕微故障閃爍 */
+        }
+
+        @keyframes glitch-text-flash {
+            0% { transform: translate(0, 0); opacity: 1; }
+            25% { transform: translate(2px, -2px); opacity: 0.9; }
+            50% { transform: translate(-2px, 2px); opacity: 1; }
+            75% { transform: translate(1px, 1px); opacity: 0.95; }
+            100% { transform: translate(-1px, -1px); opacity: 1; }
+        }

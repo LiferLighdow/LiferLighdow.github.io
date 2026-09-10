@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>極簡星際避險 - 高對比版</title>
+    <style>
+        :root {
+            --bg-color: #020617; /* 極深藍黑 */
+            --player-color: #fde047; /* 亮黃色 - 與背景形成強烈對比 */
+            --enemy-color: #ef4444; /* 鮮紅色 */
+            --enemy-glow: #7f1d1d; /* 深紅發光 */
+            --text-color: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            touch-action: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: var(--text-color);
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            background: #000;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-shadow: 0 0 10px #000, 0 0 5px #000;
+        }
+
+        #menu {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 2.5rem 1.5rem;
+            border-radius: 1rem;
+            border: 3px solid var(--player-color);
+            width: 80%;
+            max-width: 300px;
+            box-shadow: 0 0 30px rgba(253, 224, 71, 0.3);
+        }
+
+        h1 { margin-top: 0; color: var(--player-color); font-size: 2rem; }
+        
+        button {
+            background: var(--player-color);
+            border: none;
+            padding: 15px 30px;
+            color: #000;
+            font-weight: 900;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 5px 0 #ca8a04;
+        }
+
+        button:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #ca8a04;
+        }
+
+        #msg { margin-bottom: 20px; line-height: 1.6; color: #cbd5e1; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="ui-layer">
+        <div id="score-display">得分: 0</div>
+        <div id="high-score-display">最高: 0</div>
+    </div>
+    
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="menu">
+        <h1 id="menu-title">星際避險</h1>
+        <div id="msg">滑動螢幕控制<b style="color:var(--player-color)">黃色戰機</b><br>避開<b style="color:var(--enemy-color)">紅色隕石</b></div>
+        <button id="start-btn">開始任務</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const menu = document.getElementById('menu');
+    const startBtn = document.getElementById('start-btn');
+    const scoreDisplay = document.getElementById('score-display');
+    const highScoreDisplay = document.getElementById('high-score-display');
+    const menuTitle = document.getElementById('menu-title');
+
+    // 遊戲狀態
+    let gameState = 'START';
+    let score = 0;
+    let highScore = localStorage.getItem('starDodgeHighScore') || 0;
+    let lastTime = 0;
+
+    // 實體
+    let player = { x: 0, y: 0, radius: 15, targetX: 0, targetY: 0 };
+    let enemies = [];
+    let particles = [];
+    let enemySpawnTimer = 0;
+    let difficultyMultiplier = 1;
+
+    function initCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+        player.x = canvas.width / 2;
+        player.y = canvas.height * 0.8;
+        player.targetX = player.x;
+        player.targetY = player.y;
+    }
+
+    window.addEventListener('resize', initCanvas);
+    initCanvas();
+
+    function handlePointer(e) {
+        if (gameState !== 'PLAYING') return;
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        player.targetX = clientX - rect.left;
+        player.targetY = clientY - rect.top;
+    }
+
+    canvas.addEventListener('mousemove', handlePointer);
+    canvas.addEventListener('touchmove', (e) => {
+        handlePointer(e);
+        e.preventDefault();
+    }, { passive: false });
+
+    function spawnEnemy() {
+        const radius = 12 + Math.random() * 20;
+        enemies.push({
+            x: Math.random() * canvas.width,
+            y: -radius,
+            radius: radius,
+            speed: (2.5 + Math.random() * 3.5) * difficultyMultiplier,
+            rotation: 0,
+            rotSpeed: (Math.random() - 0.5) * 0.15
+        });
+    }
+
+    function createExplosion(x, y, color) {
+        for (let i = 0; i < 20; i++) {
+            particles.push({
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * 12,
+                vy: (Math.random() - 0.5) * 12,
+                life: 1.0,
+                color: color,
+                size: 2 + Math.random() * 4
+            });
+        }
+    }
+
+    function resetGame() {
+        score = 0;
+        difficultyMultiplier = 1;
+        enemies = [];
+        particles = [];
+        enemySpawnTimer = 0;
+        player.x = canvas.width / 2;
+        player.y = canvas.height * 0.8;
+        player.targetX = player.x;
+        player.targetY = player.y;
+        highScoreDisplay.textContent = `最高: ${highScore}`;
+        scoreDisplay.textContent = `得分: 0`;
+    }
+
+    function gameOver() {
+        gameState = 'GAMEOVER';
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('starDodgeHighScore', highScore);
+        }
+        menuTitle.textContent = '任務中斷';
+        document.getElementById('msg').innerHTML = `最終得分: <span style="font-size:1.5rem; color:var(--player-color)">${score}</span><br>最高紀錄: ${highScore}`;
+        startBtn.textContent = '再次出擊';
+        menu.style.display = 'block';
+    }
+
+    function update(dt) {
+        if (gameState !== 'PLAYING') return;
+
+        // 玩家移動
+        player.x += (player.targetX - player.x) * 0.25;
+        player.y += (player.targetY - player.y) * 0.25;
+
+        // 難度曲線優化
+        difficultyMultiplier += 0.00015 * dt;
+
+        // 生成敵人
+        enemySpawnTimer += dt;
+        if (enemySpawnTimer > 550 / difficultyMultiplier) {
+            spawnEnemy();
+            enemySpawnTimer = 0;
+            score++;
+            scoreDisplay.textContent = `得分: ${score}`;
+        }
+
+        // 更新敵人
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            const e = enemies[i];
+            e.y += e.speed;
+            e.rotation += e.rotSpeed;
+
+            const dx = player.x - e.x;
+            const dy = player.y - e.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < player.radius + e.radius - 4) {
+                createExplosion(player.x, player.y, '#fde047');
+                createExplosion(e.x, e.y, '#ef4444');
+                gameOver();
+            }
+
+            if (e.y > canvas.height + e.radius) {
+                enemies.splice(i, 1);
+            }
+        }
+
+        // 更新粒子
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.025;
+            if (p.life <= 0) particles.splice(i, 1);
+        }
+    }
+
+    function draw() {
+        ctx.fillStyle = '#020617';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // 繪製星空背景 (增加層次感)
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        for(let i=0; i<30; i++) {
+            const x = (i * 137.5) % canvas.width;
+            const y = (Date.now() * 0.05 + i * 150) % canvas.height;
+            ctx.fillRect(x, y, 1.5, 1.5);
+        }
+
+        // 繪製粒子
+        particles.forEach(p => {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        ctx.globalAlpha = 1.0;
+
+        // 繪製玩家 (高亮度黃色)
+        ctx.save();
+        ctx.translate(player.x, player.y);
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = '#fde047';
+        ctx.fillStyle = '#fde047';
+        ctx.beginPath();
+        ctx.moveTo(0, -22);
+        ctx.lineTo(18, 12);
+        ctx.lineTo(0, 6);
+        ctx.lineTo(-18, 12);
+        ctx.closePath();
+        ctx.fill();
+        // 增加白色中心讓對比更強
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.moveTo(0, -15);
+        ctx.lineTo(5, 5);
+        ctx.lineTo(-5, 5);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        // 繪製敵人 (飽和紅)
+        enemies.forEach(e => {
+            ctx.save();
+            ctx.translate(e.x, e.y);
+            ctx.rotate(e.rotation);
+            
+            // 敵人外發光
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#ef4444';
+            ctx.fillStyle = '#ef4444';
+            
+            ctx.beginPath();
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const r = e.radius * (0.85 + (i%2===0 ? 0.2 : 0));
+                const px = Math.cos(angle) * r;
+                const py = Math.sin(angle) * r;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.fill();
+            
+            // 加上內部紋理增加辨識度
+            ctx.strokeStyle = '#7f1d1d';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+        });
+    }
+
+    function gameLoop(timestamp) {
+        if (!lastTime) lastTime = timestamp;
+        const dt = timestamp - lastTime;
+        lastTime = timestamp;
+
+        update(dt);
+        draw();
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    startBtn.addEventListener('click', () => {
+        resetGame();
+        gameState = 'PLAYING';
+        menu.style.display = 'none';
+    });
+
+    highScoreDisplay.textContent = `最高: ${highScore}`;
+    requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>

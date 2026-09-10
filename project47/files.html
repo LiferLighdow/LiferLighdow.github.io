@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	 <link rel="stylesheet" href="files.css">
+    <title>項目 47 - 警告：未經授權的存取</title>
+
+</head>
+<body>
+
+    <!-- 音訊元素 -->
+    <audio id="staticSound" src="static.mp3" loop></audio>
+    <audio id="whispersSound" src="whispers.mp3" loop></audio>
+    <audio id="heartbeatSound" src="heartbeat.mp3" loop></audio>
+    <audio id="droneSound" src="drone.mp3" loop></audio> <!-- 新增低頻嗡嗡聲 -->
+    <audio id="jumpscareSound" src="jumpscare.mp3"></audio> <!-- 新增跳嚇音效 -->
+
+    <!-- 自訂警告模態框 -->
+    <div id="customWarningModal" class="modal-overlay">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <button id="modalCloseButton">確認</button>
+        </div>
+    </div>
+
+    <!-- 隱藏的恐怖訊息疊加層 -->
+    <div id="overlayMessage" class="overlay-message glitch"><span></span><span></span></div>
+
+    <!-- 浮動式大紅字警告的容器 -->
+    <div id="intrusiveWarningContainer"></div>
+
+    <header>
+        <h1 class="glitch"><span>項目 47：</span><span>檔案庫</span></h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#log">實驗日誌</a></li>
+            <li><a href="#subjects">實驗對象</a></li>
+            <li><a href="#images">視覺記錄</a></li>
+            <li><a href="#anomalies">異常現象</a></li>
+            <li><a href="#ecg-monitor">心電圖監測</a></li> <!-- 新增導覽連結 -->
+            <li><a href="#data-encryption">數據加密</a></li> <!-- 新增導覽連結 -->
+        </ul>
+    </nav>
+
+    <main>
+        <section id="log">
+            <h2 class="glitch"><span>實驗日誌</span><span>實驗日誌</span></h2>
+            <p class="blurred">記錄顯示：系統完整性已受損，數據流異常。</p>
+            <textarea id="logTextarea" readonly>
+            [日期：████/██/██]
+            實驗開始...受試者 A 開始表現出... 積極性？
+            [時間：03:17:42] 受試者 B 的腦電波活動出現異常高峰。 移除記錄。
+            [日期：████/██/██]
+            受試者 C 持續抱怨... "牆壁在移動"。 重新調整鎮定劑劑量。
+            [時間：ERROR]
+            [數據損壞]
+            [日期：████/██/██]
+            實驗目標... 接近完成... 但代價是...？
+            [時間：██:██:██] 監測數據異常增長...
+            [警告：不要相信他們的謊言]
+            受試者反應：████
+            ████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+            </textarea>
+        </section>
+
+        <section id="subjects">
+            <h2 class="glitch"><span>實驗對象</span><span>實驗對象</span></h2>
+            <div class="subject">
+                <h3>受試者 A</h3>
+                <img id="subjectAImage" src="https://thispersondoesnotexist.com/" alt="受試者 A" draggable="false">
+                <p class="blurred">狀態：已適應，但意識正在消退。</p>
+                <p class="blurred">備註：似乎對刺激沒有反應，但眼球運動異常。</p>
+                <p class="blurred">預計死亡日期：<span id="deathDateA">[未確定]</span></p>
+            </div>
+            <div class="subject">
+                <h3>受試者 B</h3>
+                <img id="subjectBImage" src="https://thispersondoesnotexist.com/" alt="受試者 B" draggable="false">
+                <p class="blurred">狀態：不穩定，有攻擊性傾向。</p>
+                <p class="blurred">備註：需要額外的監控，避免直接眼神接觸。</p>
+                <p class="blurred">預計死亡日期：<span id="deathDateB">[未確定]</span></p>
+            </div>
+            <div class="subject">
+                <h3>[缺失]</h3>
+                <p class="blurred">狀態：[數據遺失] - 但仍有微弱生命跡象。</p>
+                <p class="blurred">備註：[數據遺失] - 聽到微弱的呼救聲。</p>
+            </div>
+        </section>
+
+        <section id="images">
+            <h2 class="glitch"><span>視覺記錄</span><span>視覺記錄</span></h2>
+            <p class="blurred">檔案已損壞，但仍可辨識出部分內容：</p>
+            <img src="glitch.gif" alt="異常圖像" class="glitch" draggable="false"> <!-- 圖片也加上故障效果 -->
+            <p class="blurred">警告：圖像可能引發不安。</p>
+        </section>
+
+        <section id="anomalies">
+            <h2 class="glitch"><span>異常現象</span><span>異常現象</span></h2>
+            <p class="blurred">未記錄的事件正在增加，系統無法解釋：</p>
+            <ul>
+                <li class="blurred">時間：██:██:██ - 受試者 A 在睡眠中說出無法理解的語言（反向播放），內容與未來事件相關。</li>
+                <li class="blurred">時間：██:██:██ - 監測設備顯示短暫的能量爆發，但沒有明顯的來源（頻率：666 Hz），伴隨低語。</li>
+                <li class="blurred">時間：██:██:██ - 受試者 B 聲稱看到... "另一個人"，但鏡子中沒有反射。牆壁上出現抓痕。</li>
+                <li class="blurred">時間：██:██:██ - 所有受試者同時醒來，面向同一個方向（北方），並發出同步的低吼聲。</li>
+                <li class="blurred">時間：██:██:██ - 在實驗區域檢測到異常的重力波動（-0.02 G），導致物體短暫懸浮。</li>
+                <li class="blurred">時間：██:██:██ - 環境溫度驟降至冰點，隨後迅速回升，無明顯原因。</li>
+            </ul>
+        </section>
+
+        <!-- 新增心電圖監測區塊 -->
+        <section id="ecg-monitor">
+            <h2 class="glitch"><span>心電圖監測</span><span>心電圖監測</span></h2>
+            <p class="blurred">實時生命體徵監測：數據不穩定。</p>
+            <canvas id="ecgCanvas"></canvas>
+        </section>
+
+        <!-- 新增數據加密區塊 -->
+        <section id="data-encryption">
+            <h2 class="glitch"><span>數據加密</span><span>數據加密</span></h2>
+            <p class="blurred">輸入解密密鑰以存取機密檔案：</p>
+            <input type="password" id="decryptKeyInput" placeholder="密鑰...">
+            <button id="decryptButton">解密</button>
+            <div id="decryptionResult" class="blurred" style="margin-top: 1em;"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 項目 47 - 未授權存取禁止</p>
+        <p class="blurred" id="footerMessage">你已進入。沒有回頭路了。</p>
+    </footer>
+	 
+    <script src="files.js"></script>
+	 
+</body>
+</html>

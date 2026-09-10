@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高科技工具集</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 LXGW Marker Gothic 字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+Marker+Gothic&display=swap" rel="stylesheet">
+    <style>
+        /* LXGW Marker Gothic 字體 */
+        body {
+            font-family: 'LXGW Marker Gothic', cursive;
+            color: #e0f2f7; /* 淺藍色文字 */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden; /* 隱藏滾動條 */
+            position: relative;
+        }
+
+        /* 動態背景效果 */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* 更複雜的漸層 */
+            background: linear-gradient(
+                135deg,
+                #0f0c29 0%,
+                #302b63 25%,
+                #24243e 50%,
+                #302b63 75%,
+                #0f0c29 100%
+            );
+            z-index: -2;
+            animation: gradientShift 20s ease infinite alternate; /* 漸層動畫，更平滑 */
+            background-size: 400% 400%; /* 確保漸層足夠大以平滑移動 */
+        }
+
+        /* 額外的粒子效果 */
+        .particle-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none; /* 讓粒子不阻擋點擊事件 */
+        }
+
+        /* 漸層動畫關鍵幀 */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* 容器樣式 */
+        .container {
+            background-color: rgba(17, 24, 39, 0.8); /* Tailwind gray-900 with 透明度 */
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5); /* 青色發光效果 */
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 1; /* 確保內容在背景之上 */
+        }
+
+        /* 標題樣式 */
+        h1 {
+            font-size: 6rem !important; /* 標題更大，使用 !important 確保優先級 */
+            color: #00e6e6; /* 青色 */
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px #00e6e6, 0 0 30px rgba(0, 255, 255, 0.3); /* 標題更強烈的發光 */
+            line-height: 1.2; /* 調整行高 */
+        }
+
+        /* 工具網格佈局 */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            justify-content: center;
+        }
+
+        /* 工具項目樣式 */
+        .tool-item {
+            background-color: rgba(31, 41, 55, 0.9); /* Tailwind gray-800 with 透明度 */
+            border: 2px solid #00e6e6; /* 青色邊框 */
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); /* 青色陰影 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 工具項目懸停效果 */
+        .tool-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7); /* 更強烈的發光 */
+            background-color: rgba(45, 55, 72, 0.95); /* 輕微變亮 */
+        }
+
+        /* 工具連結樣式 */
+        .tool-item a {
+            color: #66ffff; /* 淺青色 */
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* 工具連結懸停效果 */
+        .tool-item a:hover {
+            color: #aaffff; /* 更亮的淺青色 */
+        }
+
+        /* 響應式調整 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 4.5rem !important; /* 小螢幕標題縮小，但仍保持較大 */
+            }
+            .container {
+                padding: 20px; /* 小螢幕內邊距縮小 */
+            }
+            .tool-grid {
+                gap: 15px; /* 小螢幕間距縮小 */
+            }
+            .tool-item {
+                padding: 15px; /* 小螢幕項目內邊距縮小 */
+            }
+            .tool-item a {
+                font-size: 1.1rem; /* 小螢幕連結文字縮小 */
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 3.5rem !important; /* 更小螢幕標題進一步縮小 */
+            }
+            .container {
+                padding: 15px; /* 更小螢幕內邊距縮小 */
+            }
+            .tool-grid {
+                grid-template-columns: 1fr; /* 極小螢幕單列佈局 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 動態背景動畫層 -->
+    <div class="background-animation"></div>
+    <!-- 粒子效果層 (可選，如果需要更複雜的動畫) -->
+    <canvas id="particleCanvas" class="particle-overlay"></canvas>
+
+    <div class="container">
+        <h1>高科技工具集</h1>
+        <div class="tool-grid">
+            <div class="tool-item">
+                <a href="../AI_Companion">AI 伴侶</a>
+            </div>
+            <div class="tool-item">
+                <a href="speedtest">網路速度測試器</a>
+            </div>
+            <div class="tool-item">
+                <a href="docx">專業富文本筆記本與文字分析</a>
+            </div>
+            <div class="tool-item">
+                <a href="password">隨機密碼產生器與強度測試</a>
+            </div>
+            <div class="tool-item">
+                <a href="calculator">專業單位轉換與科學計算機</a>
+            </div>
+            <div class="tool-item">
+                <a href="genarate">Lifer_Lighdow創意工坊 - 小說、圖片與對話生成器</a>
+            </div>
+            <div class="tool-item">
+                <a href="tts">精美文字轉語音</a>
+            </div>
+            <div class="tool-item">
+                <a href="text_art">圖片轉文字藝術</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 粒子動畫效果 (可選，如果需要更複雜的動畫)
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const numParticles = 100;
+
+        // 調整畫布大小
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        // 粒子類別
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5; // 粒子大小
+                this.speedX = Math.random() * 0.5 - 0.25; // 粒子水平速度
+                this.speedY = Math.random() * 0.5 - 0.25; // 粒子垂直速度
+                this.color = `rgba(102, 255, 255, ${Math.random() * 0.5 + 0.1})`; // 青色半透明
+            }
+
+            // 更新粒子位置
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // 如果粒子超出邊界，重新設定位置
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+
+            // 繪製粒子
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // 初始化粒子
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < numParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        // 動畫循環
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // 清除畫布
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        // 監聽視窗大小變化
+        window.addEventListener('resize', resizeCanvas);
+
+        // 頁面載入完成後執行
+        window.onload = function() {
+            resizeCanvas(); // 初始化畫布大小
+            initParticles(); // 初始化粒子
+            animateParticles(); // 開始粒子動畫
+        };
+    </script>
+</body>
+</html>

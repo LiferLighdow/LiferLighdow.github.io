@@ -1,0 +1,614 @@
+/* Custom Font Definition */
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/myfont.woff2') format('woff2'),
+         url('../fonts/myfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Global Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    /* 深色科技感背景，不傷眼 */
+    background: linear-gradient(to bottom right, #0a0a1a, #1a1a3a);
+    background-size: cover;
+    color: #e0f7fa; /* 淺藍色文字，高對比度 */
+    font-family: "MyCustomFont", sans-serif;
+    font-size: 18px;
+    /* 使用 min-height 確保內容超出時可以滾動 */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden; /* 防止水平滾動 */
+    overflow-y: auto; /* 允許垂直滾動 */
+}
+
+.container {
+    width: 500px;
+    margin: 20px auto; /* 調整上下邊距 */
+    padding: 20px;
+    background: rgba(20, 20, 40, 0.8); /* 半透明深色容器 */
+    border: 2px solid #00f0ff; /* 科技感邊框 */
+    border-radius: 15px; /* 更圓潤的邊角 */
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.5); /* 強烈科技感光暈 */
+    box-sizing: border-box; /* 包含內邊距和邊框在寬度內 */
+}
+
+/* Heading */
+.heading {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space between title and scores */
+    align-items: center; /* Vertically align items */
+    margin-bottom: 20px; /* Add some space below the heading */
+}
+
+h1.title {
+    font-size: 70px; /* 調整字體大小 */
+    font-weight: bold;
+    margin: 0;
+    color: #00ffcc; /* 霓虹綠色 */
+    text-shadow: 0 0 15px #00ffcc, 0 0 25px #00ffcc; /* 發光效果 */
+}
+
+/* Scores */
+.scores-container {
+    text-align: right;
+    display: flex; /* 使用 flex 佈局 */
+    gap: 10px; /* 分數容器間距 */
+}
+
+.score-container, .best-container {
+    position: relative;
+    display: inline-block;
+    background: rgba(40, 40, 60, 0.7); /* 深色半透明背景 */
+    padding: 10px 20px; /* 調整內邊距 */
+    font-size: 22px; /* 調整字體大小 */
+    line-height: 1.2;
+    font-weight: bold;
+    border-radius: 8px; /* 更圓潤的邊角 */
+    color: #e0f7fa; /* 淺藍色文字 */
+    margin-top: 5px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); /* 輕微發光陰影 */
+    border: 1px solid rgba(0, 240, 255, 0.3); /* 科技感邊框 */
+}
+
+.score-container:after, .best-container:after {
+    position: relative; /* 改為相對定位 */
+    display: block; /* 獨立一行 */
+    width: 100%;
+    top: 5px; /* 調整位置 */
+    left: 0;
+    text-transform: uppercase;
+    font-size: 11px; /* 調整字體大小 */
+    line-height: 1.2;
+    text-align: center;
+    color: #94A3B8;
+}
+
+.score-container .score-addition {
+    position: absolute;
+    right: 50%; /* 居中 */
+    transform: translateX(50%); /* 居中 */
+    color: #00ffcc; /* 霓虹綠色 */
+    font-size: 25px;
+    line-height: 25px;
+    font-weight: bold;
+    opacity: 0; /* 預設隱藏 */
+    animation: score-pop-up 0.5s ease-out forwards; /* 新增動畫 */
+    z-index: 100;
+}
+
+@keyframes score-pop-up {
+    0% {
+        opacity: 0;
+        transform: translate(50%, 0px);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(50%, -20px); /* 向上浮動 */
+    }
+    100% {
+        opacity: 0;
+        transform: translate(50%, -40px); /* 繼續向上浮動並消失 */
+    }
+}
+
+.score-container:after {
+    content: "SCORE";
+}
+
+.best-container:after {
+    content: "BEST";
+}
+
+/* Game Intro */
+.above-game {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space between intro text and button */
+    align-items: center; /* Vertically align items */
+    margin-top: 20px;
+    margin-bottom: 20px; /* Add some space below this section */
+}
+
+.game-intro {
+    color: #e0f7fa;
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+    line-height: 40px; /* 與按鈕對齊 */
+    margin-bottom: 0;
+    font-size: 1.1em;
+}
+
+/* Buttons */
+.restart-button, .game-message a {
+    display: inline-block;
+    background: linear-gradient(to right, #007bff, #00c6ff); /* 藍色漸變 */
+    border-radius: 8px; /* 更圓潤的邊角 */
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    height: auto; /* 自動高度 */
+    line-height: 1.2;
+    cursor: pointer;
+    font: inherit;
+    border: 1px solid #00f0ff; /* 科技感邊框 */
+    outline: none;
+    box-sizing: border-box;
+    font-weight: bold;
+    margin: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: all 0.3s ease; /* 更平滑的過渡 */
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3); /* 發光效果 */
+}
+
+.restart-button {
+    margin-top: 0; /* Align with intro text */
+}
+
+.restart-button:hover, .game-message a:hover {
+    background: linear-gradient(to right, #00c6ff, #007bff);
+    transform: translateY(-2px); /* 輕微上浮 */
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+}
+
+.restart-button:active, .game-message a:active {
+    transform: translateY(0); /* 按下效果 */
+    box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
+}
+
+/* Game Container */
+.game-container {
+    margin-top: 30px; /* 調整上邊距 */
+    position: relative;
+    padding: 15px;
+    cursor: default;
+    background: rgba(30, 30, 50, 0.9); /* 深色科技感背景 */
+    border-radius: 10px;
+    /* 固定寬度，方便內部計算 */
+    width: 470px;
+    height: 470px; /* 保持正方形 */
+    box-sizing: border-box;
+    box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.3), 0 0 20px rgba(0, 240, 255, 0.4); /* 內外發光陰影 */
+}
+
+/* Game Message (Win/Lose) */
+.game-message {
+    display: none; /* 預設隱藏 */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(10, 10, 30, 0.95); /* 更深的半透明背景 */
+    /* 提高 z-index 確保在最上層 */
+    z-index: 9999; /* 確保在最上層 */
+    padding-top: 40px;
+    text-align: center;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.game-message p {
+    font-size: 55px; /* 調整字體大小 */
+    font-weight: bold;
+    line-height: 1.2;
+    margin-top: 180px; /* 調整垂直位置 */
+    color: #00ffcc; /* 霓虹綠色 */
+    text-shadow: 0 0 15px #00ffcc, 0 0 25px #00ffcc; /* 發光效果 */
+}
+
+.game-message .lower {
+    margin-top: 30px; /* 調整按鈕組上邊距 */
+    display: flex; /* 使用 flex 佈局 */
+    justify-content: center; /* 水平居中 */
+    gap: 15px; /* 按鈕間距 */
+}
+
+.game-message a.keep-playing-button {
+    background: linear-gradient(to right, #28a745, #218838); /* 綠色漸變 */
+    border-color: #28a745;
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.4);
+}
+.game-message a.keep-playing-button:hover {
+    background: linear-gradient(to right, #218838, #28a745);
+    box-shadow: 0 0 20px rgba(40, 167, 69, 0.8);
+}
+
+.game-message a.retry-button {
+    background: linear-gradient(to right, #dc3545, #c82333); /* 紅色漸變 */
+    border-color: #dc3545;
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+}
+.game-message a.retry-button:hover {
+    background: linear-gradient(to right, #c82333, #dc3545);
+    box-shadow: 0 0 20px rgba(220, 53, 69, 0.8);
+}
+
+/* 勝利訊息的樣式 */
+.game-message.game-won {
+    display: flex; /* 顯示訊息 */
+    flex-direction: column; /* 垂直排列內容 */
+    justify-content: center; /* 垂直居中 */
+    align-items: center; /* 水平居中 */
+    background: rgba(0, 180, 255, 0.95); /* 勝利時的藍色背景 */
+    color: #fff;
+    animation: fadein 0.5s ease-out forwards; /* 淡入動畫 */
+}
+.game-message.game-won p {
+    color: #fff;
+    text-shadow: 0 0 15px #fff, 0 0 25px #fff;
+}
+
+/* 失敗訊息的樣式 */
+.game-message.game-over {
+    display: flex; /* 顯示訊息 */
+    flex-direction: column; /* 垂直排列內容 */
+    justify-content: center; /* 垂直居中 */
+    align-items: center; /* 水平居中 */
+    background: rgba(255, 50, 50, 0.95); /* 失敗時的紅色背景 */
+    color: #fff;
+    /* 更豐富的失敗動畫：先淡入，然後結合縮放、旋轉和晃動 */
+    animation: fadein 0.5s ease-out forwards, game-over-rich-fail 1.2s ease-out 0.2s forwards;
+}
+.game-message.game-over p {
+    color: #fff;
+    text-shadow: 0 0 15px #fff, 0 0 25px #fff;
+}
+
+/* 更豐富的遊戲失敗動畫 */
+@keyframes game-over-rich-fail {
+    0% {
+        transform: scale(0.8) rotate(0deg);
+        filter: blur(5px) brightness(0.5); /* 模糊和變暗 */
+        opacity: 0;
+    }
+    20% {
+        transform: scale(1.1) rotate(5deg);
+        filter: blur(0px) brightness(1.2); /* 清晰和變亮 */
+        opacity: 1;
+    }
+    40% {
+        transform: scale(1) rotate(-5deg);
+        filter: blur(0px) brightness(1);
+    }
+    60% {
+        transform: scale(1.05) rotate(3deg);
+        filter: blur(0px) brightness(1.1);
+    }
+    80% {
+        transform: scale(1) rotate(-3deg);
+        filter: blur(0px) brightness(1);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        filter: blur(0px) brightness(1);
+    }
+}
+
+
+/* Grid */
+.grid-container {
+    position: absolute;
+    z-index: 1;
+}
+
+.grid-row {
+    margin-bottom: 15px;
+}
+
+.grid-row:last-child {
+    margin-bottom: 0;
+}
+
+.grid-row:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.grid-cell {
+    /* 根據新的遊戲容器尺寸調整 */
+    width: 96.25px;
+    height: 96.25px;
+    margin-right: 15px;
+    float: left;
+    border-radius: 8px; /* 更圓潤的邊角 */
+    background: rgba(50, 50, 70, 0.6); /* 深色半透明背景 */
+    box-shadow: inset 0 0 8px rgba(0, 240, 255, 0.1); /* 內發光 */
+}
+
+.grid-cell:last-child {
+    margin-right: 0;
+}
+
+/* Tiles */
+.tile-container {
+    position: absolute;
+    z-index: 2;
+}
+
+.tile, .tile .tile-inner {
+    /* 根據新的遊戲容器尺寸調整 */
+    width: 96.25px;
+    height: 96.25px;
+    line-height: 96.25px; /* 垂直居中文字 */
+    border-radius: 8px;
+}
+
+/* Tile positions - recalculated for new grid cell size */
+.tile.tile-position-1-1 { transform: translate(0px, 0px); }
+.tile.tile-position-1-2 { transform: translate(0px, 111.25px); }
+.tile.tile-position-1-3 { transform: translate(0px, 222.5px); }
+.tile.tile-position-1-4 { transform: translate(0px, 333.75px); }
+.tile.tile-position-2-1 { transform: translate(111.25px, 0px); }
+.tile.tile-position-2-2 { transform: translate(111.25px, 111.25px); }
+.tile.tile-position-2-3 { transform: translate(111.25px, 222.5px); }
+.tile.tile-position-2-4 { transform: translate(111.25px, 333.75px); }
+.tile.tile-position-3-1 { transform: translate(222.5px, 0px); }
+.tile.tile-position-3-2 { transform: translate(222.5px, 111.25px); }
+.tile.tile-position-3-3 { transform: translate(222.5px, 222.5px); }
+.tile.tile-position-3-4 { transform: translate(222.5px, 333.75px); }
+.tile.tile-position-4-1 { transform: translate(333.75px, 0px); }
+.tile.tile-position-4-2 { transform: translate(333.75px, 111.25px); }
+.tile.tile-position-4-3 { transform: translate(333.75px, 222.5px); }
+.tile.tile-position-4-4 { transform: translate(333.75px, 333.75px); }
+
+.tile {
+    position: absolute;
+    transition: 100ms ease-in-out;
+    transition-property: transform;
+}
+
+.tile .tile-inner {
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    z-index: 10;
+    font-size: 40px;
+    color: #f0f8ff; /* 淺色文字，高對比度 */
+    box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.2), 0 0 15px rgba(0, 240, 255, 0.3); /* 內外發光陰影 */
+    position: relative;
+    transform-style: preserve-3d;
+    transition: all 0.3s ease;
+}
+
+/* Tile colors - using a sci-fi inspired palette */
+.tile.tile-2 .tile-inner { background: #007bff; } /* Blue */
+.tile.tile-4 .tile-inner { background: #00c6ff; } /* Lighter Blue */
+.tile.tile-8 .tile-inner { background: #00ffcc; } /* Neon Green */
+.tile.tile-16 .tile-inner { background: #39ff14; } /* Brighter Neon Green */
+.tile.tile-32 .tile-inner { background: #ffea00; } /* Yellow */
+.tile.tile-64 .tile-inner { background: #ff9900; } /* Orange */
+.tile.tile-128 .tile-inner { background: #ff5e00; font-size: 35px;} /* Darker Orange */
+.tile.tile-256 .tile-inner { background: #ff005e; font-size: 30px;} /* Pinkish Red */
+.tile.tile-512 .tile-inner { background: #9900ff; font-size: 30px;} /* Purple */
+.tile.tile-1024 .tile-inner { background: #6a0572; font-size: 30px;} /* Darker Purple */
+.tile.tile-2048 .tile-inner { background: #8e2de2; font-size: 30px;} /* Violet */
+.tile.tile-super .tile-inner {
+    color: #fff;
+    background: linear-gradient(to right, #ff00cc, #3333ff); /* Rainbow/Super gradient */
+    font-size: 30px;
+    box-shadow: 0 0 30px rgba(255, 0, 204, 0.8), 0 0 40px rgba(51, 51, 255, 0.8); /* 強烈發光 */
+}
+
+/* Animations - keeping original 2048 animations for tile appearance and merge */
+@-webkit-keyframes appear {
+    0% { opacity: 0; -webkit-transform: scale(0); transform: scale(0); }
+    100% { opacity: 1; -webkit-transform: scale(1); transform: scale(1); }
+}
+@-moz-keyframes appear {
+    0% { opacity: 0; -moz-transform: scale(0); transform: scale(0); }
+    100% { opacity: 1; -moz-transform: scale(1); transform: scale(1); }
+}
+@keyframes appear {
+    0% { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+}
+.tile-new .tile-inner {
+    animation: appear 200ms ease 100ms;
+    animation-fill-mode: backwards;
+}
+
+@-webkit-keyframes pop {
+    0% { -webkit-transform: scale(0); transform: scale(0); }
+    50% { -webkit-transform: scale(1.2); transform: scale(1.2); }
+    100% { -webkit-transform: scale(1); transform: scale(1); }
+}
+@-moz-keyframes pop {
+    0% { opacity: 0; -moz-transform: scale(0); transform: scale(0); } /* Added opacity: 0 for consistency */
+    50% { opacity: 1; -moz-transform: scale(1.2); transform: scale(1.2); } /* Added opacity: 1 */
+    100% { opacity: 1; -moz-transform: scale(1); transform: scale(1); } /* Added opacity: 1 */
+}
+@keyframes pop {
+    0% { transform: scale(0); opacity: 0; } /* Added opacity: 0 */
+    50% { transform: scale(1.2); opacity: 1; } /* Added opacity: 1 */
+    100% { transform: scale(1); opacity: 1; } /* Added opacity: 1 */
+}
+.tile-merged .tile-inner {
+    z-index: 20;
+    animation: pop 200ms ease 100ms;
+    animation-fill-mode: backwards;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 30px; /* 調整上邊距 */
+    font-size: 14px; /* 調整字體大小 */
+    color: #94a3b8; /* 柔和的淺灰色 */
+}
+
+.back-link {
+    color: #00f0ff; /* 科技藍色 */
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    display: inline-flex; /* 讓圖標和文字對齊 */
+    align-items: center;
+    margin-bottom: 10px; /* 與版權資訊的間距 */
+}
+
+.back-link:hover {
+    color: #00c6ff;
+    text-shadow: 0 0 10px #00c6ff;
+}
+
+.back-link i {
+    margin-right: 8px; /* 圖標與文字間距 */
+}
+
+/* Responsive Design */
+@media screen and (max-width: 520px) {
+    body {
+        margin: 10px 0;
+        padding: 0 10px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 320px; /* 限制最大寬度，確保在非常小的螢幕上也不會過大 */
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    h1.title {
+        font-size: 45px; /* 更小的標題 */
+        margin-top: 10px;
+        float: none; /* 不浮動 */
+        text-align: center; /* 居中 */
+    }
+
+    .scores-container {
+        float: none; /* 不浮動 */
+        justify-content: center; /* 居中 */
+        margin-top: 15px;
+    }
+
+    .score-container, .best-container {
+        padding: 8px 15px;
+        font-size: 18px;
+        min-width: unset; /* 移除最小寬度限制 */
+    }
+
+    .score-container:after, .best-container:after {
+        font-size: 10px;
+        top: 3px;
+    }
+
+    .above-game {
+        display: flex; /* 使用 flex 佈局 */
+        flex-direction: column; /* 垂直排列 */
+        align-items: center; /* 居中 */
+        margin-top: 15px;
+    }
+
+    .game-intro {
+        width: 100%;
+        text-align: center;
+        line-height: 1.5;
+        margin-bottom: 15px;
+        font-size: 1em;
+    }
+
+    .restart-button {
+        width: auto; /* 自動寬度 */
+        padding: 8px 15px;
+        margin-top: 0;
+        float: none; /* 不浮動 */
+    }
+
+    .game-container {
+        margin-top: 20px;
+        padding: 10px; /* 保持內邊距 */
+        width: 280px; /* 調整為 280px，以便內部計算更精確，避免小數點誤差 */
+        height: 280px; /* 保持正方形 */
+        position: relative;
+    }
+
+    /* 調整手機版網格和方塊大小 */
+    /* 遊戲容器內部可用寬度 = 280px (width) - 2 * 10px (padding) = 260px */
+    /* 網格單元寬度 = (260px - 3 * 10px (margin)) / 4 = 230px / 4 = 57.5px */
+    .grid-cell {
+        width: 57.5px;
+        height: 57.5px;
+        margin-right: 10px; /* 調整間距 */
+        float: left; /* 保持浮動 */
+        border-radius: 5px;
+    }
+
+    .grid-row {
+        margin-bottom: 10px; /* 調整行間距 */
+        /* 使用 flexbox 確保行內元素對齊，並處理最後一個元素的間距 */
+        display: flex;
+        justify-content: space-between; /* 均勻分佈 */
+    }
+
+    .grid-cell:last-child {
+        margin-right: 0; /* 確保最後一個格子沒有右邊距 */
+    }
+
+    .tile, .tile .tile-inner {
+        width: 57.5px; /* 調整方塊大小 */
+        height: 57.5px;
+        line-height: 57.5px; /* 垂直居中文字 */
+        font-size: 20px; /* 調整文字大小 */
+        border-radius: 5px;
+    }
+
+    /* Adjust tile positions for smaller grid - these need to be relative to the new cell size */
+    /* Step = cell_width + margin_right = 57.5px + 10px = 67.5px */
+    .tile.tile-position-1-1 { transform: translate(0px, 0px); }
+    .tile.tile-position-1-2 { transform: translate(0px, 67.5px); }
+    .tile.tile-position-1-3 { transform: translate(0px, 135px); }
+    .tile.tile-position-1-4 { transform: translate(0px, 202.5px); }
+    .tile.tile-position-2-1 { transform: translate(67.5px, 0px); }
+    .tile.tile-position-2-2 { transform: translate(67.5px, 67.5px); }
+    .tile.tile-position-2-3 { transform: translate(67.5px, 135px); }
+    .tile.tile-position-2-4 { transform: translate(67.5px, 202.5px); }
+    .tile.tile-position-3-1 { transform: translate(135px, 0px); }
+    .tile.tile-position-3-2 { transform: translate(135px, 67.5px); }
+    .tile.tile-position-3-3 { transform: translate(135px, 135px); }
+    .tile.tile-position-3-4 { transform: translate(135px, 202.5px); }
+    .tile.tile-position-4-1 { transform: translate(202.5px, 0px); }
+    .tile.tile-position-4-2 { transform: translate(202.5px, 67.5px); }
+    .tile.tile-position-4-3 { transform: translate(202.5px, 135px); }
+    .tile.tile-position-4-4 { transform: translate(202.5px, 202.5px); }
+
+    .tile.tile-128 .tile-inner,
+    .tile.tile-256 .tile-inner,
+    .tile.tile-512 .tile-inner,
+    .tile.tile-1024 .tile-inner,
+    .tile.tile-2048 .tile-inner,
+    .tile.tile-super .tile-inner {
+        font-size: 15px; /* 更小的數字 */
+    }
+}

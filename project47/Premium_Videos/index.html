@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Videos</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons (Clapperboard, Search, Home, User, Settings, Heart, TrendingUp, Star, Play, Eye) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for better visual appeal, if needed */
+        .video-thumbnail:hover .play-overlay {
+            opacity: 1;
+        }
+        .video-thumbnail:hover img {
+            transform: scale(1.1);
+        }
+        .jumpscare-overlay {
+            transition: opacity 0.1s ease-linear; /* Faster transition for impact */
+        }
+        /* Hide content sections by default */
+        .content-section {
+            display: none;
+        }
+        /* Active navigation link styling */
+        .nav-link.active {
+            color: #ef4444; /* red-500 */
+            border-bottom: 2px solid #ef4444;
+            padding-bottom: 4px;
+        }
+        /* Ad placeholder styling */
+        .ad-placeholder {
+            background-color: #2d3748; /* gray-800 */
+            border: 1px dashed #4a5568; /* gray-600 */
+            color: #a0aec0; /* gray-400 */
+            text-align: center;
+            padding: 1rem;
+            margin-bottom: 1.5rem; /* mb-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            overflow: hidden; /* Ensure image fits */
+            height: 192px; /* Set a fixed height for all ads to make them "longer" and consistent with video thumbnails */
+        }
+        .ad-placeholder a {
+            display: flex; /* Use flex to center content vertically */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            text-decoration: none; /* Remove underline from link */
+            color: inherit; /* Inherit text color */
+        }
+        .ad-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the ad area */
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-900 text-gray-100">
+
+    <!-- Jumpscare Audio Element (Hidden) -->
+    <audio id="scare-sound" src="../jumpscare.mp3" preload="auto" class="hidden"></audio>
+    <!-- 請將上面的 src 替換為你的驚嚇音效檔案路徑，例如："/audio/your-jumpscare-sound.mp3" -->
+    <!-- 建議使用短促、高衝擊力的音效 -->
+
+    <!-- Jumpscare Overlay -->
+    <div id="jumpscare-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-black opacity-0 pointer-events-none jumpscare-overlay">
+        <img
+            src="jumpscare.png" alt="Jumpscare Image" class="w-full h-full object-cover"/>
+    </div>
+
+    <!-- Website Navigation Bar -->
+    <header class="bg-gray-800 p-4 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center mb-4 md:mb-0">
+                <i class="fas fa-film text-red-500 mr-2 text-3xl"></i> <!-- Film icon for video site -->
+                <h1 class="text-3xl font-bold text-red-500">Premium Videos</h1>
+            </div>
+
+            <div class="relative w-full md:w-1/3 mb-4 md:mb-0">
+                <input
+                    type="text"
+                    placeholder="搜尋影片..."
+                    class="w-full pl-10 pr-4 py-2 rounded-full bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+            </div>
+
+            <nav class="flex space-x-6">
+                <a href="#" class="nav-link flex items-center text-gray-300 hover:text-red-500 transition-colors active" data-page="home">
+                    <i class="fas fa-home mr-1 text-lg"></i> 首頁
+                </a>
+                <a href="#" class="nav-link flex items-center text-gray-300 hover:text-red-500 transition-colors" data-page="trending">
+                    <i class="fas fa-fire mr-1 text-lg"></i> 熱門
+                </a>
+                <a href="#" class="nav-link flex items-center text-gray-300 hover:text-red-500 transition-colors" data-page="favorites">
+                    <i class="fas fa-star mr-1 text-lg"></i> 收藏
+                </a>
+                <a href="#" class="nav-link flex items-center text-gray-300 hover:text-red-500 transition-colors" data-page="login">
+                    <i class="fas fa-user-circle mr-1 text-lg"></i> 登入
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto p-6 pt-0"> <!-- Adjust padding-top to account for ad above -->
+        <!-- Home Section -->
+        <section id="home-section" class="content-section" style="display: block;"> <!-- Default active -->
+            <h2 class="text-2xl font-bold mb-6 text-red-400">最新影片</h2>
+            <div id="home-video-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Home video thumbnails will be dynamically added here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Trending Section -->
+        <section id="trending-section" class="content-section">
+            <h2 class="text-2xl font-bold mb-6 text-red-400">熱門影片</h2>
+            <div id="trending-video-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Trending video thumbnails will be dynamically added here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Favorites Section -->
+        <section id="favorites-section" class="content-section text-center py-20">
+            <h2 class="text-2xl font-bold mb-6 text-red-400">我的收藏</h2>
+            <p class="text-gray-400 text-lg">您還沒有收藏任何影片。</p>
+            <p class="text-gray-500 mt-2">瀏覽我們的 <a href="#" class="text-red-500 hover:underline nav-link" data-page="home">最新影片</a> 或 <a href="#" class="text-red-500 hover:underline nav-link" data-page="trending">熱門影片</a> 來尋找您喜歡的內容！</p>
+        </section>
+
+        <!-- Login Section -->
+        <section id="login-section" class="content-section flex justify-center items-center py-20">
+            <div class="bg-gray-800 p-8 rounded-lg shadow-xl w-full max-w-md">
+                <h2 class="text-2xl font-bold mb-6 text-red-400 text-center">帳戶登入/註冊</h2>
+
+                <!-- Login/Register Toggle Buttons -->
+                <div class="flex justify-center mb-6">
+                    <button id="show-login" class="px-6 py-2 rounded-l-full bg-red-600 hover:bg-red-700 text-white font-bold transition-colors">登入</button>
+                    <button id="show-register" class="px-6 py-2 rounded-r-full bg-gray-700 hover:bg-gray-600 text-gray-300 font-bold transition-colors">註冊</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="space-y-4">
+                    <div class="mb-4">
+                        <label for="username" class="block text-gray-300 text-sm font-bold mb-2">用戶名或電子郵件</label>
+                        <input type="text" id="username" name="username" placeholder="輸入您的用戶名或電子郵件"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white placeholder-gray-400">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="block text-gray-300 text-sm font-bold mb-2">密碼</label>
+                        <input type="password" id="password" name="password" placeholder="輸入您的密碼"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white placeholder-gray-400">
+                    </div>
+                    <!-- CAPTCHA Section for Login Form -->
+                    <div class="mb-6">
+                        <label class="block text-gray-300 text-sm font-bold mb-2">人類驗證 <span class="text-gray-500">(請輸入下方驗證碼)</span></label>
+                        <div class="flex items-center space-x-2">
+                            <span id="login-captcha-display" class="bg-gray-600 text-white text-xl font-bold px-4 py-2 rounded-md tracking-wider select-none"></span>
+                            <button type="button" id="login-generate-captcha-btn" class="bg-gray-600 hover:bg-gray-500 text-white text-sm py-2 px-3 rounded-md transition-colors">重新產生</button>
+                        </div>
+                        <input type="text" id="login-captcha-input" placeholder="請輸入驗證碼"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white placeholder-gray-400 mt-2">
+                        <p id="login-captcha-error" class="text-red-400 text-xs mt-1 hidden">驗證碼不正確，請重新輸入。</p>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button type="submit" id="login-submit-btn"
+                                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition-colors w-full">
+                            登入
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="space-y-4 hidden">
+                    <div class="mb-4">
+                        <label for="reg-username" class="block text-gray-300 text-sm font-bold mb-2">用戶名或電子郵件</label>
+                        <input type="text" id="reg-username" name="reg-username" placeholder="輸入您的用戶名或電子郵件"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white placeholder-gray-400">
+                    </div>
+                    <div class="mb-4">
+                        <label for="reg-password" class="block text-gray-300 text-sm font-bold mb-2">密碼</label>
+                        <input type="password" id="reg-password" name="reg-password" placeholder="輸入您的密碼"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white placeholder-gray-400">
+                    </div>
+                    <div class="mb-6">
+                        <label for="reg-confirm-password" class="block text-gray-300 text-sm font-bold mb-2">確認密碼</label>
+                        <input type="password" id="reg-confirm-password" name="reg-confirm-password" placeholder="再次輸入您的密碼"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 mb-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white placeholder-gray-400">
+                    </div>
+
+                    <!-- CAPTCHA Section for Register Form -->
+                    <div class="mb-4">
+                        <label class="block text-gray-300 text-sm font-bold mb-2">人類驗證 <span class="text-gray-500">(已發送到您的帳戶)</span></label>
+                        <div class="flex items-center space-x-2">
+                            <span id="captcha-display" class="bg-gray-600 text-white text-xl font-bold px-4 py-2 rounded-md tracking-wider select-none"></span>
+                            <button type="button" id="generate-captcha-btn" class="bg-gray-600 hover:bg-gray-500 text-white text-sm py-2 px-3 rounded-md transition-colors">重新產生</button>
+                        </div>
+                        <input type="text" id="captcha-input" placeholder="請輸入驗證碼"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 text-white placeholder-gray-400 mt-2">
+                        <p id="captcha-error" class="text-red-400 text-xs mt-1 hidden">驗證碼不正確，請重新輸入。</p>
+                    </div>
+
+                    <button type="submit" id="register-submit-btn"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition-colors w-full">
+                        註冊並登入
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Website Footer -->
+    <footer class="bg-gray-800 p-4 mt-auto text-center text-gray-400">
+        <div class="container mx-auto">
+            <p>&copy; 2023 Premium Videos. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-2">
+                <a href="#" class="hover:text-red-500">關於我們</a>
+                <a href="#" class="hover:text-red-500">條款與條件</a>
+                <a href="#" class="hover:text-red-500">隱私政策</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Video thumbnail data (using placeholder images)
+        const homeVideoThumbnails = [
+            { id: 1, type: 'video', title: '夜晚的誘惑：獨自在家', views: '1.5M', duration: '18:20', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+1' },
+            { id: 2, type: 'video', title: '當她說「隨便」時...', views: '1.3M', duration: '15:05', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+2' },
+            { id: 3, type: 'video', title: '閨蜜的秘密遊戲', views: '2.8M', duration: '22:45', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+3' },
+            { id: 4, type: 'ad', title: '私密日記：只為你開放', thumbnail: 'ad5.png', link: 'death', duration: 'AD' }, // Ad 1
+            { id: 5, type: 'video', title: '初次體驗：她害羞的請求', views: '980K', duration: '10:10', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+4' },
+            { id: 6, type: 'video', title: '健身房的意外發現', views: '2.1M', duration: '19:30', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+5' },
+            { id: 7, type: 'video', title: '鄰家女孩的邀請', views: '1.6M', duration: '14:50', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+6' },
+            { id: 8, type: 'ad', title: '探索深處：未知的快感', thumbnail: 'ad6.png', link: 'death', duration: 'AD' }, // Ad 2
+            { id: 9, type: 'video', title: '泳池派對：濕身誘惑', views: '2.3M', duration: '20:15', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+8' },
+            { id: 10, type: 'video', title: '寂寞人妻的告白', views: '1.9M', duration: '17:40', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+9' },
+            { id: 11, type: 'video', title: '老師的特別輔導', views: '2.6M', duration: '21:00', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+10' },
+            { id: 12, type: 'ad', title: '她的秘密：今晚等你', thumbnail: 'ad7.png', link: 'death', duration: 'AD' }, // Ad 3
+            { id: 13, type: 'video', title: '酒店之夜：陌生人的誘惑', views: '3.2M', duration: '28:30', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+11' },
+            { id: 14, type: 'video', title: '校園風雲人物的秘密', views: '1.4M', duration: '16:25', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+12' },
+            { id: 15, type: 'video', title: '雨夜情迷：車內的溫存', views: '1.7M', duration: '13:55', thumbnail: 'https://placehold.co/300x180/1a202c/ffffff?text=Home+Video+13' },
+            { id: 16, type: 'ad', title: '極致誘惑：挑戰你的極限', thumbnail: 'ad8.png', link: 'death', duration: 'AD' }, // Ad 4
+        ];
+
+        const trendingVideoThumbnails = [
+            { id: 17, type: 'video', title: '獨家！她與教練的私密訓練', views: '4.5M', duration: '28:00', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+1' },
+            { id: 18, type: 'video', title: '大學宿舍的瘋狂一夜', views: '3.8M', duration: '20:50', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+2' },
+            { id: 19, type: 'video', title: '空姐的飛行日記：高空誘惑', views: '3.1M', duration: '17:35', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+3' },
+            { id: 20, type: 'ad', title: '解鎖：今夜的無限可能', thumbnail: 'ad9.png', link: 'death', duration: 'AD' }, // Ad 5
+            { id: 21, type: 'video', title: '單身派對：失控的夜晚', views: '2.9M', duration: '24:10', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+4' },
+            { id: 22, type: 'video', title: '我的繼母不可能這麼可愛', views: '3.5M', duration: '26:00', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+5' },
+            { id: 23, type: 'video', title: '夜店獵豔：今晚不回家', views: '2.7M', duration: '19:20', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+6' },
+            { id: 24, type: 'ad', title: '熱情綻放：不為人知的角落', thumbnail: 'ad10.png', link: 'death', duration: 'AD' }, // Ad 6
+            { id: 25, type: 'video', title: '與陌生人的刺激冒險', views: '3.3M', duration: '21:40', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+8' },
+            { id: 26, type: 'video', title: '老闆娘的特別要求', views: '3.9M', duration: '25:30', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+9' },
+            { id: 27, type: 'video', title: '護士的夜班故事', views: '3.0M', duration: '18:00', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+10' },
+            { id: 28, type: 'ad', title: '沉淪：她最深層的渴望', thumbnail: 'ad11.png', link: 'death', duration: 'AD' }, // Ad 7
+            { id: 29, type: 'video', title: '交換伴侶：誰會是贏家', views: '4.2M', duration: '29:15', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+11' },
+            { id: 30, type: 'video', title: '海邊度假：陽光下的激情', views: '3.6M', duration: '22:05', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+12' },
+            { id: 31, type: 'video', title: '家教老師的誘惑', views: '2.5M', duration: '16:50', thumbnail: 'https://placehold.co/300x180/2d3748/ffffff?text=Trending+13' },
+            { id: 32, type: 'ad', title: '午夜場：只有我們知道', thumbnail: 'ad12.png', link: 'death', duration: 'AD' }, // Ad 8
+        ];
+
+
+        const jumpscareOverlay = document.getElementById('jumpscare-overlay');
+        const scareSound = document.getElementById('scare-sound');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+        const homeVideoGrid = document.getElementById('home-video-grid');
+        const trendingVideoGrid = document.getElementById('trending-video-grid');
+
+        // New elements for login/register forms
+        const showLoginBtn = document.getElementById('show-login');
+        const showRegisterBtn = document.getElementById('show-register');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const loginSubmitBtn = document.getElementById('login-submit-btn');
+        const registerSubmitBtn = document.getElementById('register-submit-btn');
+
+        // Register form CAPTCHA elements
+        const captchaDisplay = document.getElementById('captcha-display');
+        const generateCaptchaBtn = document.getElementById('generate-captcha-btn');
+        const captchaInput = document.getElementById('captcha-input');
+        const captchaError = document.getElementById('captcha-error');
+        let currentCaptcha = '';
+
+        // Login form CAPTCHA elements
+        const loginCaptchaDisplay = document.getElementById('login-captcha-display');
+        const loginGenerateCaptchaBtn = document.getElementById('login-generate-captcha-btn');
+        const loginCaptchaInput = document.getElementById('login-captcha-input');
+        const loginCaptchaError = document.getElementById('login-captcha-error');
+        let currentLoginCaptcha = '';
+
+
+        // Function to generate a 6-digit random CAPTCHA for registration
+        function generateRegisterCaptcha() {
+            currentCaptcha = Math.floor(100000 + Math.random() * 900000).toString();
+            captchaDisplay.textContent = currentCaptcha;
+            captchaInput.value = ''; // Clear input field
+            captchaError.classList.add('hidden'); // Hide error message
+        }
+
+        // Function to generate a 6-digit random CAPTCHA for login
+        function generateLoginCaptcha() {
+            currentLoginCaptcha = Math.floor(100000 + Math.random() * 900000).toString();
+            loginCaptchaDisplay.textContent = currentLoginCaptcha;
+            loginCaptchaInput.value = ''; // Clear input field
+            loginCaptchaError.classList.add('hidden'); // Hide error message
+        }
+
+        // Function to handle video click and trigger jumpscare
+        function handleVideoClick() {
+            jumpscareOverlay.style.opacity = '1'; // Show jumpscare overlay
+            jumpscareOverlay.style.pointerEvents = 'auto'; // Enable pointer events
+
+            if (scareSound) {
+                scareSound.play().catch(e => console.error("音效播放失敗:", e));
+            }
+
+            // Hide jumpscare overlay after 3 seconds
+            setTimeout(() => {
+                jumpscareOverlay.style.opacity = '0'; // Hide jumpscare overlay
+                jumpscareOverlay.style.pointerEvents = 'none'; // Disable pointer events
+                // Optional: Stop sound and reset if needed
+                // if (scareSound) {
+                //     scareSound.pause();
+                //     scareSound.currentTime = 0;
+                // }
+            }, 3000); // 3000 milliseconds = 3 seconds
+        }
+
+        // Function to create and append video thumbnail elements
+        function renderVideoThumbnails(gridElement, videoData) {
+            gridElement.innerHTML = ''; // Clear existing content
+            videoData.forEach(item => { // Changed 'video' to 'item' to handle both video and ad types
+                const itemDiv = document.createElement('div');
+
+                if (item.type === 'ad') {
+                    itemDiv.className = 'bg-gray-800 rounded-lg shadow-xl overflow-hidden ad-placeholder'; // Apply ad-placeholder styles
+                    // Height is now controlled by .ad-placeholder CSS directly
+                    itemDiv.innerHTML = `
+                        <a href="${item.link}" target="_blank" class="w-full h-full flex flex-col justify-center items-center">
+                            <img src="${item.thumbnail}" alt="${item.title}" class="w-full h-full object-cover rounded-lg">
+                            <p class="mt-2 text-sm text-gray-400">${item.title}</p>
+                        </a>
+                    `;
+                } else {
+                    itemDiv.className = 'bg-gray-800 rounded-lg shadow-xl overflow-hidden cursor-pointer transform hover:scale-105 transition-transform duration-300 group video-thumbnail';
+                    itemDiv.onclick = handleVideoClick; // Attach click handler
+
+                    itemDiv.innerHTML = `
+                        <div class="relative w-full h-48 overflow-hidden">
+                            <img
+                                src="${item.thumbnail}"
+                                alt="${item.title}"
+                                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                            />
+                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 play-overlay transition-opacity duration-300">
+                                <i class="fas fa-play text-white text-5xl"></i>
+                            </div>
+                            <span class="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded-md">
+                                ${item.duration}
+                            </span>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-gray-50 mb-2 truncate">${item.title}</h3>
+                            <div class="flex items-center text-gray-400 text-sm">
+                                <i class="fas fa-eye mr-1 text-base"></i> ${item.views} 次觀看
+                            </div>
+                        </div>
+                    `;
+                }
+                gridElement.appendChild(itemDiv);
+            });
+        }
+
+        // Function to switch content sections
+        function showPage(pageId) {
+            // Hide all sections
+            contentSections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show the requested section
+            const targetSection = document.getElementById(`${pageId}-section`);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
+
+            // Update active navigation link
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === pageId) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Special handling for login/register page
+            if (pageId === 'login') {
+                showAuthForm('login'); // Default to login form when navigating to login page
+            }
+        }
+
+        // Function to switch between login and register forms
+        function showAuthForm(formType) {
+            if (formType === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                showLoginBtn.classList.add('bg-red-600', 'text-white');
+                showLoginBtn.classList.remove('bg-gray-700', 'text-gray-300');
+                showRegisterBtn.classList.add('bg-gray-700', 'text-gray-300');
+                showRegisterBtn.classList.remove('bg-red-600', 'text-white');
+                generateLoginCaptcha(); // Generate CAPTCHA for login form
+            } else { // formType === 'register'
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                showRegisterBtn.classList.add('bg-red-600', 'text-white');
+                showRegisterBtn.classList.remove('bg-gray-700', 'text-gray-300');
+                showLoginBtn.classList.add('bg-gray-700', 'text-gray-300');
+                showLoginBtn.classList.remove('bg-red-600', 'text-white');
+                generateRegisterCaptcha(); // Generate CAPTCHA for registration form
+            }
+        }
+
+        // Add event listeners to navigation links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default link behavior
+                const pageId = event.currentTarget.dataset.page;
+                showPage(pageId);
+            });
+        });
+
+        // Event listeners for form switching buttons
+        showLoginBtn.addEventListener('click', () => showAuthForm('login'));
+        showRegisterBtn.addEventListener('click', () => showAuthForm('register'));
+
+        // Event listener for Register form CAPTCHA generation
+        generateCaptchaBtn.addEventListener('click', generateRegisterCaptcha);
+        // Event listener for Login form CAPTCHA generation
+        loginGenerateCaptchaBtn.addEventListener('click', generateLoginCaptcha);
+
+
+        // Event listener for Login button (main form)
+        loginSubmitBtn.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent form submission
+            if (loginCaptchaInput.value === currentLoginCaptcha) {
+                loginCaptchaError.classList.add('hidden');
+                // In a real app, you'd send login data to server here.
+                // For this demo, we just trigger jumpscare.
+                handleVideoClick(); // Re-use the jumpscare trigger
+            } else {
+                loginCaptchaError.classList.remove('hidden');
+                generateLoginCaptcha(); // Regenerate CAPTCHA on failure
+            }
+        });
+
+        // Event listener for Register button (register form)
+        registerSubmitBtn.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent form submission
+            if (captchaInput.value === currentCaptcha) {
+                captchaError.classList.add('hidden');
+                // In a real app, you'd send registration data to server here.
+                // For this demo, we just trigger jumpscare after successful CAPTCHA.
+                handleVideoClick(); // Re-use the jumpscare trigger
+            } else {
+                captchaError.classList.remove('hidden');
+                generateRegisterCaptcha(); // Regenerate CAPTCHA on failure
+            }
+        });
+
+
+        // Preload jumpscare image and sound on window load
+        window.onload = function() {
+            // Preload sound
+            if (scareSound) {
+                scareSound.load();
+            }
+
+            // Preload image
+            const jumpscareImage = new Image();
+            jumpscareImage.src = 'https://placehold.co/1920x1080/FF0000/FFFFFF?text=JUMPSCARE!'; // Replace with your jumpscare image path
+            jumpscareImage.onload = () => console.log('驚嚇圖片已預加載');
+            jumpscareImage.onerror = () => console.error('驚嚇圖片加載失敗');
+
+            // Render video thumbnails for home and trending sections
+            renderVideoThumbnails(homeVideoGrid, homeVideoThumbnails);
+            renderVideoThumbnails(trendingVideoGrid, trendingVideoThumbnails);
+
+            // Show home page by default
+            showPage('home');
+        };
+    </script>
+
+</body>
+</html>

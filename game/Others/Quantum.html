@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quantum Fission - 量子裂變</title>
+    <style>
+        :root {
+            --bg: #000000;
+            --player: #ffffff;
+            --energy: #00ff99;
+            --particle: #ffff00; 
+            --danger: #ff3366;   
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: white;
+            font-family: 'Monaco', 'Lucida Console', monospace;
+            overflow: hidden;
+            touch-action: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat {
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+
+        #energy-bar-container {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+        }
+
+        #energy-bar {
+            width: 100%;
+            height: 100%;
+            background: var(--energy);
+            transition: width 0.1s;
+        }
+
+        canvas { display: block; }
+
+        #overlay {
+            position: absolute;
+            background: rgba(0,0,0,0.92);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h2 { font-weight: 100; letter-spacing: 8px; color: var(--energy); margin-bottom: 10px; }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--energy);
+            color: var(--energy);
+            padding: 15px 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 25px;
+        }
+
+        #result-box {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px dashed rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div id="ui">
+    <div class="stat">得分: <span id="score">0</span></div>
+    <div class="stat">倍率: x<span id="multiplier">1</span></div>
+</div>
+
+<div id="energy-bar-container">
+    <div id="energy-bar"></div>
+</div>
+
+<div id="overlay">
+    <h2 id="title">量子裂變</h2>
+    <div id="result-box" style="display:none;">
+        <div>得分: <span id="final-score">0</span></div>
+        <div style="font-size: 0.8rem; margin-top: 5px;">最高紀錄: <span id="best-score">0</span></div>
+    </div>
+    <div class="instruction">
+        點擊螢幕發射能量彈<br>
+        撞擊亮黃色粒子圓框來恢復能量
+    </div>
+    <button class="btn" id="startBtn">啟動反應</button>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const multEl = document.getElementById('multiplier');
+    const energyBar = document.getElementById('energy-bar');
+    const startBtn = document.getElementById('startBtn');
+    const overlay = document.getElementById('overlay');
+    const resultBox = document.getElementById('result-box');
+    const finalScoreEl = document.getElementById('final-score');
+    const bestScoreEl = document.getElementById('best-score');
+
+    let width, height, player, particles, bullets, effects;
+    let score = 0, multiplier = 1, energy = 100;
+    let gameActive = false;
+    let highScore = parseInt(localStorage.getItem('quantum_fission_highscore')) || 0;
+
+    function init() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        player = { x: width/2, y: height/2, vx: 0, vy: 0, r: 10 };
+        particles = [];
+        bullets = [];
+        effects = [];
+        score = 0;
+        multiplier = 1;
+        energy = 100;
+        
+        // 預生成粒子
+        for(let i=0; i<10; i++) spawnParticle();
+    }
+
+    function spawnParticle() {
+        if (particles.length > 20) return;
+        particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2,
+            r: 10 + Math.random() * 10,
+            type: Math.random() > 0.2 ? 'normal' : 'volatile'
+        });
+    }
+
+    function handleInput(tx, ty) {
+        if (!gameActive) return;
+        const dx = tx - player.x;
+        const dy = ty - player.y;
+        const angle = Math.atan2(dy, dx);
+        energy -= 4;
+        bullets.push({ x: player.x, y: player.y, vx: Math.cos(angle) * 10, vy: Math.sin(angle) * 10, r: 4 });
+        player.vx -= Math.cos(angle) * 3;
+        player.vy -= Math.sin(angle) * 3;
+    }
+
+    window.addEventListener('mousedown', (e) => handleInput(e.clientX, e.clientY));
+    window.addEventListener('touchstart', (e) => {
+        handleInput(e.touches[0].clientX, e.touches[0].clientY);
+        e.preventDefault();
+    }, {passive: false});
+
+    function update() {
+        if (!gameActive) return;
+        player.vx *= 0.98; player.vy *= 0.98;
+        player.x += player.vx; player.y += player.vy;
+        energy -= 0.08;
+        energyBar.style.width = energy + '%';
+
+        if (energy <= 0 || player.x < 0 || player.x > width || player.y < 0 || player.y > height) gameOver();
+
+        bullets.forEach((b, i) => {
+            b.x += b.vx; b.y += b.vy;
+            if (b.x < 0 || b.x > width || b.y < 0 || b.y > height) bullets.splice(i, 1);
+            particles.forEach((p, j) => {
+                if (Math.hypot(b.x - p.x, b.y - p.y) < p.r + b.r) {
+                    score += 10 * (++multiplier);
+                    energy = Math.min(100, energy + 15);
+                    particles.splice(j, 1);
+                    bullets.splice(i, 1);
+                    scoreEl.innerText = score;
+                    multEl.innerText = multiplier;
+                }
+            });
+        });
+
+        particles.forEach(p => {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > width) p.vx *= -1;
+            if (p.y < 0 || p.y > height) p.vy *= -1;
+        });
+        if (Math.random() < 0.05) spawnParticle();
+    }
+
+    function draw() {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, width, height);
+
+        // 粒子繪製 - 實線外框
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.strokeStyle = p.type === 'volatile' ? '#ff3366' : '#ffff00';
+            ctx.lineWidth = 3; // 夠粗才看得到
+            ctx.stroke();
+        });
+
+        // 子彈
+        ctx.fillStyle = '#00ff99';
+        bullets.forEach(b => {
+            ctx.beginPath();
+            ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // 玩家
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        if (gameActive) {
+            update();
+            requestAnimationFrame(draw);
+        }
+    }
+
+    function gameOver() {
+        gameActive = false;
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('quantum_fission_highscore', highScore);
+        }
+        finalScoreEl.innerText = score;
+        bestScoreEl.innerText = highScore;
+        resultBox.style.display = 'block';
+        overlay.style.display = 'flex';
+    }
+
+    startBtn.addEventListener('click', () => {
+        init();
+        gameActive = true;
+        overlay.style.display = 'none';
+        draw();
+    });
+
+    init();
+    draw();
+</script>
+</body>
+</html>

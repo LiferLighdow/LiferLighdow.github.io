@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <!-- Google Fonts: Poppins for general text, Montserrat for a modern touch -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+	 <link rel="stylesheet" href="common-nav.css">
+    <!-- Font Awesome for social icons (if needed in header/footer) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" xintegrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'MyCustomFont', sans-serif; /* 使用更現代的字體 */
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); /* 深色漸變背景 */
+            color: #e0e0e0; /* 淺色文字 */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* 使用 Flexbox 垂直排列 */
+            overflow-x: hidden; /* 防止橫向捲軸 */
+        }
+
+        /* 定義自定義字體 (如果仍需使用) */
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('fonts/myfont.woff2') format('woff2'),
+                 url('fonts/myfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        a {
+            text-decoration: none;
+            color: #8be9fd; /* 淺藍色連結 */
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #6272a4; /* 較深的藍色 */
+        }
+
+        /* Container for the contact form */
+        .container {
+            background-color: rgba(22, 33, 62, 0.7); /* 半透明深色背景 */
+            backdrop-filter: blur(5px); /* 模糊效果 */
+            padding: 40px; /* 增加內距 */
+            border-radius: 15px; /* 更圓潤的邊角 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* 更明顯的陰影 */
+            width: 600px; /* 稍微寬一點 */
+            max-width: 90%;
+            margin: 3rem auto; /* 增加上下間距，並置中 */
+            flex-grow: 1; /* 讓 container 填滿剩餘空間 */
+            border: 1px solid rgba(139, 233, 253, 0.2); /* 細微邊框 */
+        }
+
+        h1 {
+            color: #8be9fd; /* 標題顏色與主題協調 */
+            margin-bottom: 30px; /* 增加間距 */
+            text-align: center;
+            font-size: 2.5rem; /* 更大的標題 */
+            text-shadow: 0 0 10px rgba(139, 233, 253, 0.5); /* 標題發光 */
+        }
+
+        .contact-info {
+            margin-bottom: 30px;
+            line-height: 1.8; /* 增加行高 */
+            color: #b3b3b3; /* 淺灰色文字 */
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .contact-info strong {
+            color: #e0e0e0; /* 強調文字 */
+        }
+
+        .form-group {
+            margin-bottom: 25px; /* 增加間距 */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px; /* 增加間距 */
+            font-weight: 500;
+            color: #e0e0e0; /* 標籤文字顏色 */
+            font-size: 1.1rem;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 15px; /* 增加內距 */
+            border: 1px solid #444; /* 深色邊框 */
+            border-radius: 8px; /* 更圓潤的邊角 */
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: #2a2a4a; /* 深色背景 */
+            color: #e0e0e0; /* 文字顏色 */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #8be9fd; /* 聚焦時邊框變色 */
+            box-shadow: 0 0 15px rgba(139, 233, 253, 0.4); /* 聚焦時發光 */
+            outline: none;
+        }
+
+        textarea {
+            min-height: 180px; /* 增加高度 */
+            resize: vertical;
+        }
+
+        /* Button styles */
+        .form-buttons {
+            display: flex;
+            gap: 15px; /* 按鈕間距 */
+            margin-top: 20px;
+        }
+
+        input[type="button"],
+        input[type="reset"] {
+            flex: 1; /* 讓按鈕平均分配寬度 */
+            padding: 15px 24px; /* 增加內距 */
+            border: none;
+            border-radius: 10px; /* 更圓潤的邊角 */
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            color: #fff; /* 文字顏色 */
+        }
+
+        input[type="button"] {
+            background: linear-gradient(45deg, #2980b9, #3498db); /* 藍色漸變 */
+        }
+
+        input[type="reset"] {
+            background: linear-gradient(45deg, #6c757d, #8d97a0); /* 灰色漸變 */
+        }
+
+        input[type="button"]:hover {
+            background: linear-gradient(45deg, #3498db, #2980b9); /* 懸停時漸變反轉 */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        input[type="reset"]:hover {
+            background: linear-gradient(45deg, #8d97a0, #6c757d); /* 懸停時漸變反轉 */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        input[type="button"]:active,
+        input[type="reset"]:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #languageSelect {
+            margin-bottom: 25px; /* 增加下方間距 */
+            padding: 12px 20px; /* 增加內距 */
+            border: 1px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: #2a2a4a; /* 深色背景 */
+            color: #e0e0e0; /* 文字顏色 */
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23e0e0e0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"); /* 下拉箭頭顏色改為淺色 */
+            background-repeat: no-repeat;
+            background-position: right 15px center; /* 調整箭頭位置 */
+            background-size: 16px 16px;
+            padding-right: 40px; /* 調整右側內距，留出箭頭空間 */
+            width: fit-content; /* 寬度根據內容調整 */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #languageSelect:focus {
+            outline: none;
+            border-color: #8be9fd;
+            box-shadow: 0 0 10px rgba(139, 233, 253, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a1a2e; /* 深色頁腳 */
+            color: #aaa;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: auto; /* 讓頁腳始終在底部 */
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Ripple Effect (Optional, if you want it on this page too) */
+        .ripple {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            background-color: rgba(139, 233, 253, 0.6);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Apply box-sizing to all elements */
+        *, *::before, *::after {
+          box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+        }
+
+        /* --- Mobile Specific Styles --- */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 0 1rem;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0.5rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 25px;
+                margin: 2rem auto;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .contact-info {
+                font-size: 1rem;
+            }
+
+            label {
+                font-size: 1rem;
+            }
+
+            input[type="text"],
+            textarea,
+            #languageSelect {
+                padding: 12px;
+                font-size: 0.95rem;
+            }
+
+            input[type="button"],
+            input[type="reset"] {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            input[type="text"],
+            textarea,
+            #languageSelect {
+                padding: 10px;
+            }
+
+            input[type="button"],
+            input[type="reset"] {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">Lifer_Lighdow</div>
+            <ul>
+                <li><a href="index" data-i18n="home">Home</a></li>
+                <!-- Adjusted links to match original index structure -->
+                <li><a href="music" data-i18n="music">Music</a></li>
+                <li><a href="game" data-i18n="games">Games</a></li>
+                <li><a href="Contact" data-i18n="contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="zh_TW">繁體中文</option>
+            <option value="zh_CN">简体中文</option>
+            <option value="ja">日本語</option>
+        </select>
+        <h1 data-i18n="title">Contact Us</h1>
+        <div class="contact-info">
+            <p><strong>Email:</strong> liferlighdow1012@gmail.com</p>
+        </div>
+        <form id="contactForm">
+            <div class="form-group">
+                <label for="subjectInput" data-i18n="subjectLabel">Subject:</label>
+                <input type="text" id="subjectInput" name="subject" size="25" maxlength="50" required>
+            </div>
+            <div class="form-group">
+                <label for="commentInput" data-i18n="commentLabel">Your Message:</label>
+                <textarea id="commentInput" name="Comment" cols="30" rows="3" required></textarea>
+            </div>
+            <div class="form-buttons">
+                <a id="mailLink" href=" " target="_blank"><input type="button" id="submitButton" value="Submit" data-i18n="submit"></a>
+                <input type="reset" value="Reset" data-i18n="reset">
+            </div>
+        </form>
+        <div id="formMessage"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Lifer_Lighdow. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                title: 'Contact Us',
+                subjectLabel: 'Subject:',
+                commentLabel: 'Your Message:',
+                submit: 'Submit',
+                reset: 'Reset',
+                sent: 'Message sent!',
+                home: 'Home',
+                music: 'Music', // Added for consistency
+                games: 'Games', // Added for consistency
+                contact: 'Contact',
+            },
+            zh_TW: {
+                title: '聯絡我們',
+                subjectLabel: '主旨：',
+                commentLabel: '您的寶貴建議：',
+                submit: '確認傳送',
+                reset: '放棄清除',
+                sent: '訊息已送出！',
+                home: '首頁',
+                music: '音樂',
+                games: '遊戲',
+                contact: '聯絡',
+            },
+            zh_CN: {
+                title: '联系我们',
+                subjectLabel: '主题：',
+                commentLabel: '您的宝贵建议：',
+                submit: '确认传送',
+                reset: '放弃清除',
+                sent: '信息已发送！',
+                home: '首页',
+                music: '音乐',
+                games: '游戏',
+                contact: '联系',
+            },
+            ja: {
+                title: 'お問い合わせ',
+                subjectLabel: '件名：',
+                commentLabel: 'メッセージ：',
+                submit: '送信',
+                reset: 'クリア',
+                sent: 'メッセージを送信しました！',
+                home: 'ホーム',
+                music: '音楽',
+                games: 'ゲーム',
+                contact: 'お問い合わせ',
+            },
+        };
+
+        // Custom alert function to replace window.alert
+        function showAlert(message) {
+            const alertBox = document.createElement('div');
+            alertBox.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #333;
+                color: #fff;
+                padding: 20px 30px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                z-index: 10000;
+                font-family: 'MyCustomFont', sans-serif;
+                font-size: 1.1rem;
+                text-align: center;
+                animation: fadeIn 0.3s ease-out;
+            `;
+            alertBox.textContent = message;
+            document.body.appendChild(alertBox);
+
+            setTimeout(() => {
+                alertBox.style.animation = 'fadeOut 0.3s ease-in forwards';
+                alertBox.addEventListener('animationend', () => alertBox.remove());
+            }, 2000); // Display for 2 seconds
+
+            // CSS for fade in/out animations
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translate(-50%, -60%); }
+                    to { opacity: 1; transform: translate(-50%, -50%); }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translate(-50%, -50%); }
+                    to { opacity: 0; transform: translate(-50%, -60%); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function setLanguage(lang) {
+            const elements = {
+                title: document.querySelector('h1'),
+                subjectLabel: document.querySelector('label[for="subjectInput"]'),
+                commentLabel: document.querySelector('label[for="commentInput"]'),
+                submitButton: document.querySelector('#submitButton'),
+                resetButton: document.querySelector('input[type="reset"]'),
+                home: document.querySelector('a[data-i18n="home"]'),
+                music: document.querySelector('a[data-i18n="music"]'), // Added for consistency
+                games: document.querySelector('a[data-i18n="games"]'), // Added for consistency
+                contact: document.querySelector('a[data-i18n="contact"]'),
+            };
+            for (const key in elements) {
+                if (elements[key]) {
+                    elements[key].textContent = translations[lang][key];
+                }
+            }
+        }
+
+        let currentLanguage = 'en';
+        setLanguage(currentLanguage);
+
+        const languageSelect = document.getElementById('languageSelect');
+        if (languageSelect) {
+            languageSelect.addEventListener('change', function() {
+                currentLanguage = this.value;
+                setLanguage(currentLanguage);
+            });
+        }
+
+        const mailLink = document.getElementById('mailLink');
+        const submitButton = document.getElementById('submitButton');
+        const subjectInput = document.getElementById('subjectInput');
+        const commentInput = document.getElementById('commentInput');
+
+        submitButton.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const subject = subjectInput.value;
+            const comment = commentInput.value;
+            // const title = translations[currentLanguage].title; // This variable is not used
+
+            if (subject === "" || comment === "") {
+                showAlert(translations[currentLanguage].alertMessage || "Please fill in all fields."); // Use custom alert
+                return;
+            }
+
+            const mailtoLink = `mailto:liferlighdow1012@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(comment)}`;
+
+            mailLink.href = mailtoLink;
+            mailLink.click();
+            subjectInput.value = "";
+            commentInput.value = "";
+            showAlert(translations[currentLanguage].sent); // Show success message
+        });
+
+        // Add an alert message to translations
+        translations.en.alertMessage = "Please fill in all fields.";
+        translations.zh_TW.alertMessage = "請填寫所有欄位。";
+        translations.zh_CN.alertMessage = "请填写所有字段。";
+        translations.ja.alertMessage = "すべての項目を入力してください。";
+
+        // Optional: Add ripple effect to this page if desired
+        document.addEventListener('click', function(e) {
+            const x = e.clientX;
+            const y = e.clientY;
+
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+
+            document.body.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    </script>
+</body>
+</html>

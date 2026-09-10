@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifer_Lighdow Tower Defense</title>
+    <link rel="stylesheet" href="tower_defense_style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Lifer_Lighdow Tower Defense</h1>
+        <div class="game-info">
+            <div>Money: <span id="money">300</span></div>
+            <div>Lives: <span id="lives">10</span></div>
+            <div>Wave: <span id="wave">0</span> / <span id="totalWaves"></span></div>
+            <div>Score: <span id="score">0</span></div>
+        </div>
+        <canvas id="gameCanvas" width="1250" height="750"></canvas>
+        <div class="button-container">
+            <div class="control-buttons">
+                <button id="startButton" data-lang-key="startButton">Start Game</button>
+                <button id="pauseButton" data-lang-key="pauseButton">Pause</button>
+                <button id="resetButton" data-lang-key="resetButton">Reset Game</button>
+                <button id="speed1xButton" class="speed-button selected-speed" data-speed="1" data-lang-key="speed1x">1x Speed</button>
+                <button id="speed2xButton" class="speed-button" data-speed="2" data-lang-key="speed2x">2x Speed</button>
+                <button id="speed4xButton" class="speed-button" data-speed="4" data-lang-key="speed4x">4x Speed</button>
+            </div>
+            <div class="tower-build-buttons">
+                <button id="buildBasicTowerButton" data-tower-type="basic" disabled data-lang-key="buildBasicTower">Build Basic Tower (<span class="cost">50</span>)</button>
+                <button id="buildSlowTowerButton" data-tower-type="slow" disabled data-lang-key="buildSlowTower">Build Slow Tower (<span class="cost">75</span>)</button>
+                <button id="buildHeavyTowerButton" data-tower-type="heavy" disabled data-lang-key="buildHeavyTower">Build Heavy Tower (<span class="cost">100</span>)</button>
+                <button id="buildSplashTowerButton" data-tower-type="splash" disabled data-lang-key="buildSplashTower">Build Splash Tower (<span class="cost">120</span>)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameOverMessage">
+        <span class="message-text" data-lang-key="gameOver">Game Over!</span><br>
+        <span class="score-text" data-lang-key="yourScore">Your Score:</span><span id="finalScore">0</span>
+        <br>
+        <button id="restartGameOverButton" class="restart-button" data-lang-key="restart" style="margin-top: 20px;">Restart</button>
+    </div>
+
+    <div id="gameWinMessage">
+        <span class="message-text" data-lang-key="gameWin">Congratulations!</span><br>
+        <span class="score-text" data-lang-key="yourScore">Your Score:</span><span id="finalWinScore">0</span>
+        <br>
+        <button id="restartGameWinButton" class="restart-button" data-lang-key="restart" style="margin-top: 20px;">Restart</button>
+    </div>
+
+    <script>
+        // Set the game language for script.js
+        let gameLanguage = 'en';
+    </script>
+    <script src="tower_defense_script.js"></script>
+</body>
+</html>

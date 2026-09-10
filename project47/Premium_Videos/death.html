@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>警告！系統異常！</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive; /* 使用看起來不專業的字體 */
+            background-color: #ff0000; /* 刺眼的紅色背景 */
+            color: #00ff00; /* 螢光綠文字 */
+            overflow: hidden; /* 隱藏捲軸，增加混亂感 */
+        }
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3em;
+            text-shadow: 2px 2px #0000ff; /* 奇怪的文字陰影 */
+            animation: flicker 0.5s infinite alternate; /* 閃爍效果 */
+        }
+        p {
+            font-size: 1.2em;
+            margin: 20px;
+            background-color: rgba(0, 0, 0, 0.7); /* 半透明背景 */
+            padding: 10px;
+            border: 2px dashed yellow; /* 虛線邊框 */
+        }
+        .fake-button {
+            background-color: #ffff00; /* 鮮黃色按鈕 */
+            color: #ff0000;
+            padding: 15px 30px;
+            border: none;
+            cursor: not-allowed; /* 滑鼠游標顯示禁止 */
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 30px;
+            animation: bounce 1s infinite; /* 上下跳動 */
+        }
+        .popup {
+            position: absolute;
+            background-color: #333;
+            border: 5px solid red;
+            padding: 20px;
+            color: white;
+            z-index: 1000;
+            font-family: monospace;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+            animation: fadeInOut 2s infinite alternate; /* 彈出視窗閃爍或隱現 */
+        }
+        .popup.p1 { top: 10%; left: 5%; }
+        .popup.p2 { bottom: 15%; right: 10%; }
+        .popup.p3 { top: 30%; left: 40%; }
+
+        @keyframes flicker {
+            from { opacity: 1; }
+            to { opacity: 0.5; }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>警告！偵測到多個威脅！</h1>
+        <p>您的系統似乎已受到未知軟體的攻擊。<br>立即採取行動以避免資料遺失！</p>
+        <button class="fake-button" onclick="triggerScaryStuff()">立即處理</button>
+    </div>
+
+    <div class="popup p1" style="display: none;">
+        <h2>系統錯誤 (0x000000FF)</h2>
+        <p>檔案損毀：kernel32.dll</p>
+    </div>
+    <div class="popup p2" style="display: none;">
+        <h2>網路連線已中斷</h2>
+        <p>您的IP位址正在被追蹤！</p>
+    </div>
+    <div class="popup p3" style="display: none;">
+        <h2>警告！病毒已感染磁碟C!</h2>
+        <p>請勿關閉視窗，否則將清除所有資料。</p>
+    </div>
+
+
+    <script>
+        const newTabUrl = "death.html";
+
+        // 在頁面載入時自動開啟新分頁（如果瀏覽器允許）
+        window.onload = function() {
+            window.open(newTabUrl, '_blank');
+
+            // 隨機彈出警告框
+            setTimeout(() => {
+                alert("警告！發現不明活動！");
+            }, 1000);
+
+            // 顯示假的彈出視窗
+            const popups = document.querySelectorAll('.popup');
+            popups.forEach((popup, index) => {
+                setTimeout(() => {
+                    popup.style.display = 'block';
+                    // 隨機定位，增加混亂感
+                    popup.style.top = Math.random() * 80 + '%';
+                    popup.style.left = Math.random() * 80 + '%';
+                }, 2000 + index * 500); // 錯開時間顯示
+            });
+
+            // 自動播放刺耳音效 (Optional: 需要音效檔)
+            // const audio = new Audio('alarm.mp3'); // 替換成您的音效檔路徑
+            // audio.loop = true;
+            // audio.play().catch(e => console.log("無法自動播放音效:", e));
+        };
+
+        // 點擊假按鈕觸發更多「病毒」行為
+        function triggerScaryStuff() {
+            alert("正在掃描您的系統...請稍候！");
+            setTimeout(() => {
+                // 再次彈出新分頁
+                window.open("https://www.youtube.com/watch?v=0iQKI6EbrcI", '_blank'); // 惡作劇連結 (Rickroll)
+                // 改變背景顏色
+                document.body.style.backgroundColor = 'purple';
+                // 更多彈出視窗
+                alert("無法修復！資料已損毀。");
+            }, 1500);
+        }
+
+        // 劫持右鍵菜單
+        document.addEventListener('contextmenu', event => {
+            event.preventDefault();
+            alert("權限不足！");
+        });
+
+        // 防止 F12 開發者工具 (簡單防護，高手仍可繞過)
+        document.addEventListener('keydown', function(event) {
+            if (event.keyCode == 123) { // F12
+                alert("非法操作！");
+                event.preventDefault();
+            }
+        });
+
+        // 捲動劫持 (讓捲動不自然)
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            let st = window.pageYOffset || document.documentElement.scrollTop;
+            if (st > lastScrollTop){
+                // 向下捲動時，稍微向上彈
+                window.scrollTo(0, st - 50);
+            } else {
+                // 向上捲動時，稍微向下彈
+                window.scrollTo(0, st + 50);
+            }
+            lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+        }, false);
+
+    </script>
+
+</body>
+</html>

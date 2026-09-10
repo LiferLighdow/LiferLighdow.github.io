@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>墨影乾坤 - Ink Spirit Refuge Edition</title>
+    <style>
+        :root {
+            --paper-color: #f4f1ea;
+            --ink-black: #1a1a1a;
+            --accent-red: #b22222;
+            --boss-purple: #483d8b;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--paper-color);
+            font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+            touch-action: none;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/papyrus-dark.png');
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            color: var(--ink-black);
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 10;
+        }
+
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .score-box {
+            font-size: 20px;
+            font-weight: bold;
+            border-left: 4px solid var(--accent-red);
+            padding-left: 10px;
+        }
+
+        .level-box {
+            font-size: 14px;
+            color: #666;
+            padding-left: 14px;
+        }
+
+        #boss-ui {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 60%;
+        }
+
+        .boss-name {
+            font-size: 18px;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            color: var(--boss-purple);
+            font-weight: bold;
+        }
+
+        .hp-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: rgba(0,0,0,0.1);
+            border: 1px solid var(--ink-black);
+        }
+
+        #hp-bar-fill {
+            width: 100%;
+            height: 100%;
+            background: var(--boss-purple);
+            transition: width 0.2s;
+        }
+
+        #menu {
+            position: absolute;
+            background: rgba(244, 241, 234, 0.95);
+            padding: 40px;
+            border: 2px solid var(--ink-black);
+            text-align: center;
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 36px;
+            letter-spacing: 8px;
+            color: var(--ink-black);
+        }
+
+        button {
+            background: var(--ink-black);
+            color: var(--paper-color);
+            border: none;
+            padding: 12px 40px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #pause-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: var(--accent-red);
+            font-weight: bold;
+            letter-spacing: 10px;
+            display: none;
+            pointer-events: none;
+            z-index: 20;
+            text-shadow: 2px 2px 0px white;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="ui-overlay">
+        <div class="info-panel">
+            <div class="score-box">墨氣: <span id="score">0</span> / 100</div>
+            <div class="level-box">試煉層數: <span id="level-val">1</span></div>
+        </div>
+        <div id="boss-ui">
+            <div class="boss-name" id="boss-title">「凶獸．窮奇之影」</div>
+            <div class="hp-bar-bg"><div id="hp-bar-fill"></div></div>
+        </div>
+    </div>
+
+    <div id="pause-indicator">息墨中</div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="menu">
+        <h1 id="menu-title">墨影乾坤</h1>
+        <p id="menu-desc">滑動引導墨靈．收集硃砂退敵<br><br><span style="color: #b22222; font-size: 0.9em;">右下角「息墨處」可暫停休息</span></p>
+        <button id="start-btn">開始試煉</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const levelEl = document.getElementById('level-val');
+    const menu = document.getElementById('menu');
+    const startBtn = document.getElementById('start-btn');
+    const bossUI = document.getElementById('boss-ui');
+    const hpBar = document.getElementById('hp-bar-fill');
+    const pauseIndicator = document.getElementById('pause-indicator');
+
+    let gameActive = false;
+    let isPaused = false;
+    let isBossMode = false;
+    let score = 0;
+    let gameLevel = 1;
+    let particles = [];
+    let obstacles = [];
+    let items = [];
+    let bullets = [];
+    let animationId;
+    let shakeAmount = 0;
+
+    const BOSS_TRIGGER_SCORE = 100;
+    const REFUGE_SIZE = 120; // 暫停區域大小
+
+    const player = {
+        x: 0, y: 0, radius: 15,
+        targetX: 0, targetY: 0,
+        ease: 0.15, trail: []
+    };
+
+    const boss = {
+        x: 0, y: -200,
+        targetY: 150,
+        hp: 150,
+        maxHp: 150,
+        radius: 65,
+        angle: 0,
+        attackTimer: 0
+    };
+
+    function init(fullReset = true) {
+        resize();
+        if (fullReset) {
+            gameLevel = 1;
+            score = 0;
+        }
+        player.x = canvas.width / 2;
+        player.y = canvas.height * 0.8;
+        player.targetX = player.x;
+        player.targetY = player.y;
+        
+        scoreEl.innerText = score;
+        levelEl.innerText = gameLevel;
+        
+        obstacles = [];
+        items = [];
+        particles = [];
+        bullets = [];
+        player.trail = [];
+        isBossMode = false;
+        isPaused = false;
+        pauseIndicator.style.display = 'none';
+        boss.y = -200;
+        bossUI.style.display = 'none';
+    }
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+
+    const handleMove = (e) => {
+        if (!gameActive) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        player.targetX = clientX;
+        player.targetY = clientY;
+    };
+
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('touchmove', handleMove, { passive: false });
+
+    function createExplosion(x, y, color, count = 10) {
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x, y,
+                vx: (Math.random() - 0.5) * 8,
+                vy: (Math.random() - 0.5) * 8,
+                radius: Math.random() * 4 + 2,
+                life: 1,
+                color: color
+            });
+        }
+    }
+
+    function spawnBossAttack() {
+        boss.attackTimer++;
+        if (boss.attackTimer % 45 === 0) {
+            const bulletCount = Math.floor(Math.random() * 6) + 6 + Math.min(gameLevel, 5); 
+            const startAngle = Math.random() * Math.PI * 2;
+            
+            for(let i=0; i < bulletCount; i++) {
+                const angle = startAngle + (i * (Math.PI * 2 / bulletCount)) + (Math.random() * 0.4 - 0.2);
+                const speed = (Math.random() * 3 + 3) + (gameLevel * 0.2); 
+                
+                obstacles.push({
+                    x: boss.x,
+                    y: boss.y,
+                    size: 12 + Math.random() * 8,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    type: 'ink-ball'
+                });
+            }
+        }
+    }
+
+    function spawnCommonElements() {
+        if (Math.random() < 0.035 + (gameLevel * 0.005)) {
+            obstacles.push({
+                x: Math.random() * canvas.width, 
+                y: -30,
+                size: Math.random() * 30 + 20,
+                vx: (Math.random() - 0.5) * 2, 
+                vy: (Math.random() * 2 + 3) + (gameLevel * 0.5),
+                type: 'rock'
+            });
+        }
+        const itemChance = isBossMode ? 0.045 : 0.025;
+        if (Math.random() < itemChance) {
+            items.push({ 
+                x: Math.random() * canvas.width, 
+                y: -20, 
+                radius: 12, 
+                speed: 3 + (gameLevel * 0.3)
+            });
+        }
+    }
+
+    function checkPause() {
+        // 檢查玩家是否在右下角暫停區域
+        const inRefuge = player.x > canvas.width - REFUGE_SIZE && player.y > canvas.height - REFUGE_SIZE;
+        if (inRefuge && !isPaused) {
+            isPaused = true;
+            pauseIndicator.style.display = 'block';
+        } else if (!inRefuge && isPaused) {
+            isPaused = false;
+            pauseIndicator.style.display = 'none';
+        }
+    }
+
+    function update() {
+        if (!gameActive) return;
+
+        // 檢查暫停狀態（即使暫停也允許移動玩家座標，否則出不來）
+        player.x += (player.targetX - player.x) * player.ease;
+        player.y += (player.targetY - player.y) * player.ease;
+        checkPause();
+
+        if (!isPaused) {
+            if (shakeAmount > 0) shakeAmount *= 0.9;
+
+            player.trail.unshift({ x: player.x, y: player.y });
+            if (player.trail.length > 15) player.trail.pop();
+
+            if (!isBossMode && score >= BOSS_TRIGGER_SCORE) {
+                isBossMode = true;
+                bossUI.style.display = 'flex';
+                boss.x = canvas.width / 2;
+                boss.maxHp = 150 + (gameLevel * 50);
+                boss.hp = boss.maxHp;
+                hpBar.style.width = '100%';
+                shakeAmount = 15;
+                document.getElementById('boss-title').innerText = `「試煉．第 ${gameLevel} 重幻影」`;
+            }
+
+            spawnCommonElements();
+
+            if (isBossMode) {
+                boss.y += (boss.targetY - boss.y) * 0.05;
+                boss.angle += 0.03 + (gameLevel * 0.005);
+                spawnBossAttack();
+            }
+
+            // 更新障礙物
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const o = obstacles[i];
+                o.x += o.vx;
+                o.y += o.vy;
+
+                const dx = player.x - o.x;
+                const dy = player.y - o.y;
+                const hitRadius = o.type === 'rock' ? o.size * 0.7 : o.size * 0.8;
+                
+                // 只有非暫停且不在避風港時才判斷碰撞
+                if (Math.sqrt(dx*dx + dy*dy) < player.radius + hitRadius) {
+                    gameOver();
+                }
+                if (o.y > canvas.height + 100 || o.y < -300 || o.x < -100 || o.x > canvas.width + 100) {
+                    obstacles.splice(i, 1);
+                }
+            }
+
+            // 更新道具
+            for (let i = items.length - 1; i >= 0; i--) {
+                const it = items[i];
+                it.y += it.speed;
+                const dx = player.x - it.x;
+                const dy = player.y - it.y;
+                if (Math.sqrt(dx*dx + dy*dy) < player.radius + it.radius) {
+                    score += 10;
+                    scoreEl.innerText = score;
+                    if (isBossMode) bullets.push({ x: player.x, y: player.y, speed: 12 });
+                    createExplosion(it.x, it.y, '#b22222', 8);
+                    items.splice(i, 1);
+                }
+                if (it.y > canvas.height + 50) items.splice(i, 1);
+            }
+
+            // 更新子彈
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                const b = bullets[i];
+                const dx = boss.x - b.x;
+                const dy = boss.y - b.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                b.x += (dx / dist) * b.speed;
+                b.y += (dy / dist) * b.speed;
+
+                if (dist < boss.radius) {
+                    boss.hp -= 5;
+                    hpBar.style.width = `${(boss.hp / boss.maxHp) * 100}%`;
+                    shakeAmount = 6;
+                    createExplosion(b.x, b.y, '#483d8b', 6);
+                    bullets.splice(i, 1);
+                    if (boss.hp <= 0) nextLevel();
+                }
+            }
+
+            // 粒子
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx; p.y += p.vy; p.life -= 0.025;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+        }
+
+        draw();
+        animationId = requestAnimationFrame(update);
+    }
+
+    function draw() {
+        ctx.save();
+        if (shakeAmount > 0 && !isPaused) {
+            ctx.translate((Math.random()-0.5)*shakeAmount, (Math.random()-0.5)*shakeAmount);
+        }
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 畫避風港區域
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = '#b22222';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(canvas.width - REFUGE_SIZE, canvas.height - REFUGE_SIZE, REFUGE_SIZE - 5, REFUGE_SIZE - 5);
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(178, 34, 34, 0.05)';
+        ctx.fillRect(canvas.width - REFUGE_SIZE, canvas.height - REFUGE_SIZE, REFUGE_SIZE, REFUGE_SIZE);
+        ctx.fillStyle = '#b22222';
+        ctx.font = '12px "Microsoft JhengHei"';
+        ctx.fillText("息墨處", canvas.width - REFUGE_SIZE + 10, canvas.height - REFUGE_SIZE + 20);
+
+        // 畫拖尾
+        for (let i = 0; i < player.trail.length - 1; i++) {
+            const p1 = player.trail[i];
+            const p2 = player.trail[i+1];
+            const opacity = 1 - (i / player.trail.length);
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(26, 26, 26, ${opacity * 0.4})`;
+            ctx.lineWidth = player.radius * 1.5 * opacity;
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+        }
+
+        // 畫 Boss (根據層數改變形狀)
+        if (isBossMode && boss.hp > 0) {
+            ctx.save();
+            ctx.translate(boss.x, boss.y);
+            ctx.rotate(boss.angle);
+            ctx.fillStyle = '#1a1a1a';
+            ctx.beginPath();
+            
+            // 角數 = gameLevel + 3 (第一層 4 角, 第二層 5 角...)
+            const sides = gameLevel + 3;
+            for(let i=0; i < sides * 2; i++) {
+                const r = i % 2 === 0 ? boss.radius : boss.radius * 0.6;
+                const a = (i * Math.PI * 2) / (sides * 2);
+                ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#483d8b';
+            ctx.lineWidth = 5;
+            ctx.globalAlpha = 0.4 + Math.abs(Math.sin(Date.now()*0.005)) * 0.4;
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // 障礙物
+        obstacles.forEach(o => {
+            ctx.save();
+            ctx.fillStyle = o.type === 'rock' ? '#333' : '#483d8b';
+            ctx.beginPath();
+            ctx.arc(o.x, o.y, o.size, 0, Math.PI*2);
+            ctx.fill();
+            if (o.type !== 'rock') {
+                ctx.globalAlpha = 0.3;
+                ctx.strokeStyle = '#fff';
+                ctx.stroke();
+            }
+            ctx.restore();
+        });
+
+        // 子彈/粒子/道具
+        bullets.forEach(b => {
+            ctx.fillStyle = '#b22222';
+            ctx.beginPath();
+            ctx.arc(b.x, b.y, 7, 0, Math.PI*2);
+            ctx.fill();
+        });
+
+        items.forEach(it => {
+            ctx.fillStyle = '#b22222';
+            ctx.beginPath();
+            ctx.arc(it.x, it.y, it.radius, 0, Math.PI*2);
+            ctx.fill();
+            ctx.globalAlpha = 0.3;
+            ctx.beginPath();
+            ctx.arc(it.x, it.y, it.radius + 7, 0, Math.PI*2);
+            ctx.stroke();
+            ctx.globalAlpha = 1.0;
+        });
+
+        particles.forEach(p => {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+            ctx.fill();
+        });
+
+        // 玩家 (若在暫停區則半透明顯示無敵狀態)
+        ctx.globalAlpha = isPaused ? 0.5 : 1.0;
+        ctx.fillStyle = '#1a1a1a';
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2);
+        ctx.fill();
+        if (isPaused) {
+            ctx.strokeStyle = '#b22222';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+    function gameOver() {
+        gameActive = false;
+        cancelAnimationFrame(animationId);
+        menu.style.display = 'block';
+        document.getElementById('menu-title').innerText = '神形俱滅';
+        document.getElementById('menu-desc').innerText = `於第 ${gameLevel} 層墨池中消散... 墨氣：${score}`;
+        startBtn.innerText = '重入輪迴';
+    }
+
+    function nextLevel() {
+        gameLevel++;
+        score = 0;
+        isBossMode = false;
+        bossUI.style.display = 'none';
+        levelEl.innerText = gameLevel;
+        scoreEl.innerText = score;
+        shakeAmount = 20;
+        obstacles = obstacles.filter(o => o.type === 'rock'); 
+        bullets = [];
+        createExplosion(boss.x, boss.y, '#483d8b', 30);
+    }
+
+    startBtn.addEventListener('click', () => {
+        menu.style.display = 'none';
+        gameActive = true;
+        init(true);
+        update();
+    });
+
+    resize();
+</script>
+</body>
+</html>

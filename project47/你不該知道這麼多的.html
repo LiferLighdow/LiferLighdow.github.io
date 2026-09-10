@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>內容確認</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* 彈窗樣式 */
+        #age-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .gate-content {
+            background-color: #262626;
+            border: 2px solid #ff4d4d;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 77, 77, 0.3);
+        }
+
+        /* 轉盤樣式 */
+        .wheel-container {
+            position: relative;
+            width: 340px;
+            height: 340px;
+            margin: 2rem auto;
+        }
+
+        #wheel-canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #333;
+            box-shadow: 0 0 20px rgba(255, 77, 77, 0.2);
+            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+        }
+
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #ffffff;
+            z-index: 10;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+        }
+
+        .spin-btn {
+            background: linear-gradient(135deg, #ff4d4d, #b30000);
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+            transition: all 0.2s;
+        }
+
+        .spin-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .spin-btn:active {
+            transform: scale(0.95);
+        }
+
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        /* 訊息框 */
+        #message-box {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff4d4d;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 200;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center">
+
+    <!-- 訊息提示 -->
+    <div id="message-box"></div>
+
+    <!-- 年齡驗證門檻 -->
+    <div id="age-gate">
+        <div class="gate-content">
+            <div class="text-6xl mb-4">🔞</div>
+            <h1 class="text-2xl font-bold mb-4 text-red-500">警告：您即將進入成人內容網站</h1>
+            <p class="text-gray-300 mb-8">
+                本網站包含成人內容，僅限 18 歲以上成年人士訪問。點擊下方按鈕即表示您確認已滿 18 歲。
+            </p>
+            <div class="flex flex-col gap-3">
+                <button onclick="handleAdult()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                    我已滿 18 歲，進入網站
+                </button>
+                <button onclick="handleMinor()" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                    我未滿 18 歲，離開
+                </button>
+            </div>
+            <p class="mt-6 text-xs text-gray-500">
+                點擊進入即代表您同意本站之服務條款與隱私權政策。
+            </p>
+        </div>
+    </div>
+
+    <!-- 轉盤遊戲區域 (未成年者進入) -->
+    <main id="game-area" class="hidden text-center p-6 w-full max-w-md">
+        <h2 class="text-3xl font-bold mb-2 text-red-400">音樂隨機抽樣</h2>
+        <p class="text-gray-400 mb-6">既然你還沒成年，來抽一首適合你的音樂吧！</p>
+        
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <canvas id="wheel-canvas" width="400" height="400"></canvas>
+        </div>
+
+        <button id="spin-trigger" onclick="spinWheel()" class="spin-btn text-white px-12 py-4 rounded-full text-xl font-bold mt-4">
+            開始抽籤！
+        </button>
+
+        <div class="mt-12 text-sm text-gray-500">
+            <p>健康上網，多聽好音樂。</p>
+        </div>
+    </main>
+
+    <script>
+        const ageGate = document.getElementById('age-gate');
+        const gameArea = document.getElementById('game-area');
+        const canvas = document.getElementById('wheel-canvas');
+        const ctx = canvas.getContext('2d');
+        const spinBtn = document.getElementById('spin-trigger');
+        const msgBox = document.getElementById('message-box');
+
+        const BASE_URL = "https://soundcloud.com/lifer_lighdow/";
+
+        // 轉盤選項與對應的 SoundCloud 路徑
+        const prizes = [
+            { text: 'Rushcore', color: '#FF0055', path: 'rushcore' },
+            { text: '上波', color: '#00FF99', path: 'up' },
+            { text: '疾嵐波', color: '#00CCFF', path: 'fast' },
+            { text: 'Hardcore', color: '#FFCC00', path: 'hardcore' },
+            { text: 'Rushcore', color: '#FF0055', path: 'rushcore' },
+            { text: '上波', color: '#00FF99', path: 'up' },
+            { text: '疾嵐波', color: '#00CCFF', path: 'fast' },
+            { text: 'Hardcore', color: '#FFCC00', path: 'hardcore' }
+        ];
+
+        let currentRotation = 0;
+        let isSpinning = false;
+
+        function drawWheel() {
+            const arc = (Math.PI * 2) / prizes.length;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = canvas.width / 2 - 10;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            prizes.forEach((prize, i) => {
+                const angle = i * arc;
+                
+                ctx.beginPath();
+                ctx.fillStyle = prize.color;
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, angle, angle + arc);
+                ctx.lineTo(centerX, centerY);
+                ctx.fill();
+                
+                ctx.strokeStyle = '#1a1a1a';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(angle + arc / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#000000";
+                ctx.font = "bold 20px Arial";
+                ctx.fillText(prize.text, radius - 25, 8);
+                ctx.restore();
+            });
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 15, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        function showMessage(text) {
+            msgBox.textContent = text;
+            msgBox.style.display = 'block';
+            // 不自動隱藏，因為即將跳轉
+        }
+
+        function handleAdult() {
+            window.location.href = 'https://liferlighdow.github.io/project47/death';
+        }
+
+        function handleMinor() {
+            ageGate.style.display = 'none';
+            gameArea.classList.remove('hidden');
+            drawWheel();
+        }
+
+        function spinWheel() {
+            if (isSpinning) return;
+
+            isSpinning = true;
+            spinBtn.disabled = true;
+
+            const extraDegrees = Math.floor(Math.random() * 360) + 1800; 
+            currentRotation += extraDegrees;
+            
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                const actualDeg = currentRotation % 360;
+                const sliceDeg = 360 / prizes.length;
+                const resultIndex = Math.floor(((360 - actualDeg + 270) % 360) / sliceDeg);
+                
+                const winPrize = prizes[resultIndex];
+                showMessage(`抽中：${winPrize.text}！即將為您播放...`);
+
+                // 延遲跳轉以便使用者閱讀結果
+                setTimeout(() => {
+                    window.location.href = BASE_URL + winPrize.path;
+                }, 1500);
+                
+            }, 4000);
+        }
+
+        window.onload = drawWheel;
+    </script>
+</body>
+</html>

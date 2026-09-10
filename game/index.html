@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lifer_Lighdow's Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" href="images/logo.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="images/logo.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" href="../common-nav.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">Lifer_Lighdow</div>
+            <ul>
+                <li><a href="../">Home</a></li>
+                <li><a href="../Music">Music</a></li>
+                <li><a href="">Games</a></li>
+                <li><a href="../Contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="top-container">
+        <div class="calendar-container">
+            <h1>System Time</h1>
+            <div class="date" id="current-date"></div>
+            <div class="year" id="current-year"></div>
+            <div class="time" id="current-time"></div>
+        </div>
+    </div>
+
+    <div id="title-container">Live2D Game Platform</div>
+
+    <div id="stage">
+        <div id="inner">
+            <div id="cover">
+                <div id="text">
+                    <span class="top">LIFER_LIGHDOW</span>
+                    <span class="bottom">LOADING...</span>
+                </div>
+                <div id="detail"></div>
+                <div id="handle"></div>
+            </div>
+            <canvas id="live2d" width="350" height="350"></canvas>
+        </div>
+
+        <button id="info"><i class="fa fa-lg fa-info"></i></button>
+        <button id="music-toggle"><i class="material-icons" id="music-icon"></i></button>
+        <button id="refresh"><i class="fa fa-lg fa-sync-alt"></i></button>
+    </div>
+
+    <div id="game-links-container">
+    </div>
+
+    <footer>
+        © 2025 Lifer_Lighdow. All rights reserved.
+    </footer>
+
+    <audio id="bg-music" loop autoplay src="../Music/Source/Dlesaws/audio.mp3"></audio>
+
+    <script src="live2d.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
