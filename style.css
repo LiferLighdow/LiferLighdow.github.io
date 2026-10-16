@@ -1,20 +1,19 @@
 body {
-    font-family: 'MyCustomFont', sans-serif; /* 使用更現代的字體 */
+    font-family: 'MyCustomFont', sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); /* 深色漸變背景 */
-    color: #e0e0e0; /* 淺色文字 */
-    overflow-x: hidden; /* 防止橫向捲軸 */
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    color: #e0e0e0;
+    overflow-x: hidden;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-/* 定義自定義字體 (如果仍需使用) */
 @font-face {
     font-family: 'MyCustomFont';
     src: url('fonts/myfont.woff2') format('woff2'),
-         url('fonts/myfont.woff') format('woff');
+    url('fonts/myfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -22,28 +21,26 @@ body {
 
 a {
     text-decoration: none;
-    color: #8be9fd; /* 淺藍色連結 */
+    color: #8be9fd;
     transition: color 0.3s ease;
 }
 
 a:hover {
-    color: #6272a4; /* 較深的藍色 */
+    color: #6272a4;
 }
-
-
 
 /* Hero Section (Cover) */
 .hero {
     position: relative;
     overflow: hidden;
-    height: 80vh; /* 佔用更多視窗高度 */
+    height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-grow: 1; /* 讓hero部分佔據剩餘空間 */
+    flex-grow: 1;
 }
 
-/* 動態背景效果 */
+/* 動態背景效果：加入 will-change 優化效能 */
 .animated-background {
     position: absolute;
     top: 0;
@@ -53,8 +50,9 @@ a:hover {
     background: linear-gradient(45deg, #0f3460, #16213e, #1a1a2e);
     background-size: 400% 400%;
     animation: gradientAnimation 15s ease infinite;
-    opacity: 0.7; /* 增加透明度，讓圖片輪播可見 */
-    z-index: 0; /* 確保在圖片輪播下方 */
+    opacity: 0.7;
+    z-index: 0;
+    will-change: background-position;
 }
 
 @keyframes gradientAnimation {
@@ -64,15 +62,16 @@ a:hover {
 }
 
 .hero-slides {
-    position: absolute; /* 讓圖片輪播作為背景的一部分 */
+    position: absolute;
     top: 0;
     left: 0;
-    width: calc(100% * 13); /* 13 slides */
+    width: calc(100% * 13);
     height: 100%;
     display: flex;
-    transition: transform 0.8s ease-in-out; /* 更平滑的過渡 */
-    opacity: 0.3; /* 降低透明度，使其更像背景 */
-    z-index: 1; /* 在動態背景之上，但在疊層之下 */
+    transition: transform 0.8s ease-in-out;
+    opacity: 0.3;
+    z-index: 1;
+    will-change: transform; /* 提示瀏覽器進行硬體加速 */
 }
 
 .hero-slide {
@@ -95,7 +94,7 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 更深的疊層，突出內容 */
+    background-color: rgba(0, 0, 0, 0.5);
     color: white;
     display: flex;
     flex-direction: column;
@@ -103,40 +102,40 @@ a:hover {
     justify-content: center;
     text-align: center;
     padding: 2rem;
-    z-index: 2; /* 確保內容在最上層 */
-    backdrop-filter: blur(3px); /* 輕微模糊效果 */
+    z-index: 2;
+    /* 移除耗效能的 backdrop-filter，改用純色背景疊層優化渲染 */
 }
 
 .profile-image-container {
     position: relative;
     z-index: 2;
-    margin-bottom: 2rem; /* 增加間距 */
+    margin-bottom: 2rem;
 }
 
 .profile-image {
-    width: 20vw; /* 略小一點 */
-    max-width: 250px; /* 最大寬度 */
+    width: 20vw;
+    max-width: 250px;
     height: auto;
     border-radius: 50%;
     object-fit: cover;
-    border: 6px solid #8be9fd; /* 鮮豔的邊框 */
-    box-shadow: 0 0 20px rgba(139, 233, 253, 0.6), 0 0 40px rgba(139, 233, 253, 0.3); /* 發光效果 */
+    border: 6px solid #8be9fd;
+    box-shadow: 0 0 20px rgba(139, 233, 253, 0.6), 0 0 40px rgba(139, 233, 253, 0.3);
     transition: transform 0.3s ease-in-out;
 }
 
 .profile-image:hover {
-    transform: scale(1.05); /* 懸停放大 */
+    transform: scale(1.05);
 }
 
 .hero h1 {
-    font-size: 3.5rem; /* 更大的標題 */
+    font-size: 3.5rem;
     margin-bottom: 0.8rem;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7); /* 文字發光 */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
     letter-spacing: 1.5px;
 }
 
 .hero p {
-    font-size: 1.5rem; /* 更大的段落文字 */
+    font-size: 1.5rem;
     color: #b3b3b3;
     margin-top: 0;
 }
@@ -152,45 +151,45 @@ a:hover {
     display: inline-block;
     margin: 0 0.8rem;
     color: #e0e0e0;
-    font-size: 2rem; /* 更大的圖標 */
+    font-size: 2rem;
     transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .social-links a:hover {
-    color: #8be9fd; /* 懸停變色 */
-    transform: translateY(-5px) scale(1.1); /* 懸停上浮並放大 */
+    color: #8be9fd;
+    transform: translateY(-5px) scale(1.1);
 }
 
 /* Buttons Section */
 .buttons {
-    padding: 3rem 0; /* 增加上下間距 */
+    padding: 3rem 0;
     text-align: center;
-    background-color: rgba(22, 33, 62, 0.7); /* 與主背景協調的深色 */
-    box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.2); /* 內陰影效果 */
+    background-color: rgba(22, 33, 62, 0.7);
+    box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .button-container {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 1.5rem; /* 按鈕之間的間距 */
+    gap: 1.5rem;
     max-width: 1000px;
     margin: 0 auto;
 }
 
 .button {
-    padding: 1rem 2.5rem; /* 更大的點擊區域 */
-    border-radius: 10px; /* 稍微方正的圓角 */
-    display: flex; /* 讓內容居中 */
+    padding: 1rem 2.5rem;
+    border-radius: 10px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem; /* 圖標與文字間距 */
+    gap: 0.5rem;
     transition: all 0.4s cubic-bezier(.25,.8,.25,1);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 3px 6px rgba(0,0,0,0.2);
     color: white;
     border: none;
     font-weight: 600;
-    font-size: 1.1rem; /* 更大的字體 */
+    font-size: 1.1rem;
     cursor: pointer;
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -202,12 +201,11 @@ a:hover {
     z-index: 1;
 }
 
-/* 按鈕背景漸變和懸停效果 */
 .button1 { background: linear-gradient(45deg, #2980b9, #3498db); }
 .button2 { background: linear-gradient(45deg, #c0392b, #e74c3c); }
 .button3 { background: linear-gradient(45deg, #8e44ad, #9b59b6); }
 .button4 { background: linear-gradient(45deg, #27ae60, #2ecc71); }
-.button5 { background: linear-gradient(45deg, #34495e, #5a6a7c); } /* 搜尋按鈕 */
+.button5 { background: linear-gradient(45deg, #34495e, #5a6a7c); }
 
 .button::before {
     content: '';
@@ -216,7 +214,7 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.1); /* 懸停時的疊層 */
+    background: rgba(255, 255, 255, 0.1);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s ease-in-out;
@@ -229,7 +227,7 @@ a:hover {
 
 .button:hover {
     box-shadow: 0 12px 25px rgba(0,0,0,0.4), 0 8px 10px rgba(0,0,0,0.3);
-    transform: translateY(-5px); /* 懸停上浮更多 */
+    transform: translateY(-5px);
 }
 
 .button:active {
@@ -239,11 +237,11 @@ a:hover {
 
 /* Footer */
 footer {
-    background-color: #1a1a2e; /* 深色頁腳 */
+    background-color: #1a1a2e;
     color: #aaa;
     text-align: center;
     padding: 1.5rem 0;
-    margin-top: auto; /* 讓頁腳始終在底部 */
+    margin-top: auto;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -255,7 +253,7 @@ footer {
     border-radius: 50%;
     transform: scale(0);
     animation: ripple 0.6s linear;
-    background-color: rgba(139, 233, 253, 0.6); /* 漣漪顏色與主題協調 */
+    background-color: rgba(139, 233, 253, 0.6);
     pointer-events: none;
     z-index: 9999;
 }
@@ -267,17 +265,13 @@ footer {
     }
 }
 
-/* Apply box-sizing to all elements */
 *, *::before, *::after {
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
-
 /* --- Mobile Specific Styles --- */
-
-/* 通用手機調整 */
 @media (max-width: 768px) {
     nav {
         flex-direction: column;
@@ -307,7 +301,7 @@ footer {
     }
 
     .profile-image {
-        width: 35vw; /* 手機上圖片更大 */
+        width: 35vw;
         max-width: 200px;
     }
 
@@ -323,13 +317,12 @@ footer {
     }
 
     .button {
-        width: 90%; /* 手機上按鈕佔滿寬度 */
+        width: 90%;
         padding: 0.8rem 1.5rem;
         font-size: 1rem;
     }
 }
 
-/* 針對更小的手機螢幕 */
 @media (max-width: 480px) {
     .hero h1 {
         font-size: 1.8rem;
