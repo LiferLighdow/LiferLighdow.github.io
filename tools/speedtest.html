@@ -2,265 +2,846 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>網路速度測試器</title>
-    <!-- 引入 Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <meta name="description" content="測量網路下載速度、上傳速度、延遲和抖動。">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Lifer_Lighdow's Toolbox">
+    <title>網路速度測試｜Lifer_Lighdow's Toolbox</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <script src="./pwa.js" defer></script>
+    <script src="./theme.js" defer></script>
     <style>
-        /* 自訂字體 */
-        body {
-            font-family: 'Inter', sans-serif;
+        :root {
+            color-scheme: light;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #182137;
+            background: #f5f7fb;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            --muted: #748096;
+            --line: #e7eaf1;
+            --accent: #5965d8;
         }
-        /* 隱藏滾動條 */
+
+        * { box-sizing: border-box; }
+
         body {
+            min-width: 320px;
+            min-height: 100vh;
+            margin: 0;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(222, 227, 255, 0.6), transparent 38rem),
+                #f5f7fb;
+        }
+
+        button, a { font: inherit; }
+
+        .site-header {
+            width: min(100% - 48px, 1060px);
+            height: 72px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(221, 226, 237, 0.85);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #202a40;
+            font-size: 14px;
+            font-weight: 750;
+            letter-spacing: -0.025em;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: #5b63d3;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .brand-light, .header-link { color: var(--muted); font-weight: 500; }
+        .header-link { font-size: 13px; text-decoration: none; }
+        .header-link:hover { color: var(--accent); }
+        .header-actions { display: flex; align-items: center; gap: 16px; }
+        .theme-toggle {
+            min-height: 34px;
+            padding: 0 10px;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            background: #fff;
+            color: #566177;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { border-color: #cdd2ef; color: var(--accent); }
+
+        main {
+            width: min(100% - 40px, 900px);
+            margin: 0 auto;
+            padding: 56px 0 44px;
+        }
+
+        .intro { margin-bottom: 30px; text-align: center; }
+        .eyebrow {
+            margin: 0 0 10px;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 0.15em;
+        }
+
+        h1 {
+            margin: 0;
+            color: #182137;
+            font-size: clamp(32px, 5vw, 44px);
+            font-weight: 760;
+            letter-spacing: -0.06em;
+            line-height: 1.15;
+        }
+
+        .intro-copy {
+            max-width: 540px;
+            margin: 13px auto 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .dashboard {
             overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 12px 36px rgba(32, 43, 69, 0.07);
+        }
+
+        .dashboard-top {
+            padding: 21px 26px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .service-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #364158;
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #31a77a;
+            box-shadow: 0 0 0 4px #e9f7f1;
+        }
+
+        .status-dot.testing {
+            background: #e6a840;
+            box-shadow: 0 0 0 4px #fff5e2;
+        }
+
+        .test-time {
+            color: #8992a3;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .results {
+            padding: 28px 26px 24px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .metric {
+            min-height: 132px;
+            padding: 17px 15px;
+            border: 1px solid #edf0f5;
+            border-radius: 14px;
+            background: #fbfcfe;
+        }
+
+        .metric-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #69758a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .metric-icon {
+            width: 19px;
+            height: 19px;
+            display: grid;
+            place-items: center;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .download-icon { color: #3c71c8; background: #edf3ff; }
+        .upload-icon { color: #795bc1; background: #f2efff; }
+        .latency-icon { color: #258a71; background: #eaf7f2; }
+        .jitter-icon { color: #c27b37; background: #fff3e7; }
+
+        .metric-value {
+            margin-top: 16px;
+            display: block;
+            color: #202a40;
+            font-size: clamp(25px, 4vw, 34px);
+            font-variant-numeric: tabular-nums;
+            font-weight: 740;
+            letter-spacing: -0.055em;
+            line-height: 1;
+        }
+
+        .metric-unit {
+            margin-left: 4px;
+            color: #8791a3;
+            font-size: 12px;
+            font-weight: 550;
+            letter-spacing: 0;
+        }
+
+        .metric-hint {
+            margin: 9px 0 0;
+            color: #929bad;
+            font-size: 11px;
+        }
+
+        .test-control {
+            padding: 0 26px 23px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .start-button {
+            min-width: 174px;
+            min-height: 48px;
+            padding: 0 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            border: 0;
+            border-radius: 12px;
+            background: #5965d8;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 5px 12px rgba(89, 101, 216, 0.2);
+            transition: background-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+        }
+
+        .start-button:hover:not(:disabled) {
+            transform: translateY(-1px);
+            background: #4c57c3;
+            box-shadow: 0 7px 16px rgba(89, 101, 216, 0.25);
+        }
+
+        .start-button:focus-visible, .copy-button:focus-visible, .header-link:focus-visible {
+            outline: 3px solid rgba(89, 101, 216, 0.35);
+            outline-offset: 3px;
+        }
+
+        .start-button:disabled { cursor: wait; opacity: 0.72; }
+        .start-icon { font-size: 15px; }
+
+        .stage-area { min-width: 0; flex: 1; }
+        .stage-label {
+            margin: 0 0 9px;
+            color: #69758a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .progress-track {
+            height: 5px;
+            overflow: hidden;
+            border-radius: 99px;
+            background: #edf0f5;
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            border-radius: inherit;
+            background: #6873df;
+            transition: width 180ms ease;
+        }
+
+        .progress-bar.indeterminate { width: 100%; opacity: 0.55; }
+        .error-message {
+            margin: 0 26px 20px;
+            padding: 12px 14px;
+            border: 1px solid #f0c8c8;
+            border-radius: 10px;
+            background: #fff5f5;
+            color: #a13e45;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .error-message[hidden] { display: none; }
+
+        .details {
+            padding: 20px 26px 23px;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 24px;
+            border-top: 1px solid var(--line);
+            background: #fcfdff;
+        }
+
+        .details h2 {
+            margin: 0 0 14px;
+            color: #364158;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .connection-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px 18px;
+        }
+
+        .detail-item { min-width: 0; }
+        .detail-label {
+            display: block;
+            margin-bottom: 4px;
+            color: #8a94a5;
+            font-size: 10px;
+        }
+
+        .detail-value {
+            display: block;
+            overflow: hidden;
+            color: #4c576d;
+            font-size: 12px;
+            font-variant-numeric: tabular-nums;
+            font-weight: 620;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .result-actions {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .copy-button {
+            padding: 7px 10px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            color: #566177;
+            font-size: 11px;
+            font-weight: 650;
+            cursor: pointer;
+        }
+
+        .copy-button:hover:not(:disabled) { border-color: #cdd2ef; color: var(--accent); }
+        .copy-button:disabled { cursor: not-allowed; opacity: 0.5; }
+        .result-note { margin: 0; color: #929bad; font-size: 10px; }
+
+        .method-note {
+            max-width: 720px;
+            margin: 18px auto 0;
+            color: #8791a3;
+            font-size: 11px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .method-note strong { color: #68748a; font-weight: 650; }
+
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+            color: #edf0fa;
+            background: #151a27;
+            --muted: #a4aec2;
+            --line: #30394d;
+            --accent: #a0a7ff;
+        }
+        :root[data-theme="dark"] body {
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(55, 61, 112, 0.35), transparent 38rem),
+                #151a27;
+        }
+        :root[data-theme="dark"] .site-header { border-bottom-color: #30394d; }
+        :root[data-theme="dark"] .brand,
+        :root[data-theme="dark"] h1,
+        :root[data-theme="dark"] .details h2 { color: #edf0fa; }
+        :root[data-theme="dark"] .dashboard,
+        :root[data-theme="dark"] .theme-toggle { border-color: #30394d; background: #1e2534; }
+        :root[data-theme="dark"] .dashboard-top { border-bottom-color: #30394d; }
+        :root[data-theme="dark"] .service-label,
+        :root[data-theme="dark"] .metric-value,
+        :root[data-theme="dark"] .detail-value,
+        :root[data-theme="dark"] .theme-toggle { color: #edf0fa; }
+        :root[data-theme="dark"] .metric { border-color: #30394d; background: #202838; }
+        :root[data-theme="dark"] .metric-icon { filter: brightness(0.75); }
+        :root[data-theme="dark"] .progress-track { background: #30394d; }
+        :root[data-theme="dark"] .details { border-top-color: #30394d; background: #1a2130; }
+        :root[data-theme="dark"] .error-message { border-color: #69414c; background: #492f39; color: #ffb9bd; }
+        :root[data-theme="dark"] .copy-button { border-color: #3a4358; background: #252e40; color: #d7dcef; }
+        :root[data-theme="dark"] .method-note strong { color: #c3cbe0; }
+
+        @media (max-width: 700px) {
+            .results { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .metric { min-height: 120px; }
+            .details { grid-template-columns: 1fr; gap: 22px; }
+        }
+
+        @media (max-width: 520px) {
+            .site-header { width: calc(100% - 32px); height: 64px; }
+            .header-actions { gap: 8px; }
+            .theme-toggle { padding: 0 7px; font-size: 11px; }
+            main { width: calc(100% - 28px); padding-top: 38px; }
+            .intro { margin-bottom: 23px; }
+            .intro-copy { font-size: 13px; }
+            .dashboard { border-radius: 16px; }
+            .dashboard-top { padding: 17px 16px; }
+            .service-label { font-size: 12px; }
+            .test-time { font-size: 10px; }
+            .results { padding: 17px 14px 19px; gap: 9px; }
+            .metric { min-height: 112px; padding: 14px 12px; }
+            .metric-value { margin-top: 14px; font-size: 28px; }
+            .test-control { padding: 0 14px 18px; align-items: stretch; flex-direction: column; gap: 13px; }
+            .start-button { width: 100%; }
+            .details { padding: 18px 16px; }
+            .error-message { margin: 0 14px 16px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { transition-duration: 0.01ms !important; }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-400 to-purple-600 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center transform transition-all duration-300 hover:scale-105">
-        <h1 class="text-4xl font-extrabold text-gray-800 mb-6">網路速度測試</h1>
-
-        <div class="space-y-4 mb-8">
-            <div class="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-inner">
-                <span class="text-xl font-semibold text-gray-700">下載速度:</span>
-                <span id="downloadSpeed" class="text-2xl font-bold text-green-600">-- Mbps</span>
-            </div>
-            <div class="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-inner">
-                <span class="text-xl font-semibold text-gray-700">上傳速度:</span>
-                <span id="uploadSpeed" class="text-2xl font-bold text-blue-600">-- Mbps</span>
-            </div>
-            <div class="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow-inner">
-                <span class="text-xl font-semibold text-gray-700">延遲 (Ping):</span>
-                <span id="ping" class="text-2xl font-bold text-red-600">-- ms</span>
-            </div>
+<body>
+    <header class="site-header">
+        <a class="brand" href="./index.html" aria-label="回到 Lifer_Lighdow's Toolbox 首頁">
+            <span class="brand-mark" aria-hidden="true">T</span>
+            <span>Lifer_Lighdow's <span class="brand-light">Toolbox</span></span>
+        </a>
+        <div class="header-actions">
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切換深色模式" aria-pressed="false">
+                <span id="theme-toggle-label">深色模式</span>
+            </button>
+            <a class="header-link" href="./index.html">返回工具箱 <span aria-hidden="true">↗</span></a>
         </div>
+    </header>
 
-        <button id="startButton" class="bg-gradient-to-r from-green-500 to-teal-600 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-300">
-            開始測試
-        </button>
+    <main>
+        <section class="intro" aria-labelledby="page-title">
+            <p class="eyebrow">NETWORK DIAGNOSTICS</p>
+            <h1 id="page-title">網路速度測試</h1>
+            <p class="intro-copy">快速檢查目前連線的下載、上傳速度、延遲與抖動。測試按下後才會開始，不在背景執行。</p>
+        </section>
 
-        <div id="loadingIndicator" class="mt-6 hidden">
-            <div class="flex items-center justify-center space-x-2">
-                <div class="w-4 h-4 bg-blue-500 rounded-full animate-bounce"></div>
-                <div class="w-4 h-4 bg-green-500 rounded-full animate-bounce delay-150"></div>
-                <div class="w-4 h-4 bg-red-500 rounded-full animate-bounce delay-300"></div>
-                <span class="text-gray-700 text-lg ml-2">測試中...</span>
+        <section class="dashboard" aria-label="網路測試結果">
+            <div class="dashboard-top">
+                <div class="service-label">
+                    <span class="status-dot" id="status-dot" aria-hidden="true"></span>
+                    <span id="connection-status">準備就緒</span>
+                </div>
+                <time class="test-time" id="test-time">尚未測試</time>
             </div>
-        </div>
 
-        <div id="errorMessage" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-            發生錯誤，請重試。
-        </div>
-    </div>
+            <div class="results">
+                <article class="metric">
+                    <div class="metric-label"><span class="metric-icon download-icon" aria-hidden="true">↓</span>下載</div>
+                    <output class="metric-value" id="downloadSpeed">--<span class="metric-unit">Mbps</span></output>
+                    <p class="metric-hint">接收資料的速度</p>
+                </article>
+                <article class="metric">
+                    <div class="metric-label"><span class="metric-icon upload-icon" aria-hidden="true">↑</span>上傳</div>
+                    <output class="metric-value" id="uploadSpeed">--<span class="metric-unit">Mbps</span></output>
+                    <p class="metric-hint">傳送資料的速度</p>
+                </article>
+                <article class="metric">
+                    <div class="metric-label"><span class="metric-icon latency-icon" aria-hidden="true">↔</span>延遲</div>
+                    <output class="metric-value" id="latency">--<span class="metric-unit">ms</span></output>
+                    <p class="metric-hint">閒置連線中位數</p>
+                </article>
+                <article class="metric">
+                    <div class="metric-label"><span class="metric-icon jitter-icon" aria-hidden="true">≈</span>抖動</div>
+                    <output class="metric-value" id="jitter">--<span class="metric-unit">ms</span></output>
+                    <p class="metric-hint">延遲變化的平均值</p>
+                </article>
+            </div>
+
+            <div class="test-control">
+                <button class="start-button" id="startButton" type="button">
+                    <span class="start-icon" aria-hidden="true">▶</span>
+                    <span id="button-label">開始測試</span>
+                </button>
+                <div class="stage-area">
+                    <p class="stage-label" id="stage-label" role="status" aria-live="polite">準備好時，開始一次測試</p>
+                    <div class="progress-track" id="progress-track" role="progressbar" aria-label="測試進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="error-message" id="error-message" role="alert" hidden></p>
+
+            <div class="details">
+                <section aria-labelledby="connection-heading">
+                    <h2 id="connection-heading">連線資訊</h2>
+                    <div class="connection-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">連線狀態</span>
+                            <span class="detail-value" id="online-status">檢查中</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">網路類型</span>
+                            <span class="detail-value" id="network-type">瀏覽器未提供</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">瀏覽器估計下載</span>
+                            <span class="detail-value" id="estimated-downlink">瀏覽器未提供</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">省流量模式</span>
+                            <span class="detail-value" id="data-saver">瀏覽器未提供</span>
+                        </div>
+                    </div>
+                </section>
+                <section aria-labelledby="result-heading">
+                    <h2 id="result-heading">本次測試</h2>
+                    <div class="connection-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">下載資料</span>
+                            <span class="detail-value">約 8 MB</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">上傳資料</span>
+                            <span class="detail-value">約 2 MB</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">延遲樣本</span>
+                            <span class="detail-value">5 次，間隔 120 ms</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">測試服務</span>
+                            <span class="detail-value">Cloudflare Speed Test</span>
+                        </div>
+                    </div>
+                    <div class="result-actions">
+                        <p class="result-note" id="duration-label">結果只保留在此頁面</p>
+                        <button class="copy-button" id="copyButton" type="button" disabled>複製結果</button>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <p class="method-note"><strong>測試說明：</strong>下載與上傳使用小型資料量依序測試；延遲以多次 HTTPS 請求估算，不等同 ICMP Ping。Wi-Fi 訊號、裝置負載及測試服務距離都會影響結果。此頁不會記錄或上傳測試歷史。</p>
+    </main>
 
     <script>
-        // 獲取 DOM 元素
-        const startButton = document.getElementById('startButton');
-        const downloadSpeedElement = document.getElementById('downloadSpeed');
-        const uploadSpeedElement = document.getElementById('uploadSpeed');
-        const pingElement = document.getElementById('ping');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const errorMessage = document.getElementById('errorMessage');
+        const DOWNLOAD_URL = 'https://speed.cloudflare.com/__down';
+        const UPLOAD_URL = 'https://speed.cloudflare.com/__up';
+        const DOWNLOAD_BYTES = 8 * 1024 * 1024;
+        const UPLOAD_BYTES = 2 * 1024 * 1024;
+        const LATENCY_SAMPLES = 5;
+        const REQUEST_TIMEOUT_MS = 30000;
 
-        // 測試設定
-        // 使用 Cloudflare 的速度測試端點作為 Ping 測試的 URL，它通常更穩定。
-        const PING_URL = 'https://speed.cloudflare.com/__down';
-        // 使用 Cloudflare 的速度測試端點作為下載測試的目標。
-        const DOWNLOAD_TEST_URL = 'https://speed.cloudflare.com/__down';
-        // 使用 httpbin.org 的 /post 端點作為上傳測試的目標，它是一個通用的 HTTP 請求測試服務。
-        const UPLOAD_TEST_URL = 'https://httpbin.org/post';
-
-        const DOWNLOAD_SIZE_MB = 50; // 下載測試檔案大小 (MB)
-        const UPLOAD_SIZE_MB = 15;    // 上傳測試檔案大小 (MB) - 調整為 15MB
-        const PING_COUNT = 5;        // Ping 測試次數
-
-        /**
-         * 顯示錯誤訊息
-         * @param {string} message - 要顯示的錯誤訊息
-         */
-        function displayError(message) {
-            errorMessage.textContent = message;
-            errorMessage.classList.remove('hidden');
-        }
-
-        /**
-         * 隱藏錯誤訊息
-         */
-        function hideError() {
-            errorMessage.classList.add('hidden');
-        }
-
-        /**
-         * 生成指定大小的隨機資料 Blob
-         * @param {number} sizeMB - Blob 的大小 (MB)
-         * @returns {Blob} - 隨機資料 Blob
-         */
-        function generateRandomBlob(sizeMB) {
-            const sizeBytes = sizeMB * 1024 * 1024;
-            const data = new Uint8Array(sizeBytes);
-            for (let i = 0; i < sizeBytes; i++) {
-                data[i] = Math.floor(Math.random() * 256);
-            }
-            return new Blob([data], { type: 'application/octet-stream' });
-        }
-
-        /**
-         * 執行下載速度測試
-         * @returns {Promise<number>} - 下載速度 (Mbps)
-         */
-        async function testDownloadSpeed() {
-            // 從 Cloudflare 的下載端點請求指定大小的隨機位元組
-            const downloadUrl = `${DOWNLOAD_TEST_URL}?bytes=${DOWNLOAD_SIZE_MB * 1024 * 1024}&cachebuster=${Date.now()}`;
-            const startTime = performance.now();
-            let downloadedBytes = 0;
-
-            try {
-                const response = await fetch(downloadUrl);
-                if (!response.ok) {
-                    throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
-                }
-                // 使用 ReadableStream 讀取響應，以累計下載的位元組數
-                const reader = response.body.getReader();
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) {
-                        break;
-                    }
-                    downloadedBytes += value.length;
-                }
-                const endTime = performance.now();
-                const durationSeconds = (endTime - startTime) / 1000;
-
-                if (durationSeconds === 0) {
-                    return 0; // 避免除以零
-                }
-                const speedMbps = (downloadedBytes * 8 / durationSeconds) / (1024 * 1024);
-                return speedMbps;
-            } catch (error) {
-                console.error("下載測試失敗:", error);
-                displayError("下載測試失敗。請檢查您的網路連線或稍後重試。");
-                throw error; // 重新拋出錯誤以觸發 runSpeedTest 中的錯誤處理
-            }
-        }
-
-        /**
-         * 執行上傳速度測試
-         * @returns {Promise<number>} - 上傳速度 (Mbps)
-         */
-        async function testUploadSpeed() {
-            const blob = generateRandomBlob(UPLOAD_SIZE_MB); // 生成指定大小的 Blob
-            // httpbin.org 的上傳端點
-            const uploadUrl = `${UPLOAD_TEST_URL}?cachebuster=${Date.now()}`;
-            const startTime = performance.now();
-
-            try {
-                // 使用 FormData 以模擬檔案上傳，這更符合 httpbin.org/post 的預期
-                const formData = new FormData();
-                formData.append('file', blob, 'upload_test.bin'); // 'file' 是常見的檔案欄位名稱
-
-                const response = await fetch(uploadUrl, {
-                    method: 'POST', // httpbin.org 的端點期望 POST
-                    body: formData, // 使用 FormData
-                    // Headers 會由 FormData 自動設定 'Content-Type': 'multipart/form-data'
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
-                }
-                await response.text(); // 讀取響應以確保整個請求完成
-                const endTime = performance.now();
-                const durationSeconds = (endTime - startTime) / 1000;
-
-                if (durationSeconds === 0) {
-                    return 0; // 避免除以零
-                }
-                const speedMbps = (blob.size * 8 / durationSeconds) / (1024 * 1024);
-                return speedMbps;
-            } catch (error) {
-                console.error("上傳測試失敗:", error);
-                displayError("上傳測試失敗。請檢查您的網路連線或稍後重試。");
-                throw error; // 重新拋出錯誤以觸發 runSpeedTest 中的錯誤處理
-            }
-        }
-
-        /**
-         * 執行 Ping 測試
-         * @returns {Promise<number>} - 平均延遲 (ms)
-         */
-        async function testPing() {
-            let totalLatency = 0;
-            let successfulPings = 0;
-
-            for (let i = 0; i < PING_COUNT; i++) {
-                const startTime = performance.now();
-                try {
-                    // 添加 cachebuster 確保每次都是新的請求
-                    const response = await fetch(PING_URL + '?cachebuster=' + Date.now());
-                    if (!response.ok) {
-                        throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
-                    }
-                    const endTime = performance.now();
-                    totalLatency += (endTime - startTime);
-                    successfulPings++;
-                } catch (error) {
-                    console.warn(`Ping 測試 #${i + 1} 失敗:`, error);
-                    // 不拋出錯誤，允許其他 Ping 繼續
-                }
-                // 稍微延遲一下，避免對伺服器造成過大壓力
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-
-            if (successfulPings === 0) {
-                displayError("Ping 測試失敗。請檢查您的網路連線或稍後重試。");
-                throw new Error("所有 Ping 測試均失敗。");
-            }
-
-            return totalLatency / successfulPings;
-        }
-
-        /**
-         * 執行所有測試並更新 UI
-         */
-        async function runSpeedTest() {
-            startButton.disabled = true;
-            loadingIndicator.classList.remove('hidden');
-            hideError();
-
-            downloadSpeedElement.textContent = '-- Mbps';
-            uploadSpeedElement.textContent = '-- Mbps';
-            pingElement.textContent = '-- ms';
-
-            try {
-                // 執行下載測試
-                const downloadSpeed = await testDownloadSpeed();
-                downloadSpeedElement.textContent = `${downloadSpeed.toFixed(2)} Mbps`;
-
-                // 執行上傳測試
-                const uploadSpeed = await testUploadSpeed();
-                uploadSpeedElement.textContent = `${uploadSpeed.toFixed(2)} Mbps`;
-
-                // 執行 Ping 測試
-                const pingLatency = await testPing();
-                pingElement.textContent = `${pingLatency.toFixed(0)} ms`;
-
-            } catch (error) {
-                console.error("速度測試過程中發生錯誤:", error);
-                // 錯誤訊息已在各個測試函數中處理
-            } finally {
-                loadingIndicator.classList.add('hidden');
-                startButton.disabled = false;
-            }
-        }
-
-        // 為按鈕添加事件監聽器
-        startButton.addEventListener('click', runSpeedTest);
-
-        // 確保視窗載入完成後執行
-        window.onload = function() {
-            // 可以選擇在載入時自動執行測試，或者只等待使用者點擊按鈕
-            // runSpeedTest();
+        const elements = {
+            startButton: document.querySelector('#startButton'),
+            buttonLabel: document.querySelector('#button-label'),
+            download: document.querySelector('#downloadSpeed'),
+            upload: document.querySelector('#uploadSpeed'),
+            latency: document.querySelector('#latency'),
+            jitter: document.querySelector('#jitter'),
+            stage: document.querySelector('#stage-label'),
+            progress: document.querySelector('#progress-bar'),
+            progressTrack: document.querySelector('#progress-track'),
+            status: document.querySelector('#connection-status'),
+            statusDot: document.querySelector('#status-dot'),
+            testTime: document.querySelector('#test-time'),
+            error: document.querySelector('#error-message'),
+            duration: document.querySelector('#duration-label'),
+            copyButton: document.querySelector('#copyButton')
         };
+
+        let lastResult = null;
+
+        function setMetric(element, value, unit, digits = 1) {
+            element.replaceChildren(
+                document.createTextNode(Number.isFinite(value) ? value.toFixed(digits) : '--'),
+                Object.assign(document.createElement('span'), {
+                    className: 'metric-unit',
+                    textContent: unit
+                })
+            );
+        }
+
+        function setProgress(percent, label) {
+            elements.progress.style.width = `${percent}%`;
+            elements.progressTrack.setAttribute('aria-valuenow', String(percent));
+            elements.stage.textContent = label;
+        }
+
+        function updateConnectionInfo() {
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            document.querySelector('#online-status').textContent = navigator.onLine ? '已連線' : '離線';
+            document.querySelector('#network-type').textContent = connection?.effectiveType || connection?.type || '瀏覽器未提供';
+            document.querySelector('#estimated-downlink').textContent = Number.isFinite(connection?.downlink)
+                ? `${connection.downlink} Mbps (估計)`
+                : '瀏覽器未提供';
+            document.querySelector('#data-saver').textContent = typeof connection?.saveData === 'boolean'
+                ? (connection.saveData ? '已開啟' : '未開啟')
+                : '瀏覽器未提供';
+        }
+
+        function getMedian(values) {
+            const sorted = [...values].sort((a, b) => a - b);
+            const middle = Math.floor(sorted.length / 2);
+            return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+        }
+
+        function getJitter(values) {
+            if (values.length < 2) return 0;
+            const differences = values.slice(1).map((value, index) => Math.abs(value - values[index]));
+            return differences.reduce((sum, value) => sum + value, 0) / differences.length;
+        }
+
+        async function measureLatency(signal) {
+            const samples = [];
+            for (let index = 0; index < LATENCY_SAMPLES; index += 1) {
+                const url = `${DOWNLOAD_URL}?bytes=1&cache=${Date.now()}-${index}`;
+                const startedAt = performance.now();
+                const response = await fetch(url, { cache: 'no-store', signal });
+                if (!response.ok) throw new Error(`延遲測試失敗（HTTP ${response.status}）`);
+                await response.arrayBuffer();
+                samples.push(performance.now() - startedAt);
+                if (index < LATENCY_SAMPLES - 1) {
+                    await new Promise(resolve => setTimeout(resolve, 120));
+                }
+            }
+            return { median: getMedian(samples), jitter: getJitter(samples) };
+        }
+
+        async function measureDownload(signal) {
+            const url = `${DOWNLOAD_URL}?bytes=${DOWNLOAD_BYTES}&cache=${Date.now()}`;
+            const startedAt = performance.now();
+            const response = await fetch(url, { cache: 'no-store', signal });
+            if (!response.ok) throw new Error(`下載測試失敗（HTTP ${response.status}）`);
+
+            let bytes = 0;
+            if (response.body?.getReader) {
+                const reader = response.body.getReader();
+                try {
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        bytes += value.byteLength;
+                    }
+                } finally {
+                    reader.releaseLock();
+                }
+            } else {
+                bytes = (await response.arrayBuffer()).byteLength;
+            }
+
+            const seconds = (performance.now() - startedAt) / 1000;
+            if (seconds <= 0 || bytes <= 0) throw new Error('下載測試沒有收到有效資料。');
+            return { speed: (bytes * 8) / seconds / 1_000_000, bytes };
+        }
+
+        function makeUploadData() {
+            const data = new Uint8Array(UPLOAD_BYTES);
+            for (let offset = 0; offset < data.length; offset += 65536) {
+                crypto.getRandomValues(data.subarray(offset, Math.min(offset + 65536, data.length)));
+            }
+            return new Blob([data]);
+        }
+
+        async function measureUpload(signal) {
+            const body = makeUploadData();
+            const startedAt = performance.now();
+            const response = await fetch(`${UPLOAD_URL}?cache=${Date.now()}`, {
+                method: 'POST',
+                body,
+                cache: 'no-store',
+                signal
+            });
+            if (!response.ok) throw new Error(`上傳測試失敗（HTTP ${response.status}）`);
+            await response.arrayBuffer();
+
+            const seconds = (performance.now() - startedAt) / 1000;
+            if (seconds <= 0) throw new Error('上傳測試時間無效。');
+            return (body.size * 8) / seconds / 1_000_000;
+        }
+
+        function formatTimestamp(date) {
+            return new Intl.DateTimeFormat('zh-TW', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }).format(date);
+        }
+
+        function buildResultText(result) {
+            return [
+                '網路速度測試結果',
+                `下載：${result.download.toFixed(1)} Mbps`,
+                `上傳：${result.upload.toFixed(1)} Mbps`,
+                `延遲：${result.latency.toFixed(1)} ms`,
+                `抖動：${result.jitter.toFixed(1)} ms`,
+                `測試時間：${formatTimestamp(result.finishedAt)}`,
+                '測試服務：Cloudflare Speed Test'
+            ].join('\n');
+        }
+
+        async function copyResult() {
+            if (!lastResult) return;
+            const text = buildResultText(lastResult);
+            try {
+                await navigator.clipboard.writeText(text);
+                elements.copyButton.textContent = '已複製';
+            } catch (error) {
+                const temporary = document.createElement('textarea');
+                temporary.value = text;
+                temporary.setAttribute('readonly', '');
+                temporary.style.position = 'fixed';
+                temporary.style.opacity = '0';
+                document.body.appendChild(temporary);
+                temporary.select();
+                const copied = document.execCommand('copy');
+                temporary.remove();
+                if (!copied) throw error;
+                elements.copyButton.textContent = '已複製';
+            }
+            window.setTimeout(() => {
+                elements.copyButton.textContent = '複製結果';
+            }, 1800);
+        }
+
+        async function runSpeedTest() {
+            if (!navigator.onLine) {
+                elements.error.textContent = '目前裝置顯示為離線狀態，請先連線再測試。';
+                elements.error.hidden = false;
+                return;
+            }
+
+            const controller = new AbortController();
+            const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+            const startedAt = performance.now();
+            let completed = false;
+            elements.startButton.disabled = true;
+            elements.buttonLabel.textContent = '測試中…';
+            elements.status.textContent = '正在測試';
+            elements.statusDot.classList.add('testing');
+            elements.error.hidden = true;
+            elements.copyButton.disabled = true;
+            elements.copyButton.textContent = '複製結果';
+            elements.duration.textContent = '測試進行中…';
+            elements.download.innerHTML = `--<span class="metric-unit">Mbps</span>`;
+            elements.upload.innerHTML = `--<span class="metric-unit">Mbps</span>`;
+            elements.latency.innerHTML = `--<span class="metric-unit">ms</span>`;
+            elements.jitter.innerHTML = `--<span class="metric-unit">ms</span>`;
+            elements.progress.classList.remove('indeterminate');
+            elements.progress.style.width = '0';
+            elements.progressTrack.setAttribute('aria-valuenow', '0');
+            elements.testTime.textContent = '正在測試';
+            lastResult = null;
+
+            try {
+                setProgress(8, '測量閒置延遲與抖動…');
+                const latencyResult = await measureLatency(controller.signal);
+                setMetric(elements.latency, latencyResult.median, 'ms');
+                setMetric(elements.jitter, latencyResult.jitter, 'ms');
+
+                setProgress(25, '測量下載速度…');
+                const downloadResult = await measureDownload(controller.signal);
+                setMetric(elements.download, downloadResult.speed, 'Mbps');
+                setProgress(63, '測量上傳速度…');
+                const uploadSpeed = await measureUpload(controller.signal);
+                setMetric(elements.upload, uploadSpeed, 'Mbps');
+
+                const finishedAt = new Date();
+                lastResult = {
+                    download: downloadResult.speed,
+                    upload: uploadSpeed,
+                    latency: latencyResult.median,
+                    jitter: latencyResult.jitter,
+                    finishedAt
+                };
+                const elapsedSeconds = (performance.now() - startedAt) / 1000;
+                elements.testTime.textContent = formatTimestamp(finishedAt);
+                elements.duration.textContent = `耗時 ${elapsedSeconds.toFixed(1)} 秒`;
+                elements.copyButton.disabled = false;
+                elements.status.textContent = '測試完成';
+                setProgress(100, '測試完成，可複製結果或重新測試');
+                completed = true;
+            } catch (error) {
+                console.error('網路速度測試失敗:', error);
+                const message = error.name === 'AbortError'
+                    ? '測試逾時。網路速度可能較慢，請稍後重試。'
+                    : error instanceof TypeError
+                        ? '無法連線至測試服務。請檢查網路或稍後重試。'
+                        : error.message || '測試未完成，請稍後重試。';
+                elements.error.textContent = message;
+                elements.error.hidden = false;
+                elements.status.textContent = '測試未完成';
+                elements.testTime.textContent = '測試失敗';
+                elements.duration.textContent = '可重新開始測試';
+                setProgress(0, '測試未完成，請檢查連線後重試');
+            } finally {
+                window.clearTimeout(timeoutId);
+                elements.startButton.disabled = false;
+                elements.buttonLabel.textContent = '重新測試';
+                elements.statusDot.classList.remove('testing');
+                if (!completed) {
+                    elements.progress.classList.remove('indeterminate');
+                }
+            }
+        }
+
+        updateConnectionInfo();
+        window.addEventListener('online', updateConnectionInfo);
+        window.addEventListener('offline', updateConnectionInfo);
+        elements.startButton.addEventListener('click', runSpeedTest);
+        elements.copyButton.addEventListener('click', () => {
+            copyResult().catch(error => {
+                console.error('複製測試結果失敗:', error);
+                elements.error.textContent = '無法複製結果，請手動選取。';
+                elements.error.hidden = false;
+            });
+        });
     </script>
 </body>
 </html>

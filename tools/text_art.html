@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f7fb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Lifer_Lighdow's Toolbox">
     <title>圖片轉文字藝術</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <script src="./pwa.js" defer></script>
+    <script src="./theme.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -126,12 +135,28 @@
             border-color: #63b3ed; /* Lighter blue focus for select */
         }
     </style>
+    <link rel="stylesheet" href="./tools-page.css">
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-4">
-    <div class="container shadow-lg rounded-xl p-8 space-y-6 w-full">
-        <h1 class="text-4xl font-bold text-center mb-6">圖片轉文字藝術</h1>
+<body class="tool-page">
+    <header class="tool-header">
+        <a class="tool-brand" href="./index.html" aria-label="回到 Lifer_Lighdow's Toolbox 首頁">
+            <span class="tool-brand-mark" aria-hidden="true">T</span>
+            <span>Lifer_Lighdow's <span class="tool-brand-light">Toolbox</span></span>
+        </a>
+        <a class="tool-home-link" href="./index.html">返回工具箱 <span aria-hidden="true">↗</span></a>
+    </header>
+    <main class="tool-main ascii-main">
+    <section class="tool-page-card ascii-card">
+        <p class="tool-eyebrow">IMAGE TO ASCII ART</p>
+        <h1 class="tool-page-title">圖片轉文字藝術</h1>
+        <p class="tool-page-description">將圖片轉成可複製、可下載的字元藝術。</p>
+        <div class="tool-theme-row">
+            <button id="asciiThemeToggle" class="tool-theme-button" type="button" aria-pressed="false">
+                <span id="asciiThemeLabel">深色模式</span>
+            </button>
+        </div>
 
-        <div class="flex flex-col items-center space-y-4">
+        <div class="upload-panel flex flex-col items-center space-y-4">
             <label for="imageUpload" class="custom-file-upload">
                 選擇圖片
             </label>
@@ -141,8 +166,8 @@
         </div>
 
         <!-- 文字藝術設定 -->
-        <div class="flex flex-col items-center space-y-4 w-full p-4 border rounded-lg">
-            <h2 class="text-2xl font-semibold">文字藝術設定</h2>
+        <div class="settings-panel flex flex-col items-center space-y-4 w-full p-4 border rounded-lg">
+            <h2 class="section-title text-2xl font-semibold">文字藝術設定</h2>
             <div class="setting-group">
                 <div class="setting-item">
                     <label for="asciiWidthInput">寬度 (字符數):</label>
@@ -184,11 +209,12 @@
         <!-- Hidden Canvas for image processing -->
         <canvas id="imageCanvas" class="hidden"></canvas>
 
-        <div class="flex flex-col items-center space-y-4">
-            <h2 class="text-2xl font-semibold">文字藝術輸出</h2>
+        <div class="output-panel flex flex-col items-center space-y-4">
+            <h2 class="section-title text-2xl font-semibold">文字藝術輸出</h2>
             <pre id="asciiOutput" class="w-full"></pre>
         </div>
-    </div>
+    </section>
+    </main>
 
     <!-- Message Box for copy notification -->
     <div id="messageBox" class="message-box"></div>
@@ -213,7 +239,6 @@
         const downloadButton = document.getElementById('downloadButton');
         const clearButton = document.getElementById('clearButton');
         const messageBox = document.getElementById('messageBox');
-
         // Global variable to store the loaded image
         let loadedImage = null;
 

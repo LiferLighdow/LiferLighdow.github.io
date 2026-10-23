@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f7fb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Lifer_Lighdow's Toolbox">
     <title>專業單位轉換與科學計算機</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <script src="./pwa.js" defer></script>
+    <script src="./theme.js" defer></script>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -120,25 +129,33 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="./tools-page.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-    <div class="w-full max-w-lg bg-white p-6 rounded-lg shadow-xl border border-gray-200 transition-colors duration-300">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4 text-center">專業單位轉換與科學計算機</h1>
-        <p class="text-gray-600 mb-6 text-center">
-            在不同工具之間切換，滿足你的計算和轉換需求。
-        </p>
+<body class="tool-page">
+    <header class="tool-header">
+        <a class="tool-brand" href="./index.html" aria-label="回到 Lifer_Lighdow's Toolbox 首頁">
+            <span class="tool-brand-mark" aria-hidden="true">T</span>
+            <span>Lifer_Lighdow's <span class="tool-brand-light">Toolbox</span></span>
+        </a>
+        <a class="tool-home-link" href="./index.html">返回工具箱 <span aria-hidden="true">↗</span></a>
+    </header>
+    <main class="tool-main">
+    <div class="tool-page-card calculator-card">
+        <p class="tool-eyebrow">CALCULATOR & CONVERTER</p>
+        <h1 class="tool-page-title">計算機與單位轉換</h1>
+        <p class="tool-page-description">快速換算常用單位，或使用科學計算功能。</p>
 
         <!-- Tab buttons -->
-        <div class="flex justify-center gap-4 mb-6">
+        <div class="tool-tabs">
             <button id="converterTabBtn" class="tab-button active" onclick="showTab('converter')">單位轉換</button>
             <button id="calculatorTabBtn" class="tab-button" onclick="showTab('calculator')">科學計算機</button>
         </div>
 
         <!-- Dark Mode Toggle -->
-        <div class="flex justify-end mb-4">
+        <div class="tool-theme-row">
             <button
                 id="darkModeToggle"
-                class="px-3 py-2 bg-gray-700 text-white text-sm rounded-md shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-75 transition duration-300 ease-in-out flex items-center"
+                class="tool-theme-button"
             >
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9 9 0 008.354-5.646z"></path></svg>
                 <span id="darkModeText">深色模式</span>
@@ -166,15 +183,39 @@
                     onchange="populateUnits(); convertUnit()"
                 >
                     <option value="length">長度</option>
-                    <option value="weight">重量</option>
+                    <option value="area">面積</option>
+                    <option value="weight">質量</option>
                     <option value="temperature">溫度</option>
                     <option value="volume">體積</option>
-                    <option value="data">數據儲存</option>
+                    <option value="time">時間</option>
+                    <option value="angle">角度</option>
+                    <option value="data">資料量</option>
+                    <option value="dataRate">資料傳輸率</option>
                     <option value="energy">能量</option>
                     <option value="power">功率</option>
                     <option value="pressure">壓力</option>
                     <option value="frequency">頻率</option>
                     <option value="speed">速度</option>
+                    <option value="acceleration">加速度</option>
+                    <option value="force">力</option>
+                    <option value="torque">力矩</option>
+                    <option value="angularSpeed">角速度</option>
+                    <option value="volumeFlow">體積流量</option>
+                    <option value="density">密度</option>
+                    <option value="dynamicViscosity">動力黏度</option>
+                    <option value="kinematicViscosity">運動黏度</option>
+                    <option value="amount">物質量</option>
+                    <option value="fuelEconomy">燃油效率</option>
+                    <option value="current">電流</option>
+                    <option value="voltage">電壓</option>
+                    <option value="resistance">電阻</option>
+                    <option value="conductance">電導</option>
+                    <option value="capacitance">電容</option>
+                    <option value="inductance">電感</option>
+                    <option value="charge">電荷</option>
+                    <option value="magneticFlux">磁通量</option>
+                    <option value="magneticFluxDensity">磁通密度</option>
+                    <option value="illuminance">照度</option>
                 </select>
             </div>
 
@@ -203,6 +244,9 @@
                     0
                 </div>
             </div>
+            <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                資料量區分十進位與 IEC 二進位單位；美制與英制容量分開計算。馬赫數以乾燥空氣約 20°C、海平面音速為參考值。
+            </p>
         </div>
 
         <!-- Calculator Section -->
@@ -216,17 +260,17 @@
             >
             <div class="grid grid-cols-5 sm:grid-cols-6 gap-2 calculator-grid">
                 <!-- Row 1: Scientific Functions -->
-                <button class="function-btn" onclick="appendToDisplay('Math.sin(')">sin</button>
-                <button class="function-btn" onclick="appendToDisplay('Math.cos(')">cos</button>
-                <button class="function-btn" onclick="appendToDisplay('Math.tan(')">tan</button>
-                <button class="function-btn" onclick="appendToDisplay('Math.log10(')">log</button>
-                <button class="function-btn" onclick="appendToDisplay('Math.log(')">ln</button>
+                <button class="function-btn" onclick="appendToDisplay('sin(', 'Math.sin(')">sin</button>
+                <button class="function-btn" onclick="appendToDisplay('cos(', 'Math.cos(')">cos</button>
+                <button class="function-btn" onclick="appendToDisplay('tan(', 'Math.tan(')">tan</button>
+                <button class="function-btn" onclick="appendToDisplay('log(', 'Math.log10(')">log</button>
+                <button class="function-btn" onclick="appendToDisplay('ln(', 'Math.log(')">ln</button>
                 <button class="clear" onclick="clearDisplay()">AC</button>
 
                 <!-- Row 2: More Scientific Functions -->
-                <button class="function-btn" onclick="appendToDisplay('Math.asin(')">asin</button>
-                <button class="function-btn" onclick="appendToDisplay('Math.acos(')">acos</button>
-                <button class="function-btn" onclick="appendToDisplay('Math.atan(')">atan</button>
+                <button class="function-btn" onclick="appendToDisplay('sin⁻¹(', 'Math.asin(')">sin<sup>-1</sup></button>
+                <button class="function-btn" onclick="appendToDisplay('cos⁻¹(', 'Math.acos(')">cos<sup>-1</sup></button>
+                <button class="function-btn" onclick="appendToDisplay('tan⁻¹(', 'Math.atan(')">tan<sup>-1</sup></button>
                 <button class="function-btn" onclick="appendToDisplay('Math.pow(10,')">10^x</button>
                 <button class="function-btn" onclick="appendToDisplay('Math.exp(')">e^x</button>
                 <button class="operator" onclick="appendToDisplay('/')">÷</button>
@@ -235,8 +279,8 @@
                 <button onclick="appendToDisplay('7')">7</button>
                 <button onclick="appendToDisplay('8')">8</button>
                 <button onclick="appendToDisplay('9')">9</button>
-                <button class="function-btn" onclick="appendToDisplay('Math.sqrt(')">√</button>
-                <button class="function-btn" onclick="appendToDisplay('Math.cbrt(')">∛</button>
+                <button class="function-btn" onclick="appendToDisplay('√(', 'Math.sqrt(')">√</button>
+                <button class="function-btn" onclick="appendToDisplay('∛(', 'Math.cbrt(')">∛</button>
                 <button class="operator" onclick="appendToDisplay('*')">×</button>
 
                 <!-- Row 4: Numbers and Operators -->
@@ -258,8 +302,8 @@
                 <!-- Row 6: Numbers and Operators -->
                 <button onclick="appendToDisplay('0')">0</button>
                 <button onclick="appendToDisplay('.')">.</button>
-                <button class="function-btn" onclick="appendToDisplay('Math.PI')">π</button>
-                <button class="function-btn" onclick="appendToDisplay('Math.E')">e</button>
+                <button class="function-btn" onclick="appendToDisplay('π', 'Math.PI')">π</button>
+                <button class="function-btn" onclick="appendToDisplay('e', 'Math.E')">e</button>
                 <button class="function-btn" onclick="appendToDisplay('%')">%</button>
                 <button class="equals" onclick="calculateResult()">=</button>
 
@@ -273,6 +317,7 @@
             </div>
         </div>
     </div>
+    </main>
 
     <script>
         const converterValueInput = document.getElementById('converterValue');
@@ -281,111 +326,258 @@
         const toUnitSelect = document.getElementById('toUnit');
         const converterResultDiv = document.getElementById('converterResult');
         const calculatorDisplay = document.getElementById('calculatorDisplay');
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const darkModeText = document.getElementById('darkModeText');
-
         const KEY_PREFIX = 'unit_calc_pro_'; // Prefix for localStorage keys
 
-        // Unit conversion rates (relative to a base unit)
         const unitConversions = {
             length: {
-                meter: 1, kilometer: 1000, centimeter: 0.01, millimeter: 0.001,
-                mile: 1609.34, yard: 0.9144, foot: 0.3048, inch: 0.0254,
-                'nautical mile': 1852, angstrom: 1e-10 // New units
+                meter: [1, '公尺 (m)'], kilometer: [1e3, '公里 (km)'], centimeter: [1e-2, '公分 (cm)'],
+                millimeter: [1e-3, '公釐 (mm)'], micrometer: [1e-6, '微米 (µm)'], nanometer: [1e-9, '奈米 (nm)'],
+                picometer: [1e-12, '皮米 (pm)'], decimeter: [1e-1, '分米 (dm)'], decameter: [10, '十米 (dam)'],
+                hectometer: [100, '百米 (hm)'],                 megameter: [1e6, '百萬米 (Mm)'], gigameter: [1e9, '十億米 (Gm)'],
+                terameter: [1e12, '兆米 (Tm)'], femtometer: [1e-15, '飛米 (fm)'], inch: [0.0254, '英吋 (in)'],
+                foot: [0.3048, '英尺 (ft)'], yard: [0.9144, '碼 (yd)'], mile: [1609.344, '英里 (mi)'],
+                nauticalMile: [1852, '海里 (nmi)'], fathom: [1.8288, '英尋 (fm)'], chain: [20.1168, '鏈 (ch)'],
+                rod: [5.0292, '竿 (rd)'], astronomicalUnit: [149597870700, '天文單位 (au)'],
+                lightYear: [9460730472580800, '光年 (ly，儒略年定義)'],
+                parsec: [149597870700 * 648000 / Math.PI, '秒差距 (pc)'],
+                angstrom: [1e-10, '埃 (Å)'], mil: [2.54e-5, '密耳 (mil)'],
+                hand: [0.1016, '手 (hand)'], furlong: [201.168, '浪 (fur)'],
+                usSurveyFoot: [1200 / 3937, '美國測量英尺 (survey ft)']
+            },
+            area: {
+                squareMeter: [1, '平方公尺 (m²)'], squareKilometer: [1e6, '平方公里 (km²)'],
+                squareCentimeter: [1e-4, '平方公分 (cm²)'], squareMillimeter: [1e-6, '平方公釐 (mm²)'],
+                hectare: [1e4, '公頃 (ha)'], are: [100, '公畝 (a)'], barn: [1e-28, '邦 (b)'],
+                squareInch: [0.00064516, '平方英吋 (in²)'],
+                squareFoot: [0.09290304, '平方英尺 (ft²)'], squareYard: [0.83612736, '平方碼 (yd²)'],
+                squareRod: [25.29285264, '平方竿 (rd²)'], rood: [1011.7141056, '路得 (ro)'],
+                acre: [4046.8564224, '英畝 (ac)'], squareMile: [2589988.110336, '平方英里 (mi²)']
             },
             weight: {
-                kilogram: 1, gram: 0.001, milligram: 0.000001,
-                pound: 0.453592, ounce: 0.0283495, 'metric ton': 1000,
-                carat: 0.0002, stone: 6.35029 // New units
+                kilogram: [1, '公斤 (kg)'], gram: [1e-3, '公克 (g)'], milligram: [1e-6, '毫克 (mg)'],
+                microgram: [1e-9, '微克 (µg)'], tonne: [1e3, '公噸 (t)'], pound: [0.45359237, '磅 (lb)'],
+                ounce: [0.028349523125, '常衡盎司 (oz)'], stone: [6.35029318, '英石 (st)'],
+                shortTon: [907.18474, '美制短噸 (short ton)'], longTon: [1016.0469088, '英制長噸 (long ton)'],
+                carat: [0.0002, '公制克拉 (ct)'], grain: [0.00006479891, '格令 (gr)'],
+                troyOunce: [0.0311034768, '金衡盎司 (ozt)'], slug: [14.5939029372, '斯勒格 (slug)'],
+                pennyweight: [0.00155517384, '金衡本尼威特 (dwt)'],
+                shortHundredweight: [45.359237, '美制英擔 (cwt)'],
+                longHundredweight: [50.80234544, '英制英擔 (long cwt)']
             },
             temperature: {
-                celsius: { toBase: (c) => c, fromBase: (c) => c, toFahrenheit: (c) => (c * 9/5) + 32, fromFahrenheit: (f) => (f - 32) * 5/9, toKelvin: (c) => c + 273.15, fromKelvin: (k) => k - 273.15, toRankine: (c) => (c + 273.15) * 9/5, fromRankine: (r) => (r - 491.67) * 5/9 },
-                fahrenheit: { toBase: (f) => (f - 32) * 5/9, fromBase: (c) => (c * 9/5) + 32 },
-                kelvin: { toBase: (k) => k - 273.15, fromBase: (c) => c + 273.15 },
-                rankine: { toBase: (r) => (r - 491.67) * 5/9, fromBase: (c) => (c + 273.15) * 9/5 } // New unit
+                celsius: { label: '攝氏 (°C)', toBase: value => value, fromBase: value => value },
+                fahrenheit: { label: '華氏 (°F)', toBase: value => (value - 32) * 5 / 9, fromBase: value => value * 9 / 5 + 32 },
+                kelvin: { label: '克耳文 (K)', toBase: value => value - 273.15, fromBase: value => value + 273.15 },
+                rankine: { label: '蘭金 (°R)', toBase: value => (value - 491.67) * 5 / 9, fromBase: value => (value + 273.15) * 9 / 5 }
             },
             volume: {
-                liter: 1, milliliter: 0.001, 'cubic meter': 1000, 'cubic centimeter': 0.001,
-                'US gallon': 3.78541, 'US quart': 0.946353, 'US pint': 0.473176, 'US fluid ounce': 0.0295735,
-                'cubic inch': 0.0163871, 'cubic foot': 28.3168, 'US barrel': 119.24 // New units
+                cubicMeter: [1, '立方公尺 (m³)'], liter: [1e-3, '公升 (L)'], milliliter: [1e-6, '毫升 (mL)'],
+                cubicCentimeter: [1e-6, '立方公分 (cm³)'], cubicMillimeter: [1e-9, '立方公釐 (mm³)'],
+                usGallon: [0.003785411784, '美制加侖 (US gal)'], imperialGallon: [0.00454609, '英制加侖 (Imp gal)'],
+                usQuart: [0.000946352946, '美制夸脫 (US qt)'], usPint: [0.000473176473, '美制品脫 (US pt)'],
+                imperialQuart: [0.0011365225, '英制夸脫 (Imp qt)'],
+                imperialPint: [0.00056826125, '英制品脫 (Imp pt)'],
+                usCup: [0.0002365882365, '美制杯 (US cup)'], metricCup: [0.00025, '公制杯 (250 mL)'],
+                usFluidOunce: [0.0000295735295625, '美制液量盎司 (US fl oz)'],
+                imperialFluidOunce: [0.0000284130625, '英制液量盎司 (Imp fl oz)'],
+                tablespoon: [0.00001478676478125, '美制湯匙 (US tbsp)'],
+                teaspoon: [0.00000492892159375, '美制茶匙 (US tsp)'],
+                cubicInch: [0.000016387064, '立方英吋 (in³)'], cubicFoot: [0.028316846592, '立方英尺 (ft³)'],
+                usBarrel: [0.158987294928, '美制石油桶 (bbl)']
             },
-            data: { // New category
-                bit: 1, byte: 8,
-                kilobit: 1000, megabit: 1e6, gigabit: 1e9, terabit: 1e12,
-                kilobyte: 8 * 1024, megabyte: 8 * 1024 * 1024, gigabyte: 8 * 1024 * 1024 * 1024, terabyte: 8 * 1024 * 1024 * 1024 * 1024, petabyte: 8 * 1024 * 1024 * 1024 * 1024 * 1024
+            time: {
+                second: [1, '秒 (s)'], millisecond: [1e-3, '毫秒 (ms)'], microsecond: [1e-6, '微秒 (µs)'],
+                nanosecond: [1e-9, '奈秒 (ns)'], minute: [60, '分鐘 (min)'], hour: [3600, '小時 (h)'],
+                day: [86400, '日 (d)'], week: [604800, '週 (wk)'], julianYear: [31557600, '儒略年 (365.25 日)'],
+                gregorianYear: [31556952, '格里曆平均年 (365.2425 日)']
             },
-            energy: { // New category
-                joule: 1, kilojoule: 1000,
-                calorie: 4.184, 'large calorie': 4184, // small cal vs kcal
-                'kilowatt-hour': 3.6e6, electronvolt: 1.60218e-19
-            },
-            power: { // New category
-                watt: 1, kilowatt: 1000, megawatt: 1e6,
-                'horsepower (metric)': 735.499, 'horsepower (mechanical)': 745.7
-            },
-            pressure: { // New category
-                pascal: 1, kilopascal: 1000, megapascal: 1e6,
-                psi: 6894.76, bar: 100000, atmosphere: 101325, torr: 133.322
-            },
-            frequency: { // New category
-                hertz: 1, kilohertz: 1000, megahertz: 1e6, gigahertz: 1e9
+            angle: {
+                radian: [1, '弧度 (rad)'], degree: [Math.PI / 180, '度 (°)'],
+                arcminute: [Math.PI / 10800, '角分 (′)'], arcsecond: [Math.PI / 648000, '角秒 (″)'],
+                gradian: [Math.PI / 200, '百分度 (gon)'], turn: [2 * Math.PI, '整圈 (turn)'],
+                milliradian: [1e-3, '毫弧度 (mrad)']
             },
             speed: {
-                'meter/second': 1, 'kilometer/hour': 0.277778, 'miles/hour': 0.44704,
-                knot: 0.514444, mach: 343 // Mach at sea level, 20°C
+                meterPerSecond: [1, '公尺/秒 (m/s)'], kilometerPerHour: [1 / 3.6, '公里/小時 (km/h)'],
+                milePerHour: [0.44704, '英里/小時 (mph)'], footPerSecond: [0.3048, '英尺/秒 (ft/s)'],
+                knot: [1852 / 3600, '節 (kn)'], mach20C: [343.2, '馬赫 (乾燥空氣約 20°C、海平面)']
+            },
+            acceleration: {
+                meterPerSecondSquared: [1, '公尺/秒² (m/s²)'], gal: [0.01, '伽 (Gal)'],
+                standardGravity: [9.80665, '標準重力 (g₀)'], footPerSecondSquared: [0.3048, '英尺/秒² (ft/s²)']
+            },
+            force: {
+                newton: [1, '牛頓 (N)'], kilonewton: [1e3, '千牛頓 (kN)'], millinewton: [1e-3, '毫牛頓 (mN)'],
+                dyne: [1e-5, '達因 (dyn)'], kilogramForce: [9.80665, '公斤力 (kgf)'],
+                poundForce: [4.4482216152605, '磅力 (lbf)'], kip: [4448.2216152605, '千磅力 (kip)'],
+                poundal: [0.138254954376, '磅達 (pdl)']
+            },
+            pressure: {
+                pascal: [1, '帕斯卡 (Pa)'], kilopascal: [1e3, '千帕 (kPa)'], megapascal: [1e6, '百萬帕 (MPa)'],
+                gigapascal: [1e9, '十億帕 (GPa)'], hectopascal: [100, '百帕 (hPa)'],
+                bar: [1e5, '巴 (bar)'], millibar: [100, '毫巴 (mbar)'],
+                atmosphere: [101325, '標準大氣壓 (atm)'], technicalAtmosphere: [98066.5, '工程大氣壓 (at)'],
+                psi: [6894.757293168, '磅/平方英吋 (psi)'], torr: [101325 / 760, '托 (Torr)'],
+                millimeterMercury: [133.322387415, '毫米汞柱 (mmHg，0°C)'],
+                inchMercury: [3386.389, '英吋汞柱 (inHg，0°C)']
+            },
+            energy: {
+                joule: [1, '焦耳 (J)'], kilojoule: [1e3, '千焦耳 (kJ)'], megajoule: [1e6, '百萬焦耳 (MJ)'],
+                calorie: [4.184, '熱化學卡 (cal)'], kilocalorie: [4184, '千卡／大卡 (kcal)'],
+                wattHour: [3600, '瓦時 (Wh)'], kilowattHour: [3.6e6, '千瓦時 (kWh)'],
+                electronvolt: [1.602176634e-19, '電子伏特 (eV)'], erg: [1e-7, '爾格 (erg)'],
+                footPound: [1.3558179483314, '英尺磅力 (ft·lbf)'],
+                btu: [1055.05585262, '英熱單位 (Btu，IT)']
+            },
+            power: {
+                watt: [1, '瓦特 (W)'], milliwatt: [1e-3, '毫瓦 (mW)'], kilowatt: [1e3, '千瓦 (kW)'],
+                megawatt: [1e6, '百萬瓦 (MW)'], gigawatt: [1e9, '十億瓦 (GW)'],
+                metricHorsepower: [735.49875, '公制馬力 (PS)'], mechanicalHorsepower: [745.69987158227, '英制馬力 (hp)'],
+                btuPerHour: [0.2930710701722222, '英熱單位/小時 (Btu/h)'],
+                refrigerationTon: [3516.8528420667, '冷凍噸 (RT)']
+            },
+            frequency: {
+                hertz: [1, '赫茲 (Hz)'], millihertz: [1e-3, '毫赫茲 (mHz)'], kilohertz: [1e3, '千赫茲 (kHz)'],
+                megahertz: [1e6, '百萬赫茲 (MHz)'], gigahertz: [1e9, '十億赫茲 (GHz)'],
+                terahertz: [1e12, '兆赫茲 (THz)'], revolutionPerMinute: [1 / 60, '轉/分鐘 (rpm)']
+            },
+            data: {
+                bit: [1, '位元 (bit)'], byte: [8, '位元組 (B)'],
+                kilobit: [1e3, '千位元 (kbit)'], megabit: [1e6, '百萬位元 (Mbit)'],
+                gigabit: [1e9, '十億位元 (Gbit)'], terabit: [1e12, '兆位元 (Tbit)'],
+                petabit: [1e15, '拍位元 (Pbit)'], kilobyte: [8e3, '千位元組 (kB)'],
+                megabyte: [8e6, '百萬位元組 (MB)'], gigabyte: [8e9, '十億位元組 (GB)'],
+                terabyte: [8e12, '兆位元組 (TB)'], petabyte: [8e15, '拍位元組 (PB)'],
+                kibibit: [1024, 'kibi 位元 (Kibit)'], mebibit: [1024 ** 2, 'mebi 位元 (Mibit)'],
+                gibibit: [1024 ** 3, 'gibi 位元 (Gibit)'], tebibit: [1024 ** 4, 'tebi 位元 (Tibit)'],
+                kibibyte: [8 * 1024, 'kibi 位元組 (KiB)'], mebibyte: [8 * 1024 ** 2, 'mebi 位元組 (MiB)'],
+                gibibyte: [8 * 1024 ** 3, 'gibi 位元組 (GiB)'], tebibyte: [8 * 1024 ** 4, 'tebi 位元組 (TiB)']
+            },
+            dataRate: {
+                bitPerSecond: [1, '位元/秒 (bit/s)'], kilobitPerSecond: [1e3, '千位元/秒 (kbit/s)'],
+                megabitPerSecond: [1e6, '百萬位元/秒 (Mbit/s)'], gigabitPerSecond: [1e9, '十億位元/秒 (Gbit/s)'],
+                terabitPerSecond: [1e12, '兆位元/秒 (Tbit/s)'], bytePerSecond: [8, '位元組/秒 (B/s)'],
+                kilobytePerSecond: [8e3, '千位元組/秒 (kB/s)'], megabytePerSecond: [8e6, '百萬位元組/秒 (MB/s)'],
+                kibibitPerSecond: [1024, 'kibi 位元/秒 (Kibit/s)'],
+                mebibitPerSecond: [1024 ** 2, 'mebi 位元/秒 (Mibit/s)'],
+                kibibytePerSecond: [8 * 1024, 'kibi 位元組/秒 (KiB/s)'],
+                mebibytePerSecond: [8 * 1024 ** 2, 'mebi 位元組/秒 (MiB/s)']
+            },
+            fuelEconomy: {
+                kilometerPerLiter: { label: '公里/公升 (km/L)', toBase: value => value, fromBase: value => value },
+                literPer100Kilometers: { label: '公升/百公里 (L/100 km)', toBase: value => 100 / value, fromBase: value => 100 / value },
+                milePerUsGallon: { label: '英里/美制加侖 (mpg US)', toBase: value => value * 1.609344 / 3.785411784, fromBase: value => value * 3.785411784 / 1.609344 },
+                milePerImperialGallon: { label: '英里/英制加侖 (mpg Imp)', toBase: value => value * 1.609344 / 4.54609, fromBase: value => value * 4.54609 / 1.609344 },
+                milePerLiter: { label: '英里/公升 (mi/L)', toBase: value => value * 1.609344, fromBase: value => value / 1.609344 }
+            },
+            torque: {
+                newtonMeter: [1, '牛頓米 (N·m)'], millinewtonMeter: [1e-3, '毫牛頓米 (mN·m)'],
+                kilonewtonMeter: [1e3, '千牛頓米 (kN·m)'], kilogramForceMeter: [9.80665, '公斤力米 (kgf·m)'],
+                kilogramForceCentimeter: [0.0980665, '公斤力公分 (kgf·cm)'],
+                poundForceFoot: [1.3558179483314, '磅力英尺 (lbf·ft)'],
+                poundForceInch: [0.1129848290276167, '磅力英吋 (lbf·in)']
+            },
+            angularSpeed: {
+                radianPerSecond: [1, '弧度/秒 (rad/s)'], degreePerSecond: [Math.PI / 180, '度/秒 (°/s)'],
+                revolutionPerSecond: [2 * Math.PI, '轉/秒 (r/s)'],
+                revolutionPerMinute: [2 * Math.PI / 60, '轉/分鐘 (rpm)'],
+                degreePerMinute: [Math.PI / 10800, '度/分鐘 (°/min)']
+            },
+            volumeFlow: {
+                cubicMeterPerSecond: [1, '立方公尺/秒 (m³/s)'], cubicMeterPerHour: [1 / 3600, '立方公尺/小時 (m³/h)'],
+                literPerSecond: [1e-3, '公升/秒 (L/s)'], literPerMinute: [1e-3 / 60, '公升/分鐘 (L/min)'],
+                usGallonPerMinute: [0.003785411784 / 60, '美制加侖/分鐘 (US gpm)'],
+                imperialGallonPerMinute: [0.00454609 / 60, '英制加侖/分鐘 (Imp gpm)'],
+                cubicFootPerSecond: [0.028316846592, '立方英尺/秒 (ft³/s)']
+            },
+            density: {
+                kilogramPerCubicMeter: [1, '公斤/立方公尺 (kg/m³)'],
+                gramPerCubicCentimeter: [1e3, '公克/立方公分 (g/cm³)'],
+                gramPerMilliliter: [1e3, '公克/毫升 (g/mL)'], kilogramPerLiter: [1e3, '公斤/公升 (kg/L)'],
+                gramPerLiter: [1, '公克/公升 (g/L)'],
+                poundPerCubicFoot: [16.01846337396, '磅/立方英尺 (lb/ft³)'],
+                poundPerCubicInch: [27679.9047102, '磅/立方英吋 (lb/in³)']
+            },
+            dynamicViscosity: {
+                pascalSecond: [1, '帕秒 (Pa·s)'], millipascalSecond: [1e-3, '毫帕秒 (mPa·s)'],
+                micropascalSecond: [1e-6, '微帕秒 (µPa·s)'], poise: [0.1, '泊 (P)'],
+                centipoise: [1e-3, '厘泊 (cP)'], poundForceSecondPerSquareFoot: [47.8802589803, '磅力秒/平方英尺 (lbf·s/ft²)']
+            },
+            kinematicViscosity: {
+                squareMeterPerSecond: [1, '平方公尺/秒 (m²/s)'],
+                squareMillimeterPerSecond: [1e-6, '平方公釐/秒 (mm²/s)'],
+                stokes: [1e-4, '斯托克斯 (St)'], centistokes: [1e-6, '厘斯托克斯 (cSt)'],
+                squareFootPerSecond: [0.09290304, '平方英尺/秒 (ft²/s)']
+            },
+            amount: {
+                mole: [1, '莫耳 (mol)'], millimole: [1e-3, '毫莫耳 (mmol)'],
+                micromole: [1e-6, '微莫耳 (µmol)'], kilomole: [1e3, '千莫耳 (kmol)'],
+                entity: [1 / 6.02214076e23, '個粒子 (entity)'],
+                dozen: [12 / 6.02214076e23, '打 (dozen entities)'],
+                gross: [144 / 6.02214076e23, '羅 (gross entities)']
+            },
+            current: {
+                ampere: [1, '安培 (A)'], picoampere: [1e-12, '皮安培 (pA)'], nanoampere: [1e-9, '奈安培 (nA)'],
+                microampere: [1e-6, '微安培 (µA)'], milliampere: [1e-3, '毫安培 (mA)'],
+                kiloampere: [1e3, '千安培 (kA)']
+            },
+            voltage: {
+                volt: [1, '伏特 (V)'], microvolt: [1e-6, '微伏特 (µV)'], millivolt: [1e-3, '毫伏特 (mV)'],
+                kilovolt: [1e3, '千伏特 (kV)'], megavolt: [1e6, '百萬伏特 (MV)'],
+                abvolt: [1e-8, '絕對伏特 (abV)'], statvolt: [299.792458, '靜電伏特 (statV)']
+            },
+            resistance: {
+                ohm: [1, '歐姆 (Ω)'], microohm: [1e-6, '微歐姆 (µΩ)'], milliohm: [1e-3, '毫歐姆 (mΩ)'],
+                kiloohm: [1e3, '千歐姆 (kΩ)'], megaohm: [1e6, '百萬歐姆 (MΩ)'],
+                gigaohm: [1e9, '十億歐姆 (GΩ)']
+            },
+            conductance: {
+                siemens: [1, '西門子 (S)'], millisiemens: [1e-3, '毫西門子 (mS)'],
+                microsiemens: [1e-6, '微西門子 (µS)'], kilosiemens: [1e3, '千西門子 (kS)'],
+                mho: [1, '姆歐 (℧，等於 S)']
+            },
+            capacitance: {
+                farad: [1, '法拉 (F)'], millifarad: [1e-3, '毫法拉 (mF)'], microfarad: [1e-6, '微法拉 (µF)'],
+                nanofarad: [1e-9, '奈法拉 (nF)'], picofarad: [1e-12, '皮法拉 (pF)']
+            },
+            inductance: {
+                henry: [1, '亨利 (H)'], millihenry: [1e-3, '毫亨利 (mH)'],
+                microhenry: [1e-6, '微亨利 (µH)'], nanohenry: [1e-9, '奈亨利 (nH)']
+            },
+            charge: {
+                coulomb: [1, '庫侖 (C)'], millicoulomb: [1e-3, '毫庫侖 (mC)'],
+                microcoulomb: [1e-6, '微庫侖 (µC)'], nanocoulomb: [1e-9, '奈庫侖 (nC)'],
+                picocoulomb: [1e-12, '皮庫侖 (pC)'], ampereHour: [3600, '安培小時 (Ah)'],
+                milliampereHour: [3.6, '毫安培小時 (mAh)'], elementaryCharge: [1.602176634e-19, '基本電荷 (e)'],
+                statcoulomb: [3.33564095198152e-10, '靜庫侖 (statC)']
+            },
+            magneticFlux: {
+                weber: [1, '韋伯 (Wb)'], milliweber: [1e-3, '毫韋伯 (mWb)'],
+                microweber: [1e-6, '微韋伯 (µWb)'], maxwell: [1e-8, '馬克士威 (Mx)']
+            },
+            magneticFluxDensity: {
+                tesla: [1, '特斯拉 (T)'], millitesla: [1e-3, '毫特斯拉 (mT)'],
+                microtesla: [1e-6, '微特斯拉 (µT)'], nanotesla: [1e-9, '奈特斯拉 (nT)'],
+                gauss: [1e-4, '高斯 (G)']
+            },
+            illuminance: {
+                lux: [1, '勒克斯 (lx)'], footCandle: [10.7639104167097, '英尺燭光 (fc)'],
+                phot: [1e4, '輻透 (ph)'], nox: [1e-3, '諾克斯 (nx)']
             }
         };
 
-        // Display names for units
-        const unitDisplayNames = {
-            length: {
-                meter: '公尺 (m)', kilometer: '公里 (km)', centimeter: '公分 (cm)', millimeter: '公釐 (mm)',
-                mile: '英里 (mi)', yard: '碼 (yd)', foot: '英尺 (ft)', inch: '英吋 (in)',
-                'nautical mile': '海里 (nmi)', angstrom: '埃 (Å)'
-            },
-            weight: {
-                kilogram: '公斤 (kg)', gram: '公克 (g)', milligram: '毫克 (mg)',
-                pound: '磅 (lb)', ounce: '盎司 (oz)', 'metric ton': '公噸',
-                carat: '克拉 (ct)', stone: '英石 (st)'
-            },
-            temperature: {
-                celsius: '攝氏 (°C)', fahrenheit: '華氏 (°F)', kelvin: '克耳文 (K)', rankine: '蘭金 (°R)'
-            },
-            volume: {
-                liter: '公升 (L)', milliliter: '毫升 (mL)', 'cubic meter': '立方公尺 (m³)', 'cubic centimeter': '立方公分 (cm³)',
-                'US gallon': '美制加侖', 'US quart': '美制夸脫', 'US pint': '美制品脫', 'US fluid ounce': '美制液盎司',
-                'cubic inch': '立方英吋', 'cubic foot': '立方英尺', 'US barrel': '美制桶'
-            },
-            data: {
-                bit: '位元 (bit)', byte: '位元組 (Byte)',
-                kilobit: '千位元 (kb)', megabit: '百萬位元 (Mb)', gigabit: '十億位元 (Gb)', terabit: '兆位元 (Tb)',
-                kilobyte: '千位元組 (KB)', megabyte: '百萬位元組 (MB)', gigabyte: '十億位元組 (GB)', terabyte: '兆位元組 (TB)', petabyte: '拍位元組 (PB)'
-            },
-            energy: {
-                joule: '焦耳 (J)', kilojoule: '千焦耳 (kJ)',
-                calorie: '卡路里 (cal)', 'large calorie': '大卡 (Cal/kcal)',
-                'kilowatt-hour': '千瓦時 (kWh)', electronvolt: '電子伏特 (eV)'
-            },
-            power: {
-                watt: '瓦特 (W)', kilowatt: '千瓦 (kW)', megawatt: '百萬瓦 (MW)',
-                'horsepower (metric)': '公制馬力', 'horsepower (mechanical)': '機械馬力'
-            },
-            pressure: {
-                pascal: '帕斯卡 (Pa)', kilopascal: '千帕 (kPa)', megapascal: '百萬帕 (MPa)',
-                psi: '磅/平方英吋 (psi)', bar: '巴 (bar)', atmosphere: '大氣壓 (atm)', torr: '托 (Torr)'
-            },
-            frequency: {
-                hertz: '赫茲 (Hz)', kilohertz: '千赫茲 (kHz)', megahertz: '兆赫茲 (MHz)', gigahertz: '吉赫茲 (GHz)'
-            },
-            speed: {
-                'meter/second': '公尺/秒 (m/s)', 'kilometer/hour': '公里/小時 (km/h)', 'miles/hour': '英里/小時 (mph)',
-                knot: '節 (kn)', mach: '馬赫'
-            }
-        };
+        const unitDisplayNames = Object.fromEntries(
+            Object.entries(unitConversions).map(([category, units]) => [
+                category,
+                Object.fromEntries(Object.entries(units).map(([unit, definition]) => [
+                    unit,
+                    Array.isArray(definition) ? definition[1] : definition.label
+                ]))
+            ])
+        );
 
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
-            loadDarkModePreference();
             loadLastTab(); // Load the last active tab
             populateUnits(); // Populate units for the initial category
             convertUnit(); // Perform initial conversion
@@ -422,6 +614,8 @@
         function populateUnits() {
             const category = unitCategorySelect.value;
             const units = unitConversions[category];
+            const previousFrom = fromUnitSelect.value;
+            const previousTo = toUnitSelect.value;
 
             fromUnitSelect.innerHTML = '';
             toUnitSelect.innerHTML = '';
@@ -439,14 +633,19 @@
                 toUnitSelect.appendChild(optionTo);
             }
 
-            // Set default selected units (e.g., first unit in list)
-            fromUnitSelect.value = Object.keys(units)[0];
-            toUnitSelect.value = Object.keys(units)[0];
+            const unitKeys = Object.keys(units);
+            fromUnitSelect.value = unitKeys.includes(previousFrom) ? previousFrom : unitKeys[0];
+            toUnitSelect.value = unitKeys.includes(previousTo) ? previousTo : unitKeys[Math.min(1, unitKeys.length - 1)];
+        }
+
+        function formatConversionResult(value) {
+            if (!Number.isFinite(value)) return value === Infinity ? '∞' : '無法計算';
+            return new Intl.NumberFormat('zh-TW', { maximumSignificantDigits: 12 }).format(value);
         }
 
         function convertUnit() {
             const value = parseFloat(converterValueInput.value);
-            if (isNaN(value)) {
+            if (!Number.isFinite(value)) {
                 converterResultDiv.textContent = '請輸入有效數值';
                 return;
             }
@@ -454,41 +653,33 @@
             const category = unitCategorySelect.value;
             const fromUnit = fromUnitSelect.value;
             const toUnit = toUnitSelect.value;
+            const units = unitConversions[category];
+            const fromDefinition = units?.[fromUnit];
+            const toDefinition = units?.[toUnit];
 
-            if (category === 'temperature') {
-                // Temperature conversion is special as it's not linear
-                const fromUnitObj = unitConversions.temperature[fromUnit];
+            if (!fromDefinition || !toDefinition) {
+                converterResultDiv.textContent = '無效的單位';
+                return;
+            }
 
-                // Convert input to Celsius (base for internal calculations)
-                let celsiusValue;
-                if (fromUnit === 'celsius') celsiusValue = value;
-                else if (fromUnit === 'fahrenheit') celsiusValue = fromUnitObj.toBase(value);
-                else if (fromUnit === 'kelvin') celsiusValue = fromUnitObj.toBase(value);
-                else if (fromUnit === 'rankine') celsiusValue = fromUnitObj.toBase(value);
-
-
-                // Convert from Celsius (base) to target unit
-                let convertedValue;
-                if (toUnit === 'celsius') convertedValue = celsiusValue;
-                else if (toUnit === 'fahrenheit') convertedValue = unitConversions.temperature.celsius.toFahrenheit(celsiusValue);
-                else if (toUnit === 'kelvin') convertedValue = unitConversions.temperature.celsius.toKelvin(celsiusValue);
-                else if (toUnit === 'rankine') convertedValue = unitConversions.temperature.celsius.toRankine(celsiusValue);
-                else convertedValue = '錯誤'; // Should not happen
-
-                converterResultDiv.textContent = convertedValue.toFixed(6); // Format to 6 decimal places for precision
-            } else {
-                // Linear conversions for other categories
-                const fromRate = unitConversions[category][fromUnit];
-                const toRate = unitConversions[category][toUnit];
-
-                if (fromRate === undefined || toRate === undefined) {
-                    converterResultDiv.textContent = '無效的單位';
+            let result;
+            if (category === 'temperature' || category === 'fuelEconomy') {
+                if (category === 'fuelEconomy' && value < 0) {
+                    converterResultDiv.textContent = '燃油效率不能為負數';
                     return;
                 }
 
-                const result = (value * fromRate) / toRate;
-                converterResultDiv.textContent = result.toFixed(6); // Format to 6 decimal places
+                const baseValue = fromDefinition.toBase(value);
+                if (category === 'temperature' && baseValue < -273.15) {
+                    converterResultDiv.textContent = '溫度低於絕對零度';
+                    return;
+                }
+                result = toDefinition.fromBase(baseValue);
+            } else {
+                result = value * fromDefinition[0] / toDefinition[0];
             }
+
+            converterResultDiv.textContent = formatConversionResult(result);
         }
 
         // --- Scientific Calculator Functions ---
@@ -502,13 +693,22 @@
                 currentExpression = '0'; // Reset expression
             }
 
+            if (calculatorDisplay.value === '0' && char.startsWith('Math.')) {
+                calculatorDisplay.value = char;
+                currentExpression = char;
+                return;
+            }
+
             if (calculatorDisplay.value === '0' && char !== '.' && !isOperator(char) && char !== '(' && char !== 'Math.PI' && char !== 'Math.E' && !char.startsWith('Math.')) { // Added Math. check
                 calculatorDisplay.value = char;
             } else {
                 // Prevent multiple leading zeros
                 if (calculatorDisplay.value === '0' && char === '0') return;
                 // Prevent multiple decimals in a number
-                if (char === '.' && (calculatorDisplay.value.endsWith('.') || isNaN(calculatorDisplay.value.slice(-1)))) return;
+                if (char === '.') {
+                    const currentNumber = calculatorDisplay.value.match(/(?:\d+\.?\d*|\.\d+)$/);
+                    if (calculatorDisplay.value.endsWith('.') || currentNumber?.[0].includes('.')) return;
+                }
                 // Prevent operators right after another operator (except for +/-)
                 const lastChar = calculatorDisplay.value.slice(-1);
                 if (isOperator(char) && isOperator(lastChar) && char !== '-' && char !== '+') {
@@ -578,7 +778,8 @@
                 // Basic validation for eval: only allow numbers, operators, Math properties/methods, and spaces
                 // This regex is more permissive but still tries to prevent arbitrary JS code.
                 // For a truly secure calculator with user input, a dedicated math expression parser is recommended.
-                if (!/^[0-9+\-*/%.() ]+$|^(Math\.(sin|cos|tan|asin|acos|atan|log10|log|exp|sqrt|cbrt|PI|E)|[+\-*/%.() ]|\*\*)+$/.test(expression)) {
+                const allowedTokens = /^(?:(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?|Math\.(?:sin|cos|tan|asin|acos|atan|log10|log|exp|sqrt|cbrt|pow|PI|E)|[+\-*/%.(),\s])+$/;
+                if (!allowedTokens.test(expression)) {
                     showMessage('錯誤: 無效輸入或不支援的函數', 'red');
                     calculatorDisplay.value = '錯誤: 無效輸入';
                     currentExpression = '0';
@@ -610,24 +811,45 @@
                 return;
             }
 
-            // Find the last number or parenthesized expression
-            const match = currentExpression.match(/(\d+\.?\d*|\(.*\))([+\-*/%]?)$/);
-            if (match) {
-                const lastPart = match[1];
-                const operator = match[2];
-                if (lastPart.startsWith('(') && lastPart.endsWith(')')) {
-                    // If it's a parenthesized expression, toggle sign inside
-                    const inner = lastPart.slice(1, -1);
-                    currentExpression = currentExpression.slice(0, -lastPart.length) + `(-(${inner}))`;
+            const numberMatch = currentExpression.match(/(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/);
+            if (numberMatch) {
+                const numberStart = numberMatch.index;
+                const prefix = currentExpression.slice(0, numberStart);
+                const trimmedPrefix = prefix.trimEnd();
+                const beforeSign = trimmedPrefix.slice(0, -1).trimEnd();
+                const hasUnaryMinus = trimmedPrefix.endsWith('-')
+                    && (beforeSign === '' || /[+\-*/%(,]$/.test(beforeSign));
+                const unsignedPrefix = hasUnaryMinus
+                    ? beforeSign
+                    : prefix;
+                const needsSeparator = !hasUnaryMinus && trimmedPrefix.endsWith('-')
+                    && !/[+\-*/%(,]$/.test(beforeSign);
+                const sign = hasUnaryMinus ? '' : needsSeparator ? ' - ' : '- ';
+                currentExpression = unsignedPrefix + sign + numberMatch[0];
+            } else if (currentExpression.endsWith(')')) {
+                let depth = 0;
+                let openingIndex = -1;
+                for (let index = currentExpression.length - 1; index >= 0; index--) {
+                    if (currentExpression[index] === ')') depth++;
+                    if (currentExpression[index] === '(' && --depth === 0) {
+                        openingIndex = index;
+                        break;
+                    }
+                }
+
+                if (openingIndex !== -1) {
+                    const prefix = currentExpression.slice(0, openingIndex);
+                    const functionMatch = prefix.match(/Math\.(?:sin|cos|tan|asin|acos|atan|log10|log|exp|sqrt|cbrt|pow)$/);
+                    const operandStart = functionMatch ? functionMatch.index : openingIndex;
+                    const operand = currentExpression.slice(operandStart);
+                    currentExpression = currentExpression.slice(0, operandStart) + `(-(${operand}))`;
                 } else {
-                    // Toggle sign of the number
-                    currentExpression = currentExpression.slice(0, -lastPart.length) + `(-${lastPart})`;
+                    currentExpression = `(-(${currentExpression}))`;
                 }
             } else if (currentExpression === '0') {
                 currentExpression = '-0';
             } else {
-                // If no clear number, try to prepend '-'
-                currentExpression = '-' + currentExpression;
+                currentExpression = `(-(${currentExpression}))`;
             }
             calculatorDisplay.value = currentExpression;
         }
@@ -725,27 +947,6 @@
             }
         }
 
-
-        // --- Dark Mode Functionality ---
-        darkModeToggle.addEventListener('click', toggleDarkMode);
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark');
-            const isDarkMode = document.body.classList.contains('dark');
-            localStorage.setItem(`${KEY_PREFIX}darkMode`, isDarkMode ? 'enabled' : 'disabled');
-            darkModeText.textContent = isDarkMode ? '淺色模式' : '深色模式';
-            showMessage(isDarkMode ? '已切換到深色模式。' : '已切換到淺色模式。', 'blue');
-        }
-
-        function loadDarkModePreference() {
-            const preference = localStorage.getItem(`${KEY_PREFIX}darkMode`);
-            if (preference === 'enabled') {
-                document.body.classList.add('dark');
-                darkModeText.textContent = '淺色模式';
-            } else {
-                darkModeText.textContent = '深色模式';
-            }
-        }
 
         // --- Custom Message Box (replacing alert/confirm/prompt) ---
         function showMessage(message, type = 'info') {

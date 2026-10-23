@@ -1,7 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Lifer_Lighdow's Toolbox">
   <title>TTS</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <script src="./pwa.js" defer></script>
+  <script src="./theme.js" defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     body {
@@ -207,49 +218,68 @@
       color: #6c757d;
     }
   </style>
+  <link rel="stylesheet" href="./tools-page.css">
 </head>
-<body>
+<body class="tool-page">
+  <header class="tool-header">
+    <a class="tool-brand" href="./index.html" aria-label="回到 Lifer_Lighdow's Toolbox 首頁">
+      <span class="tool-brand-mark" aria-hidden="true">T</span>
+      <span>Lifer_Lighdow's <span class="tool-brand-light">Toolbox</span></span>
+    </a>
+    <a class="tool-home-link" href="./index.html">返回工具箱 <span aria-hidden="true">↗</span></a>
+  </header>
 
-  <h1>TTS</h1>
+  <main class="tool-main">
+  <section class="tool-page-card tts-card">
+    <p class="tool-eyebrow">TEXT TO SPEECH</p>
+    <h1 class="tool-page-title">文字轉語音</h1>
+    <p class="tool-page-description">選擇語言與聲音，調整語速和音調後開始朗讀。</p>
+    <div class="tool-theme-row">
+      <button id="ttsThemeToggle" class="tool-theme-button" type="button" aria-pressed="false">
+        <span id="ttsThemeLabel">深色模式</span>
+      </button>
+    </div>
 
   <div class="container">
-    <label for="textToSpeak">TEXT：</label>
-    <textarea id="textToSpeak"></textarea>
+    <label for="textToSpeak">朗讀文字</label>
+    <textarea id="textToSpeak" placeholder="輸入或貼上要朗讀的文字…"></textarea>
     <div id="charCount">字數: 0</div>
 
-    <label for="languageSelect">LANGUAGE：</label>
+    <label for="languageSelect">語言</label>
     <select id="languageSelect"></select>
 
-    <label>VOICE：</label>
+    <label>語音</label>
     <div class="voice-options-container">
       <div class="voice-options" id="voiceOptions">
       </div>
     </div>
 
     <div class="slider-container">
-      <label class="slider-label" for="rate">SPEED：</label>
+      <label class="slider-label" for="rate">語速</label>
       <input type="range" id="rate" min="0.1" max="2" value="1" step="0.1">
       <span id="rateValue" class="slider-value">1.0</span>
     </div>
 
     <div class="slider-container">
-      <label class="slider-label" for="pitch">TONE：</label>
+      <label class="slider-label" for="pitch">音調</label>
       <input type="range" id="pitch" min="0" max="2" value="1" step="0.1">
       <span id="pitchValue" class="slider-value">1.0</span>
     </div>
 
     <div class="button-container">
       <button id="toggleSpeak" onclick="toggleSpeak()">
-        <i class="fas fa-play"></i> PLAY
+        <i class="fas fa-play"></i> 開始朗讀
       </button>
       <button id="cancelSpeak" class="cancel-button" onclick="cancelSpeak()">
-        <i class="fas fa-stop"></i> CANCEL
+        <i class="fas fa-stop"></i> 停止
       </button>
       <button id="downloadButton" onclick="downloadAudio()">
-        <i class="fas fa-download"></i> DOWNLOAD
+        <i class="fas fa-download"></i> 下載音訊
       </button>
     </div>
   </div>
+  </section>
+  </main>
 
   <footer>
     &copy; 2025 Lifer_Lighdow. All rights reserved.
@@ -269,7 +299,6 @@
     const charCountElement = document.getElementById('charCount');
     const rateValueElement = document.getElementById('rateValue');
     const pitchValueElement = document.getElementById('pitchValue');
-
     let voices = [];
     let currentUtterance = null;
     let isSpeaking = false;
@@ -384,7 +413,7 @@
       chunkIndex = 0; // Reset index
       isSpeaking = true; // 確保開始播放時設定為 true
       isPaused = false; // 確保重新開始時，暫停狀態是 false
-      toggleSpeakButton.innerHTML = '<i class="fas fa-pause"></i> STOP';
+      toggleSpeakButton.innerHTML = '<i class="fas fa-pause"></i> 暫停朗讀';
       speakNextChunk();
     }
 
@@ -420,7 +449,7 @@
       synth.cancel();
       isSpeaking = false;
       isPaused = false;
-      toggleSpeakButton.innerHTML = '<i class="fas fa-play"></i> PLAY';
+      toggleSpeakButton.innerHTML = '<i class="fas fa-play"></i> 開始朗讀';
       chunkIndex = 0; // 重置區塊索引
     }
 
@@ -433,7 +462,7 @@
             synth.pause();
             isSpeaking = false;
             isPaused = true;
-            toggleSpeakButton.innerHTML = '<i class="fas fa-play"></i> CONTINUE';
+            toggleSpeakButton.innerHTML = '<i class="fas fa-play"></i> 繼續朗讀';
 
             // 清除目前播放的區塊的 onend 事件
             if (currentUtterance) {
@@ -445,7 +474,7 @@
             synth.resume();
             isSpeaking = true;
             isPaused = false;
-            toggleSpeakButton.innerHTML = '<i class="fas fa-pause"></i> STOP';
+            toggleSpeakButton.innerHTML = '<i class="fas fa-pause"></i> 暫停朗讀';
         } else {
             // 開始
             speakLongText(text);

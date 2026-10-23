@@ -2,266 +2,144 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>高科技工具集</title>
-    <!-- 引入 Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 LXGW Marker Gothic 字體 -->
-    <link href="https://fonts.googleapis.com/css2?family=LXGW+Marker+Gothic&display=swap" rel="stylesheet">
-    <style>
-        /* LXGW Marker Gothic 字體 */
-        body {
-            font-family: 'LXGW Marker Gothic', cursive;
-            color: #e0f2f7; /* 淺藍色文字 */
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow: hidden; /* 隱藏滾動條 */
-            position: relative;
-        }
-
-        /* 動態背景效果 */
-        .background-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* 更複雜的漸層 */
-            background: linear-gradient(
-                135deg,
-                #0f0c29 0%,
-                #302b63 25%,
-                #24243e 50%,
-                #302b63 75%,
-                #0f0c29 100%
-            );
-            z-index: -2;
-            animation: gradientShift 20s ease infinite alternate; /* 漸層動畫，更平滑 */
-            background-size: 400% 400%; /* 確保漸層足夠大以平滑移動 */
-        }
-
-        /* 額外的粒子效果 */
-        .particle-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none; /* 讓粒子不阻擋點擊事件 */
-        }
-
-        /* 漸層動畫關鍵幀 */
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-
-        /* 容器樣式 */
-        .container {
-            background-color: rgba(17, 24, 39, 0.8); /* Tailwind gray-900 with 透明度 */
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5); /* 青色發光效果 */
-            padding: 40px;
-            max-width: 900px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-            z-index: 1; /* 確保內容在背景之上 */
-        }
-
-        /* 標題樣式 */
-        h1 {
-            font-size: 6rem !important; /* 標題更大，使用 !important 確保優先級 */
-            color: #00e6e6; /* 青色 */
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px #00e6e6, 0 0 30px rgba(0, 255, 255, 0.3); /* 標題更強烈的發光 */
-            line-height: 1.2; /* 調整行高 */
-        }
-
-        /* 工具網格佈局 */
-        .tool-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            justify-content: center;
-        }
-
-        /* 工具項目樣式 */
-        .tool-item {
-            background-color: rgba(31, 41, 55, 0.9); /* Tailwind gray-800 with 透明度 */
-            border: 2px solid #00e6e6; /* 青色邊框 */
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); /* 青色陰影 */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 工具項目懸停效果 */
-        .tool-item:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7); /* 更強烈的發光 */
-            background-color: rgba(45, 55, 72, 0.95); /* 輕微變亮 */
-        }
-
-        /* 工具連結樣式 */
-        .tool-item a {
-            color: #66ffff; /* 淺青色 */
-            text-decoration: none;
-            font-size: 1.3rem;
-            font-weight: bold;
-            display: block;
-            width: 100%;
-            text-align: center;
-        }
-
-        /* 工具連結懸停效果 */
-        .tool-item a:hover {
-            color: #aaffff; /* 更亮的淺青色 */
-        }
-
-        /* 響應式調整 */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 4.5rem !important; /* 小螢幕標題縮小，但仍保持較大 */
-            }
-            .container {
-                padding: 20px; /* 小螢幕內邊距縮小 */
-            }
-            .tool-grid {
-                gap: 15px; /* 小螢幕間距縮小 */
-            }
-            .tool-item {
-                padding: 15px; /* 小螢幕項目內邊距縮小 */
-            }
-            .tool-item a {
-                font-size: 1.1rem; /* 小螢幕連結文字縮小 */
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 3.5rem !important; /* 更小螢幕標題進一步縮小 */
-            }
-            .container {
-                padding: 15px; /* 更小螢幕內邊距縮小 */
-            }
-            .tool-grid {
-                grid-template-columns: 1fr; /* 極小螢幕單列佈局 */
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <meta name="description" content="簡單、實用的線上工具：速度測試、筆記、密碼、計算、語音與圖片工具。">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Lifer_Lighdow's Toolbox">
+    <title>Lifer_Lighdow's Toolbox</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./theme.js" defer></script>
+    <script src="./script.js" defer></script>
+    <script src="./pwa.js" defer></script>
 </head>
 <body>
-    <!-- 動態背景動畫層 -->
-    <div class="background-animation"></div>
-    <!-- 粒子效果層 (可選，如果需要更複雜的動畫) -->
-    <canvas id="particleCanvas" class="particle-overlay"></canvas>
-
-    <div class="container">
-        <h1>高科技工具集</h1>
-        <div class="tool-grid">
-            <div class="tool-item">
-                <a href="speedtest">網路速度測試器</a>
-            </div>
-            <div class="tool-item">
-                <a href="docx">專業富文本筆記本與文字分析</a>
-            </div>
-            <div class="tool-item">
-                <a href="password">隨機密碼產生器與強度測試</a>
-            </div>
-            <div class="tool-item">
-                <a href="calculator">專業單位轉換與科學計算機</a>
-            </div>
-            <div class="tool-item">
-                <a href="genarate">Lifer_Lighdow創意工坊 - 小說、圖片與對話生成器</a>
-            </div>
-            <div class="tool-item">
-                <a href="tts">精美文字轉語音</a>
-            </div>
-            <div class="tool-item">
-                <a href="text_art">圖片轉文字藝術</a>
-            </div>
+    <header class="site-header">
+        <a class="brand" href="./" aria-label="工具箱首頁">
+            <span class="brand-mark" aria-hidden="true">T</span>
+            <span>Lifer_Lighdow's <span class="brand-name-light">Toolbox</span></span>
+        </a>
+        <div class="header-actions">
+            <span class="header-note">簡單好用，隨開即用</span>
+            <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切換深色模式" aria-pressed="false">
+                <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"></path></svg>
+                <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
+                <span id="theme-toggle-label">深色模式</span>
+            </button>
         </div>
-    </div>
+    </header>
 
-    <script>
-        // 粒子動畫效果 (可選，如果需要更複雜的動畫)
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const numParticles = 100;
+    <main class="page-shell">
+        <section class="intro" aria-labelledby="page-title">
+            <p class="eyebrow">TOOLS FOR EVERYDAY</p>
+            <h1 id="page-title">讓手邊的小事，<span>更輕鬆。</span></h1>
+            <p class="intro-copy">挑一個工具開始使用。不用安裝，打開就能用。</p>
 
-        // 調整畫布大小
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+            <label class="search-box">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                    <circle cx="10.8" cy="10.8" r="6.8"></circle>
+                    <path d="m16 16 4.2 4.2"></path>
+                </svg>
+                <span class="visually-hidden">搜尋工具</span>
+                <input id="tool-search" type="search" placeholder="搜尋工具，例如：密碼、圖片" autocomplete="off">
+                <kbd aria-hidden="true">⌕</kbd>
+            </label>
+        </section>
 
-        // 粒子類別
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5; // 粒子大小
-                this.speedX = Math.random() * 0.5 - 0.25; // 粒子水平速度
-                this.speedY = Math.random() * 0.5 - 0.25; // 粒子垂直速度
-                this.color = `rgba(102, 255, 255, ${Math.random() * 0.5 + 0.1})`; // 青色半透明
-            }
+        <section class="tools-section" aria-labelledby="tools-heading">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">YOUR TOOLKIT</p>
+                    <h2 id="tools-heading">所有工具</h2>
+                </div>
+                <p id="result-count" class="result-count" role="status" aria-live="polite">共 6 項工具</p>
+            </div>
 
-            // 更新粒子位置
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
+            <div class="tool-grid" id="tool-grid">
+                <a class="tool-card" href="speedtest" data-search="網路 速度 測速 下載 上傳 ping network speed">
+                    <span class="tool-icon icon-blue" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M3.5 15.5a12 12 0 0 1 17 0M7 19a7 7 0 0 1 10 0M10.5 22a2.1 2.1 0 0 1 3 0M12 12l4-4"></path></svg>
+                    </span>
+                    <span class="card-content">
+                        <span class="card-category">網路</span>
+                        <span class="card-title">網路速度測試</span>
+                        <span class="card-description">查看下載、上傳速度與網路延遲。</span>
+                    </span>
+                    <span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
 
-                // 如果粒子超出邊界，重新設定位置
-                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-            }
+                <a class="tool-card" href="docx" data-search="筆記 文字 編輯器 富文本 分析 字數 html txt writing notes">
+                    <span class="tool-icon icon-violet" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M13.5 3.5H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10z"></path><path d="M13 3.5V10h7M8 14h8M8 17.5h8"></path></svg>
+                    </span>
+                    <span class="card-content">
+                        <span class="card-category">寫作</span>
+                        <span class="card-title">筆記與文字分析</span>
+                        <span class="card-description">編輯筆記、整理 HTML，並查看文字統計。</span>
+                    </span>
+                    <span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
 
-            // 繪製粒子
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+                <a class="tool-card" href="password" data-search="密碼 隨機 產生 強度 安全 password generator">
+                    <span class="tool-icon icon-green" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"></path></svg>
+                    </span>
+                    <span class="card-content">
+                        <span class="card-category">安全</span>
+                        <span class="card-title">密碼工具</span>
+                        <span class="card-description">產生隨機密碼，檢查密碼強度。</span>
+                    </span>
+                    <span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
 
-        // 初始化粒子
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < numParticles; i++) {
-                particles.push(new Particle());
-            }
-        }
+                <a class="tool-card" href="calculator" data-search="計算機 科學計算 單位轉換 長度 溫度 calculator converter">
+                    <span class="tool-icon icon-orange" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M8 7h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"></path></svg>
+                    </span>
+                    <span class="card-content">
+                        <span class="card-category">計算</span>
+                        <span class="card-title">計算機與單位轉換</span>
+                        <span class="card-description">進行科學計算，快速換算常用單位。</span>
+                    </span>
+                    <span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
 
-        // 動畫循環
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // 清除畫布
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-            }
-            requestAnimationFrame(animateParticles);
-        }
+                <a class="tool-card" href="tts" data-search="文字 語音 朗讀 TTS 聲音 語速 音調 speech">
+                    <span class="tool-icon icon-teal" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 10v4h4l5 4V6l-5 4zM17 9a5 5 0 0 1 0 6M19.5 6.5a9 9 0 0 1 0 11"></path></svg>
+                    </span>
+                    <span class="card-content">
+                        <span class="card-category">語音</span>
+                        <span class="card-title">文字轉語音</span>
+                        <span class="card-description">選擇聲音與語速，讓文字唸出來。</span>
+                    </span>
+                    <span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
 
-        // 監聽視窗大小變化
-        window.addEventListener('resize', resizeCanvas);
+                <a class="tool-card" href="text_art" data-search="圖片 文字藝術 ASCII art 轉換 字元 image">
+                    <span class="tool-icon icon-rose" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="8.5" cy="9" r="1.5"></circle><path d="m21 15-5-5L5 20M13 20l3-3"></path></svg>
+                    </span>
+                    <span class="card-content">
+                        <span class="card-category">圖片</span>
+                        <span class="card-title">圖片轉文字藝術</span>
+                        <span class="card-description">把圖片轉成可複製的 ASCII 字元藝術。</span>
+                    </span>
+                    <span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
+            </div>
 
-        // 頁面載入完成後執行
-        window.onload = function() {
-            resizeCanvas(); // 初始化畫布大小
-            initParticles(); // 初始化粒子
-            animateParticles(); // 開始粒子動畫
-        };
-    </script>
+            <p class="empty-state" id="empty-state" hidden>找不到符合的工具，試試其他關鍵字。</p>
+        </section>
+
+        <footer class="site-footer">
+            <span>小工具，大幫助。</span>
+            <span>選擇工具即可開始使用</span>
+        </footer>
+    </main>
 </body>
 </html>
