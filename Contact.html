@@ -306,6 +306,255 @@
                 font-size: 0.9rem;
             }
         }
+
+        body {
+            background-color: #10101e;
+            background-image:
+                linear-gradient(rgba(139, 233, 253, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 233, 253, 0.025) 1px, transparent 1px),
+                linear-gradient(135deg, #17172b, #10101e 60%, #10243a);
+            background-size: 32px 32px, 32px 32px, auto;
+        }
+
+        a:hover {
+            color: #8be9fd;
+        }
+
+        .container {
+            position: relative;
+            width: min(680px, calc(100% - 2rem));
+            max-width: none;
+            flex-grow: 0;
+            padding: clamp(1.25rem, 5vw, 3rem);
+            border: 1px solid rgba(139, 233, 253, 0.35);
+            border-radius: 0;
+            background: rgba(17, 22, 40, 0.96);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.25);
+        }
+
+        .container::before,
+        .container::after {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-color: #8be9fd;
+            border-style: solid;
+            content: '';
+            pointer-events: none;
+        }
+
+        .container::before {
+            top: 0;
+            left: 0;
+            border-width: 2px 0 0 2px;
+        }
+
+        .container::after {
+            right: 0;
+            bottom: 0;
+            border-width: 0 2px 2px 0;
+        }
+
+        .panel-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(139, 233, 253, 0.18);
+        }
+
+        .quest-label,
+        .online-status {
+            font-family: monospace;
+            letter-spacing: 0.1em;
+        }
+
+        .quest-label {
+            color: #8be9fd;
+            font-size: 0.78rem;
+        }
+
+        .online-status {
+            color: #a8f0d1;
+            font-size: 0.68rem;
+            white-space: nowrap;
+        }
+
+        .online-status::before {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            margin-right: 0.45rem;
+            background: #73e2a7;
+            content: '';
+            vertical-align: 1px;
+        }
+
+        .language-label {
+            margin: 1rem 0 0.35rem;
+            color: #93a4ba;
+            font-family: monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+        }
+
+        #languageSelect {
+            margin: 0;
+            padding: 0.55rem 2.25rem 0.55rem 0.75rem;
+            border-radius: 0;
+            background-color: #111827;
+            box-shadow: none;
+            font-family: monospace;
+            font-size: 0.82rem;
+        }
+
+        h1 {
+            margin: 1.5rem 0 1.25rem;
+            color: #fff;
+            font-size: clamp(2rem, 6vw, 3rem);
+            line-height: 1.1;
+            text-align: left;
+            text-shadow: 3px 3px 0 #244b62;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 0 0 1.75rem;
+            padding: 1rem;
+            border: 1px solid rgba(139, 233, 253, 0.2);
+            background: rgba(139, 233, 253, 0.05);
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        .contact-icon {
+            display: grid;
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            place-items: center;
+            border: 1px solid rgba(139, 233, 253, 0.3);
+            color: #8be9fd;
+        }
+
+        .contact-info-copy {
+            display: grid;
+            gap: 0.15rem;
+            min-width: 0;
+        }
+
+        .contact-info strong {
+            color: #8be9fd;
+            font-family: monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+        }
+
+        .contact-info a {
+            overflow-wrap: anywhere;
+        }
+
+        label {
+            color: #dce8f3;
+            font-family: monospace;
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+        }
+
+        input[type="text"],
+        textarea {
+            border: 1px solid #35435c;
+            border-radius: 0;
+            background: #111827;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #8be9fd;
+            background: #151f31;
+            box-shadow: none;
+        }
+
+        input[type="button"],
+        input[type="reset"] {
+            min-height: 50px;
+            border: 1px solid #4a5365;
+            border-radius: 0;
+            box-shadow: none;
+            font-family: monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.06em;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        input[type="button"] {
+            border-color: #8be9fd;
+            background: #173746;
+        }
+
+        input[type="reset"] {
+            background: #222838;
+        }
+
+        input[type="button"]:hover {
+            background: #245266;
+            transform: none;
+        }
+
+        input[type="reset"]:hover {
+            border-color: #8996aa;
+            background: #30394c;
+            transform: none;
+        }
+
+        :focus-visible {
+            outline: 2px solid #f4d35e;
+            outline-offset: 3px;
+        }
+
+        footer {
+            margin-top: auto;
+            border-top-color: rgba(139, 233, 253, 0.12);
+            background: rgba(12, 12, 24, 0.8);
+            color: #929caf;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: calc(100% - 1.25rem);
+                margin: 1.25rem auto 2rem;
+                padding: 1.25rem 1rem;
+            }
+
+            .panel-toolbar {
+                align-items: flex-start;
+            }
+
+            .quest-label {
+                font-size: 0.68rem;
+            }
+
+            .online-status {
+                font-size: 0.6rem;
+            }
+
+            .contact-info {
+                align-items: flex-start;
+                padding: 0.8rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -322,7 +571,12 @@
         </nav>
     </header>
 
-    <div class="container">
+    <main class="container">
+        <div class="panel-toolbar">
+            <span class="quest-label" data-i18n="questLabel">QUEST LOG // CONTACT</span>
+            <span class="online-status" data-i18n="onlineStatus">TRANSMISSION READY</span>
+        </div>
+        <label class="language-label" for="languageSelect" data-i18n="language">Language</label>
         <select id="languageSelect">
             <option value="en">English</option>
             <option value="zh_TW">繁體中文</option>
@@ -331,7 +585,11 @@
         </select>
         <h1 data-i18n="title">Contact Us</h1>
         <div class="contact-info">
-            <p><strong>Email:</strong> liferlighdow1012@gmail.com</p>
+            <span class="contact-icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
+            <div class="contact-info-copy">
+                <strong data-i18n="emailLabel">EMAIL CHANNEL</strong>
+                <a href="mailto:liferlighdow1012@gmail.com">liferlighdow1012@gmail.com</a>
+            </div>
         </div>
         <form id="contactForm">
             <div class="form-group">
@@ -348,7 +606,7 @@
             </div>
         </form>
         <div id="formMessage"></div>
-    </div>
+    </main>
 
     <footer>
         <p>&copy; 2025 Lifer_Lighdow. All rights reserved.</p>
@@ -358,6 +616,10 @@
         const translations = {
             en: {
                 title: 'Contact Us',
+                questLabel: 'QUEST LOG // CONTACT',
+                onlineStatus: 'TRANSMISSION READY',
+                language: 'Language',
+                emailLabel: 'EMAIL CHANNEL',
                 subjectLabel: 'Subject:',
                 commentLabel: 'Your Message:',
                 submit: 'Submit',
@@ -370,6 +632,10 @@
             },
             zh_TW: {
                 title: '聯絡我們',
+                questLabel: '任務紀錄 // 聯絡',
+                onlineStatus: '通訊準備完成',
+                language: '語言',
+                emailLabel: '電子郵件頻道',
                 subjectLabel: '主旨：',
                 commentLabel: '您的寶貴建議：',
                 submit: '確認傳送',
@@ -382,6 +648,10 @@
             },
             zh_CN: {
                 title: '联系我们',
+                questLabel: '任务记录 // 联系',
+                onlineStatus: '通讯准备完成',
+                language: '语言',
+                emailLabel: '电子邮件频道',
                 subjectLabel: '主题：',
                 commentLabel: '您的宝贵建议：',
                 submit: '确认传送',
@@ -394,6 +664,10 @@
             },
             ja: {
                 title: 'お問い合わせ',
+                questLabel: 'クエストログ // お問い合わせ',
+                onlineStatus: '通信準備完了',
+                language: '言語',
+                emailLabel: 'メールアドレス',
                 subjectLabel: '件名：',
                 commentLabel: 'メッセージ：',
                 submit: '送信',
@@ -414,13 +688,14 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                background-color: #333;
+                border: 1px solid #8be9fd;
+                background-color: #111628;
                 color: #fff;
                 padding: 20px 30px;
-                border-radius: 10px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+                border-radius: 0;
+                box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.35);
                 z-index: 10000;
-                font-family: 'MyCustomFont', sans-serif;
+                font-family: monospace;
                 font-size: 1.1rem;
                 text-align: center;
                 animation: fadeIn 0.3s ease-out;
@@ -451,6 +726,10 @@
         function setLanguage(lang) {
             const elements = {
                 title: document.querySelector('h1'),
+                questLabel: document.querySelector('.quest-label'),
+                onlineStatus: document.querySelector('.online-status'),
+                language: document.querySelector('.language-label'),
+                emailLabel: document.querySelector('.contact-info strong'),
                 subjectLabel: document.querySelector('label[for="subjectInput"]'),
                 commentLabel: document.querySelector('label[for="commentInput"]'),
                 submitButton: document.querySelector('#submitButton'),
@@ -462,7 +741,11 @@
             };
             for (const key in elements) {
                 if (elements[key]) {
-                    elements[key].textContent = translations[lang][key];
+                    if (key === 'submitButton' || key === 'resetButton') {
+                        elements[key].value = translations[lang][key];
+                    } else {
+                        elements[key].textContent = translations[lang][key];
+                    }
                 }
             }
         }

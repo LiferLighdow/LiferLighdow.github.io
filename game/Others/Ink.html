@@ -72,6 +72,14 @@
             padding-left: 14px;
         }
 
+        .mode-box {
+            display: none;
+            font-size: 14px;
+            color: var(--accent-red);
+            font-weight: bold;
+            padding-left: 14px;
+        }
+
         #boss-ui {
             display: none;
             flex-direction: column;
@@ -128,6 +136,33 @@
             margin-top: 20px;
         }
 
+        #mode-selection {
+            display: grid;
+            gap: 10px;
+        }
+
+        #mode-selection p {
+            margin: 0 0 4px;
+            line-height: 1.6;
+        }
+
+        #mode-selection button {
+            width: 100%;
+            margin-top: 0;
+            padding: 12px 20px;
+            font-size: 18px;
+        }
+
+        #mode-selection .cheat-mode-button {
+            background: var(--accent-red);
+            color: #fff;
+            box-shadow: 0 5px 0 #701515;
+        }
+
+        #mode-selection .cheat-mode-button:active {
+            box-shadow: 0 2px 0 #701515;
+        }
+
         #pause-indicator {
             position: absolute;
             top: 50%;
@@ -151,6 +186,7 @@
         <div class="info-panel">
             <div class="score-box">墨氣: <span id="score">0</span> / 100</div>
             <div class="level-box">試煉層數: <span id="level-val">1</span></div>
+            <div class="mode-box" id="mode-indicator">作弊模式・碰撞無傷</div>
         </div>
         <div id="boss-ui">
             <div class="boss-name" id="boss-title">「凶獸．窮奇之影」</div>
@@ -165,7 +201,12 @@
     <div id="menu">
         <h1 id="menu-title">墨影乾坤</h1>
         <p id="menu-desc">滑動引導墨靈．收集硃砂退敵<br><br><span style="color: #b22222; font-size: 0.9em;">右下角「息墨處」可暫停休息</span></p>
-        <button id="start-btn">開始試煉</button>
+        <div id="mode-selection">
+            <p>選擇試煉模式</p>
+            <button id="normal-mode-button" type="button">一般模式</button>
+            <button id="cheat-mode-button" class="cheat-mode-button" type="button">作弊模式（碰撞不死）</button>
+        </div>
+        <button id="start-btn" type="button" style="display: none;">開始試煉</button>
     </div>
 </div>
 
@@ -176,6 +217,8 @@
     const levelEl = document.getElementById('level-val');
     const menu = document.getElementById('menu');
     const startBtn = document.getElementById('start-btn');
+    const modeSelection = document.getElementById('mode-selection');
+    const modeIndicator = document.getElementById('mode-indicator');
     const bossUI = document.getElementById('boss-ui');
     const hpBar = document.getElementById('hp-bar-fill');
     const pauseIndicator = document.getElementById('pause-indicator');
@@ -183,6 +226,7 @@
     let gameActive = false;
     let isPaused = false;
     let isBossMode = false;
+    let isCheatMode = false;
     let score = 0;
     let gameLevel = 1;
     let particles = [];
@@ -368,7 +412,7 @@
                 const hitRadius = o.type === 'rock' ? o.size * 0.7 : o.size * 0.8;
                 
                 // 只有非暫停且不在避風港時才判斷碰撞
-                if (Math.sqrt(dx*dx + dy*dy) < player.radius + hitRadius) {
+                if (!isCheatMode && Math.sqrt(dx*dx + dy*dy) < player.radius + hitRadius) {
                     gameOver();
                 }
                 if (o.y > canvas.height + 100 || o.y < -300 || o.x < -100 || o.x > canvas.width + 100) {
@@ -545,6 +589,7 @@
         document.getElementById('menu-title').innerText = '神形俱滅';
         document.getElementById('menu-desc').innerText = `於第 ${gameLevel} 層墨池中消散... 墨氣：${score}`;
         startBtn.innerText = '重入輪迴';
+        startBtn.style.display = 'inline-block';
     }
 
     function nextLevel() {
@@ -560,12 +605,20 @@
         createExplosion(boss.x, boss.y, '#483d8b', 30);
     }
 
-    startBtn.addEventListener('click', () => {
+    function startGame(cheatMode) {
+        isCheatMode = cheatMode;
+        modeIndicator.style.display = isCheatMode ? 'block' : 'none';
+        modeSelection.style.display = 'none';
+        startBtn.style.display = 'none';
         menu.style.display = 'none';
         gameActive = true;
         init(true);
         update();
-    });
+    }
+
+    document.getElementById('normal-mode-button').addEventListener('click', () => startGame(false));
+    document.getElementById('cheat-mode-button').addEventListener('click', () => startGame(true));
+    startBtn.addEventListener('click', () => startGame(isCheatMode));
 
     resize();
 </script>

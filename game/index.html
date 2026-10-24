@@ -2,16 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Lifer_Lighdow's Game</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="icon" href="images/logo.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="images/logo.ico" type="image/x-icon" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10101e">
+    <title>Game Lounge | Lifer_Lighdow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="icon" href="../images/logo.ico" type="image/x-icon">
     <link rel="stylesheet" href="../common-nav.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -29,43 +24,121 @@
         </nav>
     </header>
 
-    <div class="top-container">
-        <div class="calendar-container">
-            <h1>System Time</h1>
-            <div class="date" id="current-date"></div>
-            <div class="year" id="current-year"></div>
-            <div class="time" id="current-time"></div>
-        </div>
-    </div>
-
-    <div id="title-container">Live2D Game Platform</div>
-
-    <div id="stage">
-        <div id="inner">
-            <div id="cover">
-                <div id="text">
-                    <span class="top">LIFER_LIGHDOW</span>
-                    <span class="bottom">LOADING...</span>
-                </div>
-                <div id="detail"></div>
-                <div id="handle"></div>
+    <main class="game-hub">
+        <section class="welcome-bar" aria-labelledby="title-container">
+            <div class="welcome-copy">
+                <p class="eyebrow">WELCOME BACK, PLAYER</p>
+                <h1 id="title-container">Your game lounge</h1>
+                <p>遊戲冒險已準備就緒，今天想從哪裡開始？</p>
             </div>
-            <canvas id="live2d" width="350" height="350"></canvas>
+            <div class="calendar-container" aria-label="System time">
+                <span class="system-label"><i class="fa-regular fa-clock" aria-hidden="true"></i> SYSTEM TIME</span>
+                <span class="date" id="current-date"></span>
+                <span class="time" id="current-time"></span>
+                <span class="year" id="current-year"></span>
+            </div>
+        </section>
+
+        <section class="companion-panel" aria-labelledby="companion-title">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">YOUR DESK COMPANION</p>
+                    <h2 id="companion-title">A little company for the journey</h2>
+                </div>
+                <span class="online-badge"><span></span> ONLINE</span>
+            </div>
+
+            <div class="companion-layout">
+                <div class="companion-stage-card">
+                    <div class="stage-toolbar">
+                        <span><i class="fa-solid fa-heart" aria-hidden="true"></i> LIVE2D COMPANION</span>
+                        <span class="model-status" id="model-status" role="status">WAKING UP...</span>
+                    </div>
+                    <div id="stage">
+                        <div id="inner">
+                            <div id="cover">
+                                <div id="text">
+                                    <span class="top">HELLO, PLAYER</span>
+                                    <span class="bottom">TAP TO MEET ME</span>
+                                </div>
+                                <div id="detail"></div>
+                                <button id="handle" type="button" aria-label="Open or close the companion curtain">
+                                    <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <canvas id="live2d" width="350" height="350" aria-label="Interactive Live2D companion"></canvas>
+                        </div>
+                    </div>
+                    <div class="stage-controls" aria-label="Companion controls">
+                        <button id="info" type="button" aria-label="Ask for encouragement" title="Ask for encouragement">
+                            <i class="fa-solid fa-comment-dots" aria-hidden="true"></i><span>Talk</span>
+                        </button>
+                        <button id="music-toggle" type="button" aria-label="Play background music" title="Toggle background music">
+                            <i class="fa-solid fa-play" id="music-icon" aria-hidden="true"></i><span>Music</span>
+                        </button>
+                        <button id="refresh" type="button" aria-label="Change companion outfit" title="Change companion appearance">
+                            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i><span>Refresh</span>
+                        </button>
+                    </div>
+                </div>
+
+                <aside class="companion-profile">
+                    <div class="profile-kicker"><i class="fa-solid fa-sparkles" aria-hidden="true"></i> COMPANION PROFILE</div>
+                    <h3>Your virtual companion</h3>
+                    <p class="profile-description">A friendly face to keep you company while you explore. Say hello and let the adventure begin.</p>
+                    <div class="companion-stats">
+                        <div class="stat-heading"><span>MOOD</span><span id="companion-mood">Cheerful</span></div>
+                        <div class="mood-meter" aria-label="Cheerful mood"><span></span></div>
+                    </div>
+                    <div class="speech-card">
+                        <span class="speech-label"><i class="fa-solid fa-comment" aria-hidden="true"></i> MESSAGE</span>
+                        <p id="companion-message" aria-live="polite">歡迎回來！今天也一起享受遊戲時光吧。</p>
+                    </div>
+                    <p class="profile-hint"><i class="fa-solid fa-hand-pointer" aria-hidden="true"></i> You can interact with the Live2D character.</p>
+                </aside>
+            </div>
+        </section>
+
+        <section class="games-section" aria-labelledby="games-title">
+            <div class="games-heading">
+                <div>
+                    <p class="eyebrow">PICK YOUR NEXT ADVENTURE</p>
+                    <h2 id="games-title">Game library</h2>
+                </div>
+                <span class="library-count" id="library-count"></span>
+            </div>
+            <div id="game-links-container" aria-label="Available games"></div>
+        </section>
+    </main>
+
+    <dialog class="language-dialog" id="game-language-dialog" aria-labelledby="language-dialog-title">
+        <div class="language-dialog-heading">
+            <div>
+                <p class="eyebrow">SELECT LANGUAGE</p>
+                <h2 id="language-dialog-title">Choose your language</h2>
+            </div>
+            <button class="language-dialog-close" id="close-language-dialog" type="button" aria-label="Close language selection">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
         </div>
-
-        <button id="info"><i class="fa fa-lg fa-info"></i></button>
-        <button id="music-toggle"><i class="material-icons" id="music-icon"></i></button>
-        <button id="refresh"><i class="fa fa-lg fa-sync-alt"></i></button>
-    </div>
-
-    <div id="game-links-container">
-    </div>
+        <p class="language-dialog-copy">Select a language to continue to the game.</p>
+        <div class="language-options">
+            <a class="language-option" id="traditional-chinese-link" lang="zh-TW" target="_blank" rel="noopener noreferrer">
+                <span>繁體中文</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </a>
+            <a class="language-option" id="english-link" lang="en" target="_blank" rel="noopener noreferrer">
+                <span>English</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </a>
+        </div>
+    </dialog>
 
     <footer>
-        © 2025 Lifer_Lighdow. All rights reserved.
+        <p>© 2025 Lifer_Lighdow. All rights reserved.</p>
     </footer>
 
-    <audio id="bg-music" loop autoplay src="../Music/Source/Dlesaws/audio.mp3"></audio>
+    <audio id="bg-music" loop preload="none" src="../Music/Source/Dlesaws/audio.mp3"></audio>
 
     <script src="live2d.js"></script>
     <script src="script.js"></script>

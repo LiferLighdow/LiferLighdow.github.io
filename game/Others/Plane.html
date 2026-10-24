@@ -27,17 +27,28 @@
             color: var(--text-color);
         }
 
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
         #game-container {
             position: relative;
             width: 100%;
             height: 100%;
             max-width: 500px;
+            overflow: hidden;
             background: #000;
             box-shadow: 0 0 50px rgba(0,0,0,1);
         }
 
         canvas {
+            position: absolute;
+            inset: 0;
             display: block;
+            width: 100%;
+            height: 100%;
         }
 
         #ui-layer {
@@ -89,6 +100,70 @@
         }
 
         #msg { margin-bottom: 20px; line-height: 1.6; color: #cbd5e1; }
+
+        #control-hint {
+            position: absolute;
+            right: 16px;
+            bottom: 14px;
+            left: 16px;
+            color: rgba(226, 232, 240, 0.72);
+            font-size: 0.8rem;
+            text-align: center;
+            text-shadow: 0 1px 5px #000;
+            pointer-events: none;
+        }
+
+        .desktop-controls {
+            display: none;
+        }
+
+        @media (min-width: 768px) and (pointer: fine) {
+            body {
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
+                padding: 24px;
+            }
+
+            #game-container {
+                width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
+                height: auto;
+                max-width: none;
+                aspect-ratio: 16 / 10;
+                border: 1px solid rgba(253, 224, 71, 0.22);
+                box-shadow: 0 18px 70px rgba(0, 0, 0, 0.8), 0 0 35px rgba(253, 224, 71, 0.08);
+            }
+
+            #ui-layer {
+                top: 24px;
+                right: 28px;
+                left: 28px;
+                font-size: 1.35rem;
+            }
+
+            #menu {
+                width: min(440px, 80%);
+                max-width: none;
+                padding: 3rem 2.5rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .desktop-controls {
+                display: inline;
+            }
+
+            .touch-controls {
+                display: none;
+            }
+
+            #control-hint {
+                bottom: 18px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -103,8 +178,17 @@
 
     <div id="menu">
         <h1 id="menu-title">星際避險</h1>
-        <div id="msg">滑動螢幕控制<b style="color:var(--player-color)">黃色戰機</b><br>避開<b style="color:var(--enemy-color)">紅色隕石</b></div>
+        <div id="msg">
+            <span class="touch-controls">滑動螢幕控制</span>
+            <span class="desktop-controls">使用滑鼠、WASD 或方向鍵移動</span>
+            <b style="color:var(--player-color)">黃色戰機</b><br>
+            避開<b style="color:var(--enemy-color)">紅色隕石</b>
+        </div>
         <button id="start-btn">開始任務</button>
+    </div>
+    <div id="control-hint" aria-hidden="true">
+        <span class="touch-controls">滑動螢幕移動戰機</span>
+        <span class="desktop-controls">滑鼠移動或使用 WASD / 方向鍵</span>
     </div>
 </div>
 
@@ -129,6 +213,8 @@
     let particles = [];
     let enemySpawnTimer = 0;
     let difficultyMultiplier = 1;
+    const pressedKeys = new Set();
+    const movementKeys = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd']);
 
     function initCanvas() {
         canvas.width = canvas.parentElement.clientWidth;
@@ -145,18 +231,26 @@
     function handlePointer(e) {
         if (gameState !== 'PLAYING') return;
         const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        
-        player.targetX = clientX - rect.left;
-        player.targetY = clientY - rect.top;
+        player.targetX = Math.max(player.radius, Math.min(canvas.width - player.radius, e.clientX - rect.left));
+        player.targetY = Math.max(player.radius, Math.min(canvas.height - player.radius, e.clientY - rect.top));
     }
 
-    canvas.addEventListener('mousemove', handlePointer);
-    canvas.addEventListener('touchmove', (e) => {
-        handlePointer(e);
-        e.preventDefault();
-    }, { passive: false });
+    canvas.addEventListener('pointermove', handlePointer);
+    window.addEventListener('keydown', (event) => {
+        const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+        if (!movementKeys.has(key)) return;
+        event.preventDefault();
+        pressedKeys.add(key);
+    });
+    window.addEventListener('keyup', (event) => {
+        const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+        pressedKeys.delete(key);
+        if (pressedKeys.size === 0) {
+            player.targetX = player.x;
+            player.targetY = player.y;
+        }
+    });
+    window.addEventListener('blur', () => pressedKeys.clear());
 
     function spawnEnemy() {
         const radius = 12 + Math.random() * 20;
@@ -168,6 +262,12 @@
             rotation: 0,
             rotSpeed: (Math.random() - 0.5) * 0.15
         });
+    }
+
+    function getEnemySpawnInterval() {
+        const isDesktop = window.matchMedia('(min-width: 768px) and (pointer: fine)').matches;
+        const desktopDensity = isDesktop ? Math.max(canvas.width / 500, 1) * 2.5 : 1;
+        return 550 / (difficultyMultiplier * desktopDensity);
     }
 
     function createExplosion(x, y, color) {
@@ -214,15 +314,29 @@
         if (gameState !== 'PLAYING') return;
 
         // 玩家移動
-        player.x += (player.targetX - player.x) * 0.25;
-        player.y += (player.targetY - player.y) * 0.25;
+        const horizontal = Number(pressedKeys.has('ArrowRight') || pressedKeys.has('d')) -
+            Number(pressedKeys.has('ArrowLeft') || pressedKeys.has('a'));
+        const vertical = Number(pressedKeys.has('ArrowDown') || pressedKeys.has('s')) -
+            Number(pressedKeys.has('ArrowUp') || pressedKeys.has('w'));
+
+        if (horizontal || vertical) {
+            const length = Math.hypot(horizontal, vertical);
+            const movement = 5 * Math.min(dt, 50) / 16.67;
+            player.x = Math.max(player.radius, Math.min(canvas.width - player.radius, player.x + horizontal / length * movement));
+            player.y = Math.max(player.radius, Math.min(canvas.height - player.radius, player.y + vertical / length * movement));
+            player.targetX = player.x;
+            player.targetY = player.y;
+        } else {
+            player.x += (player.targetX - player.x) * 0.25;
+            player.y += (player.targetY - player.y) * 0.25;
+        }
 
         // 難度曲線優化
         difficultyMultiplier += 0.00015 * dt;
 
         // 生成敵人
         enemySpawnTimer += dt;
-        if (enemySpawnTimer > 550 / difficultyMultiplier) {
+        if (enemySpawnTimer > getEnemySpawnInterval()) {
             spawnEnemy();
             enemySpawnTimer = 0;
             score++;
@@ -349,6 +463,8 @@
 
     startBtn.addEventListener('click', () => {
         resetGame();
+        lastTime = 0;
+        pressedKeys.clear();
         gameState = 'PLAYING';
         menu.style.display = 'none';
     });
